@@ -1,0 +1,39 @@
+# Credenciales y variables de entorno
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node.js y React
+node_modules/
+dist/
+.vite/
+
+# Archivos temporales
+tmp/
+temp/
+uploads/
+*.tmp
+
+# Bases de datos locales
+*.db
+*.sqlite3
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Configuraciones locales
+.vscode/
+.idea/
+
+# Registros
+*.log
+logs/
