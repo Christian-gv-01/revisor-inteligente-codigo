@@ -1,176 +1,254 @@
-
 # 09. Decisiones arquitectónicas (ADR)
 
 **Proyecto:** Revisor Inteligente de Código Seguro
-**Estado:** Borrador pendiente de aprobación del equipo.
-**Responsabilidad:** QA, seguridad y documentación técnica.
 
-Este documento registra las decisiones arquitectónicas del proyecto.
-Las propuestas aquí descritas deben contrastarse con el código
-existente y aprobarse por el equipo antes de considerarse definitivas.
+**Rama de trabajo:** `feature/qa-seguridad`
+
+**Estado:** Decisiones documentadas; aprobación definitiva pendiente del equipo.
+
+Este documento registra las decisiones arquitectónicas del proyecto, su estado de implementación y las verificaciones realizadas durante la revisión de QA.
+
+Una decisión propuesta no se considera aprobada únicamente porque exista código relacionado. La aprobación definitiva corresponde al equipo responsable del proyecto.
 
 ## ADR-001: Proveedor y modelo generativo
 
 ### Contexto
-El sistema contempla el uso de inteligencia artificial generativa
-para apoyar el análisis de código Python.
 
-En la configuración de ejemplo del repositorio aparecen las
-variables GEMINI_API_KEY y GEMINI_MODEL.
+El sistema utiliza inteligencia artificial generativa para analizar fragmentos de código Python e identificar posibles problemas de seguridad y calidad.
+
+El backend incluye la integración con Google Gemini mediante la biblioteca `google-genai`.
+
+La configuración utiliza las variables `GEMINI_API_KEY` y `GEMINI_MODEL`.
 
 ### Alternativas
-- Utilizar Google Gemini.
-- Utilizar otro proveedor de IA generativa.
-- Utilizar un analizador estático sin un modelo generativo.
+
+- Utilizar Google Gemini como proveedor inicial.
+- Utilizar otro proveedor de inteligencia artificial generativa.
+- Utilizar analizadores estáticos como complemento del análisis mediante IA.
 
 ### Decisión propuesta
-Evaluar Google Gemini como proveedor inicial, con el modelo
-configurado mediante GEMINI_MODEL y la credencial almacenada
-en GEMINI_API_KEY.
 
-El proveedor y el modelo definitivos quedan pendientes de
-confirmación por el equipo.
+Utilizar Google Gemini como proveedor generativo inicial del MVP.
+
+La implementación actual obtiene la clave desde `GEMINI_API_KEY` y el modelo desde `GEMINI_MODEL`. Cuando esta última variable no está definida, el servicio utiliza el valor predeterminado configurado en `backend/app/services/llm.py`.
+
+La aprobación definitiva del proveedor y del modelo corresponde al equipo.
+
+La configuración de ejemplo contiene variables relacionadas con Groq, pero no se ha confirmado que exista una integración funcional con ese proveedor en el servicio examinado.
 
 ### Ventajas
-- Permite configurar el modelo sin escribir su nombre directamente
-  en la lógica de la aplicación.
-- Facilita sustituir el modelo mediante configuración.
-- Permite separar las credenciales del código fuente.
+
+- Permite utilizar inteligencia artificial generativa para apoyar el análisis.
+- Separa las credenciales del código fuente.
+- Facilita configurar el modelo mediante variables de entorno.
+- Permite validar estructuralmente las respuestas generadas.
 
 ### Riesgos
-- Límites de uso, errores y tiempos de espera del proveedor.
-- Dependencia de un servicio externo.
-- Posible exposición de código sensible si se envía sin controles.
+
+- Dependencia de un proveedor externo.
+- Límites de uso y posibles errores de disponibilidad.
+- Costes asociados al consumo de la API.
+- Posible exposición de código sensible si no se aplican controles adecuados.
+- Respuestas incorrectas o hallazgos inventados por el modelo.
 
 ### Responsable
-Equipo de backend e integrante responsable de QA y seguridad.
+
+Equipo de backend y responsable de QA y seguridad.
 
 ### Estado
-Propuesto; pendiente de aprobación.
+
+**Implementación:** integración con Gemini identificada en el código.
+
+**Pendiente:** aprobación definitiva del proveedor y del modelo, y confirmación de los requisitos de disponibilidad y costes.
 
 ## ADR-002: Uso de un workflow controlado
 
 ### Contexto
-El sistema debe organizar el análisis de código de forma
-predecible, controlada y verificable.
+
+El sistema necesita organizar el análisis de código mediante etapas explícitas, validaciones y tratamiento de errores.
+
+Un flujo controlado facilita reproducir las pruebas, revisar los resultados y verificar el comportamiento de cada componente.
 
 ### Alternativas
+
 - Ejecutar un flujo de análisis con etapas definidas.
 - Delegar todas las decisiones a un agente autónomo.
-- Combinar un flujo controlado con componentes inteligentes
-  bajo límites definidos.
+- Combinar un flujo controlado con componentes inteligentes sujetos a límites definidos.
 
 ### Decisión propuesta
-Priorizar un workflow controlado con etapas explícitas,
-validaciones y manejo de errores.
 
-La implementación completa del agente se considera pendiente
-de acuerdo con el cronograma del proyecto.
+Priorizar un workflow controlado en el que las solicitudes pasen por validaciones y etapas identificables.
+
+La implementación actual incluye:
+
+- Recepción de solicitudes mediante FastAPI.
+- Validación de los datos con modelos Pydantic.
+- Delegación del análisis al servicio de IA.
+- Validación de la estructura de la respuesta.
+- Gestión de determinados errores del proveedor.
+- Devolución de resultados mediante una respuesta estructurada.
+
+La implementación de un agente completo y de cualquier funcionalidad adicional de automatización debe confirmarse con el equipo.
 
 ### Ventajas
-- Facilita reproducir y probar los resultados.
-- Permite controlar entradas, errores y límites.
-- Simplifica la auditoría del proceso.
+
+- Facilita las pruebas automatizadas.
+- Permite identificar errores en etapas concretas.
+- Reduce la dependencia de decisiones autónomas difíciles de verificar.
+- Facilita documentar y auditar el flujo de análisis.
 
 ### Riesgos
-- Requiere definir las etapas y sus contratos.
+
+- Requiere definir contratos claros entre componentes.
 - Los cambios en el flujo pueden exigir actualizar las pruebas.
+- Un manejo incompleto de excepciones puede interrumpir solicitudes.
+- Las funcionalidades adicionales pueden introducir nuevos riesgos de seguridad.
 
 ### Responsable
+
 Equipo de backend y responsable de arquitectura.
 
 ### Estado
-Propuesto; pendiente de aprobación.
 
+**Implementación:** flujo básico de análisis controlado identificado en el backend.
+
+**Pendiente:** confirmar el diseño definitivo, el alcance del agente y las etapas adicionales previstas.
 
 ## ADR-003: Seguridad de claves y datos
 
 ### Contexto
-El sistema puede manejar credenciales de proveedores y código
-fuente que debe tratarse como información potencialmente sensible.
+
+El sistema maneja credenciales de proveedores externos y recibe código fuente que puede contener información sensible.
+
+La exposición accidental de secretos en el repositorio, los registros o las respuestas HTTP puede comprometer el sistema y los datos de sus usuarios.
 
 ### Alternativas
-- Guardar las credenciales directamente en el código.
-- Utilizar variables de entorno y excluir los archivos locales
-  con secretos del control de versiones.
-- Utilizar un gestor de secretos cuando la infraestructura
-  del proyecto lo permita.
+
+- Almacenar las credenciales directamente en el código.
+- Utilizar variables de entorno y excluir los archivos locales con secretos del control de versiones.
+- Incorporar un gestor de secretos cuando la infraestructura lo permita.
 
 ### Decisión propuesta
-No incluir credenciales en el código fuente ni en los commits.
-Utilizar variables de entorno para la configuración local,
-mantener los archivos con secretos fuera del repositorio y
-evitar que las claves o el código sensible aparezcan en los logs.
 
-La configuración de ejemplo debe mostrar los nombres de las
-variables, nunca sus valores secretos.
+No incluir credenciales reales en el código fuente ni en los commits.
+
+Utilizar variables de entorno para las credenciales, mantener los archivos locales con secretos fuera del repositorio y evitar que las claves o el código sensible aparezcan en los registros y las respuestas de error.
+
+La configuración de ejemplo debe mostrar los nombres de las variables, nunca sus valores secretos.
+
+### Controles verificados
+
+- `.gitignore` excluye `.env` y `.env.*`, con una excepción para `.env.example`.
+- `git check-ignore -v .env` confirmó que Git ignora `.env`.
+- `git ls-files -- .env` no devolvió resultados.
+- El contenido revisado de `.env.example` no presenta claves reales.
+- La prueba `test_endpoint_no_expone_clave_en_error_proveedor` pasó con una clave ficticia incluida en un error simulado.
+
+### Controles pendientes
+
+- Verificar mediante pruebas específicas que los registros no expongan credenciales ni código sensible.
+- Revisar el tratamiento de excepciones inesperadas.
+- Confirmar que no existan credenciales expuestas en el historial de Git.
+- Completar la revisión de los componentes que gestionen información sensible.
 
 ### Ventajas
+
 - Reduce el riesgo de publicar credenciales.
-- Facilita separar configuración y código.
-- Mejora la protección de la información sensible.
+- Facilita separar la configuración del código.
+- Mejora la protección de información sensible.
+- Permite comprobar el comportamiento de los errores mediante pruebas automatizadas.
 
 ### Riesgos
+
 - Una configuración incorrecta puede exponer secretos.
-- Los registros de errores pueden revelar información si no
-  se revisan y controlan.
-- Las variables de entorno requieren una gestión adecuada
-  en cada entorno de ejecución.
+- Los mensajes de error pueden divulgar información interna.
+- Los registros pueden contener información sensible si no se controlan.
+- Las variables de entorno requieren una gestión adecuada en cada entorno.
 
 ### Responsable
-Todo el equipo; revisión específica por QA y seguridad.
+
+Todo el equipo, con revisión específica por QA y seguridad.
 
 ### Estado
-Propuesto; verificar los controles implementados y aprobar.
+
+**Implementación:** protección local de `.env` verificada y prueba automatizada de no exposición de una clave ficticia aprobada.
+
+**Pendiente:** revisión completa de logs, excepciones inesperadas e historial de credenciales.
 
 ## ADR-004: Aislamiento del código recibido
 
 ### Contexto
-El sistema recibe código Python que puede contener errores,
-contenido malicioso o instrucciones dirigidas a manipular
-al modelo de inteligencia artificial.
+
+El sistema recibe código Python que puede contener errores, instrucciones maliciosas o contenido destinado a manipular el comportamiento del modelo generativo.
+
+El código debe analizarse como contenido no confiable y no ejecutarse durante la revisión.
 
 ### Alternativas
+
 - Ejecutar o importar el código recibido.
 - Analizar el contenido como datos sin ejecutarlo.
-- Ejecutar código en un entorno aislado y restringido, únicamente
-  si una funcionalidad futura lo requiere y ha sido aprobada.
+- Incorporar ejecución en un entorno aislado únicamente si una funcionalidad futura lo requiere y cuenta con aprobación y controles específicos.
 
 ### Decisión propuesta
-Para el MVP, tratar el código recibido como datos no confiables.
-No ejecutarlo ni importarlo durante el análisis.
 
-Los comentarios e instrucciones incluidos en el código deben
-tratarse como contenido no confiable y nunca como instrucciones
-que puedan modificar las reglas del sistema.
+Para el MVP, tratar el código recibido como datos no confiables y no ejecutarlo ni importarlo durante el análisis.
 
-También deben definirse límites de tamaño, tiempos de espera
-y controles para archivos ZIP, incluyendo rutas de extracción
-inseguras.
+Los comentarios y las cadenas del código deben tratarse como contenido, no como instrucciones capaces de modificar las reglas del sistema.
+
+También deben definirse límites de entrada y tiempo de espera. Cualquier funcionalidad futura de carga o extracción de ZIP deberá incorporar controles específicos para rutas inseguras y consumo excesivo de recursos.
+
+### Controles identificados
+
+- El prompt `backend/app/prompts/system_v1.md` establece que el código recibido nunca debe ejecutarse.
+- El prompt indica que los comentarios y las cadenas deben tratarse como datos, nunca como instrucciones.
+- El servicio envía el código al proveedor como contenido destinado al análisis.
+- La respuesta generada se valida mediante el modelo `InformeModelo`.
+- Se comprobaron las referencias a `exec()`, `eval()`, `compile()`, `__import__()`, `importlib`, `subprocess`, `runpy` y `os.system` en los archivos Python examinados de `backend/app`, sin encontrar coincidencias.
+
+Estas comprobaciones estáticas no demuestran por sí solas que no existan todas las posibles vías de ejecución o vulnerabilidades.
+
+### Controles pendientes
+
+- Incorporar pruebas específicas frente a instrucciones maliciosas en comentarios y cadenas.
+- Comprobar que las instrucciones del sistema se mantengan durante el análisis.
+- Evaluar las respuestas manipuladas o inválidas del proveedor.
+- Revisar el flujo completo ante posibles vías de ejecución indirecta.
+- Confirmar si la carga y el procesamiento de archivos ZIP forman parte del alcance del MVP.
+- Implementar controles de extracción segura si se incorpora esa funcionalidad.
 
 ### Ventajas
-- Reduce el riesgo de ejecución de código malicioso.
+
+- Reduce el riesgo de ejecución accidental de código malicioso.
 - Evita conceder privilegios innecesarios al contenido recibido.
-- Facilita diseñar pruebas de seguridad específicas.
+- Facilita definir pruebas específicas de seguridad.
+- Permite mantener una separación clara entre las instrucciones del sistema y los datos analizados.
 
 ### Riesgos
-- El análisis de texto no elimina todos los riesgos.
-- Los archivos comprimidos pueden contener rutas maliciosas
-  o consumir recursos excesivos.
-- El aislamiento completo requiere controles adicionales.
+
+- El análisis mediante IA puede producir falsos positivos o falsos negativos.
+- Las instrucciones maliciosas pueden intentar manipular el resultado.
+- La validación estructural no garantiza que todos los hallazgos sean correctos.
+- La incorporación de carga de archivos o ejecución de código requeriría controles adicionales.
 
 ### Responsable
+
 Equipo de backend y responsable de QA y seguridad.
 
 ### Estado
-Propuesto; pendiente de aprobación y verificación técnica.
 
+**Implementación:** medidas de aislamiento identificadas en el prompt y en el servicio examinado.
+
+**Pendiente:** pruebas específicas de seguridad y confirmación completa del aislamiento técnico.
 
 ## Registro de aprobación
 
 Antes de cerrar estos ADR, el equipo debe confirmar:
 
-- El proveedor y el modelo generativo definitivos.
-- El diseño del workflow controlado.
-- Las medidas concretas de protección de secretos y datos.
-- Los controles de aislamiento y validación de archivos.
+- [ ] Proveedor y modelo generativo definitivos.
+- [ ] Diseño del workflow controlado y alcance del agente.
+- [ ] Medidas de protección de credenciales y datos.
+- [ ] Política de registros y tratamiento de errores.
+- [ ] Controles de aislamiento del código y resistencia ante instrucciones maliciosas.
+- [ ] Alcance de la carga de archivos y del procesamiento de ZIP.
+
+La aprobación definitiva debe registrarse cuando el equipo haya revisado las decisiones y confirmado su correspondencia con la implementación y los requisitos del proyecto.

@@ -1,0 +1,86 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.2, pytest-9.1.1, pluggy-1.7.0 -- C:\Users\andyj\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\andyj\Documents\GitHub\revisor-inteligente-codigo\backend
+plugins: anyio-4.15.1
+collecting ... collected 16 items
+
+tests/test_analysis.py::test_analizar_devuelve_json_valido PASSED        [  6%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos0] PASSED [ 12%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos1] PASSED [ 18%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos2] PASSED [ 25%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos3] PASSED [ 31%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos4] PASSED [ 37%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos5] PASSED [ 43%]
+tests/test_analysis.py::test_analizar_controla_error_del_servicio PASSED [ 50%]
+tests/test_health.py::test_health_endpoint_returns_success PASSED        [ 56%]
+tests/test_llm.py::test_servicio_acepta_respuesta_json_valida PASSED     [ 62%]
+tests/test_llm.py::test_servicio_controla_respuesta_vacia PASSED         [ 68%]
+tests/test_llm.py::test_servicio_controla_error_429 PASSED               [ 75%]
+tests/test_llm.py::test_servicio_controla_timeout_504 PASSED             [ 81%]
+tests/test_llm.py::test_servicio_controla_json_invalido PASSED           [ 87%]
+tests/test_llm.py::test_servicio_controla_timeout_real FAILED            [ 93%]
+tests/test_llm.py::test_endpoint_no_expone_clave_en_error_proveedor PASSED [100%]
+
+================================== FAILURES ===================================
+_____________________ test_servicio_controla_timeout_real _____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002019611DB50>
+
+    def test_servicio_controla_timeout_real(monkeypatch):
+        # Preparamos un cliente que no realiza conexiones externas.
+        cliente = crear_cliente_simulado(monkeypatch)
+    
+        # Simulamos una excepci¾n de timeout de HTTPX.
+        # Esto representa una petici¾n cuyo tiempo de espera se agota.
+        cliente.models.generate_content.side_effect = (
+            httpx.TimeoutException("Tiempo de espera agotado")
+        )
+    
+        # Esperamos que el servicio transforme el timeout
+        # en un error controlado LLMError con c¾digo 504.
+        with pytest.raises(
+            llm_module.LLMError,
+            match="tiempo de respuesta",
+        ) as error:
+    
+            # Ejecutamos el servicio para provocar el timeout simulado.
+>           llm_module.analizar_codigo("print('hola')")
+
+tests\test_llm.py:263: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+app\services\llm.py:58: in analizar_codigo
+    respuesta = client.models.generate_content(
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1167: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1171: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <Mock name='mock.models.generate_content' id='2205836801568'>, args = ()
+kwargs = {'model': 'gemini-3.8-flash', 'contents': "print('hola')", 'config': GenerateContentConfig(
+  max_output_tokens=2048,
+...o exclusivamente:
+critica, alta, media o baja.
+
+Responde conforme al esquema JSON solicitado.
+""",
+  temperature=0.2
+)}
+
+    def _execute_mock_call(self, /, *args, **kwargs):
+        # separate from _increment_mock_call so that awaited functions are
+        # executed separately from their call, also AsyncMock overrides this method
+    
+        effect = self.side_effect
+        if effect is not None:
+            if _is_exception(effect):
+>               raise effect
+E               httpx.TimeoutException: Tiempo de espera agotado
+
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1226: TimeoutException
+=========================== short test summary info ===========================
+FAILED tests/test_llm.py::test_servicio_controla_timeout_real - httpx.Timeout...
+======================== 1 failed, 15 passed in 1.58s =========================
