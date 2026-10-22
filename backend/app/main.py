@@ -1,6 +1,6 @@
-
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.concurrency import run_in_threadpool
+from app.services.files import leer_python_seguro
 
 from app.models.analisis import (
     SolicitudAnalisis,
@@ -54,3 +54,39 @@ async def analizar(solicitud: SolicitudAnalisis):
             status_code=error.codigo,
             detail=str(error),
         ) from error
+    
+@app.post(
+    "/api/v1/archivos",
+    response_model=RespuestaAnalisis,
+)
+async def analizar_archivo(
+    archivo: UploadFile = File(...),
+):
+    """
+    Recibe un archivo Python, valida su contenido
+    y lo analiza sin ejecutar el código recibido.
+    """
+
+    try:
+        nombre, codigo = await leer_python_seguro(archivo)
+
+        informe = await run_in_threadpool(
+            analizar_codigo,
+            codigo,
+        )
+
+        return RespuestaAnalisis(
+            archivo=nombre,
+            estado="analizado",
+            hallazgos=informe.hallazgos,
+        )
+
+    except LLMError as error:
+        raise HTTPException(
+            status_code=error.codigo,
+            detail=str(error),
+        ) from error
+
+    finally:
+        await archivo.close()
+
