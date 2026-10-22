@@ -27,3 +27,9 @@ class RespuestaAnalisis(BaseModel):
     estado: Literal["analizado"]
     hallazgos: list[Hallazgo]
 
+class RespuestaAnalisisZIP(BaseModel):
+    archivo_zip: str
+    estado: Literal["analizado"]
+    total_archivos: int = Field(ge=1)
+    informes: list[RespuestaAnalisis]
+

@@ -3,6 +3,7 @@ import logging
 import os
 import time
 from pathlib import Path
+import httpx
 
 from dotenv import load_dotenv
 from google import genai
@@ -97,6 +98,19 @@ def analizar_codigo(codigo: str) -> InformeModelo:
         )
 
         return informe
+
+    
+    except httpx.TimeoutException as error:
+        logger.warning(
+            "llm_timeout model=%s duration_ms=%d",
+            modelo,
+            round((time.perf_counter() - inicio) * 1000),
+        )
+
+        raise LLMError(
+            "El proveedor excedió el tiempo de respuesta.",
+            504,
+        ) from error
 
     except errors.APIError as error:
         logger.warning(
