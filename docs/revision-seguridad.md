@@ -169,17 +169,15 @@ completa del aislamiento sigue pendiente.
 
 **Limitación:** la prueba automatizada no demuestra por sí sola la resistencia del modelo generativo real frente a todos los intentos de manipulación.
 
-**Pendiente:** recopilar y comparar los resultados reales de las tres versiones de prompts, incluidas las pruebas específicas de instrucciones maliciosas.
-
-**Estado:** controles documentados y prueba automatizada aprobada; evaluación completa de las versiones de prompts pendiente.
+**Estado:** prueba automatizada de instrucciones maliciosas aprobada. La comparación de V2/V3 no bloquea esta entrega según la coordinación del equipo.
 
 ## 9. Evidencias y seguimiento
 ### Resultados de pytest
 
 - Prueba específica de timeout: aprobada.
-- Pruebas específicas de carga Python y ZIP: 23 aprobadas.
-- Suite completa ejecutada el 22 de octubre de 2026: 42 aprobadas, 0 fallidas.
-- Duración de la suite completa: 1,94 segundos.
+- Pruebas específicas de carga Python y ZIP: 25 aprobadas.
+- Suite completa ejecutada el 23 de octubre de 2026: 44 aprobadas, 0 fallidas.
+- Duración de la suite completa: 1,72 segundos.
 - Código de salida de pytest: 0.
 
 ### Evidencias
@@ -199,14 +197,14 @@ Esta revisión recoge los controles identificados en el código y los resultados
 
 - La carga de archivos Python y ZIP está implementada y cuenta con pruebas automatizadas aprobadas.
 - La prueba de timeout que falló anteriormente pasó después de la corrección del backend.
-- La suite completa registró 42 aprobadas y 0 fallidas.
+- La suite completa del 23 de octubre de 2026 registró 44 aprobadas y 0 fallidas en 1,72 segundos.
 - Las pruebas con mocks no acreditan por sí solas el comportamiento del proveedor de IA real.
 
 ### Pendientes de cierre
 
-- Coordinar pruebas adicionales para errores de descompresión ZIP.
+- Mantener las pruebas de regresión de errores de descompresión ZIP al modificar el servicio.
 - Confirmar los controles de acceso a repositorios públicos autorizados cuando esa funcionalidad esté implementada.
-- Recopilar evidencias de las tres versiones de prompts.
+- Mantener la evidencia de la prueba de instrucciones maliciosas; la comparación de V2/V3 queda fuera de los criterios de cierre acordados para esta entrega.
 - Mantener documentados los controles que todavía no se han verificado.
 
 No deben marcarse como aprobadas las protecciones que no cuentan con evidencia suficiente.

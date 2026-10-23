@@ -80,7 +80,7 @@ Desde la carpeta `backend`:
 python -m pytest tests -v
 ```
 
-Los resultados deben registrarse como evidencias reales. Hasta el momento se ha comprobado una prueba inicial del endpoint de salud.
+La última ejecución completa, realizada el 23 de octubre de 2026, obtuvo 44 pruebas aprobadas y 0 fallidas en 1,72 segundos. La evidencia está en `docs/evidencias/semana-2/pytest-resultados.txt`. Las dos variantes de regresión de errores de descompresión, `zlib.error` y `NotImplementedError`, también pasaron.
 
 ## 8. Variables de entorno y credenciales
 
@@ -112,7 +112,7 @@ Los controles solo se considerarán aprobados cuando exista evidencia de su impl
 
 ## 10. Limitaciones actuales
 
-La versión inicial dispone de una API básica y un endpoint de salud. Las funcionalidades de análisis de código, el tratamiento de errores del proveedor de IA, las validaciones avanzadas y la interfaz deben verificarse a medida que se integren los componentes del equipo.
+La versión actual del backend incluye análisis con Gemini, validación de entradas, carga de archivos Python y procesamiento de ZIP. El frontend React/Vite/TypeScript con Monaco está publicado en `feature/frontend`; su integración final con el backend debe verificarse. Las pruebas automatizadas utilizan mocks para las llamadas a IA y no demuestran por sí solas el comportamiento del proveedor real.
 
 ## 11. Documentación y evidencias
 

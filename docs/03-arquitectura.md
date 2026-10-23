@@ -102,9 +102,9 @@ La respuesta se valida mediante el modelo `InformeModelo`. También se comprueba
 
 ### 4.3. Frontend
 
-La carpeta `frontend` existe en el repositorio, pero no se ha confirmado una aplicación funcional en el código revisado.
 
-La interfaz web y su integración con la API quedan pendientes de verificación e implementación.
+
+El frontend React/Vite/TypeScript con editor Monaco está publicado en la rama `feature/frontend`. Su integración final con el backend y la compatibilidad de los contratos deben verificarse durante la integración del equipo.
 
 ### 4.4. Persistencia
 
@@ -303,27 +303,27 @@ Estos requisitos deben verificarse mediante pruebas y revisión de código; su i
 
 Las pruebas automatizadas cubren el endpoint de salud, la validación de solicitudes, la estructura de las respuestas y varios errores del servicio de IA.
 
-En la última ejecución registrada:
+En la última ejecución completa registrada en `docs/evidencias/semana-2/pytest-resultados.txt`:
 
-- Pruebas aprobadas: 15.
-- Pruebas fallidas: 1.
-- Total: 16.
+- Pruebas aprobadas: 44.
+- Pruebas fallidas: 0.
+- Duración: 1,72 segundos.
 
-La prueba fallida es `test_servicio_controla_timeout_real`. Se propagó una excepción `httpx.TimeoutException` que el servicio no transformó en el error controlado esperado.
+La ejecución del 23 de octubre de 2026 incluye las dos variantes parametrizadas de `test_zip_controla_errores_de_descompresion`. Ambas pasaron y la suite completa registró 44 aprobadas y 0 fallidas.
 
-**Estado:** corrección pendiente y nueva ejecución completa de la suite de pruebas.
+**Estado:** suite completa y regresiones ZIP aprobadas el 23 de octubre de 2026; 44 aprobadas y 0 fallidas.
 
 Las evidencias de ejecución se almacenan en `docs/evidencias/semana-2/pytest-resultados.txt`.
 
 ## 11. Componentes pendientes para la semana 3
 
-- Corregir y verificar el tratamiento de `httpx.TimeoutException`.
-- Ejecutar nuevamente la suite completa y actualizar las evidencias.
+- Mantener verificadas las pruebas de timeout `test_servicio_controla_timeout_504` y `test_servicio_controla_timeout_real`.
+- Mantener las pruebas de regresión ZIP y repetirlas si cambia el servicio de carga o descompresión.
 - Confirmar con el equipo el contrato definitivo de la API.
 - Definir si la carga de archivos y el procesamiento de ZIP forman parte del alcance del MVP.
 - Definir si se implementará la consulta de repositorios y sus controles de acceso.
 - Confirmar las decisiones sobre proveedor de respaldo y configuración de reintentos.
-- Implementar o integrar el frontend si forma parte del alcance aprobado.
+- Verificar la integración del frontend de `feature/frontend` con el contrato real del backend.
 - Completar las pruebas específicas de seguridad y de resistencia ante instrucciones maliciosas.
 - Actualizar la arquitectura cuando se aprueben nuevas decisiones técnicas.
 

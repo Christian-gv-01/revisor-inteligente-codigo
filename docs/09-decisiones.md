@@ -146,7 +146,7 @@ La configuración de ejemplo debe mostrar los nombres de las variables, nunca su
 
 ### Controles pendientes
 
-- Verificar mediante pruebas específicas que los registros no expongan credenciales ni código sensible.
+- Ampliar la revisión de otros caminos de registro y excepciones. La prueba `test_servicio_no_registra_claves_ni_codigo_sensible` pasó con datos ficticios en un error simulado, pero no cubre todos los escenarios.
 - Revisar el tratamiento de excepciones inesperadas.
 - Confirmar que no existan credenciales expuestas en el historial de Git.
 - Completar la revisión de los componentes que gestionen información sensible.
@@ -195,7 +195,7 @@ Para el MVP, tratar el código recibido como datos no confiables y no ejecutarlo
 
 Los comentarios y las cadenas del código deben tratarse como contenido, no como instrucciones capaces de modificar las reglas del sistema.
 
-También deben definirse límites de entrada y tiempo de espera. Cualquier funcionalidad futura de carga o extracción de ZIP deberá incorporar controles específicos para rutas inseguras y consumo excesivo de recursos.
+También deben definirse límites de entrada y tiempo de espera. La carga y lectura de ZIP está implementada con validaciones de rutas y límites de recursos. Las regresiones `test_zip_controla_errores_de_descompresion[zlib]` y `test_zip_controla_errores_de_descompresion[no_implementado]` pasaron. La suite completa del 23 de octubre de 2026 registró 44 aprobadas y 0 fallidas en 1,72 segundos. El flujo examinado no extrae archivos al sistema de archivos; si eso se incorpora, deberá revisarse por separado.
 
 ### Controles identificados
 
@@ -214,7 +214,7 @@ Estas comprobaciones estáticas no demuestran por sí solas que no existan todas
 - Evaluar las respuestas manipuladas o inválidas del proveedor.
 - Revisar el flujo completo ante posibles vías de ejecución indirecta.
 - Confirmar si la carga y el procesamiento de archivos ZIP forman parte del alcance del MVP.
-- Implementar controles de extracción segura si se incorpora esa funcionalidad.
+- Mantener las pruebas de regresión de errores de descompresión y repetirlas si cambia el servicio ZIP.
 
 ### Ventajas
 

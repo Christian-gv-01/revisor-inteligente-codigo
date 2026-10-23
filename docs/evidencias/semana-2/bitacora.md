@@ -135,7 +135,7 @@ La evidencia se guardó en `docs/evidencias/semana-2/pytest-resultados.txt`. Est
 - Existe un límite de 12.000 caracteres para el código recibido.
 - El servicio lee `LLM_TIMEOUT_SECONDS` para configurar la espera del cliente del proveedor.
 - La prueba de error HTTP 504 del proveedor pasó.
-- **Hallazgo corregido:** `test_servicio_controla_timeout_real` pasó después de integrar la corrección del backend. La ejecución posterior completa obtuvo 40 aprobadas y 0 fallidas.
+- **Hallazgo corregido:** `test_servicio_controla_timeout_real` pasó después de integrar la corrección del backend. Una ejecución intermedia obtuvo 40 aprobadas y 0 fallidas; la ejecución completa más reciente registró 44 aprobadas y 0 fallidas.
 
 **Verificación:** QA confirmó la corrección con la prueba específica de timeout y una ejecución completa de la suite.
 
@@ -159,7 +159,7 @@ La evidencia se guardó en `docs/evidencias/semana-2/pytest-resultados.txt`. Est
 
 ## 4. Evidencias
 
-- `docs/evidencias/semana-2/pytest-resultados.txt` contiene la ejecución completa más reciente: **42 aprobadas y 0 fallidas**.
+- `docs/evidencias/semana-2/pytest-resultados.txt` contiene la ejecución completa más reciente: **44 aprobadas y 0 fallidas**.
 - La ejecución completa anterior de 16 pruebas produjo **15 aprobadas y 1 fallida**; este resultado histórico se conserva documentado en la bitácora.
 - La ejecución parcial anterior excluyó la prueba de timeout; una ejecución completa posterior confirmó que pasó.
 - Las capturas y resultados deben corresponder a ejecuciones reales; no se inventarán aprobaciones ni resultados.
@@ -191,7 +191,7 @@ Debe mantenerse alineado con los endpoints y funcionalidades reales, las variabl
 ## 8. Observaciones
 
 - Los resultados corresponden a las comprobaciones compartidas y ejecutadas durante esta semana.
-- El resultado de 18 aprobadas y 1 excluida es histórico. La ejecución posterior completa registró 40 aprobadas y 0 fallidas.
+- El resultado de 18 aprobadas y 1 excluida es histórico. Una ejecución intermedia registró 40 aprobadas y 0 fallidas; la ejecución completa más reciente registró 44 aprobadas y 0 fallidas.
 - Las pruebas con mocks comprueban comportamientos específicos del sistema sin conectarse a Gemini; no acreditan por sí mismas la calidad o seguridad de las respuestas reales del modelo.
 - Ninguna protección pendiente se considerará completamente verificada sin evidencia suficiente.
 
@@ -207,7 +207,7 @@ Debe mantenerse alineado con los endpoints y funcionalidades reales, las variabl
 ### 9.2. Pruebas de carga de archivos
 
 - Se incorporó `backend/tests/test_uploads.py`.
-- Se ejecutaron 21 pruebas específicas de carga de archivos Python y ZIP: 21 aprobadas.
+- La ejecución actual de las pruebas de carga Python y ZIP registró 25 pruebas aprobadas, incluidas las dos variantes de regresión de descompresión.
 - Se comprobaron extensiones no permitidas, rutas inseguras, contenido vacío, UTF-8 inválido, bytes nulos y límites de tamaño.
 - Se probaron ZIP corruptos, rutas peligrosas, límites de archivos y caracteres acumulados, y errores controlados del servicio de IA.
 - Se utilizaron mocks para evitar llamadas reales al proveedor durante las pruebas.
@@ -216,8 +216,8 @@ Debe mantenerse alineado con los endpoints y funcionalidades reales, las variabl
 
 - Comando ejecutado: `python -m pytest tests -v`.
 - Directorio de ejecución: `backend`.
-- Resultado: 42 pruebas aprobadas y 0 fallidas.
-- Duración registrada: 1,94 segundos.
+- Resultado: 44 pruebas aprobadas y 0 fallidas.
+- Duración registrada: 1,72 segundos.
 - La salida se guardó en `docs/evidencias/semana-2/pytest-resultados.txt`.
 - El resultado anterior que contenía un fallo de timeout queda como antecedente histórico; la ejecución posterior confirmó que esa prueba también pasó.
 
