@@ -352,3 +352,62 @@ def test_zip_controla_error_llm(monkeypatch):
 
     assert respuesta.status_code == 503
     mock.assert_called_once()
+
+def test_zip_rechaza_mas_de_cien_entradas(monkeypatch):
+    configurar_analisis(monkeypatch)
+
+    contenido = crear_zip({
+        f"archivo_{i}.txt": b"x"
+        for i in range(101)
+    })
+
+    respuesta = client.post(
+        "/api/v1/archivos/zip",
+        files={
+            "archivo": (
+                "proyecto.zip",
+                contenido,
+                "application/zip",
+            )
+        },
+    )
+
+    assert respuesta.status_code == 413
+    assert respuesta.json()["detail"] == "Demasiadas entradas en el ZIP."
+
+
+def test_zip_rechaza_exceso_de_tamano_descomprimido(monkeypatch):
+    from zipfile import ZIP_DEFLATED
+
+    configurar_analisis(monkeypatch)
+
+    buffer = BytesIO()
+
+    with ZipFile(
+        buffer,
+        "w",
+        compression=ZIP_DEFLATED,
+    ) as zip_file:
+        zip_file.writestr(
+            "datos.bin",
+            b"A" * (20 * 1024 * 1024 + 1),
+        )
+
+    contenido = buffer.getvalue()
+
+    # El ZIP comprimido debe caber en el límite de 5 MiB.
+    assert len(contenido) < 5 * 1024 * 1024
+
+    respuesta = client.post(
+        "/api/v1/archivos/zip",
+        files={
+            "archivo": (
+                "proyecto.zip",
+                contenido,
+                "application/zip",
+            )
+        },
+    )
+
+    assert respuesta.status_code == 413
+    assert respuesta.json()["detail"] == "ZIP descomprimido demasiado grande."

@@ -202,7 +202,7 @@ Cada hallazgo incluye:
 - `explicacion`: motivo del hallazgo.
 - `correccion_sugerida`: propuesta de corrección.
 
-El servicio devuelve errores HTTP controlados para varios escenarios conocidos del proveedor. El tratamiento de todos los tipos de timeout aún requiere corrección y nueva verificación.
+El servicio devuelve errores HTTP controlados para varios escenarios conocidos del proveedor. Las pruebas test_servicio_controla_timeout_504 y test_servicio_controla_timeout_real pasaron en la última ejecución completa registrada.
 
 La consulta de repositorios no se ha confirmado como endpoint implementado.
 
@@ -224,7 +224,8 @@ La consulta de repositorios no se ha confirmado como endpoint implementado.
 
 - Entrada: archivo multipart/form-data en el campo `archivo`.
 - Tamaño máximo documentado del ZIP: 5 MiB.
-- Las pruebas contemplan límites en la cantidad de archivos y el tamaño del código.
+- Se permiten hasta 100 entradas y 20 MiB de contenido descomprimido declarado por ZIP.
+- Se admiten como máximo cinco archivos Python, de hasta 1 MiB cada uno; el código acumulado se limita a 12.000 caracteres.
 - Se verifican ZIP corruptos y rutas inseguras.
 - El código recibido no debe ejecutarse.
 
@@ -263,7 +264,7 @@ El archivo `.env.example` sirve como plantilla de configuración. El archivo `.e
 
 - Rechazar solicitudes que incumplan los límites de los modelos.
 - Limitar la longitud del código y del nombre de archivo.
-- Ampliar las validaciones cuando se implemente la carga de archivos.
+- Mantener y ampliar las validaciones de carga de archivos según los límites y escenarios de seguridad definidos.
 
 ### 9.2. Aislamiento del código
 

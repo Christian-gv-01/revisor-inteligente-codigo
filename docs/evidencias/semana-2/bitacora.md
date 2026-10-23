@@ -5,7 +5,7 @@
 **Rama:** `feature/qa-seguridad`
 **Fecha de inicio:** 20 de octubre de 2026
 **Última actualización:** 22 de octubre de 2026
-**Estado:** En progreso; 40 pruebas aprobadas y documentación pendiente de revisión final
+**Estado:** En progreso; 42 pruebas aprobadas y documentación pendiente de revisión final
 
 
 ## 1. Pruebas automatizadas
@@ -159,7 +159,7 @@ La evidencia se guardó en `docs/evidencias/semana-2/pytest-resultados.txt`. Est
 
 ## 4. Evidencias
 
-- `docs/evidencias/semana-2/pytest-resultados.txt` contiene la ejecución completa más reciente: **40 aprobadas y 0 fallidas**.
+- `docs/evidencias/semana-2/pytest-resultados.txt` contiene la ejecución completa más reciente: **42 aprobadas y 0 fallidas**.
 - La ejecución completa anterior de 16 pruebas produjo **15 aprobadas y 1 fallida**; este resultado histórico se conserva documentado en la bitácora.
 - La ejecución parcial anterior excluyó la prueba de timeout; una ejecución completa posterior confirmó que pasó.
 - Las capturas y resultados deben corresponder a ejecuciones reales; no se inventarán aprobaciones ni resultados.
@@ -177,11 +177,11 @@ Debe mantenerse alineado con los endpoints y funcionalidades reales, las variabl
 - `docs/09-decisiones.md`: actualizado; ADR pendientes de aprobación definitiva.
 - `docs/revision-seguridad.md`: actualizado con la revisión inicial y los controles pendientes; verificar su coherencia con las últimas pruebas en el cierre final.
 - `docs/evidencias/semana-2/bitacora.md`: actualizado con tres pruebas adicionales y la ejecución parcial de 19 casos recopilados.
-- `docs/evidencias/semana-2/pytest-resultados.txt`: actualizado con el resultado de 40 pruebas aprobadas y 0 fallidas.
+- `docs/evidencias/semana-2/pytest-resultados.txt`: actualizado con el resultado de 42 pruebas aprobadas y 0 fallidas.
 
 ## 7. Próximos pasos
 
-1. Actualizar la arquitectura para reflejar los endpoints de carga Python y ZIP.
+1. Verificar que la arquitectura documente los límites de carga Python y ZIP.
 2. Revisar los ADR-001 a ADR-004 y confirmar las decisiones aprobadas por el equipo.
 3. Actualizar la revisión de seguridad y comprobar las evidencias de los prompts.
 4. Revisar que los cambios locales incluyan solo archivos de QA y documentación antes del siguiente commit.
@@ -216,8 +216,8 @@ Debe mantenerse alineado con los endpoints y funcionalidades reales, las variabl
 
 - Comando ejecutado: `python -m pytest tests -v`.
 - Directorio de ejecución: `backend`.
-- Resultado: 40 pruebas aprobadas y 0 fallidas.
-- Duración registrada: 1,59 segundos.
+- Resultado: 42 pruebas aprobadas y 0 fallidas.
+- Duración registrada: 1,94 segundos.
 - La salida se guardó en `docs/evidencias/semana-2/pytest-resultados.txt`.
 - El resultado anterior que contenía un fallo de timeout queda como antecedente histórico; la ejecución posterior confirmó que esa prueba también pasó.
 

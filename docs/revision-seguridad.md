@@ -23,11 +23,10 @@
 -   La prueba `test_endpoint_no_expone_clave_en_error_proveedor` pasó
     con una clave ficticia incluida deliberadamente en un error
     simulado.
+-   La prueba `test_servicio_no_registra_claves_ni_codigo_sensible` verifica que la clave ficticia y el código sensible no aparezcan en los registros capturados durante un error simulado del proveedor.
 
 ### Controles pendientes
 
--   Comprobar mediante pruebas específicas que los registros no revelen
-    credenciales.
 -   Revisar el tratamiento de excepciones inesperadas.
 -   Verificar que las credenciales no hayan sido publicadas previamente
     en el historial de Git.
@@ -51,7 +50,7 @@ credenciales y errores sigue pendiente.
 ### Evidencia
 
 - `backend/tests/test_uploads.py` contiene pruebas de carga válida, extensiones, rutas, codificación y límites.
-- Las 21 pruebas específicas de carga pasaron en la ejecución registrada.
+- Las 23 pruebas específicas de carga pasaron en la ejecución registrada.
 
 **Estado:** controles implementados y escenarios automatizados aprobados. Esto no sustituye una auditoría exhaustiva.
 
@@ -70,8 +69,8 @@ credenciales y errores sigue pendiente.
 
 ### Evidencia
 
-- `backend/tests/test_uploads.py` comprueba ZIP válidos, corruptos, rutas inseguras, límites y contenido inválido.
-- Las 21 pruebas específicas de carga pasaron.
+- `backend/tests/test_uploads.py` comprueba ZIP válidos, corruptos, rutas inseguras, límites y contenido inválido, incluidos ZIP con más de 100 entradas y más de 20 MiB descomprimidos.
+- Las 23 pruebas específicas de carga pasaron.
 
 ### Hallazgo pendiente
 
@@ -142,7 +141,7 @@ completa del aislamiento sigue pendiente.
 - El backend limita las entradas y configura el tiempo de espera mediante `LLM_TIMEOUT_SECONDS`.
 - `test_servicio_controla_timeout_504` pasó.
 - `test_servicio_controla_timeout_real` pasó después de integrar la corrección del backend.
-- La ejecución completa del 22 de octubre de 2026 registró 40 pruebas aprobadas y ninguna fallida.
+- La ejecución completa del 22 de octubre de 2026 registró 42 pruebas aprobadas y ninguna fallida.
 
 **Estado:** el problema de timeout detectado anteriormente quedó corregido y verificado mediante la prueba específica y la suite completa.
 
@@ -178,9 +177,9 @@ completa del aislamiento sigue pendiente.
 ### Resultados de pytest
 
 - Prueba específica de timeout: aprobada.
-- Pruebas específicas de carga Python y ZIP: 21 aprobadas.
-- Suite completa ejecutada el 22 de octubre de 2026: 40 aprobadas, 0 fallidas.
-- Duración de la suite completa: 1,59 segundos.
+- Pruebas específicas de carga Python y ZIP: 23 aprobadas.
+- Suite completa ejecutada el 22 de octubre de 2026: 42 aprobadas, 0 fallidas.
+- Duración de la suite completa: 1,94 segundos.
 - Código de salida de pytest: 0.
 
 ### Evidencias
@@ -200,7 +199,7 @@ Esta revisión recoge los controles identificados en el código y los resultados
 
 - La carga de archivos Python y ZIP está implementada y cuenta con pruebas automatizadas aprobadas.
 - La prueba de timeout que falló anteriormente pasó después de la corrección del backend.
-- La suite completa registró 40 aprobadas y 0 fallidas.
+- La suite completa registró 42 aprobadas y 0 fallidas.
 - Las pruebas con mocks no acreditan por sí solas el comportamiento del proveedor de IA real.
 
 ### Pendientes de cierre
