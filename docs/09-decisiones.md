@@ -2,9 +2,12 @@
 
 **Proyecto:** Revisor Inteligente de Código Seguro
 
-**Rama de trabajo:** `feature/qa-seguridad`
+**Rama de trabajo:** `integration/revision-2`
 
-**Estado:** Decisiones documentadas; aprobación definitiva pendiente del equipo.
+**Fecha de revisión:** 23 de octubre de 2026
+
+
+**Estado:** En revisión final del equipo para aceptación de ADR.
 
 Este documento registra las decisiones arquitectónicas del proyecto, su estado de implementación y las verificaciones realizadas durante la revisión de QA.
 
@@ -252,3 +255,70 @@ Antes de cerrar estos ADR, el equipo debe confirmar:
 - [ ] Alcance de la carga de archivos y del procesamiento de ZIP.
 
 La aprobación definitiva debe registrarse cuando el equipo haya revisado las decisiones y confirmado su correspondencia con la implementación y los requisitos del proyecto.
+
+
+## Actualización técnica — Revisión 2
+
+**Fecha:** 23 de octubre de 2026  
+**Referencia:** Rama `integration/revision-2`
+
+### ADR-001 — Proveedor generativo
+
+Se ha comprobado la integración real con Google Gemini mediante FastAPI.
+
+El modelo utilizado en las pruebas de comparación es `gemini-3.5-flash-lite`, configurado mediante la variable de entorno `GEMINI_MODEL`.
+
+El backend incorpora validación de las respuestas mediante Pydantic y manejo controlado de determinados errores del proveedor.
+
+**Limitación:** no se ha implementado todavía un proveedor de respaldo operativo ni un sistema completo de reintentos.
+
+**Estado propuesto:** Aceptado para el MVP, sujeto a confirmación del equipo.
+
+### ADR-002 — Workflow controlado
+
+Se ha implementado una secuencia explícita de recepción, validación, llamada al modelo y devolución de un informe JSON estructurado.
+
+Se dispone de endpoints para fragmentos Python, archivos `.py` y archivos ZIP.
+
+**Decisión:** mantener un workflow controlado durante la segunda semana. La integración de herramientas Ruff, Bandit, RAG y el agente corresponde a fases posteriores.
+
+**Estado propuesto:** Aceptado para el MVP, sujeto a confirmación del equipo.
+
+### ADR-003 — Protección de secretos
+
+Las credenciales se cargan desde variables de entorno en el backend. El archivo `.env` está excluido del control de versiones y la configuración de ejemplo no debe contener credenciales reales.
+
+Se han ejecutado pruebas automatizadas de manejo de errores y de protección de información sensible.
+
+**Limitación:** la revisión del historial Git y de posibles secretos históricos debe documentarse de forma independiente.
+
+**Estado propuesto:** Aceptado para el MVP, sujeto a confirmación del equipo.
+
+### ADR-004 — Procesamiento de código no confiable
+
+El sistema analiza código Python como contenido textual, sin ejecutar ni importar el código enviado por el usuario.
+
+La carga de `.py` y ZIP incluye controles de tamaño, formato, rutas y contenido.
+
+Se implementó manejo de excepciones de descompresión, incluida `zlib.error`.
+
+**Limitación:** los controles actuales no constituyen un aislamiento completo del proceso. Falta validar exhaustivamente la resistencia a inyección de prompt y archivos maliciosos.
+
+**Estado propuesto:** Aceptado para el MVP, sujeto a confirmación del equipo.
+
+### Evidencia disponible
+
+- Integración real React → FastAPI → Gemini.
+- 40 pruebas de backend aprobadas antes de incorporar las nuevas pruebas de regresión ZIP.
+- 38 pruebas de frontend aprobadas.
+- Comparación experimental inicial de los tres prompts en `docs/05-prompts.md`.
+- Capturas y resultados almacenados en `docs/evidencias/semana-2/`.
+
+### Aprobación grupal
+
+**Tech Lead / Backend:** Pendiente de registrar confirmación.  
+**Frontend:** Pendiente de registrar confirmación.  
+**QA / Seguridad:** Pendiente de registrar confirmación.
+
+El equipo deberá registrar la aceptación definitiva y los responsables mediante un commit de documentación.
+
