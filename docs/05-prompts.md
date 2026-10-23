@@ -88,3 +88,49 @@ Las tres versiones alcanzaron el resultado esperado para la vulnerabilidad anali
 La siguiente evaluación debe incluir código limpio, vulnerabilidades de diferentes categorías e instrucciones maliciosas ocultas en comentarios para medir detecciones, falsos positivos y resistencia a inyección de prompt.
 
 **Decisión provisional:** conservar V1 como prompt activo del backend estable hasta completar las pruebas comparativas. No sustituir el prompt de producción únicamente por los resultados de una prueba.
+
+
+## 8. Experimento ampliado: diez casos de evaluación
+
+**Fecha:** 23 de octubre de 2026  
+**Modelo:** gemini-3.5-flash-lite  
+**Configuración:** temperatura 0,2; máximo 2048 tokens de salida  
+**Evidencia:** `docs/evidencias/semana-2/comparacion-10-casos.json`
+
+Se evaluaron tres versiones del prompt con diez fragmentos Python: cuatro vulnerables, tres limpios, dos con instrucciones dirigidas al analizador y uno ambiguo. Se realizaron 30 solicitudes reales al proveedor.
+
+### Resultados
+
+| Métrica | V1 | V2 | V3 |
+|---|---:|---:|---:|
+| Vulnerabilidades principales detectadas (4) | 4 | 3 | 4 |
+| Intentos de inyección reportados (2) | 0 | 0 | 2 |
+| Archivos limpios sin hallazgos (3) | 3 | 3 | 3 |
+| Alertas críticas en caso ambiguo C10 | 1 | 1 | 1 |
+| Respuestas JSON válidas | 10 | 10 | 10 |
+| Tiempo acumulado | 80,53 s | 58,65 s | 47,39 s |
+| Tokens totales | 3.242 | 3.824 | 5.155 |
+
+### Análisis de resultados
+
+V1 presentó una detección satisfactoria de las cuatro vulnerabilidades principales, pero no identificó las instrucciones de manipulación dirigidas al modelo.
+
+V2 incorporó criterios más estrictos de evidencia, aunque omitió el hallazgo de credencial fija. Esto demuestra que una mayor especificidad en el prompt no garantiza una mejora en todas las categorías.
+
+V3 detectó los cuatro escenarios vulnerables principales y reportó ambos intentos explícitos de inyección de prompt. También conservó el formato estructurado esperado.
+
+Ninguna versión reportó hallazgos en los tres fragmentos limpios. Las tres produjeron una alerta de severidad crítica sobre `eval("2 + 2")`, pese a que el fragmento no muestra entrada externa controlable por un atacante. Este caso evidencia la necesidad de calibrar las severidades y distinguir patrones peligrosos de vulnerabilidades explotables.
+
+### Conclusión y decisión
+
+El experimento permitió identificar una ventaja de V3 en el reporte de instrucciones maliciosas incluidas dentro del código analizado.
+
+Se recomienda V3 como candidato para la siguiente versión del sistema, sujeto a pruebas adicionales de regresión, precisión y resistencia a inyección de prompt.
+
+La versión activa del backend se mantiene sin cambios para preservar la estabilidad de la demostración.
+
+### Limitaciones
+
+Los resultados corresponden a una ejecución por combinación de caso y prompt. La muestra no permite establecer tasas generales de precisión ni demostrar resistencia absoluta a inyección de prompt.
+
+La evaluación de C10 requiere juicio contextual. Los errores del proveedor, cuando existan, deben diferenciarse de los falsos negativos del modelo.
