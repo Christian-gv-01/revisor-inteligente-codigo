@@ -20,7 +20,7 @@ El proyecto se encuentra en desarrollo y sus funcionalidades se integrarán prog
 - Python.
 - FastAPI para el backend.
 - Pytest para las pruebas automatizadas.
-- Google Gemini para el análisis asistido por inteligencia artificial, cuya integración debe verificarse con la rama del backend.
+- Google Gemini como proveedor de análisis asistido por inteligencia artificial, integrado mediante el servicio del backend. Las pruebas automatizadas utilizan mocks para evitar llamadas reales a la API.
 - Git y GitHub para el control de versiones y la colaboración.
 
 ## 4. Estructura del proyecto

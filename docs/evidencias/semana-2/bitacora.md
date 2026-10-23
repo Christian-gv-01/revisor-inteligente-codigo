@@ -4,8 +4,8 @@
 **Proyecto:** Revisor Inteligente de Código Seguro
 **Rama:** `feature/qa-seguridad`
 **Fecha de inicio:** 20 de octubre de 2026
-**Última actualización:** 21 de octubre de 2026
-**Estado:** En progreso; corrección de timeout pendiente del responsable del backend
+**Última actualización:** 22 de octubre de 2026
+**Estado:** En progreso; 40 pruebas aprobadas y documentación pendiente de revisión final
 
 
 ## 1. Pruebas automatizadas
@@ -55,7 +55,7 @@ La prueba simula una excepción `httpx.TimeoutException` y espera que `analizar_
 
 Este resultado se conserva como un hallazgo real de QA; no se ha marcado la prueba como aprobada.
 
-### 1.5. Última ejecución registrada: 19 pruebas recopiladas
+### 1.5. Resultado histórico: ejecución parcial de 19 pruebas recopiladas
 
 Después de incorporar las tres pruebas nuevas, se ejecutó desde la carpeta `backend`:
 
@@ -135,9 +135,9 @@ La evidencia se guardó en `docs/evidencias/semana-2/pytest-resultados.txt`. Est
 - Existe un límite de 12.000 caracteres para el código recibido.
 - El servicio lee `LLM_TIMEOUT_SECONDS` para configurar la espera del cliente del proveedor.
 - La prueba de error HTTP 504 del proveedor pasó.
-- **Hallazgo pendiente:** `test_servicio_controla_timeout_real` detectó que una excepción simulada `httpx.TimeoutException` se propaga sin convertirse en el `LLMError` esperado.
+- **Hallazgo corregido:** `test_servicio_controla_timeout_real` pasó después de integrar la corrección del backend. La ejecución posterior completa obtuvo 40 aprobadas y 0 fallidas.
 
-**Responsabilidad:** el ajuste en `backend/app/services/llm.py` corresponde al integrante responsable del backend. QA conserva la prueba y verificará la corrección cuando esté disponible.
+**Verificación:** QA confirmó la corrección con la prueba específica de timeout y una ejecución completa de la suite.
 
 ### 3.7. Logs y mensajes de error
 
@@ -159,9 +159,9 @@ La evidencia se guardó en `docs/evidencias/semana-2/pytest-resultados.txt`. Est
 
 ## 4. Evidencias
 
-- `docs/evidencias/semana-2/pytest-resultados.txt` contiene la ejecución parcial más reciente: **18 aprobadas y 1 excluida**.
+- `docs/evidencias/semana-2/pytest-resultados.txt` contiene la ejecución completa más reciente: **40 aprobadas y 0 fallidas**.
 - La ejecución completa anterior de 16 pruebas produjo **15 aprobadas y 1 fallida**; este resultado histórico se conserva documentado en la bitácora.
-- La prueba excluida de la ejecución reciente sigue pendiente por el fallo de timeout.
+- La ejecución parcial anterior excluyó la prueba de timeout; una ejecución completa posterior confirmó que pasó.
 - Las capturas y resultados deben corresponder a ejecuciones reales; no se inventarán aprobaciones ni resultados.
 - **Pendiente:** ejecutar toda la suite tras la corrección, actualizar evidencias, registrar el historial de commits relevante y completar las pruebas de las versiones de prompts que el equipo haya implementado realmente.
 
@@ -177,13 +177,13 @@ Debe mantenerse alineado con los endpoints y funcionalidades reales, las variabl
 - `docs/09-decisiones.md`: actualizado; ADR pendientes de aprobación definitiva.
 - `docs/revision-seguridad.md`: actualizado con la revisión inicial y los controles pendientes; verificar su coherencia con las últimas pruebas en el cierre final.
 - `docs/evidencias/semana-2/bitacora.md`: actualizado con tres pruebas adicionales y la ejecución parcial de 19 casos recopilados.
-- `docs/evidencias/semana-2/pytest-resultados.txt`: actualizado con el resultado de 18 pruebas aprobadas y 1 excluida.
+- `docs/evidencias/semana-2/pytest-resultados.txt`: actualizado con el resultado de 40 pruebas aprobadas y 0 fallidas.
 
 ## 7. Próximos pasos
 
-1. Coordinar con el responsable del backend la corrección del manejo de `httpx.TimeoutException`.
-2. Ejecutar la prueba afectada y luego la suite completa, sin exclusiones, cuando exista la corrección.
-3. Guardar la evidencia real de la ejecución completa y actualizar la bitácora.
+1. Actualizar la arquitectura para reflejar los endpoints de carga Python y ZIP.
+2. Revisar los ADR-001 a ADR-004 y confirmar las decisiones aprobadas por el equipo.
+3. Actualizar la revisión de seguridad y comprobar las evidencias de los prompts.
 4. Revisar que los cambios locales incluyan solo archivos de QA y documentación antes del siguiente commit.
 5. Validar las decisiones arquitectónicas y las funciones pendientes con los demás integrantes.
 6. Revisar el pull request de `feature/qa-seguridad` y preparar las evidencias para la entrega.
@@ -191,6 +191,41 @@ Debe mantenerse alineado con los endpoints y funcionalidades reales, las variabl
 ## 8. Observaciones
 
 - Los resultados corresponden a las comprobaciones compartidas y ejecutadas durante esta semana.
-- **18 aprobadas y 1 excluida no equivale a 19 aprobadas.** La prueba de timeout debe continuar registrada como pendiente.
+- El resultado de 18 aprobadas y 1 excluida es histórico. La ejecución posterior completa registró 40 aprobadas y 0 fallidas.
 - Las pruebas con mocks comprueban comportamientos específicos del sistema sin conectarse a Gemini; no acreditan por sí mismas la calidad o seguridad de las respuestas reales del modelo.
 - Ninguna protección pendiente se considerará completamente verificada sin evidencia suficiente.
+
+## 9. Actualización del jueves 22 de octubre de 2026
+
+### 9.1. Integración del backend
+
+- Se integraron cambios de la rama `feature/backend-ia` en `feature/qa-seguridad`.
+- El merge quedó registrado en el commit `d7e5f69`.
+- La integración incorpora los servicios de carga de archivos Python y análisis de proyectos ZIP.
+- La prueba `test_servicio_controla_timeout_real` pasó después de integrar la corrección del timeout.
+
+### 9.2. Pruebas de carga de archivos
+
+- Se incorporó `backend/tests/test_uploads.py`.
+- Se ejecutaron 21 pruebas específicas de carga de archivos Python y ZIP: 21 aprobadas.
+- Se comprobaron extensiones no permitidas, rutas inseguras, contenido vacío, UTF-8 inválido, bytes nulos y límites de tamaño.
+- Se probaron ZIP corruptos, rutas peligrosas, límites de archivos y caracteres acumulados, y errores controlados del servicio de IA.
+- Se utilizaron mocks para evitar llamadas reales al proveedor durante las pruebas.
+
+### 9.3. Resultado de la suite completa
+
+- Comando ejecutado: `python -m pytest tests -v`.
+- Directorio de ejecución: `backend`.
+- Resultado: 40 pruebas aprobadas y 0 fallidas.
+- Duración registrada: 1,59 segundos.
+- La salida se guardó en `docs/evidencias/semana-2/pytest-resultados.txt`.
+- El resultado anterior que contenía un fallo de timeout queda como antecedente histórico; la ejecución posterior confirmó que esa prueba también pasó.
+
+### 9.4. Pendientes de documentación y entrega
+
+- Revisar la arquitectura para reflejar la carga de Python y ZIP implementada.
+- Verificar los ADR-001 a ADR-004 y distinguir las decisiones aprobadas de las pendientes de confirmación.
+- Actualizar la revisión de seguridad con los controles comprobados y las limitaciones restantes.
+- Verificar las evidencias de las tres versiones de prompts y las capturas requeridas.
+- Revisar los cambios de Git antes de preparar el siguiente commit y subir la rama.
+- Mantener pendiente la revisión del Pull Request por el equipo.

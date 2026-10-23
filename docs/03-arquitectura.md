@@ -204,7 +204,29 @@ Cada hallazgo incluye:
 
 El servicio devuelve errores HTTP controlados para varios escenarios conocidos del proveedor. El tratamiento de todos los tipos de timeout aún requiere corrección y nueva verificación.
 
-La carga de archivos, el análisis de archivos ZIP y la consulta de repositorios no se han confirmado como endpoints implementados.
+La consulta de repositorios no se ha confirmado como endpoint implementado.
+
+### 6.3. POST `/api/v1/archivos`
+
+**Propósito:** analizar un archivo Python individual.
+
+- Entrada: archivo multipart/form-data en el campo `archivo`.
+- Formato permitido: `.py`.
+- Tamaño máximo documentado: 1 MiB.
+- Longitud máxima del código: 12.000 caracteres.
+- Requiere codificación UTF-8.
+- Rechaza entradas inválidas según las validaciones del backend.
+- El contenido no debe ejecutarse como código.
+
+### 6.4. POST `/api/v1/archivos/zip`
+
+**Propósito:** analizar los archivos Python de un proyecto ZIP.
+
+- Entrada: archivo multipart/form-data en el campo `archivo`.
+- Tamaño máximo documentado del ZIP: 5 MiB.
+- Las pruebas contemplan límites en la cantidad de archivos y el tamaño del código.
+- Se verifican ZIP corruptos y rutas inseguras.
+- El código recibido no debe ejecutarse.
 
 ## 7. Flujo de análisis
 

@@ -37,57 +37,47 @@ de no exposición de una clave ficticia aprobada. La revisión completa de
 credenciales y errores sigue pendiente.
 
 ## 2. Validación de archivos y entradas
+**Riesgo:** recepción de entradas vacías, demasiado grandes o de tipos no permitidos.
 
-**Riesgo:** recepción de entradas vacías, demasiado grandes o de tipos
-no permitidos.
+### Controles identificados
 
-### Controles verificados
+- `backend/app/services/files.py` acepta archivos `.py` y valida el nombre.
+- El límite de carga individual es de 1 MiB.
+- Se exige UTF-8 y se rechazan archivos vacíos y bytes nulos.
+- El código está limitado a 12.000 caracteres.
+- Los límites excedidos producen HTTP 413 y las entradas inválidas HTTP 400.
+- El archivo se lee en memoria, sin guardarlo ni ejecutarlo.
 
--   El modelo `SolicitudAnalisis` exige un nombre de archivo de entre 1
-    y 255 caracteres.
--   El modelo limita el código recibido a entre 1 y 12.000 caracteres.
--   Las pruebas automatizadas verifican el rechazo de entradas inválidas
-    y la estructura de las respuestas del análisis.
--   Las pruebas de validación de entradas pasaron en la última ejecución
-    completa de pytest.
+### Evidencia
 
-### Controles pendientes
+- `backend/tests/test_uploads.py` contiene pruebas de carga válida, extensiones, rutas, codificación y límites.
+- Las 21 pruebas específicas de carga pasaron en la ejecución registrada.
 
--   Confirmar los tipos de archivo permitidos cuando exista carga de
-    archivos.
--   Verificar un límite de tamaño en bytes para archivos recibidos.
--   Comprobar la validación del contenido real de los archivos.
--   Verificar el rechazo seguro de archivos inválidos o no permitidos.
-
-**Estado:** validación de entradas de texto verificada mediante código y
-pruebas. Controles de carga de archivos pendientes de verificar.
+**Estado:** controles implementados y escenarios automatizados aprobados. Esto no sustituye una auditoría exhaustiva.
 
 ## 3. Seguridad de archivos ZIP
+**Riesgo:** archivos comprimidos maliciosos, rutas inseguras y consumo excesivo de recursos.
 
-**Riesgo:** archivos comprimidos maliciosos, rutas inseguras y consumo
-excesivo de recursos.
+### Controles identificados
 
-### Resultado de la revisión inicial
+- `backend/app/services/zip_files.py` limita el ZIP a 5 MiB.
+- Se permiten hasta 100 entradas y 20 MiB de tamaño descomprimido declarado.
+- Se admiten como máximo cinco archivos Python, de hasta 1 MiB cada uno.
+- El código acumulado está limitado a 12.000 caracteres.
+- Se rechazan rutas inseguras, nombres duplicados, entradas cifradas y tipos de archivo especiales.
+- El contenido se procesa en memoria, sin extracción a disco ni ejecución del código.
+- Se comprueba la codificación UTF-8 y se rechazan bytes nulos.
 
--   Se buscaron referencias a `UploadFile`, `zipfile`, `ZipFile`,
-    `extractall`, `extract()` y operaciones relacionadas con carga y
-    extracción.
--   La búsqueda no devolvió coincidencias en `backend/app`.
--   No se ha identificado una implementación de carga o extracción ZIP
-    en los archivos examinados.
+### Evidencia
 
-### Controles pendientes
+- `backend/tests/test_uploads.py` comprueba ZIP válidos, corruptos, rutas inseguras, límites y contenido inválido.
+- Las 21 pruebas específicas de carga pasaron.
 
--   Confirmar si la carga y el procesamiento de archivos ZIP forman
-    parte del alcance actual del MVP.
--   Impedir la extracción fuera del directorio autorizado.
--   Limitar el tamaño total descomprimido y la cantidad de archivos.
--   Rechazar rutas de extracción inseguras y archivos no permitidos.
--   Controlar errores y prevenir el consumo excesivo de recursos.
+### Hallazgo pendiente
 
-**Estado:** no se encontró una implementación de carga o extracción ZIP
-en `backend/app`. Los controles correspondientes están pendientes de
-verificación.
+La implementación no captura explícitamente todas las posibles excepciones de descompresión, como `zlib.error` o `NotImplementedError`. Conviene coordinar pruebas adicionales con el responsable del backend.
+
+**Estado:** controles principales implementados y pruebas existentes aprobadas. La gestión de todos los errores posibles de descompresión sigue pendiente de verificación.
 
 ## 4. Repositorios autorizados
 
@@ -145,131 +135,79 @@ de verificación.
 completa del aislamiento sigue pendiente.
 
 ## 6. Límites de tiempo y recursos
+**Riesgo:** consumo excesivo de recursos y errores por tiempos de espera del proveedor de IA.
 
-**Riesgo:** solicitudes bloqueadas o consumo excesivo de recursos.
+### Controles y pruebas
 
-### Controles verificados
+- El backend limita las entradas y configura el tiempo de espera mediante `LLM_TIMEOUT_SECONDS`.
+- `test_servicio_controla_timeout_504` pasó.
+- `test_servicio_controla_timeout_real` pasó después de integrar la corrección del backend.
+- La ejecución completa del 22 de octubre de 2026 registró 40 pruebas aprobadas y ninguna fallida.
 
--   El modelo `SolicitudAnalisis` limita el código recibido a 12.000
-    caracteres.
--   El servicio configura un tiempo máximo de espera mediante
-    `LLM_TIMEOUT_SECONDS`.
--   La prueba `test_servicio_controla_timeout_504` pasó al simular un
-    error de timeout del proveedor.
--   La última ejecución completa de pytest confirmó que otras 15 pruebas
-    pasaron.
+**Estado:** el problema de timeout detectado anteriormente quedó corregido y verificado mediante la prueba específica y la suite completa.
 
-### Hallazgo de QA
-
--   La última ejecución completa recopiló 16 pruebas: 15 aprobadas y 1
-    fallida.
--   La prueba `test_servicio_controla_timeout_real` falló cuando se
-    propagó una excepción `httpx.TimeoutException`.
--   La excepción no se transformó en el `LLMError` controlado que
-    esperaba la prueba.
--   El manejo de esta excepción requiere corrección y nueva
-    verificación.
-
-### Controles pendientes
-
--   Coordinar con el responsable del backend la corrección del timeout.
--   Volver a ejecutar la prueba que falló.
--   Ejecutar nuevamente toda la suite de pytest.
--   Verificar límites de recursos adicionales cuando se implementen
-    nuevas funcionalidades.
-
-**Estado:** límites de entrada y configuración de timeout identificados.
-Existe un fallo de QA en el tratamiento de `httpx.TimeoutException`,
-pendiente de corrección y nueva verificación.
+**Pendiente:** verificar límites adicionales de recursos cuando se incorporen nuevas funcionalidades.
 
 ## 7. Protección de registros (logs)
+**Riesgo:** exposición de código sensible o credenciales en registros y mensajes de error.
 
-**Riesgo:** exposición de código sensible o credenciales en los
-registros y mensajes de error.
+### Evidencia automatizada
 
-### Controles verificados
+- `test_endpoint_no_expone_clave_en_error_proveedor` pasó.
+- `test_servicio_no_registra_claves_ni_codigo_sensible` pasó.
+- Las pruebas verifican escenarios controlados de errores y protección de información sensible.
 
--   El servicio utiliza un registrador mediante
-    `logging.getLogger(__name__)`.
--   Los registros de éxito incluyen el modelo, la duración y el uso de
-    tokens.
--   Los registros de errores del proveedor incluyen el modelo y el
-    código de estado.
--   En las instrucciones de registro examinadas no se encontró la
-    inclusión directa de claves de API ni del código Python analizado.
--   La prueba `test_endpoint_no_expone_clave_en_error_proveedor` pasó.
-    La respuesta HTTP no reveló la clave ficticia incluida en el error
-    simulado.
-
-### Controles pendientes
-
--   Comprobar mediante pruebas específicas que los registros no
-    contengan credenciales ni código sensible.
--   Revisar otros componentes que puedan generar registros.
--   Verificar que los mensajes de error permanezcan controlados ante
-    excepciones inesperadas.
-
-**Estado:** revisión estática inicial de los registros realizada y
-prueba automatizada de protección de claves aprobada. La verificación
-completa sigue pendiente.
+**Estado:** pruebas automatizadas aprobadas para los escenarios cubiertos. No se ha acreditado con esta evidencia una auditoría de todos los registros en un entorno de despliegue.
 
 ## 8. Instrucciones maliciosas dirigidas a la IA
+**Riesgo:** comentarios o cadenas Python que intenten modificar las instrucciones del sistema, manipular el análisis o revelar información confidencial.
 
-**Riesgo:** comentarios o cadenas Python que intenten modificar las
-instrucciones del sistema, manipular el análisis o revelar información
-confidencial.
+### Controles y evidencia
 
-### Controles verificados en el prompt V1
+- El prompt V1 establece que el código recibido no debe ejecutarse.
+- Los comentarios y las cadenas del código deben tratarse como datos, no como instrucciones.
+- `test_servicio_trata_codigo_malicioso_como_datos` pasó en la suite automatizada.
 
--   El archivo `backend/app/prompts/system_v1.md` indica que el código
-    recibido nunca debe ejecutarse.
--   Las reglas establecen que los comentarios y las cadenas del código
-    deben tratarse como datos, nunca como instrucciones.
--   Se exige que los hallazgos tengan evidencia concreta y que no se
-    inventen vulnerabilidades.
--   Se solicita una respuesta conforme al esquema JSON definido.
--   El servicio utiliza `response_schema=InformeModelo` y valida la
-    respuesta mediante `InformeModelo.model_validate_json()`.
--   La prueba `test_servicio_controla_json_invalido` pasó en la última
-    ejecución completa.
+**Limitación:** la prueba automatizada no demuestra por sí sola la resistencia del modelo generativo real frente a todos los intentos de manipulación.
 
-### Controles pendientes
+**Pendiente:** recopilar y comparar los resultados reales de las tres versiones de prompts, incluidas las pruebas específicas de instrucciones maliciosas.
 
--   Crear pruebas específicas con comentarios y cadenas que contengan
-    instrucciones maliciosas.
--   Comprobar que el análisis no obedezca esas instrucciones ni cambie
-    las reglas del sistema.
--   Evaluar el comportamiento frente a intentos de manipulación del
-    modelo.
-
-**Estado:** instrucciones de seguridad y validación estructural
-identificadas en el código. La resistencia ante instrucciones maliciosas
-sigue pendiente de pruebas específicas.
+**Estado:** controles documentados y prueba automatizada aprobada; evaluación completa de las versiones de prompts pendiente.
 
 ## 9. Evidencias y seguimiento
+### Resultados de pytest
 
--   Existe el archivo `docs/evidencias/semana-2/pytest-resultados.txt`.
--   La última ejecución completa de pytest registró 15 pruebas aprobadas
-    y 1 fallida.
--   El resultado de la prueba de timeout debe registrarse y actualizarse
-    después de la corrección.
--   Las capturas, los resultados y las demás evidencias deben reflejar
-    ejecuciones reales.
--   No se marcará ninguna protección como aprobada sin la verificación
-    correspondiente.
+- Prueba específica de timeout: aprobada.
+- Pruebas específicas de carga Python y ZIP: 21 aprobadas.
+- Suite completa ejecutada el 22 de octubre de 2026: 40 aprobadas, 0 fallidas.
+- Duración de la suite completa: 1,59 segundos.
+- Código de salida de pytest: 0.
 
-**Estado:** evidencias iniciales disponibles. Pendiente actualizar los
-resultados de pytest después de corregir y verificar el timeout.
+### Evidencias
+
+- `docs/evidencias/semana-2/pytest-resultados.txt`: salida de la última ejecución completa.
+- `backend/tests/test_uploads.py`: pruebas automatizadas de carga de archivos.
+- `docs/evidencias/semana-2/bitacora.md`: seguimiento de problemas y correcciones.
+
+Los resultados anteriores de 15 aprobadas y 1 fallida, así como las ejecuciones parciales, son históricos. No deben presentarse como el resultado actual.
+
+**Estado:** suite completa aprobada. La revisión de seguridad conserva los hallazgos adicionales que requieren verificación.
 
 ## 10. Observaciones
+Esta revisión recoge los controles identificados en el código y los resultados de pruebas realmente ejecutadas.
 
-Esta revisión documenta los controles identificados y los resultados
-obtenidos durante la revisión inicial.
+### Conclusiones
 
-Las búsquedas estáticas no demuestran por sí solas la ausencia total de
-vulnerabilidades. Los controles pendientes deberán contrastarse con la
-implementación completa del backend y con las decisiones aprobadas por
-el equipo.
+- La carga de archivos Python y ZIP está implementada y cuenta con pruebas automatizadas aprobadas.
+- La prueba de timeout que falló anteriormente pasó después de la corrección del backend.
+- La suite completa registró 40 aprobadas y 0 fallidas.
+- Las pruebas con mocks no acreditan por sí solas el comportamiento del proveedor de IA real.
 
-El fallo de timeout debe comunicarse al responsable del backend y
-verificarse nuevamente antes de cerrar la revisión de QA.
+### Pendientes de cierre
+
+- Coordinar pruebas adicionales para errores de descompresión ZIP.
+- Confirmar los controles de acceso a repositorios públicos autorizados cuando esa funcionalidad esté implementada.
+- Recopilar evidencias de las tres versiones de prompts.
+- Mantener documentados los controles que todavía no se han verificado.
+
+No deben marcarse como aprobadas las protecciones que no cuentan con evidencia suficiente.
