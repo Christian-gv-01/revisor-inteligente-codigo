@@ -1,0 +1,49 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.2, pytest-9.1.1, pluggy-1.7.0 -- C:\Users\andyj\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\andyj\Documents\GitHub\revisor-inteligente-codigo\backend
+plugins: anyio-4.15.1
+collecting ... collected 40 items
+
+tests/test_analysis.py::test_analizar_devuelve_json_valido PASSED        [  2%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos0] PASSED [  5%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos1] PASSED [  7%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos2] PASSED [ 10%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos3] PASSED [ 12%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos4] PASSED [ 15%]
+tests/test_analysis.py::test_analizar_rechaza_entradas_invalidas[datos5] PASSED [ 17%]
+tests/test_analysis.py::test_analizar_controla_error_del_servicio PASSED [ 20%]
+tests/test_health.py::test_health_endpoint_returns_success PASSED        [ 22%]
+tests/test_llm.py::test_servicio_acepta_respuesta_json_valida PASSED     [ 25%]
+tests/test_llm.py::test_servicio_controla_respuesta_vacia PASSED         [ 27%]
+tests/test_llm.py::test_servicio_controla_error_429 PASSED               [ 30%]
+tests/test_llm.py::test_servicio_controla_timeout_504 PASSED             [ 32%]
+tests/test_llm.py::test_servicio_controla_json_invalido PASSED           [ 35%]
+tests/test_llm.py::test_servicio_controla_timeout_real PASSED            [ 37%]
+tests/test_llm.py::test_endpoint_no_expone_clave_en_error_proveedor PASSED [ 40%]
+tests/test_llm.py::test_servicio_rechaza_linea_inexistente PASSED        [ 42%]
+tests/test_llm.py::test_servicio_trata_codigo_malicioso_como_datos PASSED [ 45%]
+tests/test_llm.py::test_servicio_no_registra_claves_ni_codigo_sensible PASSED [ 47%]
+tests/test_uploads.py::test_archivo_python_valido PASSED                 [ 50%]
+tests/test_uploads.py::test_archivo_python_rechaza_entradas_invalidas[extension-no-permitida] PASSED [ 52%]
+tests/test_uploads.py::test_archivo_python_rechaza_entradas_invalidas[ruta-insegura] PASSED [ 55%]
+tests/test_uploads.py::test_archivo_python_rechaza_entradas_invalidas[contenido-vacio] PASSED [ 57%]
+tests/test_uploads.py::test_archivo_python_rechaza_entradas_invalidas[utf8-invalido] PASSED [ 60%]
+tests/test_uploads.py::test_archivo_python_rechaza_entradas_invalidas[byte-nulo] PASSED [ 62%]
+tests/test_uploads.py::test_archivo_python_rechaza_entradas_invalidas[codigo-supera-12000] PASSED [ 65%]
+tests/test_uploads.py::test_archivo_python_rechaza_entradas_invalidas[archivo-supera-1-mib] PASSED [ 67%]
+tests/test_uploads.py::test_archivo_python_controla_error_llm PASSED     [ 70%]
+tests/test_uploads.py::test_zip_valido PASSED                            [ 72%]
+tests/test_uploads.py::test_zip_rechaza_extension_incorrecta PASSED      [ 75%]
+tests/test_uploads.py::test_zip_corrupto PASSED                          [ 77%]
+tests/test_uploads.py::test_zip_sin_archivos_python PASSED               [ 80%]
+tests/test_uploads.py::test_zip_rechaza_ruta_insegura PASSED             [ 82%]
+tests/test_uploads.py::test_zip_rechaza_mas_de_cinco_archivos_python PASSED [ 85%]
+tests/test_uploads.py::test_zip_rechaza_codigo_python_invalido[utf8-invalido] PASSED [ 87%]
+tests/test_uploads.py::test_zip_rechaza_codigo_python_invalido[byte-nulo] PASSED [ 90%]
+tests/test_uploads.py::test_zip_rechaza_codigo_python_invalido[codigo-vacio] PASSED [ 92%]
+tests/test_uploads.py::test_zip_rechaza_exceso_de_caracteres_acumulados PASSED [ 95%]
+tests/test_uploads.py::test_zip_rechaza_carga_superior_a_cinco_mib PASSED [ 97%]
+tests/test_uploads.py::test_zip_controla_error_llm PASSED                [100%]
+
+============================= 40 passed in 1.59s ==============================
