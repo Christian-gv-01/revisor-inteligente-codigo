@@ -2,8 +2,9 @@
 from io import BytesIO
 from pathlib import PurePosixPath
 from zipfile import ZipFile, BadZipFile, LargeZipFile
-
+import zlib
 from fastapi import HTTPException, UploadFile
+
 
 
 # ==========================================
@@ -222,8 +223,16 @@ async def leer_zip_seguro(
 
             return resultado
 
-    except (BadZipFile, LargeZipFile, EOFError, RuntimeError) as error:
+    
+    except (
+        BadZipFile,
+        LargeZipFile,
+        EOFError,
+        RuntimeError,
+        zlib.error,
+    ) as error:
         raise HTTPException(
             status_code=400,
             detail="Archivo ZIP inválido o no compatible.",
         ) from error
+
