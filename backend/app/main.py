@@ -1,14 +1,16 @@
+﻿
 from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.concurrency import run_in_threadpool
-from app.services.files import leer_python_seguro
-from app.models.analisis import RespuestaAnalisisZIP
-from app.services.zip_files import leer_zip_seguro
 
 from app.models.analisis import (
-    SolicitudAnalisis,
+    InformeModelo,
     RespuestaAnalisis,
+    RespuestaAnalisisZIP,
+    SolicitudAnalisis,
 )
+from app.services.files import leer_python_seguro
 from app.services.llm import analizar_codigo, LLMError
+from app.services.zip_files import leer_zip_seguro
 
 
 app = FastAPI(
@@ -16,6 +18,27 @@ app = FastAPI(
     description="API para el análisis inteligente de código Python",
     version="0.1.0",
 )
+
+
+def construir_respuesta(
+    archivo: str,
+    informe: InformeModelo,
+) -> RespuestaAnalisis:
+    """
+    Convierte el informe interno en una respuesta de la API.
+
+    Conserva el estado de abstención, el motivo y las fuentes.
+    """
+
+    motivo = informe.motivo_abstencion
+
+    return RespuestaAnalisis(
+        archivo=archivo,
+        estado="abstenido" if motivo else "analizado",
+        hallazgos=informe.hallazgos,
+        fuentes=informe.fuentes,
+        mensaje=motivo,
+    )
 
 
 @app.get("/health")
@@ -33,10 +56,7 @@ def health_check():
 )
 async def analizar(solicitud: SolicitudAnalisis):
     """
-    Recibe un fragmento Python y devuelve
-    hallazgos generados por inteligencia artificial.
-
-    El código recibido nunca se ejecuta.
+    Analiza un fragmento Python sin ejecutar su contenido.
     """
 
     try:
@@ -45,10 +65,9 @@ async def analizar(solicitud: SolicitudAnalisis):
             solicitud.codigo,
         )
 
-        return RespuestaAnalisis(
-            archivo=solicitud.archivo,
-            estado="analizado",
-            hallazgos=informe.hallazgos,
+        return construir_respuesta(
+            solicitud.archivo,
+            informe,
         )
 
     except LLMError as error:
@@ -56,7 +75,8 @@ async def analizar(solicitud: SolicitudAnalisis):
             status_code=error.codigo,
             detail=str(error),
         ) from error
-    
+
+
 @app.post(
     "/api/v1/archivos",
     response_model=RespuestaAnalisis,
@@ -65,8 +85,7 @@ async def analizar_archivo(
     archivo: UploadFile = File(...),
 ):
     """
-    Recibe un archivo Python, valida su contenido
-    y lo analiza sin ejecutar el código recibido.
+    Valida y analiza un archivo Python sin ejecutarlo.
     """
 
     try:
@@ -77,10 +96,9 @@ async def analizar_archivo(
             codigo,
         )
 
-        return RespuestaAnalisis(
-            archivo=nombre,
-            estado="analizado",
-            hallazgos=informe.hallazgos,
+        return construir_respuesta(
+            nombre,
+            informe,
         )
 
     except LLMError as error:
@@ -92,6 +110,7 @@ async def analizar_archivo(
     finally:
         await archivo.close()
 
+
 @app.post(
     "/api/v1/archivos/zip",
     response_model=RespuestaAnalisisZIP,
@@ -101,14 +120,13 @@ async def analizar_zip(
 ):
     """
     Analiza archivos Python contenidos en un ZIP.
-    No ejecuta ni importa código del usuario.
+    Nunca ejecuta ni importa el código recibido.
     """
 
     try:
         archivos = await leer_zip_seguro(archivo)
 
-        # Presupuesto inicial: máximo cinco llamadas
-        # al modelo por solicitud ZIP.
+        # Limitar el consumo del proveedor de IA.
         if len(archivos) > 5:
             raise HTTPException(
                 status_code=413,
@@ -124,10 +142,9 @@ async def analizar_zip(
             )
 
             informes.append(
-                RespuestaAnalisis(
-                    archivo=nombre,
-                    estado="analizado",
-                    hallazgos=informe.hallazgos,
+                construir_respuesta(
+                    nombre,
+                    informe,
                 )
             )
 
@@ -146,4 +163,3 @@ async def analizar_zip(
 
     finally:
         await archivo.close()
-
