@@ -13,12 +13,16 @@ COLLECTION_NAMES = (
     "contexto_proyecto",
 )
 
-# Umbral provisional: debe calibrarse con pruebas.
+# Umbral máximo de distancia permitido.
+# Puede configurarse mediante RAG_MAX_DISTANCE.
 try:
-    MAX_DISTANCE = float(os.getenv("RAG_MAX_DISTANCE", "0.75"))
+    MAX_DISTANCE = float(
+        os.getenv("RAG_MAX_DISTANCE", "0.75")
+    )
 except (TypeError, ValueError):
     MAX_DISTANCE = 0.75
 
+# La distancia coseno de ChromaDB se limita a [0, 2].
 MAX_DISTANCE = max(0.0, min(MAX_DISTANCE, 2.0))
 
 
@@ -31,11 +35,19 @@ def buscar_fragmentos(
     limite: int = 3,
 ) -> list[dict]:
     """
-    Recupera fragmentos de las colecciones disponibles,
-    filtra por distancia y conserva sus fuentes originales.
+    Recupera fragmentos de las colecciones disponibles.
+
+    - Busca en seguridad_python y contexto_proyecto.
+    - Descarta resultados que superen el umbral de distancia.
+    - Excluye evidencias históricas de la recuperación ordinaria.
+    - Conserva los metadatos y referencias originales.
+    - Ordena por relevancia semántica.
+    - Aplica el límite individualmente a cada colección.
+    - Evita que el contexto del proyecto desplace las fuentes
+      documentales de seguridad.
     """
 
-    if not pregunta.strip():
+    if not isinstance(pregunta, str) or not pregunta.strip():
         return []
 
     if not DB_PATH.is_dir():
@@ -44,27 +56,39 @@ def buscar_fragmentos(
             "Ejecuta los scripts de ingesta."
         )
 
+    try:
+        limite = int(limite)
+    except (TypeError, ValueError):
+        limite = 3
+
     limite = max(1, min(limite, 10))
-    cliente = chromadb.PersistentClient(path=str(DB_PATH))
+
+    cliente = chromadb.PersistentClient(
+        path=str(DB_PATH)
+    )
 
     try:
         fragmentos = []
         colecciones_disponibles = 0
 
         for nombre_coleccion in COLLECTION_NAMES:
+
+            # Recuperar la colección.
             try:
                 coleccion = cliente.get_collection(
-                    name=nombre_coleccion,
+                    name=nombre_coleccion
                 )
             except Exception:
                 continue
 
             colecciones_disponibles += 1
+
             total = coleccion.count()
 
             if total == 0:
                 continue
 
+            # Recuperar candidatos de cada colección.
             resultados = coleccion.query(
                 query_texts=[pregunta],
                 n_results=min(limite, total),
@@ -81,27 +105,39 @@ def buscar_fragmentos(
             identificadores = resultados["ids"][0] or []
 
             for indice, documento in enumerate(documentos):
+
                 if not documento:
                     continue
 
-                distancia = (
-                    distancias[indice]
-                    if indice < len(distancias)
-                    else None
-                )
-
-                if (
-                    distancia is not None
-                    and distancia > MAX_DISTANCE
-                ):
-                    continue
-
+                # Obtener los metadatos antes de utilizarlos.
                 metadata = (
                     metadatos[indice]
                     if indice < len(metadatos)
                     else None
                 ) or {}
 
+                # Obtener y comprobar la distancia.
+                distancia = (
+                    distancias[indice]
+                    if indice < len(distancias)
+                    else None
+                )
+
+                if distancia is not None:
+                    if distancia > MAX_DISTANCE:
+                        continue
+
+                # Excluir evidencias históricas.
+                ruta_documento = str(
+                    metadata.get("source_path", "")
+                ).replace("\\", "/").lower()
+
+                if ruta_documento.startswith(
+                    "docs/evidencias/"
+                ):
+                    continue
+
+                # Recuperar el identificador original.
                 identificador = (
                     identificadores[indice]
                     if indice < len(identificadores)
@@ -109,16 +145,24 @@ def buscar_fragmentos(
                 )
 
                 ruta = metadata.get("source_path", "")
+
                 es_seguridad = (
                     nombre_coleccion == "seguridad_python"
                 )
 
+                # Construir el fragmento conservando sus fuentes.
                 fragmentos.append({
                     "id": identificador,
                     "texto": documento,
                     "seccion": metadata.get("section", ""),
-                    "documento": metadata.get("document") or ruta,
-                    "fuente": metadata.get("source_name") or ruta,
+                    "documento": (
+                        metadata.get("document")
+                        or ruta
+                    ),
+                    "fuente": (
+                        metadata.get("source_name")
+                        or ruta
+                    ),
                     "url": metadata.get("source_url", ""),
                     "distancia": distancia,
                     "area": metadata.get(
@@ -139,6 +183,7 @@ def buscar_fragmentos(
                     ),
                 })
 
+        # Comprobar que al menos una colección existe.
         if colecciones_disponibles == 0:
             raise RAGNoDisponibleError(
                 "No se encontraron las colecciones de conocimiento. "
@@ -146,14 +191,27 @@ def buscar_fragmentos(
                 "scripts/ingest_proyecto.py."
             )
 
+        # Ordenar por distancia semántica ascendente.
+        # La fuente de seguridad solo desempata distancias iguales.
         fragmentos.sort(
             key=lambda fragmento: (
-                fragmento["distancia"]
-                if fragmento["distancia"] is not None
-                else float("inf")
+                (
+                    fragmento["distancia"]
+                    if fragmento["distancia"] is not None
+                    else float("inf")
+                ),
+                (
+                    0
+                    if fragmento["tipo_fuente"] == "seguridad"
+                    else 1
+                ),
             )
         )
 
+        # IMPORTANTE:
+        # El límite ya se aplica individualmente en cada colección.
+        # No aplicar un segundo límite global porque podría eliminar
+        # referencias de seguridad relevantes.
         return fragmentos
 
     finally:

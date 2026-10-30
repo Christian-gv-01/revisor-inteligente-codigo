@@ -163,11 +163,12 @@ export function HomePage() {
   function exportReport() {
     if (!result) return;
     const report = {
-      modo: result.demo ? "demostracion_sin_ia" : "backend",
-      fecha: new Date().toISOString(),
-      archivos: result.archivos.map((f) => f.nombre),
-      hallazgos: result.hallazgos,
-    };
+  modo: result.demo ? "demostracion_sin_ia" : "backend",
+  fecha: new Date().toISOString(),
+  archivos: result.archivos.map((f) => f.nombre),
+  fuentes: result.fuentes ?? [],
+  hallazgos: result.hallazgos,
+};
     const url = URL.createObjectURL(
       new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }),
     );

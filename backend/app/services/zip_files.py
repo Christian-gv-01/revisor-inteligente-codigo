@@ -3,8 +3,8 @@ from io import BytesIO
 from pathlib import PurePosixPath
 from zipfile import ZipFile, BadZipFile, LargeZipFile
 import zlib
-from fastapi import HTTPException, UploadFile
 
+from fastapi import HTTPException, UploadFile
 
 
 # ==========================================
@@ -73,26 +73,41 @@ async def leer_zip_seguro(
             # ==========================================
 
             for entrada in entradas:
+
+                # Recuperar el nombre original del ZIP.
+                # Python puede normalizar las barras invertidas
+                # en entrada.filename, pero orig_filename
+                # conserva el nombre original recibido.
+                nombre_original = getattr(
+                    entrada,
+                    "orig_filename",
+                    entrada.filename,
+                )
+
                 nombre = entrada.filename
 
-                ruta = PurePosixPath(nombre.replace("\\", "/"))
+                # Normalizar únicamente para comprobar rutas.
+                ruta = PurePosixPath(
+                    nombre_original.replace("\\", "/")
+                )
 
                 # Bloquear rutas peligrosas.
                 if (
-                    not nombre
-                    or nombre.startswith(("/", "\\"))
-                    or "\\" in nombre
-                    or ":" in nombre
+                    not nombre_original
+                    or "\x00" in nombre_original
+                    or nombre_original.startswith(("/", "\\"))
+                    or "\\" in nombre_original
+                    or ":" in nombre_original
                     or ruta.is_absolute()
                     or ".." in ruta.parts
-                    or nombre in nombres
+                    or nombre_original in nombres
                 ):
                     raise HTTPException(
                         status_code=400,
                         detail="Ruta ZIP insegura.",
                     )
 
-                nombres.add(nombre)
+                nombres.add(nombre_original)
 
                 # Detectar enlaces simbólicos y
                 # otros tipos de archivo especiales.
@@ -223,7 +238,6 @@ async def leer_zip_seguro(
 
             return resultado
 
-    
     except (
         BadZipFile,
         LargeZipFile,
@@ -235,4 +249,3 @@ async def leer_zip_seguro(
             status_code=400,
             detail="Archivo ZIP inválido o no compatible.",
         ) from error
-

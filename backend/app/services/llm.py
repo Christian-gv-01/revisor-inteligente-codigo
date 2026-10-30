@@ -2,6 +2,7 @@
 import json
 import logging
 import os
+import re
 import time
 from pathlib import Path
 
@@ -64,6 +65,102 @@ def _es_fuente_seguridad(fragmento: dict) -> bool:
     )
 
 
+def _construir_consulta_rag(codigo: str) -> str:
+    """
+    Construye una consulta descriptiva para mejorar la recuperacion RAG.
+
+    ChromaDB recupera mejor la documentacion cuando recibe el concepto
+    de seguridad que representa el codigo, en lugar de recibir solamente
+    el codigo fuente. Esta funcion solo inspecciona texto: nunca ejecuta
+    ni importa el codigo analizado.
+
+    Si no identifica un patron conocido, conserva el codigo original
+    como consulta para no perder la recuperacion general.
+    """
+
+    if not isinstance(codigo, str) or not codigo.strip():
+        return ""
+
+    descripciones = []
+
+    # Ejecucion dinamica de expresiones o instrucciones.
+    if re.search(r"\beval\s*\(", codigo, re.IGNORECASE):
+        descripciones.append(
+            "Uso inseguro de eval con entradas no confiables "
+            "Python ejecución arbitraria de código"
+        )
+
+    if re.search(r"\bexec\s*\(", codigo, re.IGNORECASE):
+        descripciones.append(
+            "Uso inseguro de exec con entradas no confiables "
+            "Python ejecución arbitraria de código"
+        )
+
+    # Consultas SQL construidas o ejecutadas con datos variables.
+    tiene_ejecucion_sql = re.search(
+        r"\b(?:execute|executemany)\s*\(",
+        codigo,
+        re.IGNORECASE,
+    )
+    tiene_sentencia_sql = re.search(
+        r"\b(?:select|insert|update|delete|replace)\b",
+        codigo,
+        re.IGNORECASE,
+    )
+
+    if tiene_ejecucion_sql and tiene_sentencia_sql:
+        descripciones.append(
+            "Prevención de inyección SQL consultas construidas mediante "
+            "concatenación de entradas del usuario consultas parametrizadas"
+        )
+
+    # Ejecucion de comandos del sistema con valores potencialmente variables.
+    llamada_comando = re.search(
+        r"\b(?:os\s*\.\s*(?:system|popen)|"
+        r"subprocess\s*\.\s*"
+        r"(?:run|call|popen|check_output|check_call))\s*\(",
+        codigo,
+        re.IGNORECASE,
+    )
+    usa_shell = re.search(
+        r"\bshell\s*=\s*true\b",
+        codigo,
+        re.IGNORECASE,
+    )
+
+    if llamada_comando or usa_shell:
+        api_comando = ""
+        if llamada_comando:
+            api_comando = re.sub(
+                r"\s+",
+                "",
+                llamada_comando.group(0),
+            ).split("(")[0]
+
+        if api_comando == "os.system":
+            descripciones.append(
+                "Prevención de inyección de comandos del sistema "
+                "Python os.system con entradas no confiables"
+            )
+        else:
+            detalle_api = (
+                api_comando
+                if api_comando
+                else "subprocess shell=True"
+            )
+            descripciones.append(
+                "Prevención de inyección de comandos del sistema "
+                f"Python {detalle_api} con entradas no confiables"
+            )
+
+    if descripciones:
+        # No se concatena el codigo completo: puede diluir la consulta
+        # descriptiva y empeorar la similitud semantica.
+        return " ".join(descripciones)
+
+    return codigo
+
+
 # =========================================================
 # RECUPERACION DE CONTEXTO MEDIANTE RAG
 # =========================================================
@@ -88,8 +185,10 @@ def _recuperar_contexto_rag(
     try:
         from app.services.rag import buscar_fragmentos
 
+        consulta_rag = _construir_consulta_rag(codigo)
+
         fragmentos = buscar_fragmentos(
-            codigo,
+            consulta_rag,
             limite=3,
         )
 

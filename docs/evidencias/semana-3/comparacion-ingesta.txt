@@ -1,0 +1,20 @@
+﻿Fecha de comprobación: 2026-10-29
+
+Colección: contexto_proyecto
+Registros existentes: 95
+Fragmentos actuales generados: 92
+IDs coincidentes: 92
+Registros antiguos no generados: 3
+Fragmentos actuales ausentes: 0
+
+Registros antiguos identificados:
+- proyecto-750205f5d5286db22c76a561
+- proyecto-77c58b9de8a0f8233720f026
+- proyecto-fab26d9bb321597e700abe23
+
+Origen de los tres registros:
+backend/tests/test_llm.py
+
+La ingesta utiliza upsert y no elimina automáticamente
+los registros anteriores. Los tres IDs se mantienen
+pendientes de revisión antes de una posible eliminación.
