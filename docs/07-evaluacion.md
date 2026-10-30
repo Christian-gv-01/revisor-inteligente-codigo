@@ -143,3 +143,11 @@ Para completar la evaluación de respuestas, el responsable de backend debe conf
 ```
 
 Se debe revisar cada respuesta respecto a `respuesta_referencia`, validar la pertinencia de las citas y la corrección sugerida, y agregar el nuevo resultado al informe conservando la evidencia del bloqueo inicial. Hasta entonces, la entrega acredita funcionamiento del frontend, pruebas del software y recuperación RAG; **no acredita calidad de respuestas completas de IA**.
+
+## 8. Integración posterior del diseño aprobado
+
+Se implementó la propuesta visual v3 elegida por el usuario, con paleta azul noche, turquesa y ámbar, encabezado académico, editor e informe en dos paneles y una sección de trazabilidad del hallazgo seleccionado. El ejemplo inicial pasó a ser `usuarios.py` con nueve líneas y un hallazgo SQL ilustrativo en la línea 6. Los tres patrones originales siguen disponibles en el servicio de demostración y sus pruebas.
+
+La nueva suite del frontend tiene **58 pruebas aprobadas**. Las fuentes de Demo se identifican como referencias ilustrativas sin recuperación RAG; el modo API mantiene la asociación por archivo y los estados de abstención y análisis parcial. Se verificaron en navegador los filtros, la ubicación de líneas, la descarga JSON, la carga de Python, la cancelación, el estado vacío y el error HTTP 503 del backend local. El bloqueo de evaluación con Gemini sigue vigente.
+
+Las [evidencias del rediseño](evidencias/semana-3/redisenointerfaz/README.md) se guardan aparte de la corrida original de recuperación y sus métricas. Las capturas nuevas corresponden a la aplicación React integrada, con viewport de escritorio y móvil.

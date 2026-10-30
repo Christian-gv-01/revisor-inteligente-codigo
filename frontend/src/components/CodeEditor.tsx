@@ -8,6 +8,26 @@ import type { Finding } from "../types/analysis";
 // Recursos locales: el editor no descarga scripts de una CDN.
 self.MonacoEnvironment = { getWorker: () => new EditorWorker() };
 loader.config({ monaco });
+monaco.editor.defineTheme("codeguard-night", {
+  base: "vs-dark",
+  inherit: true,
+  rules: [
+    { token: "keyword", foreground: "C8A6EF" },
+    { token: "string", foreground: "F3CF7E" },
+    { token: "number", foreground: "82DCCF" },
+    { token: "comment", foreground: "8094B5" },
+  ],
+  colors: {
+    "editor.background": "#10192C",
+    "editor.foreground": "#E4ECF8",
+    "editorLineNumber.foreground": "#8299BA",
+    "editorLineNumber.activeForeground": "#F4B65B",
+    "editor.lineHighlightBackground": "#17243B",
+    "editorCursor.foreground": "#19C8BB",
+    "editor.selectionBackground": "#224967",
+    "editorIndentGuide.background1": "#25334A",
+  },
+});
 interface Props {
   code: string;
   filename: string;
@@ -42,7 +62,7 @@ export function CodeEditor({
         endColumn: model.getLineMaxColumn(f.linea),
         message: `${f.titulo}\n${f.correccion_sugerida}`,
         severity:
-          f.severidad === "critica" || f.severidad === "alta"
+          f.severidad === "critica"
             ? monaco.MarkerSeverity.Error
             : monaco.MarkerSeverity.Warning,
       })),
@@ -74,9 +94,9 @@ export function CodeEditor({
   }, [selected, filename, ready]);
   return (
     <Editor
-      height="425px"
+      height="380px"
       language="python"
-      theme="vs-dark"
+      theme="codeguard-night"
       value={code}
       loading={
         <div className="editor-loading">Preparando editor de Python…</div>
@@ -91,8 +111,8 @@ export function CodeEditor({
       options={{
         readOnly,
         minimap: { enabled: false },
-        fontSize: 13,
-        lineHeight: 23,
+        fontSize: 14,
+        lineHeight: 25,
         fontFamily: "Consolas, monospace",
         padding: { top: 20, bottom: 20 },
         scrollBeyondLastLine: false,

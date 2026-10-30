@@ -1,0 +1,12 @@
+
+> frontend@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.5 C:/Users/alexm/Desktop/TITULACION/revisor-inteligente-codigo/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  58 passed (58)
+   Start at  16:59:06
+   Duration  497ms (transform 40%, import 36%, tests 19%, worker 4%)

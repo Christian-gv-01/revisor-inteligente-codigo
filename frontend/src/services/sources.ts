@@ -7,3 +7,8 @@ export function safeSourceUrl(value: string): string | null {
     return null;
   }
 }
+import type { AnalysisResult, Finding, SourceReference } from "../types/analysis";
+
+export function getFindingSources(result: AnalysisResult, finding: Finding): SourceReference[] {
+  return finding.fuentes ?? (result.fuentes ?? []).filter((source) => finding.referencias?.includes(source.id));
+}
