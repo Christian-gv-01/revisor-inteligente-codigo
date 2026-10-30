@@ -1,5 +1,4 @@
-
-import os
+﻿import os
 from pathlib import Path
 
 import chromadb
@@ -13,7 +12,7 @@ COLLECTION_NAMES = (
     "contexto_proyecto",
 )
 
-# Umbral máximo de distancia permitido.
+# Umbral maximo de distancia permitido.
 # Puede configurarse mediante RAG_MAX_DISTANCE.
 try:
     MAX_DISTANCE = float(
@@ -27,7 +26,7 @@ MAX_DISTANCE = max(0.0, min(MAX_DISTANCE, 2.0))
 
 
 class RAGNoDisponibleError(RuntimeError):
-    """Indica que la base de conocimiento no está preparada."""
+    """Indica que la base de conocimiento no esta preparada."""
 
 
 def buscar_fragmentos(
@@ -47,12 +46,17 @@ def buscar_fragmentos(
 
     - Busca en seguridad_python y contexto_proyecto.
     - Descarta resultados que superen el umbral de distancia.
-    - Excluye evidencias históricas de la recuperación ordinaria.
+    - Excluye evidencias historicas de la recuperacion ordinaria.
     - Conserva los metadatos y referencias originales.
-    - Ordena por relevancia semántica.
-    - Aplica el límite individualmente a cada colección.
+    - Ordena por relevancia semantica.
+    - Aplica el limite individualmente a cada coleccion.
     - Evita que el contexto del proyecto desplace las fuentes
       documentales de seguridad.
+
+    La coleccion de seguridad es obligatoria para las consultas
+    generales y para los filtros documentales de seguridad.
+    La coleccion del proyecto es complementaria, salvo cuando
+    se solicita expresamente un filtro propio de esa coleccion.
     """
 
     if not isinstance(pregunta, str) or not pregunta.strip():
@@ -71,50 +75,100 @@ def buscar_fragmentos(
 
     limite = max(1, min(limite, 10))
 
-    cliente = chromadb.PersistentClient(
-        path=str(DB_PATH)
+    tiene_filtros_seguridad = any(
+        isinstance(valor, str) and valor.strip()
+        for valor in (source_name, review_date, effective_date)
     )
+
+    tiene_filtros_proyecto = any(
+        isinstance(valor, str) and valor.strip()
+        for valor in (area, extension, source_type)
+    )
+
+    consultar_seguridad = (
+        not tiene_filtros_proyecto
+        or tiene_filtros_seguridad
+    )
+
+    consultar_proyecto = (
+        not tiene_filtros_seguridad
+        or tiene_filtros_proyecto
+    )
+
+    colecciones_obligatorias = set()
+
+    if consultar_seguridad:
+        colecciones_obligatorias.add("seguridad_python")
+
+    if tiene_filtros_proyecto:
+        colecciones_obligatorias.add("contexto_proyecto")
+
+    try:
+        cliente = chromadb.PersistentClient(
+            path=str(DB_PATH)
+        )
+    except Exception as error:
+        raise RAGNoDisponibleError(
+            "No fue posible conectar con la base vectorial ChromaDB."
+        ) from error
 
     try:
         fragmentos = []
-        colecciones_disponibles = 0
-
-        tiene_filtros_seguridad = any(
-            isinstance(valor, str) and valor.strip()
-            for valor in (source_name, review_date, effective_date)
-        )
-
-        tiene_filtros_proyecto = any(
-            isinstance(valor, str) and valor.strip()
-            for valor in (area, extension, source_type)
-        )
+        colecciones_disponibles = set()
 
         for nombre_coleccion in COLLECTION_NAMES:
 
-            if nombre_coleccion == "seguridad_python":
-                if tiene_filtros_proyecto and not tiene_filtros_seguridad:
-                    continue
+            if (
+                nombre_coleccion == "seguridad_python"
+                and not consultar_seguridad
+            ):
+                continue
 
-            elif nombre_coleccion == "contexto_proyecto":
-                if tiene_filtros_seguridad and not tiene_filtros_proyecto:
-                    continue
+            if (
+                nombre_coleccion == "contexto_proyecto"
+                and not consultar_proyecto
+            ):
+                continue
 
-            # Recuperar la colección.
+            # Recuperar la coleccion.
             try:
                 coleccion = cliente.get_collection(
                     name=nombre_coleccion
                 )
-            except Exception:
+            except Exception as error:
+                if nombre_coleccion in colecciones_obligatorias:
+                    raise RAGNoDisponibleError(
+                        f"La coleccion obligatoria "
+                        f"'{nombre_coleccion}' no esta disponible. "
+                        "Comprueba la ingesta correspondiente."
+                    ) from error
+
+                # El contexto interno es complementario en consultas
+                # generales; su ausencia no invalida la fuente oficial.
                 continue
 
-            colecciones_disponibles += 1
+            colecciones_disponibles.add(nombre_coleccion)
 
-            total = coleccion.count()
+            try:
+                total = coleccion.count()
+            except Exception as error:
+                if nombre_coleccion in colecciones_obligatorias:
+                    raise RAGNoDisponibleError(
+                        f"No fue posible consultar la coleccion "
+                        f"'{nombre_coleccion}'."
+                    ) from error
+                continue
 
             if total == 0:
+                if nombre_coleccion in colecciones_obligatorias:
+                    raise RAGNoDisponibleError(
+                        f"La coleccion obligatoria "
+                        f"'{nombre_coleccion}' esta vacia. "
+                        "Ejecuta la ingesta correspondiente."
+                    )
                 continue
 
-            # Recuperar candidatos de cada colección.
+            # Recuperar candidatos de cada coleccion.
             query_kwargs = {
                 "query_texts": [pregunta],
                 "n_results": min(limite, total),
@@ -158,12 +212,28 @@ def buscar_fragmentos(
                     "$and": condiciones
                 }
 
-            resultados = coleccion.query(**query_kwargs)
+            try:
+                resultados = coleccion.query(**query_kwargs)
+            except Exception as error:
+                if nombre_coleccion in colecciones_obligatorias:
+                    raise RAGNoDisponibleError(
+                        f"Fallo la recuperacion de la coleccion "
+                        f"'{nombre_coleccion}'."
+                    ) from error
+                continue
 
-            documentos = resultados["documents"][0] or []
-            metadatos = resultados["metadatas"][0] or []
-            distancias = resultados["distances"][0] or []
-            identificadores = resultados["ids"][0] or []
+            documentos = (
+                resultados.get("documents", [[]])[0] or []
+            )
+            metadatos = (
+                resultados.get("metadatas", [[]])[0] or []
+            )
+            distancias = (
+                resultados.get("distances", [[]])[0] or []
+            )
+            identificadores = (
+                resultados.get("ids", [[]])[0] or []
+            )
 
             for indice, documento in enumerate(documentos):
 
@@ -188,7 +258,7 @@ def buscar_fragmentos(
                     if distancia > MAX_DISTANCE:
                         continue
 
-                # Excluir evidencias históricas.
+                # Excluir evidencias historicas.
                 ruta_documento = str(
                     metadata.get("source_path", "")
                 ).replace("\\", "/").lower()
@@ -247,15 +317,25 @@ def buscar_fragmentos(
                     ),
                 })
 
-        # Comprobar que al menos una colección existe.
-        if colecciones_disponibles == 0:
+        # La coleccion de seguridad debe estar disponible en consultas
+        # generales, incluso si la coleccion del proyecto existe.
+        if (
+            consultar_seguridad
+            and "seguridad_python" not in colecciones_disponibles
+        ):
+            raise RAGNoDisponibleError(
+                "No se encontro la coleccion obligatoria "
+                "'seguridad_python'. Ejecuta scripts/ingest.py."
+            )
+
+        if not colecciones_disponibles:
             raise RAGNoDisponibleError(
                 "No se encontraron las colecciones de conocimiento. "
                 "Ejecuta scripts/ingest.py y "
                 "scripts/ingest_proyecto.py."
             )
 
-        # Ordenar por distancia semántica ascendente.
+        # Ordenar por distancia semantica ascendente.
         # La fuente de seguridad solo desempata distancias iguales.
         fragmentos.sort(
             key=lambda fragmento: (
@@ -272,9 +352,8 @@ def buscar_fragmentos(
             )
         )
 
-        # IMPORTANTE:
-        # El límite ya se aplica individualmente en cada colección.
-        # No aplicar un segundo límite global porque podría eliminar
+        # El limite se aplica individualmente en cada coleccion.
+        # No aplicar un segundo limite global porque podria eliminar
         # referencias de seguridad relevantes.
         return fragmentos
 
