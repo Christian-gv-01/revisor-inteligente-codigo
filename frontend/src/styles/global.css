@@ -911,6 +911,32 @@ h2 {
   padding: 12px;
   border-radius: 4px;
 }
+.finding-sources { margin-top: 20px; }
+.finding-sources h4 { margin: 0 0 10px; font-size: 12px; line-height: 1.6; }
+.finding-sources > p, .sources-section > p {
+  font-size: 12px; line-height: 1.7; color: #526c78;
+}
+.sources-section { padding: 20px; border-top: 1px solid #e1e9e7; }
+.sources-section h3 { font-size: 14px; margin-bottom: 8px; }
+.sources-list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
+.source-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 7px;
+  padding: 14px; background: #f5faf8; border: 1px solid #dce9e4;
+  border-radius: 6px; overflow-wrap: anywhere; min-width: 0;
+}
+.source-title { font-size: 12px; line-height: 1.6; color: #294d45; }
+.source-section { font-size: 12px; line-height: 1.6; color: #506c65; }
+.source-id { font-size: 11px; line-height: 1.6; color: #5d727a; }
+.source-id code { font-family: Consolas, monospace; }
+.source-link { padding-block: 5px; font-size: 12px; color: #116c5b; text-underline-offset: 3px; }
+.source-link:hover { color: #084f42; }
+.source-unavailable { font-size: 11px; color: #5d727a; }
+.source-warning, .analysis-notice {
+  padding: 12px; border: 1px solid #e7d9ae; border-radius: 5px;
+  background: #fffaed; color: #70551f; overflow-wrap: anywhere;
+}
+.analysis-notice { margin: 15px 20px 0; font-size: 12px; line-height: 1.7; }
+.analysis-notice p { margin-top: 5px; white-space: pre-wrap; }
 .error-notice {
   margin: 15px 20px;
   display: flex;

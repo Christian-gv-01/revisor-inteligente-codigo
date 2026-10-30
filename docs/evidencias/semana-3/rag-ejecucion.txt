@@ -1,0 +1,35 @@
+P01: ok (300.71 ms)
+P02: ok (324.94 ms)
+P03: ok (334.85 ms)
+P04: ok (348.18 ms)
+P05: ok (318.87 ms)
+P06: ok (305.3 ms)
+P07: ok (320.52 ms)
+P08: ok (320.2 ms)
+P09: ok (302.28 ms)
+P10: ok (314.76 ms)
+P11: ok (324.51 ms)
+P12: ok (302.0 ms)
+P13: ok (304.86 ms)
+P14: ok (339.21 ms)
+P15: ok (318.73 ms)
+P16: ok (328.34 ms)
+P17: ok (324.61 ms)
+P18: ok (335.41 ms)
+P19: ok (334.64 ms)
+P20: ok (301.0 ms)
+Evidencias: docs\evidencias\semana-3\rag-20-casos
+{
+  "total": 20,
+  "completados": 20,
+  "errores": 0,
+  "tasa_completitud": 1.0,
+  "latencia_media_ms": 320.196,
+  "latencia_p95_ms": 339.21,
+  "precision_at_k": 0.537037037037037,
+  "recall_at_k": 0.9444444444444444,
+  "mrr_at_k": 0.8888888888888888,
+  "hit_at_k": 0.9444444444444444,
+  "sin_fuentes_fuera_cobertura": 1.0,
+  "casos_con_referencias_esperadas_evaluados": 18
+}

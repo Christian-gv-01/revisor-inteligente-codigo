@@ -1,0 +1,1043 @@
+{
+  "fecha_utc": "2026-10-30T20:48:39.887942+00:00",
+  "python": "3.12.14",
+  "commit_base": "8f27ddc9971f328ae122e6c71e50726ef898c1f0",
+  "cambios_locales": true,
+  "dependencias": {
+    "chromadb": "1.5.9",
+    "google-genai": "2.31.0",
+    "fastapi": "0.156.1",
+    "pydantic": "2.14.1"
+  },
+  "dataset_sha256": "4e880db137d1350fda194482b7b3350320b61bc9e581ae99421804f8dc496fef",
+  "runner_sha256": "2384c8e149f9eabc39bbbe5f2980b62d50deaba1d3841625f581f8456edb34f1",
+  "knowledge_sha256": "2a97df83b2043cd43bce5b6efd8498008890b4bc22bc934304ccb673d00048b8",
+  "llm_sha256": "2d30f3ce934cb6102f75d52c6da3341b6a4a204722edfb7838e28c22b199885d",
+  "rag_sha256": "4aed567df610f17ad9b0af013e9639d84fd39129bf520d54e41d8c246a3aaa4f",
+  "modo": "rag",
+  "k": 3,
+  "casos": [
+    {
+      "id": "P01",
+      "nombre": "SQL concatenado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables\ndentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar\nla estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos,\nusar opciones fijas permitidas por la aplicacion. Validar una entrada\nno sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5732212662696838,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 300.71
+    },
+    {
+      "id": "P02",
+      "nombre": "SQL interpolado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables\ndentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar\nla estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos,\nusar opciones fijas permitidas por la aplicacion. Validar una entrada\nno sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5732212662696838,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 324.94
+    },
+    {
+      "id": "P03",
+      "nombre": "SQL con formato",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables\ndentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar\nla estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos,\nusar opciones fijas permitidas por la aplicacion. Validar una entrada\nno sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5732212662696838,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 334.85
+    },
+    {
+      "id": "P04",
+      "nombre": "Identificador SQL externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables\ndentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar\nla estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos,\nusar opciones fijas permitidas por la aplicacion. Validar una entrada\nno sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5732212662696838,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 348.18
+    },
+    {
+      "id": "P05",
+      "nombre": "SQL parametrizado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables\ndentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar\nla estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos,\nusar opciones fijas permitidas por la aplicacion. Validar una entrada\nno sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5732212662696838,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 318.87
+    },
+    {
+      "id": "P06",
+      "nombre": "Tabla permitida",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables\ndentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar\nla estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos,\nusar opciones fijas permitidas por la aplicacion. Validar una entrada\nno sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5732212662696838,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 305.3
+    },
+    {
+      "id": "P07",
+      "nombre": "os.system externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python os.system con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.4817391633987427,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5658223032951355,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables\ndentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar\nla estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos,\nusar opciones fijas permitidas por la aplicacion. Validar una entrada\nno sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.710336446762085,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 320.52
+    },
+    {
+      "id": "P08",
+      "nombre": "subprocess shell",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python subprocess.run con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.6397630572319031,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.685827374458313,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 320.2
+    },
+    {
+      "id": "P09",
+      "nombre": "os.popen externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python os.popen con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5328900814056396,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5894253849983215,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables\ndentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar\nla estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos,\nusar opciones fijas permitidas por la aplicacion. Validar una entrada\nno sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.735322892665863,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 302.28
+    },
+    {
+      "id": "P10",
+      "nombre": "Comando interpolado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python subprocess.check_output con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.645088255405426,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.6767148971557617,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 314.76
+    },
+    {
+      "id": "P11",
+      "nombre": "Argumentos constantes",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python subprocess.run con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.6397630572319031,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.685827374458313,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 324.51
+    },
+    {
+      "id": "P12",
+      "nombre": "Comandos permitidos",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python subprocess.run con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.6397630572319031,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.685827374458313,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 302.0
+    },
+    {
+      "id": "P13",
+      "nombre": "eval externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Uso inseguro de eval con entradas no confiables Python ejecución arbitraria de código",
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos\nexternos. Si una persona puede controlar la entrada evaluada, puede\nprovocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el\nusuario. Recomendar alternativas que no ejecuten codigo arbitrario.\nast.literal_eval limita la evaluacion a literales, pero tampoco debe\nconsiderarse una solucion universal para entradas no confiables, porque\nentradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.3863523006439209,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45747995376586914,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5810190439224243,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 304.86
+    },
+    {
+      "id": "P14",
+      "nombre": "exec externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 0.5,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Uso inseguro de exec con entradas no confiables Python ejecución arbitraria de código",
+        "fuentes": [
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.48014217615127563,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos\nexternos. Si una persona puede controlar la entrada evaluada, puede\nprovocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el\nusuario. Recomendar alternativas que no ejecuten codigo arbitrario.\nast.literal_eval limita la evaluacion a literales, pero tampoco debe\nconsiderarse una solucion universal para entradas no confiables, porque\nentradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.526955246925354,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5395717620849609,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 339.21
+    },
+    {
+      "id": "P15",
+      "nombre": "eval en función",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Uso inseguro de eval con entradas no confiables Python ejecución arbitraria de código",
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos\nexternos. Si una persona puede controlar la entrada evaluada, puede\nprovocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el\nusuario. Recomendar alternativas que no ejecuten codigo arbitrario.\nast.literal_eval limita la evaluacion a literales, pero tampoco debe\nconsiderarse una solucion universal para entradas no confiables, porque\nentradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.3863523006439209,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45747995376586914,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5810190439224243,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 318.73
+    },
+    {
+      "id": "P16",
+      "nombre": "eval tras strip",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Uso inseguro de eval con entradas no confiables Python ejecución arbitraria de código",
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos\nexternos. Si una persona puede controlar la entrada evaluada, puede\nprovocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el\nusuario. Recomendar alternativas que no ejecuten codigo arbitrario.\nast.literal_eval limita la evaluacion a literales, pero tampoco debe\nconsiderarse una solucion universal para entradas no confiables, porque\nentradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.3863523006439209,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45747995376586914,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando\ndel sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar\nentradas no confiables en comandos. Si una operacion del sistema es\nnecesaria, limitar las opciones permitidas y aplicar el principio de\nminimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos\ny comprobar de donde proceden sus argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5810190439224243,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 328.34
+    },
+    {
+      "id": "P17",
+      "nombre": "Conversión numérica",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 0.5,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "entrada = input(\"Número: \")\ntry:\n    resultado = int(entrada) + 1\nexcept ValueError:\n    resultado = None\n",
+        "fuentes": [
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o\nel significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion\npositiva de entradas cuando corresponda. Si no existe una API segura,\nel escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una\nvalidacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.7221401929855347,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28"
+          },
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos\nexternos. Si una persona puede controlar la entrada evaluada, puede\nprovocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el\nusuario. Recomendar alternativas que no ejecuten codigo arbitrario.\nast.literal_eval limita la evaluacion a literales, pero tampoco debe\nconsiderarse una solucion universal para entradas no confiables, porque\nentradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7248492240905762,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28"
+          }
+        ]
+      },
+      "duracion_ms": 324.61
+    },
+    {
+      "id": "P18",
+      "nombre": "Operaciones fijas",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "mrr_at_k": 0.0,
+        "hit_at_k": 0.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "import operator\noperaciones = {\"sumar\": operator.add, \"restar\": operator.sub}\nopcion = input(\"Operación: \")\nif opcion in operaciones:\n    resultado = operaciones[opcion](2, 3)\n",
+        "fuentes": []
+      },
+      "duracion_ms": 335.41
+    },
+    {
+      "id": "P19",
+      "nombre": "Fuera de cobertura: estadística",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": null,
+        "recall_at_k": null,
+        "mrr_at_k": null,
+        "hit_at_k": null,
+        "sin_fuentes_fuera_cobertura": 1.0
+      },
+      "respuesta": {
+        "consulta_transformada": "def media(valores):\n    return sum(valores) / len(valores) if valores else 0\n",
+        "fuentes": []
+      },
+      "duracion_ms": 334.64
+    },
+    {
+      "id": "P20",
+      "nombre": "Fuera de cobertura: geometría",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": null,
+        "recall_at_k": null,
+        "mrr_at_k": null,
+        "hit_at_k": null,
+        "sin_fuentes_fuera_cobertura": 1.0
+      },
+      "respuesta": {
+        "consulta_transformada": "def area_rectangulo(ancho, alto):\n    return ancho * alto\n",
+        "fuentes": []
+      },
+      "duracion_ms": 301.0
+    }
+  ],
+  "configuracion": {
+    "coleccion": "seguridad_python",
+    "fragmentos": 4,
+    "distancia_maxima": 0.75,
+    "proveedor_ia_utilizado": false,
+    "calentamiento_fuera_de_latencia": true
+  },
+  "resumen": {
+    "total": 20,
+    "completados": 20,
+    "errores": 0,
+    "tasa_completitud": 1.0,
+    "latencia_media_ms": 320.196,
+    "latencia_p95_ms": 339.21,
+    "precision_at_k": 0.537037037037037,
+    "recall_at_k": 0.9444444444444444,
+    "mrr_at_k": 0.8888888888888888,
+    "hit_at_k": 0.9444444444444444,
+    "sin_fuentes_fuera_cobertura": 1.0,
+    "casos_con_referencias_esperadas_evaluados": 18
+  }
+}

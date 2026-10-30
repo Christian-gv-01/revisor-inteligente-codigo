@@ -14,6 +14,7 @@ import {
 } from "../types/analysis";
 
 import { Icon } from "./Icon";
+import { SourceList } from "./SourceList";
 
 interface FindingsPanelProps {
   result: AnalysisResult | null;
@@ -43,6 +44,7 @@ export function FindingsPanel({
   const obtenerFuentes = (
     finding: Finding,
   ): SourceReference[] => {
+    if (finding.fuentes) return finding.fuentes;
     if (!result?.fuentes || !finding.referencias) {
       return [];
     }
@@ -107,6 +109,12 @@ export function FindingsPanel({
         </div>
       )}
 
+      {!loading && result?.estado !== "abstenido" && result?.mensaje && (
+        <div className="analysis-notice" role="status">
+          <strong>Análisis con observaciones</strong>
+          <p>{result.mensaje}</p>
+        </div>
+      )}
       <div className="findings-content">
 
         {/* ================================================= */}
@@ -216,6 +224,9 @@ export function FindingsPanel({
         ) : (
           visible.map((finding) => {
             const fuentes = obtenerFuentes(finding);
+            const missing = [...new Set(finding.referencias ?? [])].filter(
+              (id) => !fuentes.some((source) => source.id === id),
+            );
 
             return (
               <article
@@ -270,39 +281,14 @@ export function FindingsPanel({
 
                 <div className="finding-sources">
                   <h4>
-                    Fuentes que respaldan este hallazgo
+                    Referencias citadas en este hallazgo
                   </h4>
 
+                  {missing.length > 0 && (
+                    <p className="source-warning">Referencias sin metadatos: {missing.join(", ")}. No se puede comprobar su origen.</p>
+                  )}
                   {fuentes.length > 0 ? (
-                    <ul className="sources-list">
-                      {fuentes.map((source) => (
-                        <li key={source.id}>
-                          <strong>
-                            {source.fuente ||
-                              source.documento}
-                          </strong>
-
-                          {source.seccion && (
-                            <span>{source.seccion}</span>
-                          )}
-
-                          <span>
-                            ID: {source.id}
-                          </span>
-
-                          {source.url &&
-                            /^https?:\/\//i.test(source.url) && (
-                              <a
-                                href={source.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Consultar fuente
-                              </a>
-                            )}
-                        </li>
-                      ))}
-                    </ul>
+                    <SourceList sources={fuentes} />
                   ) : (
                     <p>
                       No se han recibido referencias
@@ -321,7 +307,7 @@ export function FindingsPanel({
       {/* FUENTES GENERALES RECUPERADAS */}
       {/* ================================================= */}
 
-      {result && (result.fuentes?.length ?? 0) > 0 && (
+      {!loading && result && (result.fuentes?.length ?? 0) > 0 && (
         <section
           className="sources-section"
           aria-labelledby="sources-title"
@@ -331,40 +317,12 @@ export function FindingsPanel({
           </h3>
 
           <p>
-            Documentos recuperados de ChromaDB.
-            Las referencias individuales se muestran
-            dentro de cada hallazgo cuando el backend
-            proporciona sus identificadores.
+            Documentos recuperados durante el análisis. Su recuperación
+            no implica que respalden todos los hallazgos; revisa las citas
+            indicadas en cada uno.
           </p>
 
-          <ul className="sources-list">
-            {result.fuentes!.map((source) => (
-              <li key={source.id}>
-                <strong>
-                  {source.fuente ||
-                    source.documento ||
-                    "Fuente documental"}
-                </strong>
-
-                {source.seccion && (
-                  <span>{source.seccion}</span>
-                )}
-
-                <span>ID: {source.id}</span>
-
-                {source.url &&
-                  /^https?:\/\//i.test(source.url) && (
-                    <a
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Consultar fuente
-                    </a>
-                  )}
-              </li>
-            ))}
-          </ul>
+          <SourceList sources={result.fuentes!} />
         </section>
       )}
 

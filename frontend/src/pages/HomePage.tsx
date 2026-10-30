@@ -10,6 +10,7 @@ import {
   validateInput,
 } from "../services/api";
 import { analyzeDemo, EXAMPLE_CODE } from "../services/demo";
+import { createReport } from "../services/report";
 import type {
   AnalysisInput,
   AnalysisResult,
@@ -162,13 +163,7 @@ export function HomePage() {
   }
   function exportReport() {
     if (!result) return;
-    const report = {
-  modo: result.demo ? "demostracion_sin_ia" : "backend",
-  fecha: new Date().toISOString(),
-  archivos: result.archivos.map((f) => f.nombre),
-  fuentes: result.fuentes ?? [],
-  hallazgos: result.hallazgos,
-};
+    const report = createReport(result);
     const url = URL.createObjectURL(
       new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }),
     );

@@ -1,0 +1,10 @@
+{
+  "fecha_utc": "2026-10-30T21:09:30.937988+00:00",
+  "health": {
+    "status": "ok",
+    "service": "revisor-inteligente-codigo",
+    "version": "0.1.0"
+  },
+  "analisis_status": 503,
+  "detalle": "Proveedor de IA no configurado."
+}
