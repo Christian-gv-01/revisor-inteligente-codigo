@@ -1,4 +1,4 @@
-﻿
+
 import os
 from pathlib import Path
 
@@ -33,6 +33,14 @@ class RAGNoDisponibleError(RuntimeError):
 def buscar_fragmentos(
     pregunta: str,
     limite: int = 3,
+    *,
+    area: str | None = None,
+    extension: str | None = None,
+    source_type: str | None = None,
+    source_name: str | None = None,
+    section: str | None = None,
+    review_date: str | None = None,
+    effective_date: str | None = None,
 ) -> list[dict]:
     """
     Recupera fragmentos de las colecciones disponibles.
@@ -71,7 +79,25 @@ def buscar_fragmentos(
         fragmentos = []
         colecciones_disponibles = 0
 
+        tiene_filtros_seguridad = any(
+            isinstance(valor, str) and valor.strip()
+            for valor in (source_name, review_date, effective_date)
+        )
+
+        tiene_filtros_proyecto = any(
+            isinstance(valor, str) and valor.strip()
+            for valor in (area, extension, source_type)
+        )
+
         for nombre_coleccion in COLLECTION_NAMES:
+
+            if nombre_coleccion == "seguridad_python":
+                if tiene_filtros_proyecto and not tiene_filtros_seguridad:
+                    continue
+
+            elif nombre_coleccion == "contexto_proyecto":
+                if tiene_filtros_seguridad and not tiene_filtros_proyecto:
+                    continue
 
             # Recuperar la colección.
             try:
@@ -89,15 +115,50 @@ def buscar_fragmentos(
                 continue
 
             # Recuperar candidatos de cada colección.
-            resultados = coleccion.query(
-                query_texts=[pregunta],
-                n_results=min(limite, total),
-                include=[
+            query_kwargs = {
+                "query_texts": [pregunta],
+                "n_results": min(limite, total),
+                "include": [
                     "documents",
                     "metadatas",
                     "distances",
                 ],
-            )
+            }
+
+            if nombre_coleccion == "seguridad_python":
+                filtros_metadata = {
+                    "source_name": source_name,
+                    "section": section,
+                    "review_date": review_date,
+                    "effective_date": effective_date,
+                }
+
+            elif nombre_coleccion == "contexto_proyecto":
+                filtros_metadata = {
+                    "area": area,
+                    "extension": extension,
+                    "source_type": source_type,
+                    "section": section,
+                }
+
+            else:
+                filtros_metadata = {}
+
+            condiciones = [
+                {campo: {"$eq": valor.strip()}}
+                for campo, valor in filtros_metadata.items()
+                if isinstance(valor, str) and valor.strip()
+            ]
+
+            if len(condiciones) == 1:
+                query_kwargs["where"] = condiciones[0]
+
+            elif len(condiciones) > 1:
+                query_kwargs["where"] = {
+                    "$and": condiciones
+                }
+
+            resultados = coleccion.query(**query_kwargs)
 
             documentos = resultados["documents"][0] or []
             metadatos = resultados["metadatas"][0] or []
@@ -180,6 +241,9 @@ def buscar_fragmentos(
                     ),
                     "review_date": metadata.get(
                         "review_date", ""
+                    ),
+                    "effective_date": metadata.get(
+                        "effective_date", ""
                     ),
                 })
 

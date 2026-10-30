@@ -1,0 +1,102 @@
+=================================================================
+EVALUACION DEL FLUJO RAG REAL
+=================================================================
+Raiz: C:\Users\andyj\Documents\GitHub\revisor-inteligente-codigo
+Coleccion: seguridad_python
+Limite de evaluacion: 3
+Proveedor Gemini: no utilizado
+
+=================================================================
+Uso inseguro de eval
+=================================================================
+
+Consulta transformada:
+Uso inseguro de eval con entradas no confiables Python ejecución arbitraria de código
+
+Contexto generado: True
+Fuentes de seguridad: 3
+
+Precision@3: 0.333
+Recall@3:    1.000
+MRR@3:       1.000
+
+Fragmentos recuperados:
+
+1. ID=seguridad_python-001 | distancia=0.3864 | relevante=True
+   Fuente: MITRE CWE-94
+   Seccion: Regla 1: Evitar eval con entradas no confiables
+
+2. ID=seguridad_python-004 | distancia=0.4575 | relevante=False
+   Fuente: OWASP Injection Prevention Cheat Sheet
+   Seccion: Regla 4: Prevencion general de inyecciones
+
+3. ID=seguridad_python-005 | distancia=0.5012 | relevante=False
+   Fuente: MITRE CWE-798
+   Seccion: Regla 5: Prevenir exposicion de credenciales y secretos
+
+=================================================================
+Inyeccion SQL
+=================================================================
+
+Consulta transformada:
+Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas
+
+Contexto generado: True
+Fuentes de seguridad: 3
+
+Precision@3: 0.667
+Recall@3:    1.000
+MRR@3:       1.000
+
+Fragmentos recuperados:
+
+1. ID=seguridad_python-002 | distancia=0.1560 | relevante=True
+   Fuente: OWASP SQL Injection Prevention Cheat Sheet
+   Seccion: Regla 2: Prevenir inyeccion SQL
+
+2. ID=seguridad_python-004 | distancia=0.5526 | relevante=True
+   Fuente: OWASP Injection Prevention Cheat Sheet
+   Seccion: Regla 4: Prevencion general de inyecciones
+
+3. ID=seguridad_python-001 | distancia=0.7142 | relevante=False
+   Fuente: MITRE CWE-94
+   Seccion: Regla 1: Evitar eval con entradas no confiables
+
+=================================================================
+Inyeccion de comandos
+=================================================================
+
+Consulta transformada:
+Prevención de inyección de comandos del sistema Python os.system con entradas no confiables
+
+Contexto generado: True
+Fuentes de seguridad: 3
+
+Precision@3: 0.667
+Recall@3:    1.000
+MRR@3:       1.000
+
+Fragmentos recuperados:
+
+1. ID=seguridad_python-003 | distancia=0.4054 | relevante=True
+   Fuente: OWASP OS Command Injection Defense Cheat Sheet
+   Seccion: Regla 3: Prevenir inyeccion de comandos del sistema
+
+2. ID=seguridad_python-004 | distancia=0.5658 | relevante=True
+   Fuente: OWASP Injection Prevention Cheat Sheet
+   Seccion: Regla 4: Prevencion general de inyecciones
+
+3. ID=seguridad_python-005 | distancia=0.5702 | relevante=False
+   Fuente: MITRE CWE-798
+   Seccion: Regla 5: Prevenir exposicion de credenciales y secretos
+
+=================================================================
+RESUMEN GLOBAL
+=================================================================
+Consultas evaluadas: 3
+Precision@3 media: 0.556
+Recall@3 medio:    1.000
+MRR@3 medio:       1.000
+Cobertura:           100.0%
+
+Evaluacion finalizada.
