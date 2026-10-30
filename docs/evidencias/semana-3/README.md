@@ -15,6 +15,7 @@ Fecha: 30 de octubre de 2026. Informe: [07-evaluacion.md](../../07-evaluacion.md
 - `backend-pruebas.txt`: suite existente ejecutada desde `backend/`.
 - `evaluador-pruebas.txt`, `dataset-validacion.txt`: comprobación independiente de fórmulas y conjunto.
 - `entorno-python.txt`: versiones realmente instaladas para reproducir este entorno.
+- `integracion-http/`: nueve pruebas HTTP conjuntas de frontend y FastAPI, recuperación ChromaDB real y consumo del contrato desde el evaluador. La respuesta del proveedor de IA es controlada y no se usa para calcular métricas de calidad generativa.
 
 Los archivos `comparacion-ingesta.txt`, `evaluacion-rag.txt` y `pruebas-llm-abstencion.txt` ya existían en `main`. Se preservan; no se atribuyen a esta corrida ni se mezclan sus métricas con las actuales.
 

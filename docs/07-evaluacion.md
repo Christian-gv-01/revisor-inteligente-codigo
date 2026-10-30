@@ -151,3 +151,15 @@ Se implementó la propuesta visual v3 elegida por el usuario, con paleta azul no
 La nueva suite del frontend tiene **58 pruebas aprobadas**. Las fuentes de Demo se identifican como referencias ilustrativas sin recuperación RAG; el modo API mantiene la asociación por archivo y los estados de abstención y análisis parcial. Se verificaron en navegador los filtros, la ubicación de líneas, la descarga JSON, la carga de Python, la cancelación, el estado vacío y el error HTTP 503 del backend local. El bloqueo de evaluación con Gemini sigue vigente.
 
 Las [evidencias del rediseño](evidencias/semana-3/redisenointerfaz/README.md) se guardan aparte de la corrida original de recuperación y sus métricas. Las capturas nuevas corresponden a la aplicación React integrada, con viewport de escritorio y móvil.
+
+## 9. Integración conjunta de frontend, FastAPI, RAG y evaluador
+
+Se añadió `eval/run_integration.py`, que inicia una instancia temporal del FastAPI real en loopback y un puerto libre. Mantiene reales los endpoints, la validación de entradas, la recuperación ChromaDB, la validación de citas y la serialización. Solo el cliente de IA se sustituye por respuestas controladas dentro del proceso de prueba; no modifica el `.env` ni el backend normal y no usa cuota del proveedor.
+
+El frontend realiza peticiones HTTP reales con su adaptador `analyzeCode`. Se aprobaron **9/9 pruebas**: JSON, renderizado/exportación de fuentes, multipart Python, ZIP parcial, abstención por citas ausentes o inventadas, respuesta vacía válida, timeout del proveedor y rechazo de un archivo inválido. El evaluador también consumió el mismo endpoint con `request_analysis` y comprobó su contrato con `validate_response`.
+
+Se repitieron las suites habituales: **58 pruebas del frontend**, **58 del backend** y **10 del evaluador**, todas aprobadas. Las 9 pruebas HTTP se omiten intencionadamente al ejecutar la suite habitual sin el servidor temporal; el ejecutor de integración sí las ejecuta todas. El conjunto sigue conteniendo 20 casos válidos y ESLint termina sin errores.
+
+Esta verificación acredita las conexiones y el tratamiento de respuestas, no la calidad de Gemini. No se calculan precisión, recall ni F1 de IA sobre las respuestas controladas. Las métricas de recuperación de la sección 5 conservan su corrida y procedencia originales. La evaluación generativa sigue pendiente de configurar `GEMINI_API_KEY`.
+
+Evidencias: [`integracion-http/`](evidencias/semana-3/integracion-http/README.md). La [explicación completa de conexiones y reproducción](integracion-frontend-evaluacion.md) describe cada componente y la integración mediante el PR #5.

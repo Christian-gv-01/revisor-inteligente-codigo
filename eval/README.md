@@ -63,6 +63,18 @@ El modo API calcula coincidencias por categoría/título y línea admisible, con
 
 Una referencia resuelta significa que su ID está en `fuentes`; no demuestra que el documento sustente semánticamente el hallazgo. Las explicaciones, correcciones, severidad y pertinencia documental requieren revisión humana. Las fórmulas y limitaciones están en [el informe](../docs/07-evaluacion.md).
 
+## Integración HTTP sin credenciales de IA
+
+```powershell
+.\.venv\Scripts\python.exe eval/run_integration.py
+```
+
+El ejecutor inicia una instancia temporal de FastAPI y utiliza ChromaDB local real. Solo sustituye el cliente externo de IA por respuestas controladas; no modifica el `.env` ni consume cuota. Ejecuta nueve pruebas con el adaptador HTTP real del frontend y comprueba también el consumo del contrato desde el evaluador. Se requiere haber instalado las dependencias del frontend y disponer de la ingesta de seguridad.
+
+Cada ejecución crea una carpeta nueva de evidencias; se puede elegir con `--output carpeta-nueva`. El servidor se apaga al finalizar. Las pruebas de `frontend/tests/integration-http.test.tsx` se omiten en la suite habitual si no se ejecuta este flujo. No deben interpretarse estas respuestas como una evaluación de precisión o recall de Gemini.
+
+Detalles y resultados: [integración de frontend y evaluación](../docs/integracion-frontend-evaluacion.md).
+
 ## Verificación visual reproducible
 
 ```powershell

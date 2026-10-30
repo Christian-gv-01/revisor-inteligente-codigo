@@ -70,6 +70,8 @@ npm.cmd run build
 
 La suite cubre entradas, contrato, HTTP simulado, fuentes, abstención, exportación y trazabilidad. La [evidencia del rediseño](../docs/evidencias/semana-3/redisenointerfaz/README.md) incluye pruebas y capturas de escritorio y móvil. La evaluación de 20 casos se documenta en [07-evaluacion.md](../docs/07-evaluacion.md).
 
+Para verificar la integración por HTTP con FastAPI y ChromaDB reales, ejecutar desde la raíz `.\.venv\Scripts\python.exe eval/run_integration.py`. Solo la respuesta externa de IA se simula. Este flujo ejecuta nueve pruebas dedicadas; se omiten en `npm test` cuando el servidor temporal no está activo. Véase la [explicación de integraciones](../docs/integracion-frontend-evaluacion.md).
+
 Monaco genera una advertencia de tamaño del paquete al compilar; la compilación termina correctamente.
 
 ## Archivos principales
