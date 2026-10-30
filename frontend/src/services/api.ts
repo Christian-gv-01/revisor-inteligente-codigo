@@ -195,7 +195,7 @@ function parseSources(value: unknown): SourceReference[] {
     );
   }
 
-  return value.map((entry: unknown) => {
+  const sources = value.map((entry: unknown) => {
     if (
       !record(entry) ||
       typeof entry.id !== "string" ||
@@ -229,6 +229,17 @@ function parseSources(value: unknown): SourceReference[] {
           : null,
     };
   });
+  const unique = new Map<string, SourceReference>();
+  for (const source of sources) {
+    const previous = unique.get(source.id);
+    if (previous && ["documento", "seccion", "fuente", "url"].some(
+      (key) => previous[key as keyof SourceReference] !== source[key as keyof SourceReference],
+    )) {
+      throw invalidResponse("Un identificador RAG corresponde a fuentes diferentes.");
+    }
+    if (!previous) unique.set(source.id, source);
+  }
+  return Array.from(unique.values());
 }
 
 // =========================================================
@@ -364,7 +375,10 @@ export function parseResponse(
             : input.codigo,
       },
     ],
-    hallazgos,
+    hallazgos: hallazgos.map((finding) => ({
+      ...finding,
+      fuentes: fuentes.filter((source) => finding.referencias?.includes(source.id)),
+    })),
     ...(fuentes.length > 0 ? { fuentes } : {}),
     demo: false,
     estado,

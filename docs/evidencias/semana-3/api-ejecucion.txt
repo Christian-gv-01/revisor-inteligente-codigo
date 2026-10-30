@@ -1,0 +1,51 @@
+P01: error (97.07 ms)
+P02: error (3.9 ms)
+P03: error (3.51 ms)
+P04: error (3.17 ms)
+P05: error (3.49 ms)
+P06: error (2.94 ms)
+P07: error (26.14 ms)
+P08: error (3.6 ms)
+P09: error (3.08 ms)
+P10: error (4.03 ms)
+P11: error (5.15 ms)
+P12: error (3.46 ms)
+P13: error (3.75 ms)
+P14: error (2.23 ms)
+P15: error (20.84 ms)
+P16: error (4.11 ms)
+P17: error (4.93 ms)
+P18: error (4.76 ms)
+P19: error (3.84 ms)
+P20: error (2.94 ms)
+Evidencias: docs\evidencias\semana-3\api-sin-configurar
+{
+  "total": 20,
+  "completados": 0,
+  "errores": 20,
+  "tasa_completitud": 0.0,
+  "latencia_media_ms": null,
+  "latencia_p95_ms": null,
+  "precision_at_k": null,
+  "recall_at_k": null,
+  "mrr_at_k": null,
+  "hit_at_k": null,
+  "sin_fuentes_fuera_cobertura": null,
+  "casos_con_referencias_esperadas_evaluados": 0,
+  "tp": 0,
+  "fp": 0,
+  "fn": 0,
+  "hallazgos": 0,
+  "hallazgos_con_citas_resueltas": 0,
+  "referencias": 0,
+  "referencias_resueltas": 0,
+  "lineas_fuera_rango": 0,
+  "precision": null,
+  "recall": null,
+  "f1": null,
+  "cobertura_citas": null,
+  "validez_referencias": null,
+  "tasa_abstencion": null,
+  "exactitud_casos_validos": null,
+  "aciertos_sobre_total": 0.0
+}

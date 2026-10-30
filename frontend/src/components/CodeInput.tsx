@@ -1,7 +1,7 @@
 import type { AnalysisInput, InputKind } from "../types/analysis";
 import { Icon } from "./Icon";
 const choices = [
-  { id: "codigo", label: "Código", icon: "code" },
+  { id: "codigo", label: "Pegar código", icon: "code" },
   { id: "python", label: "Archivo .py", icon: "file" },
   { id: "zip", label: "Proyecto .zip", icon: "folder" },
   { id: "github", label: "GitHub", icon: "github" },
@@ -44,6 +44,7 @@ export function CodeInput({
           <label className="filename-label">
             Nombre del archivo
             <input
+              aria-label="Nombre del archivo"
               value={input.archivo}
               maxLength={255}
               disabled={disabled}
