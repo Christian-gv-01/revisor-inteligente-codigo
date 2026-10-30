@@ -1,126 +1,85 @@
-# CodeGuard — Revisor Inteligente de Código Seguro
+# Revisor Inteligente de Código Seguro — Frontend
 
-Frontend del Caso 10 de UNIANDES. React, Vite, TypeScript y Monaco Editor. Trabajo en `feature/frontend`.
+Interfaz del proyecto de titulación UNIANDES, desarrollada con React, TypeScript, Vite y Monaco Editor. Rama de trabajo: `feature/frontend`.
+
+## Diseño integrado
+
+Se implementó la [propuesta visual aprobada](../docs/diseno/propuesta-revisor-elegante-v3.png): encabezado académico, paleta azul noche/turquesa/ámbar, editor Python e informe en dos paneles y trazabilidad entre hallazgos y fuentes. En móvil los paneles se apilan y el código se ajusta al ancho disponible.
+
+El diseño está construido con componentes y CSS; la imagen es una referencia, no el contenido de la interfaz. Las tipografías del sistema y los recursos de Monaco se sirven localmente.
 
 ## Ejecutar en Windows
 
-Desde esta carpeta, con Node.js compatible con Vite 8 (verificado con Node.js 24.17.0):
+Desde `frontend/`, con una versión de Node compatible con Vite 8:
 
 ```powershell
 npm.cmd ci
-npm.cmd run dev
+npm.cmd run dev -- --host 127.0.0.1
 ```
 
-Abrir la dirección Local que muestra Vite. Mantener la terminal abierta.
-Para detener: Ctrl+C. Para volver a iniciar: `npm.cmd run dev`.
+Abrir la dirección indicada por Vite. Para detener el servidor, usar Ctrl+C.
 
-## Demostración para la presentación
+## Demostración
 
-1. La aplicación abre en **Demo**, con un ejemplo Python.
-2. Pulsar **Probar análisis**: aparecen tres hallazgos en las líneas 7, 12 y 16.
-3. Pulsar el título o la ubicación de un hallazgo para situar el cursor en su línea.
-4. Abrir **Ver corrección sugerida** y filtrar por severidad.
-5. Elegir **Sin hallazgos**, **Error del servidor** o **Error de conexión** en el selector para probar esos estados.
-6. Probar **Cancelar** durante un análisis.
-7. Seleccionar **Archivo .py** para previsualizar un archivo UTF-8 propio.
-8. ZIP y GitHub ofrecen una demo de dos archivos ficticios, identificados con el prefijo `demo/`. No se abre el ZIP ni se descarga el repositorio.
-9. Descargar el informe JSON; queda identificado como demostración.
+La pantalla abre en **Demo**, sin llamar al proveedor de IA ni consultar ChromaDB. El ejemplo `usuarios.py` tiene nueve líneas y muestra un hallazgo de inyección SQL en la línea 6 al pulsar **Probar análisis**.
 
-La demo reconoce únicamente tres patrones mediante expresiones regulares. Puede generar falsos positivos y negativos: **no es IA ni un analizador de seguridad real**. El escenario vacío fuerza cero hallazgos para probar la interfaz, independientemente del código.
+- El hallazgo selecciona la línea en Monaco y actualiza la sección de trazabilidad.
+- La corrección aparece expandida y se puede contraer.
+- Las referencias locales ilustrativas se identifican expresamente como demostración; no son resultados de recuperación RAG.
+- El filtro permite cambiar la severidad; el selector de escenarios permite probar cero hallazgos, errores y cancelación.
+- **Exportar JSON** conserva modo, estado, mensaje, archivos, hallazgos y fuentes.
+- **Cargar ejemplo** vuelve al código SQL inicial.
 
-## Integración real disponible
+La demo reconoce patrones sencillos mediante expresiones regulares, con posibles falsos positivos y negativos. Los ZIP y GitHub en Demo usan archivos ficticios con prefijo `demo/`; no se analizan sus contenidos.
 
-Contrato verificado en `origin/feature/backend-ia`, commit `cf26cad`, el 22 de octubre de 2026. La interfaz no modifica archivos del backend.
+## Conexión con el backend
 
-```http
-POST /api/v1/analizar
-Content-Type: application/json
-```
+Iniciar el backend en `http://127.0.0.1:8000`, configurar su proveedor de IA en el `.env` de la raíz y seleccionar **API real**. El proxy de desarrollo de Vite reenvía `/api` a ese servidor.
 
-Solicitud:
+| Entrada | Endpoint | Formato |
+|---|---|---|
+| Código | `/api/v1/analizar` | JSON: `archivo`, `codigo` |
+| Archivo Python | `/api/v1/archivos` | Multipart: campo `archivo`; se envía el código visible y editado |
+| ZIP | `/api/v1/archivos/zip` | Multipart: campo `archivo` |
 
-```json
-{ "archivo": "ejemplo.py", "codigo": "print('Hola')" }
-```
+El contrato integrado es el de `main` base `8f27ddc`. Una respuesta individual incluye `archivo`, `estado` (`analizado` o `abstenido`), `hallazgos`, `fuentes` y `mensaje`. Cada hallazgo puede incluir IDs en `referencias`. Una fuente contiene `id`, `documento`, `seccion`, `fuente`, `url` y `distancia`.
 
-Respuesta:
+Las citas se resuelven dentro del informe de su archivo antes de combinar resultados ZIP. Las referencias desconocidas se identifican sin inventar metadatos. Los errores de contrato no se convierten en respuestas sin hallazgos. La abstención y el análisis parcial se muestran en pantalla y se conservan al exportar.
 
-```json
-{
-  "archivo": "ejemplo.py",
-  "estado": "analizado",
-  "hallazgos": [
-    {
-      "linea": 1,
-      "severidad": "alta",
-      "categoria": "Ejemplo",
-      "titulo": "Título del hallazgo",
-      "explicacion": "Explicación del riesgo",
-      "correccion_sugerida": "Corrección recomendada"
-    }
-  ]
-}
-```
+Para otro servidor, configurar `VITE_API_BASE_URL` en `.env.local` de `frontend/` y reiniciar Vite. Una URL de otro origen requiere CORS autorizado en el backend. En producción debe configurarse un proxy `/api` o una URL de backend con CORS; el proxy de Vite solo sirve para desarrollo.
 
-Severidades: `critica`, `alta`, `media`, `baja`.
-El backend limita `archivo` a 255 caracteres y `codigo` a 12.000.
-El frontend comprueba el contrato; una respuesta inválida se muestra como error, nunca como cero hallazgos.
+**No configurar claves privadas en variables `VITE_`: su contenido llega al navegador.** La IA se llama únicamente desde el backend.
 
-**Pasos para conectar:**
+## Límites y funcionalidades pendientes
 
-1. El compañero debe iniciar su backend en `http://127.0.0.1:8000` con su configuración de IA.
-2. Iniciar el frontend con Vite y elegir **API real**.
-3. Usar **Código**, **Archivo .py** o **Proyecto .zip**. Código usa JSON en `/api/v1/analizar`. Python se previsualiza localmente y se envía (con sus ediciones) como multipart, campo `archivo`, a `/api/v1/archivos`. ZIP se envía sin descomprimir al endpoint `/api/v1/archivos/zip`, con el mismo campo multipart.
-4. Vite reenvía `/api` al backend mediante el proxy de `vite.config.ts`, sin modificar el backend ni requerir CORS para este flujo local.
+- Código: hasta 12.000 caracteres; nombre Python de hasta 255 caracteres.
+- Python: hasta 48 KB y texto UTF-8, sujeto al límite de caracteres.
+- ZIP: hasta 5 MiB, 5 archivos Python y 12.000 caracteres en total, con validación adicional en backend.
+- La API todavía no descarga GitHub. La interfaz explica esta limitación y deshabilita su envío real.
+- ZIP no devuelve código fuente: se muestran hallazgos y líneas, con aviso de que falta el contenido para resaltarlo. No se fabrica una vista previa.
+- Tiempo máximo de espera: 60 segundos por fragmento y 180 por ZIP. Cancelar en el navegador no garantiza detener un trabajo que ya comenzó en el servidor.
+- La API local de esta entrega devuelve HTTP 503 mientras falta `GEMINI_API_KEY`. La evaluación completa de respuestas queda pendiente de esa configuración.
 
-Para otra dirección, copiar `.env.example` a `.env.local`, establecer `VITE_API_BASE_URL` y reiniciar Vite. Una dirección de otro origen requiere que el backend autorice CORS. El proxy de Vite solo funciona en desarrollo: en producción se necesita un proxy de `/api` o una URL pública de backend con CORS.
-
-**Nunca poner claves Gemini u otros secretos en variables VITE\_**: se incluyen en el navegador.
-El servicio HTTP está en `src/services/api.ts`; no llama a Gemini ni ejecuta Python.
-
-## Pendientes de coordinación
-
-- El backend todavía no incluye descarga de GitHub. El control está presente; su envío real queda deshabilitado con una explicación. Acordar la ruta, solicitud y contrato de respuesta.
-- ZIP ya permite carga y resultados por archivo: límite de 5 MiB, hasta 5 archivos Python y 12.000 caracteres en total, validados por el backend. Respuesta: `{archivo_zip, estado: "analizado", total_archivos, informes: [RespuestaAnalisis]}`.
-- El backend no devuelve el contenido de los archivos ZIP. La interfaz muestra archivos, hallazgos y números de línea, pero explica que no puede marcar el código sin ese contenido. Para completarlo, acordar que cada informe incluya el código o una ruta segura para recuperarlo. La demo sí ilustra el editor con varios archivos ficticios.
-- Confirmar el backend ejecutándose para la prueba completa con IA. Las pruebas automatizadas simulan HTTP y no acreditan una conexión real con Gemini.
-- Las líneas fuera del archivo se conservan en el informe, pero no se marcan en el editor.
-- Las consultas tienen tiempo límite de 60 segundos (180 segundos para ZIP) y permiten cancelación. Cancelar el navegador no garantiza detener un trabajo que ya ejecuta el backend.
-
-## Estructura
-
-- `src/components/`: entradas, editor, resultados e iconos.
-- `src/pages/HomePage.tsx`: composición y flujo de pantalla.
-- `src/services/api.ts`: validación, HTTP y adaptación del contrato.
-- `src/services/demo.ts`: simulación local explícita.
-- `src/types/analysis.ts`: tipos compartidos.
-- `src/styles/global.css`: estilos y adaptación móvil.
-- `tests/analysis.test.ts`: pruebas de límites, contrato, errores, demo y cancelación.
-
-Monaco y su worker se sirven localmente, sin CDN. Su tamaño hace que Vite pueda advertir sobre un paquete grande; no es un fallo de compilación.
-Se fija DOMPurify 3.4.17 mediante un override de Monaco para resolver los avisos observados en 3.4.15; revisar el override al actualizar Monaco.
-
-## Verificaciones
+## Verificación
 
 ```powershell
 npm.cmd test
+npm.cmd run lint
 npm.cmd run build
-npm.cmd audit
 ```
 
-Antes de subir cambios, revisar `git status` y confirmar `feature/frontend`.
-Se incluyen `package.json` y `package-lock.json`; se excluyen `node_modules`, `dist` y archivos `.env` locales.
+La suite cubre entradas, contrato, HTTP simulado, fuentes, abstención, exportación y trazabilidad. La [evidencia del rediseño](../docs/evidencias/semana-3/redisenointerfaz/README.md) incluye pruebas y capturas de escritorio y móvil. La evaluación de 20 casos se documenta en [07-evaluacion.md](../docs/07-evaluacion.md).
 
-## Subir a GitHub
+Para verificar la integración por HTTP con FastAPI y ChromaDB reales, ejecutar desde la raíz `.\.venv\Scripts\python.exe eval/run_integration.py`. Solo la respuesta externa de IA se simula. Este flujo ejecuta nueve pruebas dedicadas; se omiten en `npm test` cuando el servidor temporal no está activo. Véase la [explicación de integraciones](../docs/integracion-frontend-evaluacion.md).
 
-Desde la raíz del repositorio:
+Monaco genera una advertencia de tamaño del paquete al compilar; la compilación termina correctamente.
 
-```powershell
-git branch --show-current
-git add frontend
-git diff --cached --stat
-git commit -m "feat(frontend): crear interfaz de revision segura con Monaco"
-git push -u origin feature/frontend
-```
+## Archivos principales
 
-Crear un pull request con base `main` y compare `feature/frontend`. Explicar que faltan la descarga GitHub y el contenido de los archivos ZIP para resaltarlos. Adjuntar capturas. No integrar en main sin revisión del equipo.
+- `src/pages/HomePage.tsx`: composición, carga, modos y flujo de análisis.
+- `src/components/CodeEditor.tsx`: tema local y marcadores de seguridad de Monaco.
+- `src/components/FindingsPanel.tsx`: informe, filtros, correcciones y fuentes.
+- `src/components/EvidenceTrace.tsx`: vínculo entre selección y referencias.
+- `src/services/api.ts`: validaciones, transporte y normalización por archivo.
+- `src/services/demo.ts`: simulación explícita y ejemplos.
+- `src/styles/global.css`: paleta, composición y adaptación a pantallas.

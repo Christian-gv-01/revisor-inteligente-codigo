@@ -1,0 +1,196 @@
+{
+  "fecha_utc": "2026-10-30T21:03:33.344652+00:00",
+  "python": "3.12.14",
+  "commit_base": "8f27ddc9971f328ae122e6c71e50726ef898c1f0",
+  "cambios_locales": true,
+  "dependencias": {
+    "chromadb": "1.5.9",
+    "google-genai": "2.31.0",
+    "fastapi": "0.156.1",
+    "pydantic": "2.14.1"
+  },
+  "dataset_sha256": "4e880db137d1350fda194482b7b3350320b61bc9e581ae99421804f8dc496fef",
+  "runner_sha256": "2384c8e149f9eabc39bbbe5f2980b62d50deaba1d3841625f581f8456edb34f1",
+  "knowledge_sha256": "2a97df83b2043cd43bce5b6efd8498008890b4bc22bc934304ccb673d00048b8",
+  "llm_sha256": "2d30f3ce934cb6102f75d52c6da3341b6a4a204722edfb7838e28c22b199885d",
+  "rag_sha256": "4aed567df610f17ad9b0af013e9639d84fd39129bf520d54e41d8c246a3aaa4f",
+  "modo": "api",
+  "k": 3,
+  "casos": [
+    {
+      "id": "P01",
+      "nombre": "SQL concatenado",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 97.07
+    },
+    {
+      "id": "P02",
+      "nombre": "SQL interpolado",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 3.9
+    },
+    {
+      "id": "P03",
+      "nombre": "SQL con formato",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 3.51
+    },
+    {
+      "id": "P04",
+      "nombre": "Identificador SQL externo",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 3.17
+    },
+    {
+      "id": "P05",
+      "nombre": "SQL parametrizado",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 3.49
+    },
+    {
+      "id": "P06",
+      "nombre": "Tabla permitida",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 2.94
+    },
+    {
+      "id": "P07",
+      "nombre": "os.system externo",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 26.14
+    },
+    {
+      "id": "P08",
+      "nombre": "subprocess shell",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 3.6
+    },
+    {
+      "id": "P09",
+      "nombre": "os.popen externo",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 3.08
+    },
+    {
+      "id": "P10",
+      "nombre": "Comando interpolado",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 4.03
+    },
+    {
+      "id": "P11",
+      "nombre": "Argumentos constantes",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 5.15
+    },
+    {
+      "id": "P12",
+      "nombre": "Comandos permitidos",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 3.46
+    },
+    {
+      "id": "P13",
+      "nombre": "eval externo",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 3.75
+    },
+    {
+      "id": "P14",
+      "nombre": "exec externo",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 2.23
+    },
+    {
+      "id": "P15",
+      "nombre": "eval en función",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 20.84
+    },
+    {
+      "id": "P16",
+      "nombre": "eval tras strip",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 4.11
+    },
+    {
+      "id": "P17",
+      "nombre": "Conversión numérica",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 4.93
+    },
+    {
+      "id": "P18",
+      "nombre": "Operaciones fijas",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 4.76
+    },
+    {
+      "id": "P19",
+      "nombre": "Fuera de cobertura: estadística",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 3.84
+    },
+    {
+      "id": "P20",
+      "nombre": "Fuera de cobertura: geometría",
+      "estado_ejecucion": "error",
+      "error": "HTTP 503",
+      "duracion_ms": 2.94
+    }
+  ],
+  "configuracion": {
+    "base_url": "http://127.0.0.1:8000",
+    "timeout": 10.0,
+    "aviso": "La configuración y revisión del servidor deben registrarse por separado."
+  },
+  "resumen": {
+    "total": 20,
+    "completados": 0,
+    "errores": 20,
+    "tasa_completitud": 0.0,
+    "latencia_media_ms": null,
+    "latencia_p95_ms": null,
+    "precision_at_k": null,
+    "recall_at_k": null,
+    "mrr_at_k": null,
+    "hit_at_k": null,
+    "sin_fuentes_fuera_cobertura": null,
+    "casos_con_referencias_esperadas_evaluados": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "hallazgos": 0,
+    "hallazgos_con_citas_resueltas": 0,
+    "referencias": 0,
+    "referencias_resueltas": 0,
+    "lineas_fuera_rango": 0,
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "cobertura_citas": null,
+    "validez_referencias": null,
+    "tasa_abstencion": null,
+    "exactitud_casos_validos": null,
+    "aciertos_sobre_total": 0.0
+  }
+}

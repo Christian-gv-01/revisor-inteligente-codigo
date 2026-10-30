@@ -26,6 +26,8 @@ export interface Finding {
   // IDs exactos de los fragmentos RAG
   // que respaldan el hallazgo.
   referencias?: string[];
+  // Fuentes resueltas dentro del informe del archivo, antes de combinar un ZIP.
+  fuentes?: SourceReference[];
 }
 
 // =========================================================

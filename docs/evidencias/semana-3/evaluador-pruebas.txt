@@ -1,0 +1,15 @@
+test_abstention_is_not_safe_true_negative (test_run_eval.EvaluationTests.test_abstention_is_not_safe_true_negative) ... ok
+test_contract_rejects_inconsistent_abstention_and_boolean_line (test_run_eval.EvaluationTests.test_contract_rejects_inconsistent_abstention_and_boolean_line) ... ok
+test_dataset_balance (test_run_eval.EvaluationTests.test_dataset_balance) ... ok
+test_duplicate_finding_counts_as_false_positive (test_run_eval.EvaluationTests.test_duplicate_finding_counts_as_false_positive) ... ok
+test_empty_expected_is_not_perfect_recall (test_run_eval.EvaluationTests.test_empty_expected_is_not_perfect_recall) ... ok
+test_error_only_run_has_no_quality_score (test_run_eval.EvaluationTests.test_error_only_run_has_no_quality_score) ... ok
+test_fewer_than_k_uses_fixed_denominator (test_run_eval.EvaluationTests.test_fewer_than_k_uses_fixed_denominator) ... ok
+test_ranking_and_duplicates (test_run_eval.EvaluationTests.test_ranking_and_duplicates) ... ok
+test_unresolved_citation_is_not_grounding (test_run_eval.EvaluationTests.test_unresolved_citation_is_not_grounding) ... ok
+test_wrong_line_does_not_match (test_run_eval.EvaluationTests.test_wrong_line_does_not_match) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.016s
+
+OK

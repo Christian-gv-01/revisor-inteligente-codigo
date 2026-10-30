@@ -1,0 +1,61 @@
+
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:   0%|          | 0.00/79.3M [00:00<?, ?iB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:   0%|          | 68.0k/79.3M [00:00<02:58, 466kiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:   0%|          | 187k/79.3M [00:00<01:40, 827kiB/s] 
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:   1%|          | 526k/79.3M [00:00<00:43, 1.91MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:   1%|          | 867k/79.3M [00:00<00:33, 2.48MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:   2%|▏         | 1.81M/79.3M [00:00<00:15, 5.09MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:   4%|▍         | 3.17M/79.3M [00:00<00:09, 8.10MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:   7%|▋         | 5.26M/79.3M [00:00<00:06, 12.5MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  10%|▉         | 7.85M/79.3M [00:00<00:05, 13.6MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  12%|█▏        | 9.57M/79.3M [00:01<00:04, 14.7MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  15%|█▌        | 12.0M/79.3M [00:01<00:03, 17.7MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  17%|█▋        | 13.8M/79.3M [00:01<00:03, 17.4MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  19%|█▉        | 15.5M/79.3M [00:01<00:04, 15.2MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  23%|██▎       | 18.4M/79.3M [00:01<00:03, 19.2MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  26%|██▌       | 20.7M/79.3M [00:01<00:03, 17.5MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  31%|███       | 24.6M/79.3M [00:01<00:02, 23.1MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  34%|███▍      | 27.1M/79.3M [00:01<00:02, 23.8MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  37%|███▋      | 29.7M/79.3M [00:01<00:02, 24.5MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  41%|████      | 32.2M/79.3M [00:02<00:01, 24.8MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  44%|████▍     | 34.7M/79.3M [00:02<00:01, 25.2MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  47%|████▋     | 37.3M/79.3M [00:02<00:01, 25.4MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  50%|█████     | 39.8M/79.3M [00:02<00:01, 25.6MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  53%|█████▎    | 42.3M/79.3M [00:02<00:01, 25.2MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  56%|█████▋    | 44.7M/79.3M [00:02<00:01, 24.2MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  59%|█████▉    | 47.2M/79.3M [00:02<00:01, 24.6MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  63%|██████▎   | 49.7M/79.3M [00:02<00:01, 25.0MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  66%|██████▌   | 52.4M/79.3M [00:02<00:01, 25.9MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  69%|██████▉   | 55.0M/79.3M [00:03<00:00, 26.5MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  73%|███████▎  | 57.7M/79.3M [00:03<00:00, 26.8MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  76%|███████▌  | 60.3M/79.3M [00:03<00:00, 26.9MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  79%|███████▉  | 62.9M/79.3M [00:03<00:00, 27.1MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  83%|████████▎ | 65.5M/79.3M [00:03<00:00, 27.0MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  86%|████████▌ | 68.2M/79.3M [00:03<00:00, 27.2MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  90%|████████▉ | 71.0M/79.3M [00:03<00:00, 27.6MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  93%|█████████▎| 73.8M/79.3M [00:03<00:00, 28.2MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz:  97%|█████████▋| 76.7M/79.3M [00:03<00:00, 28.6MiB/s]
+C:\Users\alexm\.cache\chroma\onnx_models\all-MiniLM-L6-v2\onnx.tar.gz: 100%|██████████| 79.3M/79.3M [00:03<00:00, 21.3MiB/s]
+Fuente: knowledge\seguridad_python.md
+Base vectorial: data\chroma
+Coleccion: seguridad_python
+Fragmentos procesados: 4
+Fragmentos obsoletos eliminados: 0
+Total de registros en la coleccion: 4
+
+Resultados de la consulta de prueba:
+1. Regla 1: Evitar eval con entradas no confiables
+   Fuente: MITRE CWE-94
+   URL: https://cwe.mitre.org/data/definitions/94.html
+   Fecha de vigencia: No indicada
+   Distancia: 0.4575
+2. Regla 3: Prevenir inyeccion de comandos del sistema
+   Fuente: OWASP OS Command Injection Defense Cheat Sheet
+   URL: https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html
+   Fecha de vigencia: No indicada
+   Distancia: 0.4696
+3. Regla 4: Prevencion general de inyecciones
+   Fuente: OWASP Injection Prevention Cheat Sheet
+   URL: https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html
+   Fecha de vigencia: No indicada
+   Distancia: 0.5318
