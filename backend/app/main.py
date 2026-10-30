@@ -2,12 +2,18 @@
 from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.concurrency import run_in_threadpool
 
+
+
 from app.models.analisis import (
     InformeModelo,
     RespuestaAnalisis,
     RespuestaAnalisisZIP,
+    RespuestaAnalisisRepositorio,
     SolicitudAnalisis,
+    SolicitudGitHub,
 )
+
+from app.services.github_repos import obtener_archivos_python_github
 from app.services.files import leer_python_seguro
 from app.services.llm import analizar_codigo, LLMError
 from app.services.zip_files import leer_zip_seguro
@@ -163,3 +169,52 @@ async def analizar_zip(
 
     finally:
         await archivo.close()
+
+# =========================================================
+# ANALISIS DE REPOSITORIOS PUBLICOS DE GITHUB
+# =========================================================
+
+@app.post(
+    "/api/v1/repositorios/github",
+    response_model=RespuestaAnalisisRepositorio,
+)
+async def analizar_repositorio_github(
+    solicitud: SolicitudGitHub,
+):
+    """
+    Analiza archivos Python de un repositorio público de GitHub.
+
+    La descarga y validación se delegan al servicio GitHub.
+    El código recuperado nunca se ejecuta ni se importa.
+    """
+
+    try:
+        archivos = await run_in_threadpool(
+            obtener_archivos_python_github,
+            solicitud.url,
+        )
+
+        informes = []
+
+        for nombre, codigo in archivos:
+            informe = await run_in_threadpool(
+                analizar_codigo,
+                codigo,
+            )
+
+            informes.append(
+                construir_respuesta(nombre, informe)
+            )
+
+        return RespuestaAnalisisRepositorio(
+            repositorio=solicitud.url,
+            estado="analizado",
+            total_archivos=len(informes),
+            informes=informes,
+        )
+
+    except LLMError as error:
+        raise HTTPException(
+            status_code=error.codigo,
+            detail=str(error),
+        ) from error

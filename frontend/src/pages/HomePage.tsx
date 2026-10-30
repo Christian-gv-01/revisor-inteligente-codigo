@@ -226,7 +226,7 @@ export function HomePage() {
                     {mode === "demo"
                       ? "En demo se muestran archivos ficticios. El ZIP o repositorio seleccionado no se analiza."
                       : input.tipo === "github"
-                        ? "El backend disponible aún no tiene una ruta para descargar repositorios."
+                        ? "Se analizarán hasta 5 archivos Python de un repositorio público, con un máximo de 12.000 caracteres en total."
                         : "El backend analiza hasta 5 archivos Python y 12.000 caracteres en total. Devuelve hallazgos por archivo; la vista del código espera contenido del backend."}
                   </span>
                 </div>
@@ -378,9 +378,7 @@ export function HomePage() {
                 ) : (
                   <button
                     className="primary-button"
-                    disabled={
-                      busy || (mode === "api" && input.tipo === "github")
-                    }
+                    disabled={busy}
                     onClick={() => void analyze()}
                   >
                     {mode === "demo" ? "Probar análisis" : "Analizar código"}
