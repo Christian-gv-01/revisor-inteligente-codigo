@@ -2,6 +2,8 @@
 
 Fecha: 30 de octubre de 2026. Rama de trabajo: `feature/frontend`. Propuesta de revisión: [PR #5](https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/5).
 
+La documentación de fuentes y evaluación del RAG se encuentra en [rag-frontend-evaluacion.md](rag-frontend-evaluacion.md), complementaria a la arquitectura técnica del equipo.
+
 ## Entregables del Compañero 2
 
 | Responsabilidad | Implementación | Estado |

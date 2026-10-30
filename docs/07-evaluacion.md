@@ -7,6 +7,8 @@
 
 ## 1. Alcance y estado de la entrega
 
+La documentación del RAG desde el rol de Frontend y Evaluación está en [rag-frontend-evaluacion.md](rag-frontend-evaluacion.md): contrato de fuentes, presentación, métricas, revisión semántica propuesta y reproducción.
+
 Se revisó y mejoró la presentación de fuentes del backend. Se prepararon 20 preguntas con código y respuestas de referencia, un ejecutor reproducible y evidencias de pruebas, recuperación real y revisión visual.
 
 **La recuperación RAG se evaluó realmente en 20 casos. La calidad de las respuestas de Gemini queda pendiente:** el backend local responde HTTP 503 porque `GEMINI_API_KEY` no está configurada. No se atribuyen a la IA resultados de pruebas simuladas, ni se reutilizan como actuales las evidencias de semanas anteriores.
