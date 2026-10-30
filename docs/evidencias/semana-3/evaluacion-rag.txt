@@ -1,0 +1,152 @@
+python : C:\Users\andyj\Documents\GitHub\revisor-inteligente-codigo\scripts\evaluate_rag.py:2: SyntaxWarning: invalid escape sequence '\S'
+En línea: 6 Carácter: 1
++ python .\scripts\evaluate_rag.py 2>&1 |
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\Users\andyj\...e sequence '\S':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+  """Eval·a la recuperaci¾n RAG con consultas y referencias esperadas.
+EVALUACION DE RECUPERACION RAG
+Raiz: C:\Users\andyj\Documents\GitHub\revisor-inteligente-codigo
+Umbral de distancia configurado en el servicio.
+Metricas principales: Precision@3, Recall@3 y MRR.
+
+=== Uso inseguro de eval ===
+Pregunta: eval con entradas no confiables Python
+Precision@3: 0.333
+Recall@3:    1.000
+MRR:           1.000
+
+Fragmentos recuperados:
+1. ID=seguridad_python-001 | tipo=seguridad | distancia=0.4062 | relevante=True
+   Seccion: Regla 1: Evitar eval con entradas no confiables
+   Fuente: MITRE CWE-94
+2. ID=seguridad_python-004 | tipo=seguridad | distancia=0.5405 | relevante=False
+   Seccion: Regla 4: Prevencion general de inyecciones
+   Fuente: OWASP Injection Prevention Cheat Sheet
+3. ID=proyecto-e9f7366a3ab08d2e7c2738e7 | tipo=contexto_proyecto | distancia=0.4126 | relevante=False
+   Seccion: docs/evidencias/semana-2/comparacion-10-casos.json
+   Fuente: docs/evidencias/semana-2/comparacion-10-casos.json
+4. ID=proyecto-07d465a0be34f083eae3be13 | tipo=contexto_proyecto | distancia=0.5126 | relevante=False
+   Seccion: # otros tipos de archivo especiales.
+   Fuente: backend/app/services/zip_files.py
+5. ID=proyecto-a4b5af2f1bcc8f65a25d1bef | tipo=contexto_proyecto | distancia=0.5317 | relevante=False
+   Seccion: # System Prompt V3 ù Seguridad y resistencia a inyecciones
+   Fuente: backend/app/prompts/system_v3.md
+6. ID=proyecto-6297575571d1b01d6a1e122b | tipo=contexto_proyecto | distancia=0.5343 | relevante=False
+   Seccion: # Sustituimos temporalmente la funci¾n de anßlisis.
+   Fuente: backend/tests/test_analysis.py
+7. ID=proyecto-fab26d9bb321597e700abe23 | tipo=contexto_proyecto | distancia=0.5481 | relevante=False
+   Seccion: # Enviamos c¾digo de una sola lÝnea.
+   Fuente: backend/tests/test_llm.py
+
+=== Inyeccion SQL ===
+Pregunta: inyeccion SQL concatenacion de parametros
+Precision@3: 0.667
+Recall@3:    1.000
+MRR:           1.000
+
+Fragmentos recuperados:
+1. ID=seguridad_python-002 | tipo=seguridad | distancia=0.3910 | relevante=True
+   Seccion: Regla 2: Prevenir inyeccion SQL
+   Fuente: OWASP SQL Injection Prevention Cheat Sheet
+2. ID=seguridad_python-004 | tipo=seguridad | distancia=0.6720 | relevante=True
+   Seccion: Regla 4: Prevencion general de inyecciones
+   Fuente: OWASP Injection Prevention Cheat Sheet
+3. ID=seguridad_python-003 | tipo=seguridad | distancia=0.6880 | relevante=False
+   Seccion: Regla 3: Prevenir inyeccion de comandos del sistema
+   Fuente: OWASP OS Command Injection Defense Cheat Sheet
+4. ID=seguridad_python-001 | tipo=seguridad | distancia=0.7081 | relevante=False
+   Seccion: Regla 1: Evitar eval con entradas no confiables
+   Fuente: MITRE CWE-94
+5. ID=proyecto-2978c983a5e12d1049a9fd78 | tipo=contexto_proyecto | distancia=0.4735 | relevante=False
+   Seccion: docs/evidencias/semana-2/comparacion-10-casos.json
+   Fuente: docs/evidencias/semana-2/comparacion-10-casos.json
+6. ID=proyecto-e543a147c43db820968dd0f3 | tipo=contexto_proyecto | distancia=0.6531 | relevante=False
+   Seccion: # Dise±o e implementaci¾n de RAG
+   Fuente: docs/06-rag.md
+7. ID=proyecto-98164b4b8a85df8e6f753c99 | tipo=contexto_proyecto | distancia=0.6638 | relevante=False
+   Seccion: docs/evidencias/semana-2/comparacion-10-casos.json
+   Fuente: docs/evidencias/semana-2/comparacion-10-casos.json
+8. ID=proyecto-a051181cae95eb14e85c9619 | tipo=contexto_proyecto | distancia=0.6767 | relevante=False
+   Seccion: docs/evidencias/semana-2/comparacion-10-casos.json
+   Fuente: docs/evidencias/semana-2/comparacion-10-casos.json
+9. ID=proyecto-484350f548d4bc88eb1fe84a | tipo=contexto_proyecto | distancia=0.6888 | relevante=False
+   Seccion: docs/evidencias/semana-2/comparacion-10-casos.json
+   Fuente: docs/evidencias/semana-2/comparacion-10-casos.json
+
+=== Inyeccion de comandos ===
+Pregunta: inyeccion de comandos del sistema Python
+Precision@3: 0.667
+Recall@3:    1.000
+MRR:           1.000
+
+Fragmentos recuperados:
+1. ID=seguridad_python-003 | tipo=seguridad | distancia=0.5855 | relevante=True
+   Seccion: Regla 3: Prevenir inyeccion de comandos del sistema
+   Fuente: OWASP OS Command Injection Defense Cheat Sheet
+2. ID=seguridad_python-004 | tipo=seguridad | distancia=0.5931 | relevante=True
+   Seccion: Regla 4: Prevencion general de inyecciones
+   Fuente: OWASP Injection Prevention Cheat Sheet
+3. ID=seguridad_python-002 | tipo=seguridad | distancia=0.7405 | relevante=False
+   Seccion: Regla 2: Prevenir inyeccion SQL
+   Fuente: OWASP SQL Injection Prevention Cheat Sheet
+4. ID=proyecto-964c0bc52c92a0d32f26f7cd | tipo=contexto_proyecto | distancia=0.4028 | relevante=False
+   Seccion: # Revisor Inteligente de C¾digo Seguro
+   Fuente: README.md
+5. ID=proyecto-e543a147c43db820968dd0f3 | tipo=contexto_proyecto | distancia=0.4271 | relevante=False
+   Seccion: # Dise±o e implementaci¾n de RAG
+   Fuente: docs/06-rag.md
+6. ID=proyecto-37fa7b3b2996ed5af669308e | tipo=contexto_proyecto | distancia=0.4714 | relevante=False
+   Seccion: # System Prompt V1 ù Revisor de c¾digo Python
+   Fuente: backend/app/prompts/system_v1.md
+7. ID=proyecto-e9f7366a3ab08d2e7c2738e7 | tipo=contexto_proyecto | distancia=0.4922 | relevante=False
+   Seccion: docs/evidencias/semana-2/comparacion-10-casos.json
+   Fuente: docs/evidencias/semana-2/comparacion-10-casos.json
+8. ID=proyecto-6e7adb2a1fe02b4252bf49d3 | tipo=contexto_proyecto | distancia=0.4922 | relevante=False
+   Seccion: ### ADR-003 ù Protecci¾n de secretos
+   Fuente: docs/09-decisiones.md
+
+=== Prevencion general de inyecciones ===
+Pregunta: como prevenir ataques de inyeccion
+Precision@3: 1.000
+Recall@3:    1.000
+MRR:           1.000
+
+Fragmentos recuperados:
+1. ID=seguridad_python-004 | tipo=seguridad | distancia=0.4457 | relevante=True
+   Seccion: Regla 4: Prevencion general de inyecciones
+   Fuente: OWASP Injection Prevention Cheat Sheet
+2. ID=seguridad_python-003 | tipo=seguridad | distancia=0.5133 | relevante=True
+   Seccion: Regla 3: Prevenir inyeccion de comandos del sistema
+   Fuente: OWASP OS Command Injection Defense Cheat Sheet
+3. ID=seguridad_python-002 | tipo=seguridad | distancia=0.5969 | relevante=True
+   Seccion: Regla 2: Prevenir inyeccion SQL
+   Fuente: OWASP SQL Injection Prevention Cheat Sheet
+4. ID=seguridad_python-001 | tipo=seguridad | distancia=0.6570 | relevante=False
+   Seccion: Regla 1: Evitar eval con entradas no confiables
+   Fuente: MITRE CWE-94
+5. ID=proyecto-616b56e157544ca40dbd785d | tipo=contexto_proyecto | distancia=0.5528 | relevante=False
+   Seccion: ### Controles pendientes
+   Fuente: docs/09-decisiones.md
+6. ID=proyecto-a4b5af2f1bcc8f65a25d1bef | tipo=contexto_proyecto | distancia=0.5625 | relevante=False
+   Seccion: # System Prompt V3 ù Seguridad y resistencia a inyecciones
+   Fuente: backend/app/prompts/system_v3.md
+7. ID=proyecto-37fa7b3b2996ed5af669308e | tipo=contexto_proyecto | distancia=0.5904 | relevante=False
+   Seccion: # System Prompt V1 ù Revisor de c¾digo Python
+   Fuente: backend/app/prompts/system_v1.md
+8. ID=proyecto-6e7adb2a1fe02b4252bf49d3 | tipo=contexto_proyecto | distancia=0.5935 | relevante=False
+   Seccion: ### ADR-003 ù Protecci¾n de secretos
+   Fuente: docs/09-decisiones.md
+9. ID=proyecto-86d2af26ef81acc7f188e1d3 | tipo=contexto_proyecto | distancia=0.6019 | relevante=False
+   Seccion: # Importamos pytest para ejecutar las pru
+   Fuente: backend/tests/test_analysis.py
+
+=== RESUMEN GLOBAL ===
+Consultas evaluadas: 4
+Precision@3 media: 0.667
+Recall@3 medio:    1.000
+MRR medio:           1.000
+Cobertura:           100.0%
+
+IMPORTANTE: revisa manualmente las referencias esperadas y los resultados recuperados. Estas metricas son preliminares y dependen de la calidad de las etiquetas.
