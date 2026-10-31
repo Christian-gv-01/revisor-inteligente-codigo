@@ -1,5 +1,6 @@
 ﻿
 from pathlib import Path
+import os
 import hashlib
 import re
 from collections import Counter
@@ -8,7 +9,8 @@ import chromadb
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DB_PATH = ROOT / "data" / "chroma"
+configurada = os.getenv("CHROMA_PATH", "").strip()
+DB_PATH = Path(configurada).expanduser() if configurada else ROOT / "data" / "chroma"
 COLLECTION_NAME = "contexto_proyecto"
 
 MAX_CHARS = 3500
@@ -368,7 +370,7 @@ def mostrar_resultados(coleccion, archivos, registros):
 def main():
     if not DB_PATH.is_dir():
         raise SystemExit(
-            "No existe data/chroma. "
+            f"No existe el indice ChromaDB en {DB_PATH}. "
             "Revisa primero la ingesta de seguridad."
         )
 
