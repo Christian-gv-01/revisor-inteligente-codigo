@@ -1,0 +1,23 @@
+# Uso local con Docker Desktop. No publica el backend a Internet.
+services:
+  codeguard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      CHROMA_PATH: /data/chroma
+      SERVE_FRONTEND: "1"
+      PORT: "8000"
+    ports:
+      - "127.0.0.1:8080:8000"
+    volumes:
+      - codeguard-data:/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    init: true
+
+volumes:
+  codeguard-data:
