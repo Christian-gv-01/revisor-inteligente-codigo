@@ -218,3 +218,8 @@ async def analizar_repositorio_github(
             status_code=error.codigo,
             detail=str(error),
         ) from error
+
+
+# CODEGUARD AGENT LAB: rutas independientes
+from app.routes.agente import router as agente_router
+app.include_router(agente_router)

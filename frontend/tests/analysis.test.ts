@@ -147,9 +147,10 @@ describe("Contrato y servicio HTTP", () => {
     await expect(analyzeCode(input)).rejects.toMatchObject({
       kind: "contrato",
     });
-  });
-  
-it("analiza un repositorio GitHub y conserva la abstención", async () => {
+  });  
+
+
+  it("analiza un repositorio GitHub y conserva la abstención", async () => {
   const url = "https://github.com/test/repo";
 
   const respuesta = {
