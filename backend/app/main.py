@@ -223,3 +223,16 @@ async def analizar_repositorio_github(
 # CODEGUARD AGENT LAB: rutas independientes
 from app.routes.agente import router as agente_router
 app.include_router(agente_router)
+
+
+# En producción, servir el frontend compilado desde el mismo origen.
+# Se registra al final para no interceptar /api, /health ni /agente/demo.
+import os
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+
+if os.getenv("SERVE_FRONTEND", "0") == "1":
+    dist = Path(__file__).resolve().parents[3] / "frontend" / "dist"
+    if not (dist / "index.html").is_file():
+        raise RuntimeError("SERVE_FRONTEND=1 requiere frontend/dist/index.html")
+    app.mount("/", StaticFiles(directory=dist, html=True), name="frontend")
