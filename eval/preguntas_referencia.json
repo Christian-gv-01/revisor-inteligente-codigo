@@ -1,0 +1,372 @@
+{
+  "version": 1,
+  "descripcion": "20 casos propios, derivados de las cuatro reglas de knowledge/seguridad_python.md. Las preguntas explican el objetivo; se envía únicamente el código a la API.",
+  "casos": [
+    {
+      "id": "P01",
+      "nombre": "SQL concatenado",
+      "pregunta": "¿La concatenación de una entrada en SQL permite inyección?",
+      "archivo": "caso_01.py",
+      "codigo": "nombre = input(\"Nombre: \")\nconsulta = \"SELECT * FROM usuarios WHERE nombre = '\" + nombre + \"'\"\ncursor.execute(consulta)\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "sql",
+          "patron": "sql|consulta|query",
+          "lineas": [
+            2,
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Usar parámetros separados de la consulta."
+    },
+    {
+      "id": "P02",
+      "nombre": "SQL interpolado",
+      "pregunta": "¿Una f-string protege una consulta SQL?",
+      "archivo": "caso_02.py",
+      "codigo": "nombre = input(\"Nombre: \")\ncursor.execute(f\"SELECT * FROM usuarios WHERE nombre = '{nombre}'\")\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "sql",
+          "patron": "sql|consulta|query",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "La interpolación conserva el riesgo; parametrizar."
+    },
+    {
+      "id": "P03",
+      "nombre": "SQL con formato",
+      "pregunta": "¿Es seguro construir SQL con format?",
+      "archivo": "caso_03.py",
+      "codigo": "nombre = input(\"Nombre: \")\nconsulta = \"SELECT * FROM usuarios WHERE nombre = '{}'\".format(nombre)\ncursor.execute(consulta)\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "sql",
+          "patron": "sql|consulta|query",
+          "lineas": [
+            2,
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Sustituir format por parámetros del controlador."
+    },
+    {
+      "id": "P04",
+      "nombre": "Identificador SQL externo",
+      "pregunta": "¿Se puede insertar directamente el nombre de una tabla recibido?",
+      "archivo": "caso_04.py",
+      "codigo": "tabla = input(\"Tabla: \")\ncursor.execute(\"SELECT * FROM \" + tabla)\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "sql",
+          "patron": "sql|consulta|query",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "Elegir identificadores de un mapa fijo permitido."
+    },
+    {
+      "id": "P05",
+      "nombre": "SQL parametrizado",
+      "pregunta": "¿La consulta separa correctamente datos y sintaxis?",
+      "archivo": "caso_05.py",
+      "codigo": "nombre = input(\"Nombre: \")\ncursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "No reportar inyección SQL en este fragmento."
+    },
+    {
+      "id": "P06",
+      "nombre": "Tabla permitida",
+      "pregunta": "¿Es segura una tabla elegida mediante un mapa fijo?",
+      "archivo": "caso_06.py",
+      "codigo": "tablas = {\"usuarios\": \"usuarios\", \"productos\": \"productos\"}\nopcion = input(\"Tabla: \")\nif opcion in tablas:\n    cursor.execute(\"SELECT * FROM \" + tablas[opcion])\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "El identificador queda restringido a dos constantes."
+    },
+    {
+      "id": "P07",
+      "nombre": "os.system externo",
+      "pregunta": "¿Qué riesgo presenta concatenar un host en os.system?",
+      "archivo": "caso_07.py",
+      "codigo": "import os\nhost = input(\"Host: \")\nos.system(\"ping \" + host)\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "comandos",
+          "patron": "comando|command|shell|subprocess|popen|os\\.system",
+          "lineas": [
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Evitar el intérprete y validar el host."
+    },
+    {
+      "id": "P08",
+      "nombre": "subprocess shell",
+      "pregunta": "¿shell=True interpreta instrucciones introducidas por el usuario?",
+      "archivo": "caso_08.py",
+      "codigo": "import subprocess\ncomando = input(\"Comando: \")\nsubprocess.run(comando, shell=True)\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "comandos",
+          "patron": "comando|command|shell|subprocess|popen|os\\.system",
+          "lineas": [
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Comando fijo, argumentos validados y shell=False."
+    },
+    {
+      "id": "P09",
+      "nombre": "os.popen externo",
+      "pregunta": "¿Puede una entrada modificar un comando pasado a popen?",
+      "archivo": "caso_09.py",
+      "codigo": "import os\nnombre = input(\"Nombre: \")\nresultado = os.popen(\"echo \" + nombre).read()\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "comandos",
+          "patron": "comando|command|shell|subprocess|popen|os\\.system",
+          "lineas": [
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Usar una API que no interprete comandos."
+    },
+    {
+      "id": "P10",
+      "nombre": "Comando interpolado",
+      "pregunta": "¿Una f-string evita la inyección en check_output?",
+      "archivo": "caso_10.py",
+      "codigo": "import subprocess\nruta = input(\"Ruta: \")\nsubprocess.check_output(f\"cat {ruta}\", shell=True)\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "comandos",
+          "patron": "comando|command|shell|subprocess|popen|os\\.system",
+          "lineas": [
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Leer con una API de archivos y controlar las rutas permitidas."
+    },
+    {
+      "id": "P11",
+      "nombre": "Argumentos constantes",
+      "pregunta": "¿Un proceso con ejecutable y argumentos fijos tiene entrada inyectable?",
+      "archivo": "caso_11.py",
+      "codigo": "import subprocess\nsubprocess.run([\"python\", \"--version\"], shell=False, check=True)\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "No existe entrada externa en el fragmento."
+    },
+    {
+      "id": "P12",
+      "nombre": "Comandos permitidos",
+      "pregunta": "¿Un mapa fijo de comandos evita interpretar la entrada?",
+      "archivo": "caso_12.py",
+      "codigo": "import subprocess\nopciones = {\"version\": [\"python\", \"--version\"]}\nopcion = input(\"Opción: \")\nif opcion in opciones:\n    subprocess.run(opciones[opcion], shell=False, check=True)\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "La entrada solo selecciona una lista de argumentos constante."
+    },
+    {
+      "id": "P13",
+      "nombre": "eval externo",
+      "pregunta": "¿Es seguro evaluar directamente una expresión del usuario?",
+      "archivo": "caso_13.py",
+      "codigo": "entrada = input(\"Expresión: \")\nresultado = eval(entrada)\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "codigo",
+          "patron": "eval|exec|c[oó]digo|code injection",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "No evaluar expresiones externas con eval."
+    },
+    {
+      "id": "P14",
+      "nombre": "exec externo",
+      "pregunta": "¿Qué sucede al ejecutar instrucciones recibidas por entrada?",
+      "archivo": "caso_14.py",
+      "codigo": "entrada = input(\"Instrucciones: \")\nexec(entrada)\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "codigo",
+          "patron": "eval|exec|c[oó]digo|code injection",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "Definir operaciones permitidas sin ejecutar texto externo."
+    },
+    {
+      "id": "P15",
+      "nombre": "eval en función",
+      "pregunta": "¿Es seguro pasar una entrada a eval dentro de una función?",
+      "archivo": "caso_15.py",
+      "codigo": "def calcular(expresion):\n    return eval(expresion)\ncalcular(input(\"Expresión: \"))\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "codigo",
+          "patron": "eval|exec|c[oó]digo|code injection",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "La función no cambia el origen no confiable de la entrada."
+    },
+    {
+      "id": "P16",
+      "nombre": "eval tras strip",
+      "pregunta": "¿Eliminar espacios vuelve segura una expresión externa?",
+      "archivo": "caso_16.py",
+      "codigo": "entrada = input(\"Expresión: \").strip()\nresultado = eval(entrada)\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "codigo",
+          "patron": "eval|exec|c[oó]digo|code injection",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "strip no restringe las instrucciones que eval interpreta."
+    },
+    {
+      "id": "P17",
+      "nombre": "Conversión numérica",
+      "pregunta": "¿Convertir un número con int ejecuta código?",
+      "archivo": "caso_17.py",
+      "codigo": "entrada = input(\"Número: \")\ntry:\n    resultado = int(entrada) + 1\nexcept ValueError:\n    resultado = None\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "La conversión numérica no interpreta instrucciones Python."
+    },
+    {
+      "id": "P18",
+      "nombre": "Operaciones fijas",
+      "pregunta": "¿Se puede calcular con una operación seleccionada de una lista?",
+      "archivo": "caso_18.py",
+      "codigo": "import operator\noperaciones = {\"sumar\": operator.add, \"restar\": operator.sub}\nopcion = input(\"Operación: \")\nif opcion in operaciones:\n    resultado = operaciones[opcion](2, 3)\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "Se selecciona una función conocida sin eval ni exec."
+    },
+    {
+      "id": "P19",
+      "nombre": "Fuera de cobertura: estadística",
+      "pregunta": "¿Existe evidencia de las reglas actuales para analizar una media aritmética?",
+      "archivo": "caso_19.py",
+      "codigo": "def media(valores):\n    return sum(valores) / len(valores) if valores else 0\n",
+      "referencias_esperadas": [],
+      "estado_esperado": "abstenido",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "La base actual no documenta este tema; se espera abstención documental."
+    },
+    {
+      "id": "P20",
+      "nombre": "Fuera de cobertura: geometría",
+      "pregunta": "¿La base de inyecciones contiene reglas sobre cálculo de áreas?",
+      "archivo": "caso_20.py",
+      "codigo": "def area_rectangulo(ancho, alto):\n    return ancho * alto\n",
+      "referencias_esperadas": [],
+      "estado_esperado": "abstenido",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "No inventar referencias de seguridad para este cálculo."
+    }
+  ]
+}

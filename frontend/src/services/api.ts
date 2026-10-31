@@ -195,7 +195,7 @@ function parseSources(value: unknown): SourceReference[] {
     );
   }
 
-  return value.map((entry: unknown) => {
+  const sources = value.map((entry: unknown) => {
     if (
       !record(entry) ||
       typeof entry.id !== "string" ||
@@ -229,6 +229,31 @@ function parseSources(value: unknown): SourceReference[] {
           : null,
     };
   });
+
+  const unique = new Map<string, SourceReference>();
+
+  for (const source of sources) {
+    const previous = unique.get(source.id);
+
+    if (
+      previous &&
+      ["documento", "seccion", "fuente", "url"].some(
+        (key) =>
+          previous[key as keyof SourceReference] !==
+          source[key as keyof SourceReference],
+      )
+    ) {
+      throw invalidResponse(
+        "Un identificador RAG corresponde a fuentes diferentes.",
+      );
+    }
+
+    if (!previous) {
+      unique.set(source.id, source);
+    }
+  }
+
+  return Array.from(unique.values());
 }
 
 // =========================================================
@@ -345,26 +370,19 @@ export function parseResponse(
     throw invalid();
   }
 
-  if (
-    estado === "abstenido" &&
-    fuentes.length > 0 &&
-    hallazgos.length === 0
-  ) {
-    // Las fuentes pueden acompañar la explicación de abstención.
-    // No se convierten automáticamente en hallazgos.
-  }
-
   return {
     archivos: [
       {
         nombre: input.archivo,
-        codigo:
-          input.tipo === "python" && input.fichero
-            ? input.codigo
-            : input.codigo,
+        codigo: input.codigo,
       },
     ],
-    hallazgos,
+    hallazgos: hallazgos.map((finding) => ({
+      ...finding,
+      fuentes: fuentes.filter((source) =>
+        finding.referencias?.includes(source.id),
+      ),
+    })),
     ...(fuentes.length > 0 ? { fuentes } : {}),
     demo: false,
     estado,
@@ -376,7 +394,7 @@ export function parseResponse(
 }
 
 // =========================================================
-// PROCESAMIENTO DE RESPUESTAS ZIP
+// PROCESAMIENTO DE RESPUESTAS ZIP Y GITHUB
 // =========================================================
 
 export function parseZipResponse(
@@ -385,13 +403,15 @@ export function parseZipResponse(
 ): AnalysisResult {
   const invalid = () =>
     invalidResponse(
-      "El informe ZIP del servidor no coincide con el contrato esperado.",
+      "El informe del proyecto no coincide con el contrato esperado.",
     );
 
   if (
     !record(value) ||
     !isAnalysisStatus(value.estado) ||
-    value.archivo_zip !== input.fichero?.name ||
+    (input.tipo === "github"
+      ? value.repositorio !== input.url
+      : value.archivo_zip !== input.fichero?.name) ||
     !Array.isArray(value.informes) ||
     value.informes.length < 1 ||
     value.informes.length > 5 ||
@@ -454,7 +474,7 @@ export function parseZipResponse(
     result.hallazgos.push(
       ...parsed.hallazgos.map((finding) => ({
         ...finding,
-        id: `zip-${index}-${finding.id}`,
+        id: `${input.tipo === "github" ? "github" : "zip"}-${index}-${finding.id}`,
       })),
     );
   });
@@ -465,9 +485,10 @@ export function parseZipResponse(
 
   if (archivosAbstenidos === value.informes.length) {
     result.estado = "abstenido";
+
     result.mensaje =
       mensajes.join("\n") ||
-      "No se encontraron fuentes suficientes para fundamentar los análisis del ZIP.";
+      "No se encontraron fuentes suficientes para fundamentar los análisis del proyecto.";
   } else if (archivosAbstenidos > 0) {
     result.mensaje =
       mensajes.length > 0
@@ -488,19 +509,14 @@ export async function analyzeCode(
 ): Promise<AnalysisResult> {
   validateInput(input);
 
-  if (input.tipo === "github") {
-    throw new AnalysisError(
-      "pendiente",
-      "El backend aún no ofrece descarga de repositorios. Utiliza Código, Archivo .py o Proyecto .zip.",
-    );
-  }
-
   const base = (
     import.meta.env.VITE_API_BASE_URL || ""
   ).replace(/\/$/, "");
 
   const timeout = AbortSignal.timeout(
-    input.tipo === "zip" ? 180_000 : 60_000,
+    input.tipo === "zip" || input.tipo === "github"
+      ? 180_000
+      : 60_000,
   );
 
   const combined = signal
@@ -513,18 +529,24 @@ export async function analyzeCode(
       input.tipo === "zip";
 
     const path =
-      input.tipo === "zip"
-        ? "/api/v1/archivos/zip"
-        : input.tipo === "python"
-          ? "/api/v1/archivos"
-          : "/api/v1/analizar";
+      input.tipo === "github"
+        ? "/api/v1/repositorios/github"
+        : input.tipo === "zip"
+          ? "/api/v1/archivos/zip"
+          : input.tipo === "python"
+            ? "/api/v1/archivos"
+            : "/api/v1/analizar";
 
     const body = upload
       ? new FormData()
-      : JSON.stringify({
-          archivo: input.archivo,
-          codigo: input.codigo,
-        });
+      : JSON.stringify(
+          input.tipo === "github"
+            ? { url: input.url }
+            : {
+                archivo: input.archivo,
+                codigo: input.codigo,
+              },
+        );
 
     if (body instanceof FormData) {
       body.append(
@@ -556,7 +578,10 @@ export async function analyzeCode(
     );
 
     if (!response.ok) {
-      if ([400, 413, 422].includes(response.status)) {
+      if (
+        [400, 413, 422].includes(response.status) ||
+        (input.tipo === "github" && response.status === 404)
+      ) {
         throw new AnalysisError(
           "entrada",
           `El servidor rechazó la entrada (HTTP ${response.status}). Revisa el tamaño y el contenido.`,
@@ -580,7 +605,7 @@ export async function analyzeCode(
       );
     }
 
-    return input.tipo === "zip"
+    return input.tipo === "zip" || input.tipo === "github"
       ? parseZipResponse(data, input)
       : parseResponse(data, input);
 
@@ -597,7 +622,9 @@ export async function analyzeCode(
       throw new AnalysisError(
         "conexion",
         `El análisis superó ${
-          input.tipo === "zip" ? "180" : "60"
+          input.tipo === "zip" || input.tipo === "github"
+            ? "180"
+            : "60"
         } segundos. Comprueba el backend e inténtalo de nuevo.`,
       );
     }

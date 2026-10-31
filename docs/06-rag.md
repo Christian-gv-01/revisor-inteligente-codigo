@@ -1,4 +1,4 @@
-﻿# Diseño e implementación de RAG
+# Diseño e implementación de RAG
 
 ## 1. Objetivo
 
@@ -14,12 +14,14 @@ La documentación de seguridad se encuentra en:
 
 - `knowledge/seguridad_python.md`
 
-Contiene cuatro reglas resumidas relacionadas con:
+Contiene seis reglas resumidas relacionadas con:
 
 - Uso de `eval` con entradas no confiables.
 - Prevención de inyección SQL.
 - Prevención de inyección de comandos del sistema.
 - Prevención general de inyecciones.
+- Exposición de credenciales y secretos.
+- Path Traversal y acceso inseguro a archivos.
 
 Las reglas incluyen referencias a documentación de MITRE y OWASP. El documento contiene resúmenes técnicos y enlaces a las fuentes originales, no copias completas de las páginas oficiales.
 
@@ -63,10 +65,10 @@ python .\scripts\ingest.py
 La ejecución verificada produjo los siguientes resultados:
 
 - Documento procesado: `knowledge/seguridad_python.md`.
-- Fragmentos procesados: 4.
+- Fragmentos procesados: 6.
 - Colección: `seguridad_python`.
-- Registros finales: 4.
-- Fragmentos obsoletos eliminados: 0.
+- Registros finales: 6.
+- Fragmentos obsoletos eliminados: 1.
 
 Los cuatro fragmentos corresponden a las cuatro reglas de seguridad documentadas.
 
@@ -113,7 +115,7 @@ La sincronización debe mantener los fragmentos actuales sin eliminar informaci�
 
 La estrategia utilizada para la documentación de seguridad consiste en crear un fragmento por sección Markdown de nivel `##`.
 
-La documentación actual produce cuatro fragmentos.
+La documentación actual produce seis fragmentos.
 
 ### 4.1. Justificación
 
@@ -192,7 +194,7 @@ En el documento `knowledge/seguridad_python.md` aparece la fecha de revisión 20
 
 Si el documento de entrada no proporciona una fecha de vigencia, el sistema no debe inventarla.
 
-En la ingesta verificada se procesaron cuatro fragmentos de seguridad y sus resultados incluyeron referencias a MITRE y OWASP.
+En la ingesta verificada se procesaron seis fragmentos de seguridad y sus resultados incluyeron referencias a MITRE y OWASP.
 
 ## 7. Recuperación de información
 

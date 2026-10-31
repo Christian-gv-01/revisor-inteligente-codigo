@@ -1,0 +1,47 @@
+{
+  "proveedor_ia": "simulado",
+  "respuesta": {
+    "archivo": "caso_01.py",
+    "estado": "analizado",
+    "hallazgos": [
+      {
+        "linea": 2,
+        "severidad": "alta",
+        "categoria": "Inyección SQL",
+        "titulo": "Consulta SQL de la prueba de integración",
+        "explicacion": "Respuesta controlada del proveedor simulado para probar el contrato.",
+        "correccion_sugerida": "cursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))",
+        "referencias": [
+          "seguridad_python-002"
+        ]
+      }
+    ],
+    "fuentes": [
+      {
+        "id": "seguridad_python-002",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 2: Prevenir inyeccion SQL",
+        "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.1560038924217224
+      },
+      {
+        "id": "seguridad_python-004",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 4: Prevencion general de inyecciones",
+        "fuente": "OWASP Injection Prevention Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.552624523639679
+      },
+      {
+        "id": "seguridad_python-003",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+        "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+        "distancia": 0.5732212662696838
+      }
+    ],
+    "mensaje": null
+  }
+}

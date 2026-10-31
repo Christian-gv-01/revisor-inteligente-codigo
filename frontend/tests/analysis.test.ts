@@ -147,19 +147,57 @@ describe("Contrato y servicio HTTP", () => {
     await expect(analyzeCode(input)).rejects.toMatchObject({
       kind: "contrato",
     });
+  });  
+
+
+  it("analiza un repositorio GitHub y conserva la abstención", async () => {
+  const url = "https://github.com/test/repo";
+
+  const respuesta = {
+    repositorio: url,
+    estado: "analizado",
+    total_archivos: 1,
+    informes: [
+      {
+        archivo: "hello_world.py",
+        estado: "abstenido",
+        hallazgos: [],
+        fuentes: [],
+        mensaje: "No hay evidencia documental suficiente.",
+      },
+    ],
+  };
+
+  const fetchMock = vi.fn().mockResolvedValue(
+    new Response(JSON.stringify(respuesta), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    }),
+  );
+
+  vi.stubGlobal("fetch", fetchMock);
+
+  const resultado = await analyzeCode({
+    ...input,
+    tipo: "github",
+    url,
   });
-  it("no inventa endpoints para GitHub", async () => {
-    const fetch = vi.fn();
-    vi.stubGlobal("fetch", fetch);
-    await expect(
-      analyzeCode({
-        ...input,
-        tipo: "github",
-        url: "https://github.com/test/repo",
-      }),
-    ).rejects.toMatchObject({ kind: "pendiente" });
-    expect(fetch).not.toHaveBeenCalled();
-  });
+
+  expect(fetchMock).toHaveBeenCalledWith(
+    "/api/v1/repositorios/github",
+    expect.objectContaining({
+      method: "POST",
+      body: JSON.stringify({ url }),
+    }),
+  );
+
+  expect(resultado.estado).toBe("abstenido");
+  expect(resultado.archivos).toEqual([
+    { nombre: "hello_world.py", codigo: null },
+  ]);
+  expect(resultado.hallazgos).toEqual([]);
+});
+
   it("expone la cancelación al consumidor", async () => {
     const controller = new AbortController();
     controller.abort();

@@ -69,3 +69,16 @@ class RespuestaAnalisisZIP(BaseModel):
     estado: Literal["analizado"]
     total_archivos: int = Field(ge=1)
     informes: list[RespuestaAnalisis]
+
+
+
+class SolicitudGitHub(BaseModel):
+    url: str = Field(min_length=1, max_length=2048)
+
+
+class RespuestaAnalisisRepositorio(BaseModel):
+    repositorio: str
+    estado: Literal["analizado"]
+    total_archivos: int = Field(ge=1)
+    informes: list[RespuestaAnalisis]
+

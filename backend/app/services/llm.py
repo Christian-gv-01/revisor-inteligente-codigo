@@ -183,11 +183,14 @@ def _recuperar_contexto_rag(
     """
 
     try:
-        from app.services.rag import buscar_fragmentos
+        # Importar el modulo permite conservar una unica referencia compartida
+        # con el resto de la aplicacion y facilita aislar la recuperacion
+        # en las pruebas mediante monkeypatch.
+        from app.services import rag as rag_module
 
         consulta_rag = _construir_consulta_rag(codigo)
 
-        fragmentos = buscar_fragmentos(
+        fragmentos = rag_module.buscar_fragmentos(
             consulta_rag,
             limite=3,
         )
@@ -198,7 +201,14 @@ def _recuperar_contexto_rag(
             "rag_unavailable error_type=%s",
             type(error).__name__,
         )
-        return "", []
+
+        # Un fallo de ChromaDB no equivale a una consulta sin resultados.
+        # La infraestructura debe responder con un error controlado 503.
+        raise LLMError(
+            "El servicio de recuperacion documental no esta disponible. "
+            "Comprueba ChromaDB y las ingestas de conocimiento.",
+            503,
+        ) from error
 
     if not fragmentos:
         logger.info("rag_no_sources")
@@ -360,6 +370,8 @@ def _construir_contenido_usuario(
 # ABSTENCION
 # =========================================================
 
+
+
 def _crear_informe_abstenido(
     fuentes: list[dict],
     motivo: str,
@@ -369,7 +381,11 @@ def _crear_informe_abstenido(
     respaldo documental suficiente.
     """
 
-    informe = InformeModelo(hallazgos=[])
+    informe = InformeModelo(
+        hallazgos=[],
+        estado="abstenido",
+        mensaje=motivo,
+    )
 
     informe._fuentes = fuentes
     informe._motivo_abstencion = motivo

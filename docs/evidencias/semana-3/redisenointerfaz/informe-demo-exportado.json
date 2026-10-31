@@ -1,0 +1,44 @@
+{
+  "modo": "demostracion_sin_ia",
+  "fecha": "2026-10-30T21:53:28.457Z",
+  "estado": "analizado",
+  "mensaje": null,
+  "archivos": [
+    "usuarios.py"
+  ],
+  "fuentes": [
+    {
+      "id": "seguridad_python-002",
+      "documento": "seguridad_python.md",
+      "seccion": "Regla 2: Prevenir inyección SQL",
+      "fuente": "OWASP · SQL Injection Prevention",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+      "distancia": null
+    }
+  ],
+  "hallazgos": [
+    {
+      "id": "demo-0",
+      "archivo": "usuarios.py",
+      "linea": 6,
+      "severidad": "alta",
+      "categoria": "Inyección SQL",
+      "titulo": "Entrada de usuario dentro de una consulta",
+      "explicacion": "Insertar texto del usuario en una consulta puede alterar su estructura y permitir acceso no autorizado a datos.",
+      "correccion_sugerida": "conexion.execute(\n    \"SELECT * FROM usuarios WHERE nombre = ?\",\n    (nombre,)\n)",
+      "referencias": [
+        "seguridad_python-002"
+      ],
+      "fuentes": [
+        {
+          "id": "seguridad_python-002",
+          "documento": "seguridad_python.md",
+          "seccion": "Regla 2: Prevenir inyección SQL",
+          "fuente": "OWASP · SQL Injection Prevention",
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+          "distancia": null
+        }
+      ]
+    }
+  ]
+}
