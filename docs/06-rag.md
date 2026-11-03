@@ -1,5 +1,7 @@
 # Diseño e implementación de RAG
 
+> **Actualización de Frontend y Evaluación — 30 de octubre de 2026:** las secciones siguientes conservan la documentación técnica e histórica del equipo. La entrega de veinte casos, sus métricas, la presentación de fuentes y los criterios de revisión de citas se documentan en [RAG: fuentes, interfaz y evaluación](rag-frontend-evaluacion.md) y [07-evaluacion.md](07-evaluacion.md). Las cifras históricas no sustituyen esos resultados ni se atribuyen a otras ramas.
+
 ## 1. Objetivo
 
 El sistema utiliza recuperación aumentada por generación (RAG) para proporcionar al modelo documentación relacionada con la seguridad del código Python.
@@ -640,3 +642,13 @@ La implementación ha superado las pruebas automatizadas registradas, con 51 pru
 Sin embargo, la validación definitiva del RAG requiere completar las pruebas específicas de recuperación, actualizar las evidencias después de la última sincronización, verificar la correspondencia semántica entre hallazgos y citas y completar la evaluación oficial de veinte preguntas.
 
 El sistema se considerará validado cuando las pruebas y el conjunto de evaluación proporcionen evidencia suficiente de la recuperación, la fundamentación de las citas y la abstención ante consultas sin respaldo documental.
+
+## 15. Entrega de Frontend y Evaluación
+
+La rama `feature/frontend` incorpora las referencias por hallazgo, su resolución dentro de cada archivo, la exportación del estado y mensaje, y la trazabilidad de la selección. Las fuentes consultadas se distinguen de las citas individuales; las referencias de Demo se identifican como ilustrativas.
+
+El conjunto de [20 preguntas](../eval/preguntas_referencia.json) y [su ejecutor](../eval/run_eval.py) están preparados. La corrida local de recuperación completó 20/20 casos, con Recall@3 medio de 94,44 % sobre los 18 casos con referencias esperadas. La base evaluada contenía cuatro fragmentos de seguridad y no la colección interna del proyecto. Las métricas y sus limitaciones están en [la documentación específica](rag-frontend-evaluacion.md).
+
+Se verificó además la integración con nueve pruebas HTTP que utilizan FastAPI y ChromaDB reales y el cliente externo de IA simulado. Eso acredita el contrato y la presentación de fuentes, sin medir la calidad de Gemini.
+
+La evaluación de respuestas reales y la revisión semántica de citas siguen pendientes de una API con Gemini configurado. La configuración del proveedor y los cambios internos de ingesta o recuperación corresponden al responsable de backend/RAG.
