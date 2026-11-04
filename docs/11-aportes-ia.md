@@ -8,9 +8,9 @@ La siguiente relación se basa en el historial Git y debe ser validada por el eq
 |---|---|
 | `christian` / `Christian-gv-01` | Backend FastAPI, Gemini, carga de archivos y ZIP, repositorios GitHub, agente supervisado y preparación de despliegue. |
 | `Andyjr98` | QA, seguridad de entradas, RAG, filtros, abstención, regresiones y documentación de decisiones. |
-| `olmesaguilar` | Frontend, diseño, trazabilidad de fuentes, evaluación RAG, integración HTTP y rol de QA/seguridad/documentación para la Entrega 4. |
+| `olmesaguilar` | Frontend, diseño, trazabilidad de fuentes, evaluación RAG e integración HTTP, según el historial. |
 
-Los alias duplicados corresponden a configuraciones distintas de nombre o correo en Git; no se contabilizan como integrantes separados.
+Las identidades Git describen autoría registrada; no acreditan por sí solas el nombre ni el rol actual de la persona. La correspondencia entre cuentas e integrantes debe confirmarla el equipo. El responsable de Frontend y Evaluación comunicó sus avances por separado; el usuario de esta entrega asume el rol de Compañero 3, QA, seguridad y documentación. No se atribuye este rol a la cuenta configurada localmente sin esa confirmación.
 
 ## Aporte del rol QA, seguridad y documentación — Entrega 4
 
