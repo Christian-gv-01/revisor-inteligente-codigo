@@ -16,7 +16,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     XDG_CACHE_HOME=/data/.cache
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libgomp1 \
+    && apt-get install -y --no-install-recommends libgomp1 gosu \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --system --gid 10001 codeguard \
     && useradd --system --uid 10001 --gid codeguard --home-dir /data codeguard
@@ -35,11 +35,11 @@ RUN mkdir -p /data/chroma /data/.cache \
     && chown -R codeguard:codeguard /data \
     && chmod 755 /app/entrypoint.sh
 
-USER codeguard
+USER root
 WORKDIR /app/backend
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=8s --start-period=180s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=5).read()" || exit 1
+    CMD python -c "import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:'+os.getenv('PORT','8000')+'/health',timeout=5).read()" || exit 1
 
 ENTRYPOINT ["/app/entrypoint.sh"]
