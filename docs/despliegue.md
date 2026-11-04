@@ -56,5 +56,7 @@ El puerto 8080 del Compose está restringido a loopback para uso local. **Compos
 - No hay ejecución de código Python enviado por usuarios. La ingesta ejecuta únicamente scripts del propio repositorio.
 - La imagen inicia brevemente como root únicamente para fijar permisos del volumen. Después ejecuta Python y FastAPI como usuario `codeguard` (UID 10001) y no incluye `.env` ni datos de ChromaDB.
 - El endpoint `/health` verifica que la API responde, pero **no** verifica por sí solo la disponibilidad del modelo o del RAG. Demostrar estos componentes con una petición de análisis real.
-- Antes de abrir la URL al público se deben incorporar límites de tasa, revisar errores seguros, dependencia y protección contra abuso.
+- Docker activa `RATE_LIMIT_ENABLED=1` (predeterminado 0 en desarrollo local): ventana deslizante de 60 segundos, 30 unidades globales y 10 por IP observada; los endpoints ZIP y GitHub cuestan 5 unidades y el agente Gemini 3. Se devuelve HTTP 429 con `Retry-After`. Los tests normales permanecen sin límites mientras se ejecutan en local.
+- Este mecanismo funciona por proceso y usa la IP de conexión, sin confiar en el encabezado `X-Forwarded-For`. Para varios procesos o réplicas se requiere un almacén compartido como Redis; los usuarios detrás del mismo proxy pueden compartir cupo.
+- Antes de abrir la URL al público se debe verificar HTTP 429 real, revisar errores seguros, dependencias y protección contra abuso.
 - Revisar el historial Git con un detector de secretos y comprobar que la plataforma no expone el volumen.
