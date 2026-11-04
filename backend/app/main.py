@@ -1,5 +1,11 @@
 ﻿
 from fastapi import FastAPI, HTTPException, File, UploadFile
+import os
+
+from fastapi import Request
+from fastapi.responses import JSONResponse
+
+from app.services.rate_limit import ENDPOINT_WEIGHTS, LimitadorPonderado
 from fastapi.concurrency import run_in_threadpool
 
 
@@ -24,6 +30,39 @@ app = FastAPI(
     description="API para el análisis inteligente de código Python",
     version="0.1.0",
 )
+
+
+# El presupuesto global también protege si el proveedor de hosting agrupa IPs.
+# No se confía en X-Forwarded-For suministrado por el cliente.
+# Se activa explícitamente en producción mediante RATE_LIMIT_ENABLED=1.
+limitador_peticiones = LimitadorPonderado(
+    ventana=60,
+    limite_global=30,
+    limite_cliente=10,
+)
+
+
+@app.middleware("http")
+async def limitar_analisis(request: Request, call_next):
+    if (
+        os.getenv("RATE_LIMIT_ENABLED", "0") == "1"
+        and request.method == "POST"
+        and request.url.path in ENDPOINT_WEIGHTS
+    ):
+        ip = request.client.host if request.client else "desconocido"
+        resultado = limitador_peticiones.comprobar(
+            ip, ENDPOINT_WEIGHTS[request.url.path]
+        )
+        if not resultado.permitido:
+            return JSONResponse(
+                status_code=429,
+                content={"detail": "Demasiadas solicitudes. Reintenta más tarde."},
+                headers={
+                    "Retry-After": str(resultado.retry_after),
+                    "Cache-Control": "no-store",
+                },
+            )
+    return await call_next(request)
 
 
 def construir_respuesta(
