@@ -232,7 +232,7 @@ from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 
 if os.getenv("SERVE_FRONTEND", "0") == "1":
-    dist = Path(__file__).resolve().parents[3] / "frontend" / "dist"
+    dist = Path(__file__).resolve().parents[2] / "frontend" / "dist"
     if not (dist / "index.html").is_file():
         raise RuntimeError("SERVE_FRONTEND=1 requiere frontend/dist/index.html")
     app.mount("/", StaticFiles(directory=dist, html=True), name="frontend")
