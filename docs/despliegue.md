@@ -44,7 +44,8 @@ Repetir el mismo análisis después del reinicio y comprobar que vuelve a obtene
 
 El Dockerfile admite un servicio único en hosting con Docker y la variable `PORT`. Configurar en la plataforma:
 - `GEMINI_API_KEY` y `GEMINI_MODEL` como variables privadas.
-- Un **volumen persistente montado en `/data`**.
+- Un **volumen persistente montado en `/data`**. Railway lo monta como usuario root; el entrypoint prepara permisos y ejecuta ingesta y FastAPI como `codeguard` (UID 10001) mediante `gosu`.
+- El HEALTHCHECK usa el puerto de `PORT`, que Railway puede asignar dinámicamente.
 - `CHROMA_PATH=/data/chroma`.
 - Exposición HTTPS mediante el proxy del proveedor y ruta de salud `/health`.
 
@@ -53,7 +54,7 @@ El puerto 8080 del Compose está restringido a loopback para uso local. **Compos
 ## Seguridad y límites
 
 - No hay ejecución de código Python enviado por usuarios. La ingesta ejecuta únicamente scripts del propio repositorio.
-- La imagen usa un usuario no privilegiado y no contiene `.env` ni datos de ChromaDB.
+- La imagen inicia brevemente como root únicamente para fijar permisos del volumen. Después ejecuta Python y FastAPI como usuario `codeguard` (UID 10001) y no incluye `.env` ni datos de ChromaDB.
 - El endpoint `/health` verifica que la API responde, pero **no** verifica por sí solo la disponibilidad del modelo o del RAG. Demostrar estos componentes con una petición de análisis real.
 - Antes de abrir la URL al público se deben incorporar límites de tasa, revisar errores seguros, dependencia y protección contra abuso.
 - Revisar el historial Git con un detector de secretos y comprobar que la plataforma no expone el volumen.
