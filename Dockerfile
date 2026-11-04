@@ -11,6 +11,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app/backend \
     SERVE_FRONTEND=1 \
+    RATE_LIMIT_ENABLED=1 \
     CHROMA_PATH=/data/chroma \
     HOME=/data \
     XDG_CACHE_HOME=/data/.cache
