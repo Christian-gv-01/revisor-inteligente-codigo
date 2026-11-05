@@ -60,4 +60,26 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
             ),
         )
     except LLMError as error:
-        raise HTTPException(status_code=error.codigo, detail=str(error)) from error
+        # Fallback explícito: no se atribuyen hallazgos AST a Gemini ni a RAG.
+        # No ocultar una falla distinta de disponibilidad/formato del proveedor.
+        if error.codigo not in (502, 503, 504):
+            raise HTTPException(status_code=error.codigo, detail=str(error)) from error
+
+        pasos = await run_in_threadpool(inspeccion_local, solicitud)
+        return RespuestaAgente(
+            archivo=solicitud.archivo,
+            modo="degradado",
+            pasos=pasos,
+            max_pasos=solicitud.max_pasos,
+            informe=RespuestaAnalisis(
+                archivo=solicitud.archivo,
+                estado="parcial",
+                hallazgos=[],
+                fuentes=[],
+                mensaje=(
+                    "La consulta a Gemini no pudo completarse. "
+                    "Se ejecutaron únicamente herramientas AST locales; "
+                    "no hay dictamen de IA ni referencias RAG."
+                ),
+            ),
+        )

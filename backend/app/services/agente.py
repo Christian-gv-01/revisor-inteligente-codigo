@@ -47,7 +47,7 @@ class PasoAgente(BaseModel):
 
 class RespuestaAgente(BaseModel):
     archivo: str
-    modo: Literal["gemini_real", "inspeccion_local"]
+    modo: Literal["gemini_real", "inspeccion_local", "degradado"]
     pasos: list[PasoAgente]
     max_pasos: int = Field(ge=1, le=3)
     informe: RespuestaAnalisis
@@ -141,7 +141,7 @@ def planificar_gemini(codigo: str, pasos: list[PasoAgente]) -> DecisionAgente:
     """El proveedor sugiere UNA siguiente acción de una lista cerrada."""
     from dotenv import load_dotenv
     from google import genai
-    from google.genai import types
+    from google.genai import errors, types
 
     load_dotenv(Path(__file__).resolve().parents[3] / ".env")
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
@@ -216,15 +216,22 @@ response_json_schema={
         return decision
     except LLMError:
         raise
-    except Exception as error:
+    except errors.APIError as error:
+        # Mensajes crudos del proveedor nunca se incluyen en la respuesta pública.
         logger.warning(
-            "agente_planificador_error tipo=%s codigo_http=%s",
-            type(error).__name__,
-            getattr(error, "code", "desconocido"),
+            "agente_planificador_proveedor status=%s", error.code
         )
-        raise LLMError(
-            "El planificador de Gemini no está disponible.", 503
-        ) from error
+        if error.code in (408, 504):
+            raise LLMError("El planificador superó el tiempo de espera.", 504) from error
+        if error.code in (429, 500, 502, 503):
+            raise LLMError("El planificador no está disponible temporalmente.", 503) from error
+        raise LLMError("El proveedor rechazó la planificación.", 502) from error
+    except (ValueError, TypeError) as error:
+        logger.warning("agente_planificador_respuesta_invalida tipo=%s", type(error).__name__)
+        raise LLMError("El planificador devolvió una decisión inválida.", 502) from error
+    except Exception as error:
+        logger.warning("agente_planificador_error tipo=%s", type(error).__name__)
+        raise LLMError("El planificador no está disponible.", 503) from error
     finally:
         client.close()
 
@@ -251,7 +258,12 @@ def ejecutar_agente(
     )]
     usados = {"inspeccionar_estructura"}
     for numero in range(2, solicitud.max_pasos + 1):
-        decision = DecisionAgente.model_validate(elegir(solicitud.codigo, list(pasos)))
+        try:
+            decision = DecisionAgente.model_validate(elegir(solicitud.codigo, list(pasos)))
+        except (ValueError, TypeError) as error:
+            # Incluso un planificador defectuoso no puede ejecutar herramientas
+            # fuera de la lista permitida ni filtrar errores internos.
+            raise LLMError("El planificador devolvió una decisión inválida.", 502) from error
         nombre = decision.herramienta
         if nombre == "finalizar" or nombre in usados:
             break
