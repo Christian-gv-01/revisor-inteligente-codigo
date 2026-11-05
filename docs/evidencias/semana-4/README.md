@@ -17,6 +17,8 @@
 | `pruebas-locales.json` | 26/26 aprobados | `scripts/pruebas_produccion.py` contra localhost |
 | `integracion-http/resultado-integracion.json` | 9/9 aprobadas | FastAPI y ChromaDB reales; proveedor controlado |
 | `pruebas-publicas.json` | 24/26; dos fallos de sanitización 422 | Mismo script contra HTTPS público |
+| `pruebas-publicas-2026-11-05.json` | Repetición: 24/26; persisten P05/P07 | Mismo script contra Railway el 5 de noviembre |
+| `revalidacion-cierre-2026-11-05.json` | Endpoint estático ausente; análisis 502; sin baseline | Consulta OpenAPI y un análisis sintético con el helper de persistencia |
 | `auditoria-secretos.json` | Histórico previo a actualizar ramas | `scripts/auditar_secretos.py` |
 | `auditoria-secretos-integrado.json` | Requiere revisar JWT de fixture | Historial ampliado tras fetch |
 | `pytest-integrado.xml` | 179 aprobadas | Suite integrada con Ruff/Bandit reales |

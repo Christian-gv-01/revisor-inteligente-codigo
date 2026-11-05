@@ -1,8 +1,18 @@
 # Dependencias para cerrar QA público
 
-Fecha: 4 de noviembre de 2026, America/Bogota.
+Actualización: 5 de noviembre de 2026, America/Bogota.
 
-## Confirmación del equipo
+## Estado vigente
+
+- La rama QA está publicada y el PR #12 está abierto en borrador. La autenticación Git ya se resolvió con la cuenta confirmada por el usuario.
+- Railway tiene URL HTTPS pública: https://revisor-inteligente-codigo-production.up.railway.app . La primera matriz pública obtuvo 24/26; conservar `pruebas-publicas.json` como evidencia de esa ejecución.
+- Falta verificar en producción la corrección de los errores 422 y el análisis real que devolvió 502. Los resultados de una repetición se guardan por separado; no se reemplaza la evidencia anterior.
+- El responsable indicó que no puede reiniciar el servicio. No se dispone en esta sesión de una herramienta de administración de Railway. Falta evidencia del evento de reinicio, volumen y recuperación sin reingesta.
+- El estado actual, la revisión de los aportes de Frontend y las evidencias posteriores se detallan en `../../12-cierre-qa-entrega4.md`.
+
+Las secciones históricas siguientes explican los bloqueos iniciales; no describen el estado vigente de autenticación ni de disponibilidad de la URL.
+
+## Confirmación inicial del equipo — histórico del 4 de noviembre
 
 El usuario compartió el reporte del responsable de Frontend y Evaluación. Ese reporte indica que sigue pendiente definir la plataforma, obtener la URL pública del backend y comprobar la integración en producción. No se dispone de una URL confirmada en esta revisión.
 
@@ -18,7 +28,7 @@ Las métricas RAG comunicadas por ese integrante pertenecen a su ejecución. No 
 
 Con esos datos, QA ejecuta los escenarios públicos, captura las citas previas, solicita el reinicio al responsable y compara las citas posteriores. El frontend realiza sus propias verificaciones de interfaz y exportación.
 
-## Comprobaciones realizadas en esta continuación
+## Comprobaciones iniciales — histórico
 
 - Se intentó publicar la rama con autenticación no interactiva. Git indicó que no podía obtener el usuario de GitHub; la publicación continúa sin confirmar.
 - Se inició Docker Desktop para intentar la construcción. El motor terminó durante el arranque; `docker compose build` no pudo conectarse al motor Linux.

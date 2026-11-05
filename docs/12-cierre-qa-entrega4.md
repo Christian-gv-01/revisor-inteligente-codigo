@@ -68,3 +68,26 @@ Los informes HTTP omiten cuerpos y mensajes de excepción al guardar evidencia p
 ## Condición para aceptar la entrega pública
 
 Se requiere integrar los cambios de Frontend, confirmar la revisión desplegada, resolver o aceptar documentadamente los hallazgos, repetir la matriz pública sobre esa revisión y registrar el reinicio coordinado. QA puede entregar ahora el código, pruebas y documentación; no certifica una aceptación de producción completa mientras esos puntos sigan abiertos.
+
+## Revisión de avances del equipo — 5 de noviembre de 2026
+
+Se actualizaron las referencias remotas antes de revisar el informe compartido por Frontend. Revisiones observadas: `origin/main` en `f459ef9`, `origin/feature/frontend-semana4` en `d35079455ad895242aabb5d4530ed8b309215658` y `origin/feature/semana4-ruff-bandit` en `a394d6543b20e77e8abf2e5a1acbe7b78fb58cf2`. La consulta no fusionó estas ramas ni cambió el despliegue.
+
+| Punto comunicado | Comprobación propia | Estado de QA |
+|---|---|---|
+| Aviso de IA y privacidad | `frontend/src/pages/HomePage.tsx` de la rama de Frontend contiene un aviso visible en modo API: envío de código y contexto a Gemini, análisis sin ejecución y recomendación de no enviar secretos | Implementación comprobada en fuente; falta aceptación visual de la versión integrada/desplegada |
+| Gitleaks | Workflow `.github/workflows/secretos.yml` presente y [ejecución 41949973928](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/41949973928) terminada en `success` para `d350794` | Automatización comprobada; el resultado depende de las exclusiones configuradas |
+| Credencial histórica | `.gitleaksignore` identifica exactamente el commit y archivo de QA-H02, regla `jwt`, línea 336 | Es el mismo hallazgo. Rotación comunicada por el compañero, no verificada directamente por QA; excluirlo no prueba su revocación |
+| Comparación de evaluaciones, commit `11dd2f8` | No disponible tras `git fetch`; la API de commits devolvió HTTP 422 para ese identificador y el documento remoto revisado termina en la sección 9 | Solicitar publicación de ese commit o su SHA completo; no se da por verificada la nueva sección 10 ni sus métricas |
+| Ruff/Bandit en Frontend | Sin coincidencias de `analisis_estatico` en `frontend/src` de la rama remota revisada | QA-S10/QA-H01 continúan pendientes |
+| Cloud Run | El informe lo menciona como pendiente; la URL comprobada por QA corresponde a Railway | No hay evidencia propia de migración a Cloud Run |
+
+La auditoría QA anterior se conserva sin modificar ni ocultar su hallazgo. No se probó la credencial contra servicios externos y no se solicitó compartir su valor. Para cerrar QA-H02 basta una confirmación trazable del responsable sobre su carácter sintético o su revocación, identificando el hallazgo sin exponer el secreto.
+
+### Repetición pública del 5 de noviembre
+
+Se ejecutó de nuevo `scripts/pruebas_produccion.py` contra la URL de Railway y se guardó el resultado en `evidencias/semana-4/pruebas-publicas-2026-11-05.json`: **24/26 aprobadas**, con los mismos fallos P05 y P07 de sanitización del 422. No hubo mejora verificable en esos dos casos; la corrección de la rama QA sigue pendiente de integración y despliegue.
+
+Después de dejar transcurrir una ventana del limitador, se consultó `/openapi.json` y se repitió una sola llamada a `analizar` del script `verificar_persistencia_citas.py`, con su payload sintético habitual y timeout de 90 segundos. OpenAPI devolvió 200 y continúa sin publicar `/api/v1/estatico/analizar`; el análisis volvió a responder **502**. No se creó baseline de citas. Se guardaron únicamente estados HTTP y booleanos en `evidencias/semana-4/revalidacion-cierre-2026-11-05.json`; no se conservaron cuerpos ni mensajes privados del servidor.
+
+Para continuar, Backend debe integrar/desplegar la sanitización del PR #12 y diagnosticar el 502 con logs privados; Frontend debe publicar la integración estática y la comparación anunciada; el responsable del hosting debe proporcionar acceso operativo o coordinar un reinicio después de obtener citas. QA repetirá las aserciones sobre la revisión integrada. Ninguna evidencia de esta revisión acredita un reinicio, una migración a Cloud Run ni un análisis Gemini exitoso.
