@@ -351,3 +351,55 @@ def test_servicio_no_registra_claves_ni_codigo_sensible(
     assert codigo_sensible not in registros
 
     cliente.close.assert_called_once()
+
+
+def test_servicio_conserva_error_503_del_proveedor(monkeypatch):
+    cliente = crear_cliente_simulado(monkeypatch)
+    cliente.models.generate_content.side_effect = errors.APIError(
+        503,
+        {"message": "Simulacion de proveedor temporalmente saturado"},
+    )
+    with pytest.raises(llm_module.LLMError) as error:
+        llm_module.analizar_codigo("print('hola')")
+    assert error.value.codigo == 503
+    assert "temporalmente" in str(error.value)
+    assert "Simulacion" not in str(error.value)
+    cliente.close.assert_called_once()
+
+
+def test_endpoint_503_no_filtra_error_original(monkeypatch):
+    from fastapi.testclient import TestClient
+    import app.main as principal
+
+    cliente = crear_cliente_simulado(monkeypatch)
+    marcador = "SECRETO_TEST_QUE_NO_DEBE_APARECER"
+    cliente.models.generate_content.side_effect = errors.APIError(
+        503,
+        {"message": marcador},
+    )
+    monkeypatch.setattr(principal, "analizar_codigo", llm_module.analizar_codigo)
+    monkeypatch.setenv("RATE_LIMIT_ENABLED", "0")
+    monkeypatch.setenv("CONCURRENCY_LIMIT_ENABLED", "0")
+    with TestClient(principal.app) as api:
+        respuesta = api.post(
+            "/api/v1/analizar",
+            json={"archivo": "caso.py", "codigo": "print('hola')"},
+        )
+    assert respuesta.status_code == 503
+    assert marcador not in respuesta.text
+    cliente.close.assert_called_once()
+
+
+def test_gemini_configura_reintentos_transitorios_sin_duplicar_el_bucle(monkeypatch):
+    cliente = crear_cliente_simulado(monkeypatch)
+    # Fijar el timeout explícitamente: el .env local podría usar otro valor.
+    monkeypatch.setenv("LLM_TIMEOUT_SECONDS", "27")
+    informe = llm_module.analizar_codigo("print('ok')")
+    assert informe is not None
+    configuracion = llm_module.genai.Client.call_args.kwargs["http_options"]
+    politica = configuracion.retry_options
+    assert politica.attempts == 2
+    assert politica.http_status_codes == [502, 503, 504]
+    assert configuracion.timeout == 27000
+    cliente.models.generate_content.assert_called_once()
+    cliente.close.assert_called_once()

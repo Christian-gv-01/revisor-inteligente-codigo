@@ -524,6 +524,16 @@ def analizar_codigo(codigo: str) -> InformeModelo:
         api_key=api_key,
         http_options=types.HttpOptions(
             timeout=timeout * 1000,
+            # SDK google-genai: sin retry_options hace un solo intento.
+            # Un reintento acotado en errores transitorios del proveedor;
+            # no repetir errores de autenticacion ni entradas invalidas.
+            retry_options=types.HttpRetryOptions(
+                attempts=2,
+                initial_delay=0.6,
+                max_delay=2.0,
+                jitter=0.2,
+                http_status_codes=[502, 503, 504],
+            ),
         ),
     )
 
@@ -667,6 +677,12 @@ def analizar_codigo(codigo: str) -> InformeModelo:
         if error.code == 429:
             raise LLMError(
                 "El proveedor ha alcanzado su limite de solicitudes.",
+                503,
+            ) from error
+
+        if error.code == 503:
+            raise LLMError(
+                "El proveedor de IA no esta disponible temporalmente. Intenta de nuevo mas tarde.",
                 503,
             ) from error
 

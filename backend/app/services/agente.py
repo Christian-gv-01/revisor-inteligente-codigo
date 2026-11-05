@@ -154,7 +154,19 @@ def planificar_gemini(codigo: str, pasos: list[PasoAgente]) -> DecisionAgente:
 
     # Los resultados previos SÍ influyen en la siguiente decisión del planificador.
     resumen = [{"herramienta": p.herramienta, "resultado": p.resultado} for p in pasos]
-    client = genai.Client(api_key=api_key, http_options=types.HttpOptions(timeout=45000))
+    client = genai.Client(
+        api_key=api_key,
+        http_options=types.HttpOptions(
+            timeout=45000,
+            retry_options=types.HttpRetryOptions(
+                attempts=2,
+                initial_delay=0.6,
+                max_delay=2.0,
+                jitter=0.2,
+                http_status_codes=[502, 503, 504],
+            ),
+        ),
+    )
     try:
         respuesta = client.models.generate_content(
             model=os.getenv("GEMINI_MODEL") or "gemini-3.5-flash-lite",
