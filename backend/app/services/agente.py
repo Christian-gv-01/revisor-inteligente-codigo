@@ -5,6 +5,7 @@ lista cerrada; los hallazgos del LLM siguen bajo la validación RAG existente.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
 import ast
 import json
 import logging
@@ -44,6 +45,44 @@ class PasoAgente(BaseModel):
     herramienta: HerramientaEjecutable
     motivo: str
     resultado: dict
+    origen: Literal["automatico", "gemini", "local"] = "automatico"
+
+
+class DecisionRegistrada(BaseModel):
+    """Decisión observable del planificador; no es razonamiento interno."""
+    numero: int = Field(ge=1, le=2)
+    herramienta: Herramienta
+    motivo: str = Field(min_length=1, max_length=240)
+    estado: Literal["ejecutada", "finalizar", "repetida"]
+
+
+@dataclass(frozen=True)
+class ResultadoEjecucionAgente:
+    pasos: list[PasoAgente]
+    informe: InformeModelo
+    decisiones: list[DecisionRegistrada]
+
+    def __iter__(self):
+        """Compatibilidad con llamadas existentes: pasos, informe = ejecutar_agente(...)."""
+        yield self.pasos
+        yield self.informe
+
+
+class ErrorAgenteConTraza(LLMError):
+    """Fallo controlado sin perder la evidencia anterior ni exponer el código."""
+    def __init__(
+        self,
+        causa: LLMError,
+        *,
+        fase: Literal["planificacion", "informe"],
+        pasos: list[PasoAgente],
+        decisiones: list[DecisionRegistrada],
+    ):
+        super().__init__(str(causa), causa.codigo)
+        self.fase = fase
+        self.pasos = list(pasos)
+        self.decisiones = list(decisiones)
+
 
 class RespuestaAgente(BaseModel):
     archivo: str
@@ -51,6 +90,8 @@ class RespuestaAgente(BaseModel):
     pasos: list[PasoAgente]
     max_pasos: int = Field(ge=1, le=3)
     informe: RespuestaAnalisis
+    decisiones: list[DecisionRegistrada] = Field(default_factory=list)
+    fase_error: Literal["planificacion", "informe"] | None = None
     requiere_confirmacion_humana: bool = False
     politica: str = "Solo lectura; sin ejecución de código ni cambios de archivos"
 
@@ -241,46 +282,101 @@ def ejecutar_agente(
     *,
     planificador: Callable[[str, list[PasoAgente]], DecisionAgente] | None = None,
     analizador: Callable[[str], InformeModelo] | None = None,
-) -> tuple[list[PasoAgente], InformeModelo]:
-    """Hace un preflight determinista; Gemini decide las otras herramientas."""
-    if not solicitud.codigo.strip() or "\x00" in solicitud.codigo:
+) -> ResultadoEjecucionAgente:
+    """Inspección inicial, decisiones limitadas y dictamen RAG independiente.
+
+    Las decisiones seleccionadas por Gemini son acciones públicas verificables,
+    no una transcripción de razonamiento interno del modelo.
+    """
+    if not solicitud.codigo.strip() or "\\x00" in solicitud.codigo:
         raise ValueError("El código debe ser texto Python no vacío y sin bytes nulos.")
     elegir = planificador or planificar_gemini
     if analizador is None:
         from app.services.llm import analizar_codigo
         analizador = analizar_codigo
 
-    # Preflight obligatorio: siempre existe evidencia útil aunque el modelo decida finalizar.
     pasos = [PasoAgente(
         numero=1, herramienta="inspeccionar_estructura",
         motivo="Inspección de sintaxis y estructura antes de consultar herramientas adicionales.",
         resultado=inspeccionar_estructura(solicitud.codigo),
+        origen="automatico",
     )]
+    decisiones: list[DecisionRegistrada] = []
     usados = {"inspeccionar_estructura"}
+
     for numero in range(2, solicitud.max_pasos + 1):
         try:
             decision = DecisionAgente.model_validate(elegir(solicitud.codigo, list(pasos)))
+        except LLMError as error:
+            logger.warning(
+                "agente_fallo fase=planificacion status=%s pasos=%d decisiones=%d",
+                error.codigo, len(pasos), len(decisiones),
+            )
+            raise ErrorAgenteConTraza(
+                error, fase="planificacion", pasos=pasos, decisiones=decisiones,
+            ) from error
         except (ValueError, TypeError) as error:
-            # Incluso un planificador defectuoso no puede ejecutar herramientas
-            # fuera de la lista permitida ni filtrar errores internos.
-            raise LLMError("El planificador devolvió una decisión inválida.", 502) from error
+            logger.warning(
+                "agente_fallo fase=planificacion status=502 pasos=%d decisiones=%d",
+                len(pasos), len(decisiones),
+            )
+            raise ErrorAgenteConTraza(
+                LLMError("El planificador devolvió una decisión inválida.", 502),
+                fase="planificacion", pasos=pasos, decisiones=decisiones,
+            ) from error
+
         nombre = decision.herramienta
-        if nombre == "finalizar" or nombre in usados:
+        estado: Literal["ejecutada", "finalizar", "repetida"] = (
+            "finalizar" if nombre == "finalizar" else
+            "repetida" if nombre in usados else "ejecutada"
+        )
+        decisiones.append(DecisionRegistrada(
+            numero=len(decisiones) + 1,
+            herramienta=nombre,
+            motivo=decision.motivo,
+            estado=estado,
+        ))
+        logger.info(
+            "agente_decision numero=%d herramienta=%s estado=%s",
+            len(decisiones), nombre, estado,
+        )
+        if estado != "ejecutada":
             break
         funcion = _HERRAMIENTAS.get(nombre)
         if funcion is None:
-            raise LLMError("Herramienta seleccionada no permitida.", 502)
+            raise ErrorAgenteConTraza(
+                LLMError("Herramienta seleccionada no permitida.", 502),
+                fase="planificacion", pasos=pasos, decisiones=decisiones,
+            )
         pasos.append(PasoAgente(
             numero=numero, herramienta=nombre, motivo=decision.motivo,
-            resultado=funcion(solicitud.codigo),
+            resultado=funcion(solicitud.codigo), origen="gemini",
         ))
         usados.add(nombre)
         logger.info("agente_paso numero=%d herramienta=%s", numero, nombre)
 
-    # El informe final se obtiene de nuestro analizador existente con verificación RAG.
-    # El agente es de orquestación: NO declara automáticamente vulnerabilidades basadas en AST.
-    return pasos, analizador(solicitud.codigo)
+    logger.info(
+        "agente_planificacion_completada pasos=%d decisiones=%d",
+        len(pasos), len(decisiones),
+    )
+    try:
+        informe = analizador(solicitud.codigo)
+    except LLMError as error:
+        logger.warning(
+            "agente_fallo fase=informe status=%s pasos=%d decisiones=%d",
+            error.codigo, len(pasos), len(decisiones),
+        )
+        raise ErrorAgenteConTraza(
+            error, fase="informe", pasos=pasos, decisiones=decisiones,
+        ) from error
 
+    logger.info(
+        "agente_informe_completado pasos=%d decisiones=%d",
+        len(pasos), len(decisiones),
+    )
+    return ResultadoEjecucionAgente(
+        pasos=pasos, informe=informe, decisiones=decisiones,
+    )
 
 def inspeccion_local(solicitud: SolicitudAgente) -> list[PasoAgente]:
     """Ruta determinista de respaldo: NO llama a Gemini ni produce dictamen de seguridad."""
@@ -290,5 +386,5 @@ def inspeccion_local(solicitud: SolicitudAgente) -> list[PasoAgente]:
     return [PasoAgente(
         numero=i, herramienta=nombre,
         motivo="Herramienta estática programada; modo local sin IA.",
-        resultado=funcion(solicitud.codigo),
+        resultado=funcion(solicitud.codigo), origen="local",
     ) for i, (nombre, funcion) in enumerate(herramientas, start=1)]
