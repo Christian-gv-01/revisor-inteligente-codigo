@@ -1,0 +1,44 @@
+{
+  "fecha_utc": "2026-11-05T18:43:45.502838+00:00",
+  "python": "3.12.14",
+  "commit_base": "0bc69c78d2e88dafb03f8c7a1108a1f02e52cb85",
+  "cambios_locales": true,
+  "dependencias": {
+    "chromadb": "1.5.9",
+    "google-genai": "2.31.0",
+    "fastapi": "0.156.1",
+    "pydantic": "2.14.1"
+  },
+  "dataset_sha256": "4e880db137d1350fda194482b7b3350320b61bc9e581ae99421804f8dc496fef",
+  "runner_sha256": "8d43e17b372fc8efd575470728b92c42e0cbcbd3dd1ab74dcc64e6dbeed9836d",
+  "knowledge_sha256": "b106e021a4de2135e52c299cf0ae9141c90eb0177120ddcad3fc8a9fdb0d555f",
+  "llm_sha256": "1fb7b9db62a11b98e916653d3e60cec257ebcec843e6d8bf03f08dc825b6298c",
+  "rag_sha256": "b25a1033dffddf55e35ecc16b40b1148b2149672a96ca3f00cb108a7c0187112",
+  "tipo": "integracion_http",
+  "proveedor_ia": "simulado",
+  "rag": "ChromaDB local real",
+  "llamadas_externas_ia": 0,
+  "aviso": "Estas pruebas verifican integración; no miden precisión, recall ni F1 de Gemini.",
+  "integracion_runner_sha256": "dce61c323fdc2469d23ddf135f4f4e444f6a9a621c5301383efce8445e804de2",
+  "github_fixture_sha256": "a60913dc42f46e195fe3ee3bf50a36bdb70ba3ff18eb8afc6d3fd1a2cda9cf26",
+  "frontend_http_test_sha256": "685edfcd37317f4e593d216798c5adc602572e2a738c8332ab7b511ef45411c7",
+  "github": "API externa simulada; lector, validación y rutas reales",
+  "analisis_estatico": "desactivado",
+  "configuracion_rag": {
+    "coleccion": "seguridad_python",
+    "fragmentos": 6,
+    "distancia_maxima": 0.75,
+    "proveedor_ia_utilizado": false,
+    "calentamiento_fuera_de_latencia": true
+  },
+  "evaluador_http": "aprobado: request_analysis y validate_response contra FastAPI",
+  "pruebas_frontend_http": {
+    "numTotalTests": 15,
+    "numPassedTests": 10,
+    "numFailedTests": 0,
+    "numPendingTests": 5,
+    "success": true
+  },
+  "estado": "aprobado",
+  "respuestas_controladas_proveedor": 11
+}

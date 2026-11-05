@@ -18,6 +18,9 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
   const [filter, setFilter] = useState<Severity | "todas">("todas");
   const visible = result?.hallazgos.filter(finding => filter === "todas" || finding.severidad === filter) ?? [];
   const highest = SEVERITIES.find(severity => result?.hallazgos.some(finding => finding.severidad === severity));
+  const staticNeedsReview = result?.analisis_estatico?.some(
+    report => report.hallazgos.length > 0 || report.estado !== "completo",
+  );
   return (
     <section className="panel results-panel" aria-labelledby="results-title" aria-busy={loading}>
       <div className="panel-heading">
@@ -55,6 +58,8 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
             <h3>Revisión contextual incompleta</h3>
             <p>Gemini no completó el análisis. Revisa más abajo los resultados estáticos de Ruff y Bandit; no equivalen a una evaluación completa con citas RAG.</p>
           </div>
+        ) : result.hallazgos.length === 0 && staticNeedsReview ? (
+          <div className="empty-state"><div className="empty-icon"><Icon name="info" size={36} /></div><h3>Sin hallazgos contextuales de Gemini</h3><p>Revisa las observaciones y el estado de Ruff y Bandit más abajo. El resultado contextual no descarta alertas estáticas ni revisiones incompletas.</p></div>
         ) : result.hallazgos.length === 0 ? (
           <div className="empty-state"><div className="empty-icon success"><Icon name="check" size={36} /></div><h3>No se encontraron hallazgos</h3><p>{result.demo ? "Resultado de demostración. No equivale a una revisión de seguridad real." : "El análisis no reportó problemas. Esto no garantiza que el código esté libre de vulnerabilidades."}</p></div>
         ) : visible.length === 0 ? (
