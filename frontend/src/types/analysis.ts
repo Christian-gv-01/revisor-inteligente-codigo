@@ -7,7 +7,7 @@ export type Mode = "demo" | "api";
 
 export type Scenario = "hallazgos" | "vacio" | "servidor" | "conexion";
 
-export type AnalysisStatus = "analizado" | "abstenido";
+export type AnalysisStatus = "analizado" | "abstenido" | "parcial";
 
 // =========================================================
 // HALLAZGOS
@@ -57,6 +57,41 @@ export interface SourceReference {
 }
 
 // =========================================================
+// INFORME ESTÁTICO INDEPENDIENTE DE LAS CITAS RAG
+// =========================================================
+
+export type StaticTool = "ruff" | "bandit";
+export type StaticToolStatus = "ok" | "no_disponible" | "timeout" | "error";
+export type StaticAnalysisStatus = "completo" | "parcial" | "no_disponible";
+
+export interface StaticFinding {
+  herramienta: StaticTool;
+  regla: string;
+  tipo: "seguridad" | "calidad";
+  linea: number;
+  columna: number | null;
+  severidad: Severity;
+  titulo: string;
+  descripcion: string;
+  confianza: "alta" | "media" | "baja" | null;
+  referencia: string | null;
+}
+
+export interface StaticToolExecution {
+  herramienta: StaticTool;
+  estado: StaticToolStatus;
+  hallazgos: number;
+}
+
+export interface StaticAnalysis {
+  archivo: string;
+  estado: StaticAnalysisStatus;
+  hallazgos: StaticFinding[];
+  herramientas: StaticToolExecution[];
+  mensaje: string | null;
+}
+
+// =========================================================
 // RESULTADO DEL ANÁLISIS
 // =========================================================
 
@@ -64,6 +99,8 @@ export interface AnalysisResult {
   archivos: SourceFile[];
   hallazgos: Finding[];
   fuentes?: SourceReference[];
+  // Uno por archivo; separado de los hallazgos que requieren citas RAG.
+  analisis_estatico?: StaticAnalysis[];
 
   // Indica si se utilizó el modo demostración.
   demo: boolean;

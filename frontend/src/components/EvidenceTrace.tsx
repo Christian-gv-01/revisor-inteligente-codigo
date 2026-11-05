@@ -17,7 +17,7 @@ export function EvidenceTrace({ result, selected, loading }: { result: AnalysisR
           </div>
           <p className="trace-description">{result?.demo ? "Referencias de ejemplo de la demostración; no corresponden a una recuperación del backend." : sources.length ? "El hallazgo seleccionado conserva sus referencias documentales. Consulta su contenido en el informe." : "La ausencia de referencias impide comprobar el respaldo documental de este hallazgo."}</p>
         </>
-      ) : <p className="trace-description">{result?.estado === "abstenido" ? "El sistema se abstuvo de generar hallazgos sin evidencia suficiente." : result ? "El análisis no reportó hallazgos. Las fuentes recuperadas, si existen, se conservan en el informe." : "Al analizar tu código, podrás seguir la relación entre cada hallazgo y sus fuentes."}</p>}
+      ) : <p className="trace-description">{result?.estado === "abstenido" ? "El sistema se abstuvo de generar hallazgos sin evidencia suficiente." : result?.estado === "parcial" ? "Gemini no completó la revisión contextual: no hay hallazgos de IA con citas. Consulta por separado las observaciones estáticas." : result ? "La revisión contextual no reportó hallazgos. Consulta también las observaciones estáticas, si están disponibles, y las fuentes del informe." : "Al analizar tu código, podrás seguir la relación entre cada hallazgo y sus fuentes."}</p>}
     </section>
   );
 }

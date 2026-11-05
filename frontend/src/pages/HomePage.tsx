@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { PrivacyNotice } from "../components/PrivacyNotice";
 import { CodeEditor } from "../components/CodeEditor";
 import { CodeInput } from "../components/CodeInput";
 import { FindingsPanel } from "../components/FindingsPanel";
@@ -205,6 +206,7 @@ export function HomePage() {
             <button disabled={busy} aria-pressed={mode === "api"} onClick={() => { clearResult(); setMode("api"); }}>API real</button>
           </div>
         </section>
+        {mode === "api" && <PrivacyNotice />}
         <div className="workspace-grid">
           <section id="source-panel" className="panel source-panel" aria-labelledby="source-title">
             <div className="panel-heading">

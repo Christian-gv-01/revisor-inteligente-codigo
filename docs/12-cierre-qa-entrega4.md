@@ -1,5 +1,7 @@
 # Cierre técnico de QA — Entrega 4
 
+> Actualización posterior: la revisión del PR #19 y las correcciones propuestas en el PR #23 están en [14-revision-qa-pr19.md](14-revision-qa-pr19.md). Los resultados siguientes conservan el estado de la revisión inicial; no sustituyen la evidencia posterior de integración estática.
+
 Fecha de revisión: 4 de noviembre de 2026, America/Bogota.
 Responsable del trabajo actual: cuenta confirmada por el usuario `0123445-20Alexis`.
 

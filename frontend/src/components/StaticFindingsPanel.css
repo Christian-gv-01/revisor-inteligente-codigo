@@ -1,0 +1,113 @@
+/* Bloque independiente del informe RAG: origen y estados verificables. */
+.static-report {
+  padding: 16px;
+  border-top: 1px solid #dce6f1;
+  background: #f7fafc;
+  color: #173351;
+  overflow-wrap: anywhere;
+}
+.static-report-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.static-report-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.static-report-header p,
+.static-report-disclaimer,
+.static-report-message,
+.static-report-empty {
+  margin: 6px 0 10px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #56718e;
+}
+.static-report-disclaimer {
+  padding: 10px 12px;
+  background: #e9f3fa;
+  border-left: 3px solid #208caa;
+  color: #22576a;
+}
+.static-report-warning {
+  padding: 6px 9px;
+  background: #fff1de;
+  color: #845100;
+  border: 1px solid #efcf9f;
+  font-size: 11px;
+  border-radius: 5px;
+}
+.static-report-file {
+  background: #fff;
+  border: 1px solid #dae6f2;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 12px;
+}
+.static-report-file h4 {
+  margin: 0 0 9px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  font-family: Consolas, monospace;
+}
+.static-report-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.static-tool-state {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  background: #edf5fd;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 11px;
+}
+.static-tool-state span { color: #506d8b; }
+.static-report-finding {
+  border-left: 3px solid #308a9f;
+  border-radius: 4px;
+  background: #f7fafc;
+  padding: 10px 12px;
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.static-report-finding p { margin: 6px 0; }
+.static-report-finding-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.static-report-finding-title strong {
+  font-family: Consolas, monospace;
+  font-size: 11px;
+}
+.static-report-location {
+  color: #506d8b;
+  font-family: Consolas, monospace;
+}
+.static-report-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+  margin-top: 9px;
+  color: #4d6b85;
+  font-size: 11px;
+}
+.static-report-meta a {
+  color: #057889;
+  text-decoration: underline;
+}
+@media (max-width: 500px) {
+  .static-report { padding: 11px; }
+  .static-report-file { padding: 10px; }
+}

@@ -9,6 +9,7 @@ import type { AnalysisInput } from "../src/types/analysis";
 
 const base = process.env.INTEGRATION_API_BASE_URL;
 const suite = base ? describe : describe.skip;
+const staticEnabled = process.env.INTEGRATION_STATIC_ANALYSIS === "1";
 const sql = 'nombre = input("Nombre: ")\ncursor.execute("SELECT * FROM usuarios WHERE nombre = \'" + nombre + "\'")\n';
 const input: AnalysisInput = { tipo: "codigo", archivo: "usuarios.py", codigo: sql, url: "", fichero: null };
 
@@ -72,13 +73,56 @@ suite("Integración HTTP: frontend → FastAPI → RAG real → proveedor simula
     expect(result.hallazgos).toEqual([]);
     expect(result.fuentes?.length).toBeGreaterThan(0);
   });
-  it("propaga un timeout de proveedor simulado como error HTTP 504", async () => {
-    await expect(analyzeCode({ ...input, codigo: `# INTEGRACION_ERROR\n${sql}` })).rejects.toMatchObject({ kind: "servidor", message: expect.stringContaining("HTTP 504") });
+  it("un timeout conserva el contrato de la configuración estática", async () => {
+    const operation = analyzeCode({ ...input, codigo: `# INTEGRACION_ERROR\n${sql}` });
+    if (staticEnabled) {
+      await expect(operation).resolves.toMatchObject({ estado: "parcial", hallazgos: [] });
+    } else {
+      await expect(operation).rejects.toMatchObject({ kind: "servidor", message: expect.stringContaining("HTTP 504") });
+    }
   });
   it("rechaza un archivo no Python en el endpoint real", async () => {
     const form = new FormData();
     form.append("archivo", new File(["texto"], "invalido.txt"));
     const response = await fetch(`${base}/api/v1/archivos`, { method: "POST", body: form });
     expect([400, 422]).toContain(response.status);
+  });
+
+  it("integra GitHub con lector real y API externa controlada", async () => {
+    const result = await analyzeCode({ ...input, tipo: "github", url: "https://github.com/qa-fixture/proyecto" });
+    expect(result.estado).toBe("analizado");
+    expect(result.archivos[0].nombre).toBe("usuarios.py");
+    expect(result.hallazgos[0].fuentes?.[0].id).toBe("seguridad_python-002");
+    if (staticEnabled) expect(createReport(result).analisis_estatico[0].estado).toBe("completo");
+    else expect(result.analisis_estatico).toBeUndefined();
+  });
+
+  it.skipIf(!staticEnabled).each(["codigo", "python", "zip", "github"] as const)(
+    "muestra y exporta análisis parcial con Ruff/Bandit reales: %s", async tipo => {
+      const codigo = "# INTEGRACION_ERROR\neval(user_input)\n";
+      const fichero = tipo === "zip"
+        ? new File([readFileSync(process.env.INTEGRATION_PARTIAL_ZIP_PATH!)], "parcial.zip")
+        : tipo === "python" ? new File([codigo], "usuarios.py") : null;
+      const result = await analyzeCode({ ...input, tipo, codigo, fichero, url: "https://github.com/qa-fixture/parcial" });
+      expect(result.estado).toBe("parcial");
+      expect(result.hallazgos).toEqual([]);
+      expect(result.fuentes ?? []).toEqual([]);
+      const reports = createReport(result).analisis_estatico;
+      expect(reports.map(report => report.archivo)).toEqual(result.archivos.map(file => file.nombre));
+      for (const report of reports) {
+        expect(report.estado).toBe("completo");
+        expect(report.herramientas.map(tool => tool.estado)).toEqual(["ok", "ok"]);
+        expect(report.hallazgos.some(finding => finding.regla === "B307")).toBe(true);
+      }
+      const html = renderToStaticMarkup(<FindingsPanel result={result} loading={false} onSelect={() => {}} />);
+      expect(html).toContain("Revisión contextual incompleta");
+      expect(html).toContain("B307");
+      expect(html).not.toContain("No se encontraron hallazgos");
+    },
+  );
+
+  it.skipIf(!staticEnabled)("acepta por HTTP 202 alertas combinadas reales sin perderlas en JSON", async () => {
+    const result = await analyzeCode({ ...input, codigo: "eval(user_input)\n".repeat(101) });
+    expect(createReport(result).analisis_estatico[0].hallazgos).toHaveLength(202);
   });
 });

@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 from contextlib import ExitStack
 from datetime import datetime, timezone
+from hashlib import sha256
 import json
 import logging
 import os
@@ -65,6 +66,7 @@ class FixtureClient:
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--static-analysis", action="store_true", help="Activa Ruff/Bandit reales y verifica degradación parcial")
     args = parser.parse_args(argv)
     folder = args.output or ROOT / "docs/evidencias/semana-3" / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ") + "-integracion")
     if folder.exists():
@@ -78,16 +80,27 @@ def main(argv=None):
     report = {**provenance(DEFAULT_DATA), "tipo": "integracion_http", "proveedor_ia": "simulado",
               "rag": "ChromaDB local real", "llamadas_externas_ia": 0,
               "aviso": "Estas pruebas verifican integración; no miden precisión, recall ni F1 de Gemini."}
+    report["integracion_runner_sha256"] = sha256(Path(__file__).read_bytes()).hexdigest()
+    report["github_fixture_sha256"] = sha256((ROOT / "eval/integration_github_fixture.py").read_bytes()).hexdigest()
+    report["frontend_http_test_sha256"] = sha256((ROOT / "frontend/tests/integration-http.test.tsx").read_bytes()).hexdigest()
     FixtureClient.calls = 0
     server = None
     thread = None
     try:
         with ExitStack() as stack:
-            stack.enter_context(patch.dict(os.environ, {"GEMINI_API_KEY": "fixture-local-sin-credencial-real", "GEMINI_MODEL": "fixture-integracion", "LLM_TIMEOUT_SECONDS": "3"}))
+            stack.enter_context(patch.dict(os.environ, {
+                "GEMINI_API_KEY": "fixture-local-sin-credencial-real", "GEMINI_MODEL": "fixture-integracion",
+                "LLM_TIMEOUT_SECONDS": "3", "STATIC_ANALYSIS_ENABLED": "1" if args.static_analysis else "0",
+                "RATE_LIMIT_ENABLED": "0", "CONCURRENCY_LIMIT_ENABLED": "0",
+            }))
             sys.path.insert(0, str(ROOT / "backend"))
             from app.main import app
             import app.services.llm as llm
             import uvicorn
+            from integration_github_fixture import install_github_fixture
+            install_github_fixture(stack, SQL_CODE)
+            report["github"] = "API externa simulada; lector, validación y rutas reales"
+            report["analisis_estatico"] = "Ruff/Bandit reales" if args.static_analysis else "desactivado"
 
             # Se parchea solo el cliente externo; la consulta RAG, las validaciones,
             # las rutas y la serialización de FastAPI siguen siendo las reales.
@@ -136,17 +149,22 @@ def main(argv=None):
                 with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as file:
                     file.writestr("usuarios.py", SQL_CODE)
                     file.writestr("sin_cita.py", "# INTEGRACION_SIN_CITA\n" + SQL_CODE)
+                partial_archive = Path(temporary) / "parcial.zip"
+                with zipfile.ZipFile(partial_archive, "w", zipfile.ZIP_DEFLATED) as file:
+                    file.writestr("fallo.py", "# INTEGRACION_ERROR\neval(user_input)\n")
+                    file.writestr("segundo.py", "eval(user_input)\n")
                 env = dict(os.environ)
                 # Las credenciales ficticias no necesitan llegar al proceso frontend.
                 for key in ("GEMINI_API_KEY", "GROQ_API_KEY", "OPENAI_API_KEY"):
                     env.pop(key, None)
                 env.update(INTEGRATION_API_BASE_URL=base, INTEGRATION_ZIP_PATH=str(archive), PYTHONIOENCODING="utf-8")
+                env.update(INTEGRATION_PARTIAL_ZIP_PATH=str(partial_archive), INTEGRATION_STATIC_ANALYSIS="1" if args.static_analysis else "0")
                 command = [node, str(vitest), "run", "tests/integration-http.test.tsx", "--reporter=json", f"--outputFile={folder / 'vitest-integracion.json'}"]
                 completed = subprocess.run(command, cwd=ROOT / "frontend", env=env, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=90)
                 (folder / "frontend-http.txt").write_text(completed.stdout + completed.stderr, encoding="utf-8")
                 if (folder / "vitest-integracion.json").is_file():
                     results = json.loads((folder / "vitest-integracion.json").read_text(encoding="utf-8"))
-                    report["pruebas_frontend_http"] = {key: results.get(key) for key in ("numTotalTests", "numPassedTests", "numFailedTests", "success")}
+                    report["pruebas_frontend_http"] = {key: results.get(key) for key in ("numTotalTests", "numPassedTests", "numFailedTests", "numPendingTests", "success")}
                 if completed.returncode:
                     raise RuntimeError("Falló al menos una prueba HTTP; consultar frontend-http.txt")
             report["estado"] = "aprobado"
