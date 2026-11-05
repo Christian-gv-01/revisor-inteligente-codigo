@@ -1,0 +1,13 @@
+caso_id,categoria,repeticion,orden,condicion,estado,herramienta,codigo_error,latencia_ms,sha256_codigo
+eval_entrada,llamada_sensible,1,1,sin_contexto,ok,detectar_llamadas_sensibles,,1907.11,519015016078a2fe
+eval_entrada,llamada_sensible,1,2,con_contexto,ok,detectar_llamadas_sensibles,,1339.06,519015016078a2fe
+exec_entrada,llamada_sensible,1,3,con_contexto,ok,detectar_llamadas_sensibles,,2898.91,da96e6cc8c27a6eb
+exec_entrada,llamada_sensible,1,4,sin_contexto,ok,detectar_llamadas_sensibles,,3537.81,da96e6cc8c27a6eb
+sql_concatenado,sql_dinamico,1,5,sin_contexto,ok,revisar_consultas_sql,,1440.02,45090ad07a4cfe19
+sql_concatenado,sql_dinamico,1,6,con_contexto,ok,revisar_consultas_sql,,5450.84,45090ad07a4cfe19
+comando_shell,llamada_sensible,1,7,con_contexto,ok,detectar_llamadas_sensibles,,1370.4,d7e763b1d39a2259
+comando_shell,llamada_sensible,1,8,sin_contexto,ok,detectar_llamadas_sensibles,,3079.69,d7e763b1d39a2259
+funcion_limpia,control_limpio,1,9,sin_contexto,ok,detectar_llamadas_sensibles,,1461.17,6fe59df4f142c8c4
+funcion_limpia,control_limpio,1,10,con_contexto,ok,detectar_llamadas_sensibles,,1999.18,6fe59df4f142c8c4
+sql_parametrizado,control_limpio,1,11,con_contexto,ok,revisar_consultas_sql,,3304.97,a8f298b214bbd3ff
+sql_parametrizado,control_limpio,1,12,sin_contexto,error_proveedor,,503,2174.71,a8f298b214bbd3ff
