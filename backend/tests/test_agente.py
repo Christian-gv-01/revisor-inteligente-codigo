@@ -311,7 +311,9 @@ def test_dashboard_explicita_modo_degradado():
     r = client.get("/agente/demo")
     assert r.status_code == 200
     assert "ANÁLISIS PARCIAL" in r.text
-    assert "NO existen hallazgos de IA ni citas RAG" in r.text
+    assert "ANÁLISIS PARCIAL:" in r.text
+    assert "report.mensaje" in r.text
+    assert "No hay dictamen de IA ni citas RAG" in r.text
 
 
 def test_previsualizacion_ast_protegida_por_limite_de_tasa():
