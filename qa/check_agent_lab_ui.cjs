@@ -110,6 +110,18 @@ async function main() {
     archivo: "demo_eval.py",
     modo: "degradado",
     fase_error: "informe",
+    analisis_estatico: {
+      archivo: "demo_eval.py",
+      estado: "completo",
+      herramientas: [
+        { herramienta: "ruff", estado: "ok", hallazgos: 0 },
+        { herramienta: "bandit", estado: "ok", hallazgos: 1 },
+      ],
+      hallazgos: [{
+        herramienta: "bandit", regla: "B307", tipo: "seguridad",
+        linea: 3, severidad: "media", descripcion: "Posible eval inseguro",
+      }],
+    },
     decisiones: [
       { numero: 1, herramienta: "detectar_llamadas_sensibles", estado: "ejecutada", motivo: "Revisar eval" },
     ],
@@ -136,6 +148,9 @@ async function main() {
   assert.match(displayed, /Decisiones registradas del planificador/);
   assert.match(displayed, /ELEGIDO POR GEMINI/);
   assert.match(displayed, /Informe contextual no disponible/);
+  assert.match(displayed, /Ruff \+ Bandit/);
+  assert.match(displayed, /B307/);
+  assert.match(displayed, /1 observaciones/);
 
   console.log("Agent Lab: JS sintácticamente válido, ejemplos y botón funcionales, traza renderizada.");
 }
