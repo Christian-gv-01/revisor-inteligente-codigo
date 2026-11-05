@@ -4,6 +4,20 @@ Actualización: 5 de noviembre de 2026, America/Bogota.
 
 ## Estado vigente
 
+El PR #25 ya está fusionado a `main`. La evidencia publicada hasta `219069a` acredita:
+- Matriz pública en Railway **26/26**, incluidos los casos P05/P07 de sanitización 422: [reporte](pruebas-publicas-post-merge-20261105.json).
+- Endpoint estático anunciado en el OpenAPI público.
+- Análisis público Gemini/RAG antes y después de un reinicio, con un hallazgo y las mismas tres fuentes: [antes](persistencia-antes-20261105.json) y [comparación posterior](persistencia-despues-20261105.json).
+- Reinicio coordinado por Christian y recuperación del índice sin nueva ingesta anunciada en el [log aportado](reinicio-railway-20261105.png).
+
+Los bloqueos previos de 24/26, ausencia del endpoint estático y falta de baseline/reinicio quedan superados por estas evidencias. Los 503 reales del proveedor siguen siendo una limitación observada: el primer intento de captura no generó baseline y la captura posterior sí terminó.
+
+El comparador HTTP conserva `persistencia_volumen_verificada: false`. La continuidad de citas y el log son evidencia de recuperación operacional en ese reinicio; falta una prueba de integridad más amplia o una marca única no regenerable para certificar el volumen de forma independiente.
+
+Permanecen pendientes QA-H02 (confirmación trazable sobre credencial histórica) y QA-H03 (memoria durante captura de salida de analizadores), además de documentar el SHA completo de cada revisión desplegada. Ver [cierre consolidado](../../12-cierre-qa-entrega4.md). No se declara una aceptación de seguridad sin reservas.
+
+## Estado previo — histórico
+
 - La rama QA está publicada y el PR #12 está abierto en borrador. La autenticación Git ya se resolvió con la cuenta confirmada por el usuario.
 - Railway tiene URL HTTPS pública: https://revisor-inteligente-codigo-production.up.railway.app . La primera matriz pública obtuvo 24/26; conservar `pruebas-publicas.json` como evidencia de esa ejecución.
 - Falta verificar en producción la corrección de los errores 422 y el análisis real que devolvió 502. Los resultados de una repetición se guardan por separado; no se reemplaza la evidencia anterior.
