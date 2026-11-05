@@ -670,6 +670,12 @@ def analizar_codigo(codigo: str) -> InformeModelo:
                 503,
             ) from error
 
+        if error.code == 503:
+            raise LLMError(
+                "El proveedor de IA no esta disponible temporalmente. Intenta de nuevo mas tarde.",
+                503,
+            ) from error
+
         if error.code in (408, 504):
             raise LLMError(
                 "El proveedor excedio el tiempo de respuesta.",
