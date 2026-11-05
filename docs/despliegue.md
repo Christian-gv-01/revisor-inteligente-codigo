@@ -44,7 +44,8 @@ Repetir el mismo análisis después del reinicio y comprobar que vuelve a obtene
 
 El Dockerfile admite un servicio único en hosting con Docker y la variable `PORT`. Configurar en la plataforma:
 - `GEMINI_API_KEY` y `GEMINI_MODEL` como variables privadas.
-- Un **volumen persistente montado en `/data`**.
+- Un **volumen persistente montado en `/data`**. Railway lo monta como usuario root; el entrypoint prepara permisos y ejecuta ingesta y FastAPI como `codeguard` (UID 10001) mediante `gosu`.
+- El HEALTHCHECK usa el puerto de `PORT`, que Railway puede asignar dinámicamente.
 - `CHROMA_PATH=/data/chroma`.
 - Exposición HTTPS mediante el proxy del proveedor y ruta de salud `/health`.
 
@@ -53,7 +54,11 @@ El puerto 8080 del Compose está restringido a loopback para uso local. **Compos
 ## Seguridad y límites
 
 - No hay ejecución de código Python enviado por usuarios. La ingesta ejecuta únicamente scripts del propio repositorio.
-- La imagen usa un usuario no privilegiado y no contiene `.env` ni datos de ChromaDB.
+- La imagen inicia brevemente como root únicamente para fijar permisos del volumen. Después ejecuta Python y FastAPI como usuario `codeguard` (UID 10001) y no incluye `.env` ni datos de ChromaDB.
 - El endpoint `/health` verifica que la API responde, pero **no** verifica por sí solo la disponibilidad del modelo o del RAG. Demostrar estos componentes con una petición de análisis real.
-- Antes de abrir la URL al público se deben incorporar límites de tasa, revisar errores seguros, dependencia y protección contra abuso.
+- Docker activa `RATE_LIMIT_ENABLED=1` (predeterminado 0 en desarrollo local): ventana deslizante de 60 segundos, 30 unidades globales y 10 por IP observada; los endpoints ZIP y GitHub cuestan 5 unidades y el agente Gemini 3. Se devuelve HTTP 429 con `Retry-After`. Los tests normales permanecen sin límites mientras se ejecutan en local.
+- El mecanismo de tasa funciona por proceso (30 unidades/minuto globales; 10 por identidad) y **no** usa `X-Forwarded-For` arbitrariamente. Por defecto obtiene la IP de conexión. `TRUST_RAILWAY_REAL_IP=1` únicamente debe habilitarse después de confirmar que **todas** las solicitudes llegan exclusivamente a través del proxy público de Railway que sobrescribe `X-Real-IP`, sin rutas privadas o directas que permitan suplantarlo. El límite global permanece activo incluso sin identidad individual confiable. No afirmar validación pública del límite por visitante hasta completar esa prueba.
+- El servicio Docker también activa `CONCURRENCY_LIMIT_ENABLED=1`: dos peticiones costosas simultáneas por proceso. Cuando está saturado, devuelve HTTP 503, `Retry-After: 3` y un mensaje seguro. La ruta `/health` no consume cupo.
+- Para varias réplicas de aplicación se necesita un almacén de cuotas compartido como Redis, más un límite agregado de concurrencia. Las reservas actuales no representan tokens consumidos y solicitudes rechazadas pueden gastar cupo de tasa, deliberadamente para prevenir abuso.
+- Antes de abrir la URL al público se debe verificar HTTP 429 real, revisar errores seguros, dependencias y protección contra abuso.
 - Revisar el historial Git con un detector de secretos y comprobar que la plataforma no expone el volumen.

@@ -8,7 +8,17 @@ fi
 
 : "${CHROMA_PATH:=/data/chroma}"
 export CHROMA_PATH
+
+# El volumen de Railway se monta como root: preparar permisos una sola vez
+# por arranque y después ejecutar todas las tareas Python sin privilegios.
+if [ "$(id -u)" -eq 0 ]; then
+  mkdir -p "$CHROMA_PATH" /data/.cache
+  chown -R codeguard:codeguard /data
+  exec gosu codeguard /app/entrypoint.sh "$@"
+fi
+
 mkdir -p "$CHROMA_PATH"
+echo "CODEGUARD: proceso iniciado sin privilegios (UID $(id -u))."
 
 # Ingesta solamente cuando la colección oficial aún no existe o está vacía.
 # En reinicios normales usa los datos persistidos en /data.
@@ -36,4 +46,6 @@ else:
     runpy.run_path("/app/scripts/ingest.py", run_name="__main__")
 PY
 
-exec python -m uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}"
+# No aceptar automáticamente X-Forwarded-For de un origen no autenticado.
+# El encabezado X-Real-IP solo se usa mediante configuración de confianza explícita.
+exec python -m uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}" --no-proxy-headers
