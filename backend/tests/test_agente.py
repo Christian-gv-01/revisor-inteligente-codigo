@@ -153,3 +153,26 @@ def test_no_ejecuta_codigo(tmp_path):
     codigo = f"open({str(target)!r}, 'w').write('PELIGRO')\n"
     assert inspeccionar_estructura(codigo)["sintaxis_valida"]
     assert not target.exists()
+
+
+def test_planificador_gemini_configura_reintentos_transitorios(monkeypatch):
+    from unittest.mock import Mock
+    import app.services.agente as modulo
+    from google import genai
+
+    monkeypatch.setenv("GEMINI_API_KEY", "clave-ficticia-de-pruebas")
+    cliente_falso = Mock()
+    cliente_falso.models.generate_content.return_value.text = (
+        '{"herramienta":"finalizar","motivo":"Sin herramientas adicionales."}'
+    )
+    crear_cliente = Mock(return_value=cliente_falso)
+    monkeypatch.setattr(genai, "Client", crear_cliente)
+
+    decision = modulo.planificar_gemini("print('hola')", [])
+    assert decision.herramienta == "finalizar"
+    http = crear_cliente.call_args.kwargs["http_options"]
+    assert http.timeout == 45000
+    assert http.retry_options.attempts == 2
+    assert http.retry_options.http_status_codes == [502, 503, 504]
+    cliente_falso.models.generate_content.assert_called_once()
+    cliente_falso.close.assert_called_once()

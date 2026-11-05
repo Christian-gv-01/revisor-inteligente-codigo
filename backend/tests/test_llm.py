@@ -388,3 +388,18 @@ def test_endpoint_503_no_filtra_error_original(monkeypatch):
     assert respuesta.status_code == 503
     assert marcador not in respuesta.text
     cliente.close.assert_called_once()
+
+
+def test_gemini_configura_reintentos_transitorios_sin_duplicar_el_bucle(monkeypatch):
+    cliente = crear_cliente_simulado(monkeypatch)
+    # Fijar el timeout explícitamente: el .env local podría usar otro valor.
+    monkeypatch.setenv("LLM_TIMEOUT_SECONDS", "27")
+    informe = llm_module.analizar_codigo("print('ok')")
+    assert informe is not None
+    configuracion = llm_module.genai.Client.call_args.kwargs["http_options"]
+    politica = configuracion.retry_options
+    assert politica.attempts == 2
+    assert politica.http_status_codes == [502, 503, 504]
+    assert configuracion.timeout == 27000
+    cliente.models.generate_content.assert_called_once()
+    cliente.close.assert_called_once()
