@@ -268,7 +268,7 @@ def guardar(
         writer.writerows(resultados)
     with archivo_md.open("w", encoding="utf-8") as f:
         f.write("# Evaluación A/B del planificador de CODEGUARD\n\n")
-        f.write(f"Modelo: \`{metadatos['modelo']}\`. Casos sintéticos: {metadatos['casos']}.\n\n")
+        f.write(f"Modelo: `{metadatos['modelo']}`. Casos sintéticos: {metadatos['casos']}.\n\n")
         f.write(f"Solicitudes: {resumen['total_solicitudes']} · Pares completos: {resumen['pares_completos']} · Pares no comparables: {resumen['pares_no_comparables']}.\n\n")
         f.write(f"Cambios observados: {resumen['pares_con_cambio']} · Tasa de cambio: {resumen['tasa_cambio_de_decision']}.\n\n")
         f.write("| Caso | Repetición | Sin contexto | Con contexto | Cambio |\n")
