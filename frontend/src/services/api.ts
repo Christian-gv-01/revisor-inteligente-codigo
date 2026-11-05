@@ -6,6 +6,10 @@ import type {
   Finding,
   Severity,
   SourceReference,
+  StaticAnalysis,
+  StaticTool,
+  StaticToolExecution,
+  StaticFinding,
 } from "../types/analysis";
 
 import { SEVERITIES } from "../types/analysis";
@@ -173,7 +177,7 @@ function record(
 function isAnalysisStatus(
   value: unknown,
 ): value is AnalysisStatus {
-  return value === "analizado" || value === "abstenido";
+  return value === "analizado" || value === "abstenido" || value === "parcial";
 }
 
 function invalidResponse(message: string): AnalysisError {
@@ -325,6 +329,99 @@ function parseFindings(
 }
 
 // =========================================================
+// VALIDACIÓN DE ANÁLISIS ESTÁTICO — INDEPENDIENTE DE RAG
+// =========================================================
+
+const STATIC_TOOLS: StaticTool[] = ["ruff", "bandit"];
+const STATIC_TOOL_STATES = ["ok", "error", "timeout", "no_disponible"];
+
+function parseStaticReport(value: unknown, archivo: string): StaticAnalysis | undefined {
+  if (value === undefined || value === null) return undefined;
+
+  if (
+    !record(value) ||
+    value.archivo !== archivo ||
+    !["completo", "parcial", "no_disponible"].includes(value.estado as string) ||
+    !Array.isArray(value.herramientas) ||
+    !Array.isArray(value.hallazgos) ||
+    value.hallazgos.length > 200 ||
+    value.herramientas.length < 1 ||
+    value.herramientas.length > 2 ||
+    (value.mensaje !== null && value.mensaje !== undefined && typeof value.mensaje !== "string")
+  ) {
+    throw invalidResponse("El servidor devolvió un formato inválido de Ruff/Bandit.");
+  }
+
+  const herramientas = value.herramientas.map((tool: unknown): StaticToolExecution => {
+    if (
+      !record(tool) ||
+      !STATIC_TOOLS.includes(tool.herramienta as StaticTool) ||
+      !STATIC_TOOL_STATES.includes(tool.estado as string) ||
+      !Number.isInteger(tool.hallazgos) ||
+      (tool.hallazgos as number) < 0
+    ) {
+      throw invalidResponse("Estado de herramienta estática inválido.");
+    }
+    return {
+      herramienta: tool.herramienta as StaticTool,
+      estado: tool.estado as StaticToolExecution["estado"],
+      hallazgos: tool.hallazgos as number,
+    };
+  });
+
+  if (new Set(herramientas.map(t => t.herramienta)).size !== herramientas.length) {
+    throw invalidResponse("La respuesta repite una herramienta estática.");
+  }
+
+  const hallazgos = value.hallazgos.map((finding: unknown): StaticFinding => {
+    if (
+      !record(finding) ||
+      !STATIC_TOOLS.includes(finding.herramienta as StaticTool) ||
+      typeof finding.regla !== "string" ||
+      !finding.regla.trim() ||
+      !["seguridad", "calidad"].includes(finding.tipo as string) ||
+      !Number.isInteger(finding.linea) ||
+      (finding.linea as number) < 1 ||
+      (finding.columna !== undefined && finding.columna !== null &&
+        (!Number.isInteger(finding.columna) || (finding.columna as number) < 1)) ||
+      !SEVERITIES.includes(finding.severidad as Severity) ||
+      typeof finding.titulo !== "string" ||
+      typeof finding.descripcion !== "string" ||
+      (finding.confianza !== null && finding.confianza !== undefined &&
+        !["alta", "media", "baja"].includes(finding.confianza as string)) ||
+      (finding.referencia !== null && finding.referencia !== undefined &&
+        typeof finding.referencia !== "string")
+    ) {
+      throw invalidResponse("Un hallazgo estático no cumple el contrato.");
+    }
+    return {
+      herramienta: finding.herramienta as StaticTool,
+      regla: finding.regla as string,
+      tipo: finding.tipo as StaticFinding["tipo"],
+      linea: finding.linea as number,
+      columna: typeof finding.columna === "number" ? finding.columna : null,
+      severidad: finding.severidad as Severity,
+      titulo: finding.titulo as string,
+      descripcion: finding.descripcion as string,
+      confianza: (finding.confianza ?? null) as StaticFinding["confianza"],
+      referencia: (finding.referencia ?? null) as string | null,
+    };
+  });
+
+  if (value.estado === "no_disponible" && hallazgos.length > 0) {
+    throw invalidResponse("Un análisis estático no disponible no puede declarar hallazgos.");
+  }
+
+  return {
+    archivo,
+    estado: value.estado as StaticAnalysis["estado"],
+    hallazgos,
+    herramientas,
+    mensaje: typeof value.mensaje === "string" ? value.mensaje : null,
+  };
+}
+
+// =========================================================
 // PROCESAMIENTO DE RESPUESTAS DEL BACKEND
 // =========================================================
 
@@ -355,6 +452,8 @@ export function parseResponse(
 
   const fuentes = parseSources(value.fuentes);
 
+  const estatico = parseStaticReport(value.analisis_estatico, input.archivo);
+
   if (
     estado === "abstenido" &&
     hallazgos.length > 0
@@ -384,6 +483,7 @@ export function parseResponse(
       ),
     })),
     ...(fuentes.length > 0 ? { fuentes } : {}),
+    ...(estatico ? { analisis_estatico: [estatico] } : {}),
     demo: false,
     estado,
     mensaje:
@@ -432,6 +532,7 @@ export function parseZipResponse(
   const archivosVistos = new Set<string>();
 
   let archivosAbstenidos = 0;
+  let archivosParciales = 0;
   const mensajes: string[] = [];
 
   value.informes.forEach((report: unknown, index: number) => {
@@ -456,6 +557,16 @@ export function parseZipResponse(
       nombre: report.archivo,
       codigo: null,
     });
+
+    if (parsed.analisis_estatico?.length) {
+      result.analisis_estatico ??= [];
+      result.analisis_estatico.push(...parsed.analisis_estatico);
+    }
+
+    if (parsed.estado === "parcial") {
+      archivosParciales++;
+      mensajes.push(`${report.archivo}: ${parsed.mensaje || "Gemini no completó la revisión contextual."}`);
+    }
 
     if (parsed.estado === "abstenido") {
       archivosAbstenidos++;
@@ -483,7 +594,10 @@ export function parseZipResponse(
     result.fuentes = Array.from(fuentesUnicas.values());
   }
 
-  if (archivosAbstenidos === value.informes.length) {
+  if (value.estado === "parcial" || archivosParciales > 0) {
+    result.estado = "parcial";
+    result.mensaje = mensajes.join("\n") || "Algunos archivos solo disponen de análisis estático.";
+  } else if (archivosAbstenidos === value.informes.length) {
     result.estado = "abstenido";
 
     result.mensaje =
