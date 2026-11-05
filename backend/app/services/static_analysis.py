@@ -12,7 +12,7 @@ import re
 import subprocess
 import sys
 import tempfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field
 MAX_CHARS = 12_000
 MAX_STDOUT = 1_000_000
 TOOL_TIMEOUT = 12
-_SAFE_NAME = re.compile(r"^[A-Za-z0-9_.-]{1,120}\.py$", re.ASCII)
+_SAFE_PART = re.compile(r"^[A-Za-z0-9_.-]{1,120}$", re.ASCII)
 _SEVERIDADES = {"HIGH": "alta", "MEDIUM": "media", "LOW": "baja"}
 
 
@@ -61,8 +61,14 @@ def _validar(codigo: str, archivo: str) -> tuple[str, str]:
     if len(codigo) > MAX_CHARS:
         raise EntradaEstaticaInvalida("El código supera 12.000 caracteres.")
     # Nombre seguro y estable; no se permite que la entrada controle rutas.
-    if not isinstance(archivo, str) or not _SAFE_NAME.fullmatch(archivo):
-        raise EntradaEstaticaInvalida("El nombre debe ser un archivo .py sencillo.")
+    if not isinstance(archivo, str) or len(archivo) > 255 or not archivo.endswith(".py"):
+        raise EntradaEstaticaInvalida("El nombre debe ser una ruta Python relativa segura.")
+    partes = archivo.split("/")
+    if (
+        not partes or any(p in ("", ".", "..") or not _SAFE_PART.fullmatch(p) for p in partes)
+        or PurePosixPath(archivo).is_absolute()
+    ):
+        raise EntradaEstaticaInvalida("El nombre debe ser una ruta Python relativa segura.")
     return codigo, archivo
 
 
