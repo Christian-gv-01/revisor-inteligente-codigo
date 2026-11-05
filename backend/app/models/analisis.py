@@ -3,6 +3,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, PrivateAttr
 
+from app.services.static_analysis import ResultadoEstatico
+
 
 class SolicitudAnalisis(BaseModel):
     archivo: str = Field(min_length=1, max_length=255)
@@ -59,6 +61,11 @@ class RespuestaAnalisis(BaseModel):
     estado: Literal["analizado", "abstenido"]
     hallazgos: list[Hallazgo]
     fuentes: list[Fuente] = Field(default_factory=list)
+    # Independiente de las referencias RAG: Ruff/Bandit tienen sus propias reglas.
+    # Se omite cuando está desactivado, para preservar los contratos anteriores.
+    analisis_estatico: ResultadoEstatico | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
 
     # Mensaje cuando no existe evidencia suficiente.
     mensaje: str | None = None
