@@ -37,7 +37,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r backend/requirements.txt pytest
       - name: Validar diseño A/B sin consumo de Gemini
-        run: python eval/evaluar_planificador_agente.py
+        run: |
+          python -W error::SyntaxWarning -m py_compile eval/evaluar_planificador_agente.py
+          python eval/evaluar_planificador_agente.py
       - name: Validate syntax
         run: |
           python -m compileall -q backend/app
