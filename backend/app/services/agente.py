@@ -288,7 +288,7 @@ def ejecutar_agente(
     Las decisiones seleccionadas por Gemini son acciones públicas verificables,
     no una transcripción de razonamiento interno del modelo.
     """
-    if not solicitud.codigo.strip() or "\\x00" in solicitud.codigo:
+    if not solicitud.codigo.strip() or "\x00" in solicitud.codigo:
         raise ValueError("El código debe ser texto Python no vacío y sin bytes nulos.")
     elegir = planificador or planificar_gemini
     if analizador is None:
