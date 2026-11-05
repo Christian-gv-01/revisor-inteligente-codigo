@@ -1,6 +1,7 @@
 ﻿
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
@@ -9,7 +10,8 @@ import chromadb
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_FILE = ROOT / "knowledge" / "seguridad_python.md"
-DB_PATH = ROOT / "data" / "chroma"
+configurada = os.getenv("CHROMA_PATH", "").strip()
+DB_PATH = Path(configurada).expanduser() if configurada else ROOT / "data" / "chroma"
 COLLECTION_NAME = "seguridad_python"
 
 HEADING_PATTERN = re.compile(
@@ -233,7 +235,7 @@ def main() -> None:
             collection.delete(ids=obsolete_ids)
 
         print(f"Fuente: {SOURCE_FILE.relative_to(ROOT)}")
-        print(f"Base vectorial: {DB_PATH.relative_to(ROOT)}")
+        print(f"Base vectorial: {DB_PATH}")
         print(f"Coleccion: {COLLECTION_NAME}")
         print(f"Fragmentos procesados: {len(sections)}")
         print(

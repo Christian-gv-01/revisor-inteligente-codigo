@@ -1,0 +1,27 @@
+# No incluir secretos, historial, bases locales o dependencias en la imagen.
+.git/
+.gitignore
+.env
+.env.*
+**/.env
+**/.env.*
+**/.venv/
+**/venv/
+**/node_modules/
+**/dist/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+**/*.pyc
+data/
+docs/
+eval/
+frontend/evidencias/
+frontend/tests/
+backend/tests/
+payload/
+instalar_agente.py
+*.log
+*.zip
+.DS_Store
+Thumbs.db

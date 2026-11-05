@@ -5,7 +5,13 @@ import chromadb
 
 
 ROOT = Path(__file__).resolve().parents[3]
-DB_PATH = ROOT / "data" / "chroma"
+def obtener_ruta_chroma() -> Path:
+    """Ubicacion del indice vectorial; CHROMA_PATH permite un volumen externo."""
+    configurada = os.getenv("CHROMA_PATH", "").strip()
+    return Path(configurada).expanduser() if configurada else ROOT / "data" / "chroma"
+
+
+DB_PATH = obtener_ruta_chroma()
 
 COLLECTION_NAMES = (
     "seguridad_python",
