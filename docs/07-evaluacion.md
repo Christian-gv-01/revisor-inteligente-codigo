@@ -163,3 +163,108 @@ Se repitieron las suites habituales: **58 pruebas del frontend**, **58 del backe
 Esta verificación acredita las conexiones y el tratamiento de respuestas, no la calidad de Gemini. No se calculan precisión, recall ni F1 de IA sobre las respuestas controladas. Las métricas de recuperación de la sección 5 conservan su corrida y procedencia originales. La evaluación generativa sigue pendiente de configurar `GEMINI_API_KEY`.
 
 Evidencias: [`integracion-http/`](evidencias/semana-3/integracion-http/README.md). La [explicación completa de conexiones y reproducción](integracion-frontend-evaluacion.md) describe cada componente y la integración mediante el PR #5.
+
+## 10. Evaluaciones complementarias — 4 de noviembre de 2026
+
+Se recuperaron cuatro ejecuciones reales del evaluador: RAG y API para las semanas 3 y 4. Los resultados originales se conservan en sus respectivos directorios de evidencias.
+
+### 10.1. Resultados de recuperación RAG
+
+| Métrica | Semana 3 (25 casos) | Semana 4 (20 casos) |
+|---|---:|---:|
+| Completados | 25/25 | 20/20 |
+| Errores | 0 | 0 |
+| Completitud | 100 % | 100 % |
+| Precision@K | 44,00 % | 46,30 % |
+| Recall@K | 92,00 % | 80,56 % |
+| MRR@K | 96,00 % | 86,11 % |
+| Hit@K | 96,00 % | 88,89 % |
+| Latencia media | 648,35 ms | 690,90 ms |
+| Latencia P95 | 829,04 ms | 805,53 ms |
+
+Los promedios de recuperación se calcularon sobre 25 casos en Semana 3 y 18 casos con referencias esperadas en Semana 4.
+
+Interpretación: Precision@K aumentó aproximadamente 2,30 puntos porcentuales. Sin embargo, Recall@K disminuyó 11,44 puntos, MRR@K disminuyó 9,89 puntos y Hit@K disminuyó 7,11 puntos. La latencia media aumentó aproximadamente 6,56 %.
+
+Estos resultados muestran que la recuperación requiere mejoras en cobertura y posicionamiento de documentos relevantes.
+
+### 10.2. Resultados de la API
+
+| Métrica | Semana 3 (25 casos) | Semana 4 (20 casos) |
+|---|---:|---:|
+| Completados | 25 | 20 |
+| Errores | 0 | 0 |
+| TP | 20 | 12 |
+| FP | 0 | 0 |
+| FN | 0 | 0 |
+| Precisión | 100 % | 100 % |
+| Recall | 100 % | 100 % |
+| F1 | 100 % | 100 % |
+| Cobertura de citas | 100 % | 100 % |
+| Validez de referencias | 100 % | 100 % |
+| Tasa de abstención | 0 % | 10 % |
+| Latencia media | 4.205,85 ms | 21.450,14 ms |
+| Latencia P95 | 6.482,97 ms | 37.074,06 ms |
+
+Los indicadores de precisión, recall y F1 corresponden a los hallazgos emparejados por el evaluador. No deben interpretarse aisladamente como una garantía de detección de todos los casos.
+
+La API registró una latencia media aproximadamente 5,1 veces superior en Semana 4. También aumentó la latencia P95.
+
+### 10.3. Trazabilidad de las ejecuciones
+
+Las cuatro ejecuciones utilizaron:
+
+- Commit base: `563cc380ec7d5179ee646f5e7839321859377851`.
+- Runner: `c4e5d46a488eb4009f14e4e1cba6f8e69cb335e111abaf9d55c3c0798b113400`.
+- Base de conocimiento: `b106e021a4de2135e52c299cf0ae9141c90eb0177120ddcad3fc8a9fdb0d555f`.
+- Código RAG: `199ced47208d4b94d16e0bdc216e71a709435ed98c652a1057f03ac663e013a8`.
+
+Se identificaron las siguientes diferencias:
+
+| Elemento | Semana 3 | Semana 4 |
+|---|---|---|
+| Hash del dataset | `e72647994d9748b72b64dd7bef11f55853abbda5601052ee7299ab4fb8217fc0` | `4e880db137d1350fda194482b7b3350320b61bc9e581ae99421804f8dc496fef` |
+| Hash LLM | `102ad3fe5eeed82c684e9d0872be29bc5a5c4f1af587346373fad0639e289ddf` | Diferente según ejecución |
+| Cambios locales | Sí | Sí |
+
+Hashes LLM de Semana 4:
+- RAG: `1568a3540e5040c4dfe05151281d40146751075e0220aae7fef584637bded29c`
+- API: `3e5ce45bfcadfb95f95ce6c905ec10f761e54651cc1fed8167453e66d5acc83f`
+
+La configuración RAG utilizó la colección `seguridad_python`, seis fragmentos y distancia máxima de 0,75. No utilizó proveedor externo de IA durante la recuperación.
+
+Las evaluaciones API utilizaron el servidor local `http://127.0.0.1:8000`, con timeout de 90 segundos.
+
+### 10.4. Limitaciones de la comparación
+
+Los resultados no constituyen una comparación experimental controlada porque:
+
+1. Los datasets tienen hashes y cantidades de casos diferentes.
+2. La implementación LLM cambió entre ejecuciones.
+3. Las capturas de metadatos indican cambios locales en las cuatro ejecuciones.
+4. Las evaluaciones API se realizaron contra un servidor local, no demuestran rendimiento en producción.
+5. Las métricas de citas verifican trazabilidad estructural, pero no garantizan por sí solas la corrección semántica de las explicaciones.
+
+Por estas razones, las diferencias observadas describen las ejecuciones realizadas, pero no permiten atribuir causalmente los cambios al modelo o a una modificación concreta.
+
+### 10.5. Conclusiones
+
+Las cuatro ejecuciones finalizaron sin errores de ejecución.
+
+La recuperación RAG mantuvo una completitud del 100 %, aunque presentó una disminución en recall, MRR y Hit@K en Semana 4.
+
+La API mantuvo los indicadores registrados de precisión, recall y F1 en 100 %, pero presentó una latencia considerablemente superior y una tasa de abstención del 10 % en Semana 4.
+
+Se identifica como trabajo futuro mejorar la recuperación de referencias relevantes, reducir la latencia de la API y realizar una comparación controlada con idéntico dataset, configuración y versión de código.
+
+### 10.6. Evidencias originales
+
+**Semana 3:**
+- `evidencias/semana-3/20261104T222131138240Z-rag/resultados.json`
+- `evidencias/semana-3/20261104T222153137562Z-api/resultados.json`
+
+**Semana 4:**
+- `evidencias/semana-4/rag-diagnostico-20261104-000927/resultados.json`
+- `evidencias/semana-4/api-gemini-final-corregida-20261104-130318/resultados.json`
+
+Los archivos JSON originales se mantienen sin modificaciones y constituyen la fuente de las métricas presentadas.
