@@ -46,4 +46,6 @@ else:
     runpy.run_path("/app/scripts/ingest.py", run_name="__main__")
 PY
 
-exec python -m uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}"
+# No aceptar automáticamente X-Forwarded-For de un origen no autenticado.
+# El encabezado X-Real-IP solo se usa mediante configuración de confianza explícita.
+exec python -m uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}" --no-proxy-headers
