@@ -2,6 +2,8 @@
 
 Fecha: 5 de noviembre de 2026, America/Bogota. Responsable: `0123445-20Alexis`.
 
+Propuesta publicada: [PR #23](https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/23), en borrador sobre la rama del PR #19. Deben revisarse estos ajustes antes de consolidar la candidata.
+
 Se revisó el PR #19 en `d85517ba5ad8d88be0f8f1bd66c861e47794afea`, sobre `integration/semana4-candidata` en `7f0ac9c6615d859162cb919ac1a884e3d117d261`. El trabajo se aisló en `feature/entrega4-qa-pr19`, partiendo del PR. No se fusionó a main, no se modificó la rama del compañero y no se desplegó Railway.
 
 ## Dictamen

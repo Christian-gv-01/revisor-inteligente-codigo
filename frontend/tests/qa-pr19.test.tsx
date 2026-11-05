@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { parseResponse } from "../src/services/api";
 import { createReport } from "../src/services/report";
 import { FindingsPanel } from "../src/components/FindingsPanel";
+import { EvidenceTrace } from "../src/components/EvidenceTrace";
 import type { AnalysisInput } from "../src/types/analysis";
 
 const input: AnalysisInput = {
@@ -40,6 +41,9 @@ describe("Regresiones QA de PR19", () => {
     expect(html).toContain("B307");
     expect(html).not.toContain("No se encontraron hallazgos");
     expect(html).not.toContain("El análisis no reportó problemas");
+    const trace = renderToStaticMarkup(<EvidenceTrace result={result} selected={null} loading={false} />);
+    expect(trace).not.toContain("El análisis no reportó hallazgos");
+    expect(trace).toContain("La revisión contextual no reportó hallazgos");
   });
   it.each(["error", "timeout", "no_disponible"])("no oculta un motor incompleto: %s", estado => {
     const data = response(0);
