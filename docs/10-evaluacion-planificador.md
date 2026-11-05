@@ -91,3 +91,40 @@ El ensayo debe incluir en la entrega final los resultados **reales** obtenidos e
 Los tests `backend/tests/test_evaluacion_planificador.py` y el modo sin `--ejecutar` verifican la metodología sin consumir solicitudes. Su aprobación **no sustituye** la ejecución de la comparación real.
 
 La consolidación en `integration/semana4-candidata`, el despliegue a `main` y la publicación en Railway siguen sujetos a revisión de QA y de los demás integrantes del equipo.
+
+
+## 7. Primera ejecución real: 5 de noviembre de 2026
+
+**Procedencia:** resultados leídos de `resumen.md` y `resultados.csv` mostrados por el operador en capturas de pantalla de su ejecución Windows. Este apartado registra la interpretación de esos datos; **los archivos CSV/JSON originales no están incluidos todavía en este commit**. El comando ejecutado fue `python eval/evaluar_planificador_agente.py --ejecutar --repeticiones 1` con el modelo `gemini-3.5-flash-lite`.
+
+| Métrica | Resultado |
+|---|---:|
+| Casos sintéticos | 6 |
+| Solicitudes efectuadas | 12 |
+| Pares válidos | 5 |
+| Pares no comparables | 1 |
+| Pares válidos con diferente herramienta | 0 |
+| Tasa de cambio de decisión | 0,00 (0/5) |
+| Respuestas del proveedor fallidas | 1 (HTTP 503, condición sin contexto) |
+| Latencia media sin contexto, solo los cinco pares válidos | 1.815,52 ms |
+| Latencia media con contexto, solo los cinco pares válidos | 3.085,12 ms |
+
+### Primera decisión observada
+
+| Caso | Sin contexto | Con contexto | Interpretación |
+|---|---|---|---|
+| `eval_entrada` | `detectar_llamadas_sensibles` | `detectar_llamadas_sensibles` | Igual |
+| `exec_entrada` | `detectar_llamadas_sensibles` | `detectar_llamadas_sensibles` | Igual |
+| `comando_shell` | `detectar_llamadas_sensibles` | `detectar_llamadas_sensibles` | Igual |
+| `sql_concatenado` | `revisar_consultas_sql` | `revisar_consultas_sql` | Igual |
+| `funcion_limpia` | `detectar_llamadas_sensibles` | `detectar_llamadas_sensibles` | Igual; revisar posible inspección innecesaria |
+| `sql_parametrizado` | Error HTTP 503 | `revisar_consultas_sql` | No comparable |
+
+**Interpretación honesta:** La integración de Ruff/Bandit como contexto quedó probada técnicamente en pruebas unitarias e inspecciones locales, pero **no se observó cambio de herramienta en los cinco pares comparables**. Esto **no significa** que la información adicional no sirva nunca ni que el agente sea más preciso: solamente indica que el primer paso elegido fue idéntico en estas muestras. El paso de revisión en `funcion_limpia` tampoco equivale a un falso positivo hasta examinar los hallazgos de la herramienta.
+
+Las medias de latencia se calcularon sobre **las mismas cinco parejas completas**, excluyendo la pareja con error. La latencia observada fue mayor con contexto en cuatro de cinco casos; por tamaño de muestra y variación temporal del proveedor, **no se establece causalidad ni significación estadística**.
+
+La captura del reporte antiguo muestra secuencias de escape Markdown `\\`` y caracteres mal interpretados por la consola Windows. El generador se corrigió en el PR de evaluación, pero **los archivos ya generados requieren regeneración local sin volver a solicitar respuestas de Gemini**. No modificar el CSV real para ajustar cifras. El HTTP 503 de este CSV no debe confundirse con errores 429 observados en sesiones anteriores.
+
+**Pendiente para evidencia académica:** incorporar los `resultados.json`, `resultados.csv` y `resumen.md` originales generados localmente en `docs/evidencias/semana-4/agente-ab-20261105T190848Z/`, después de revisar que no incluyan datos privados, claves o rutas sensibles.
+
