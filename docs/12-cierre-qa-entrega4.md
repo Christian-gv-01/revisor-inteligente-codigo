@@ -1,5 +1,7 @@
 # Cierre técnico de QA — Entrega 4
 
+> Aporte complementario de QA (PR #26): [verificación pública integrada](15-verificacion-publica-integrada.md), con evidencias propias de `0123445-20Alexis`. Su baseline corresponde a una ejecución anterior al reinicio; la comparación posterior y el log de Christian se documentan en el estado consolidado siguiente. Se conserva la procedencia de cada ejecución.
+
 ## Estado consolidado — 5 de noviembre de 2026
 
 Esta actualización recoge las evidencias publicadas por Christian en `main` hasta el commit `219069a`. Las secciones posteriores conservan la revisión histórica y su autoría; sus bloqueos de integración y producción deben leerse con este estado consolidado.

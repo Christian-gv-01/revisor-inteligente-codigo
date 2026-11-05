@@ -1,0 +1,12 @@
+{
+  "fecha_utc": "2026-11-05T21:10:11.719787+00:00",
+  "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "estado": "analizado",
+  "fuentes_ids": [
+    "seguridad_python-001",
+    "seguridad_python-004",
+    "seguridad_python-005"
+  ],
+  "total_fuentes": 3,
+  "total_hallazgos": 1
+}
