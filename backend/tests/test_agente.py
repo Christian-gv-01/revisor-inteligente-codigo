@@ -312,3 +312,10 @@ def test_dashboard_explicita_modo_degradado():
     assert r.status_code == 200
     assert "ANÁLISIS PARCIAL" in r.text
     assert "NO existen hallazgos de IA ni citas RAG" in r.text
+
+
+def test_previsualizacion_ast_protegida_por_limite_de_tasa():
+    # La ruta local también consume CPU y debe quedar protegida en Railway.
+    from app.services.rate_limit import ENDPOINT_WEIGHTS
+    assert ENDPOINT_WEIGHTS["/api/v1/agente/previsualizar"] == 1
+    assert ENDPOINT_WEIGHTS["/api/v1/agente/analizar"] == 3
