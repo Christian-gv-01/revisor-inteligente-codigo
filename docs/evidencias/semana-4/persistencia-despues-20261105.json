@@ -1,0 +1,36 @@
+{
+  "fecha_utc": "2026-11-05T21:31:45.604879+00:00",
+  "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "antes": {
+    "fecha_utc": "2026-11-05T21:29:32.774451+00:00",
+    "estado": "analizado",
+    "fuentes_ids": [
+      "seguridad_python-001",
+      "seguridad_python-004",
+      "seguridad_python-005"
+    ],
+    "total_fuentes": 3,
+    "total_hallazgos": 1,
+    "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app"
+  },
+  "despues": {
+    "fecha_utc": "2026-11-05T21:31:45.604852+00:00",
+    "estado": "analizado",
+    "fuentes_ids": [
+      "seguridad_python-001",
+      "seguridad_python-004",
+      "seguridad_python-005"
+    ],
+    "total_fuentes": 3,
+    "total_hallazgos": 1,
+    "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app"
+  },
+  "citas_coincidentes": [
+    "seguridad_python-001",
+    "seguridad_python-004",
+    "seguridad_python-005"
+  ],
+  "continuidad_citas": true,
+  "persistencia_volumen_verificada": false,
+  "alcance": "Comparación HTTP de citas. Requiere evidencia independiente del reinicio y del volumen sin reingesta."
+}
