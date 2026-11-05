@@ -1,6 +1,6 @@
 # Evidencias verificables — Semana 4
 
-> Actualización integrada: ver `../../12-cierre-qa-entrega4.md`. Backend: 179 aprobadas; ejecutores QA: 8 aprobadas; producción: 24/26. `auditoria-secretos-integrado.json` requiere revisar un JWT en un fixture del historial. Los resultados anteriores se conservan como históricos.
+> Estado actualizado al 5 de noviembre de 2026: matriz pública 26/26 y continuidad de tres citas tras reinicio, con log independiente de recuperación del índice. CI de backend, frontend y HTTP aprobado para la candidata. QA-H02 y QA-H03 siguen abiertos. Ver [cierre consolidado](../../12-cierre-qa-entrega4.md). Los reportes previos se conservan como históricos.
 
 ## Reglas
 
@@ -10,7 +10,23 @@
 - Las capturas deben mostrar URL, fecha o contexto suficiente para reproducirlas.
 - Un archivo pendiente no se reemplaza por una afirmación sin evidencia.
 
-## Inventario
+## Evidencias posteriores a la integración
+
+| Evidencia | Resultado y alcance |
+|---|---|
+| [pruebas-publicas-post-merge-20261105.json](pruebas-publicas-post-merge-20261105.json) | 26/26 en Railway; P05 y P07 aprobados |
+| [integracion-final-estatico-20261105-revision2/resultado-integracion.json](integracion-final-estatico-20261105-revision2/resultado-integracion.json) | 15/15 HTTP; ChromaDB y Ruff/Bandit reales, Gemini/GitHub externo simulados |
+| [integracion-final-sin-estatico-20261105/resultado-integracion.json](integracion-final-sin-estatico-20261105/resultado-integracion.json) | 10/10 aplicables y cinco omisiones intencionales |
+| [agente-real-20261105/sql-completo.json](agente-real-20261105/sql-completo.json) | Agente local Gemini real, informe analizado, dos decisiones, tres pasos |
+| [agente-real-20261105/sql-degradado-503.json](agente-real-20261105/sql-degradado-503.json) | Otro fragmento, informe parcial, decisiones y estático conservados; 503 identificado en el log aportado |
+| [persistencia-antes-20261105.json](persistencia-antes-20261105.json) | Análisis público con un hallazgo y tres fuentes, antes del reinicio |
+| [persistencia-despues-20261105.json](persistencia-despues-20261105.json) | Mismas tres fuentes y un hallazgo; continuidad true; volumen no verificado por el comparador HTTP |
+| [reinicio-railway-20261105.png](reinicio-railway-20261105.png) | Log independiente de apagado, volumen, recuperación del índice y arranque |
+| [CI backend](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42106521541), [frontend](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42106521518), [HTTP](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42106521602) | Success para candidata 2dd76ad, antes de fusionar PR #25 |
+
+Los nombres históricos `persistencia-antes.json` y `persistencia-despues.json` de la tabla siguiente no son los archivos generados en la verificación final: las evidencias efectivas incluyen el sufijo `-20261105`. La continuidad HTTP y el log respaldan recuperación operacional en el reinicio documentado; no constituyen auditoría completa del volumen.
+
+## Inventario histórico
 
 | Evidencia | Estado inicial | Cómo se genera |
 |---|---|---|
