@@ -38,6 +38,13 @@ def simular_ambos(monkeypatch):
     return llamadas
 
 
+def test_ruta_de_repositorio_interna_aceptada(monkeypatch):
+    simular_ambos(monkeypatch)
+    reporte = mod.analizar_estatico("import os\\nx = eval(input())\\n".replace("\\\\n", "\\n"), "src/main.py")
+    assert reporte.archivo == "src/main.py"
+    assert reporte.estado == "completo"
+
+
 def test_normaliza_hallazgos_separados(monkeypatch):
     llamadas = simular_ambos(monkeypatch)
     resultado = mod.analizar_estatico("import os\nx = eval(input())\n", "usuarios.py")
@@ -79,7 +86,7 @@ def test_ambos_indisponibles_no_finge_exito(monkeypatch):
 
 @pytest.mark.parametrize("codigo,nombre", [
     ("", "codigo.py"), ("\x00", "codigo.py"), ("x" * 12001, "codigo.py"),
-    ("print(1)", "../escape.py"), ("print(1)", "subcarpeta/archivo.py"),
+    ("print(1)", "../escape.py"), ("print(1)", "subcarpeta/../archivo.py"),
     ("print(1)", "archivo.txt"), ("print(1)", "C:\\escape.py"),
 ])
 def test_entradas_rechazadas(codigo, nombre):
