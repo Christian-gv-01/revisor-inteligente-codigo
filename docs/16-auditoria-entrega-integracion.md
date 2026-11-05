@@ -189,3 +189,38 @@ No hace falta añadir funciones comerciales, corrección automática o ejecució
 ## 8. Alcance de esta auditoría
 
 Se inspeccionaron la lista del portal y el árbol/código/documentación de la revisión indicada. Se reutilizaron resultados existentes de CI y producción sin presentarlos como nuevas ejecuciones de IA. No se evaluaron nuevamente 20 respuestas generativas ni se comprobó el contenido de un ZIP final. Este documento es un diagnóstico y plan de integración; no acredita que las tareas propuestas ya estén implementadas.
+
+## 9. Comparación autorizada con muestra_vulnerable.py
+
+Después de esta auditoría, Christian aportó el archivo de prueba y autorizó explícitamente enviarlo a Railway y Gemini. Se hicieron una solicitud normal y una de agente con el mismo contenido y nombre. [Resultados estructurados](evidencias/semana-4/comparacion-muestra-20261105/resultados.json).
+
+SHA-256 del código: `9a363f3fb3afec5b02b2fa45b508c18d92dc069e89d80a12896f04c71eb74090`. Tiene 49 líneas. Se omite el código fuente en la evidencia y se conservan los informes contextuales, reglas/líneas estáticas y la traza; no se almacenan textos de alertas estáticas que reproduzcan el valor ficticio de prueba.
+
+| Resultado | Normal | Agente |
+|---|---:|---:|
+| HTTP | 200 | 200 |
+| Estado contextual | analizado | analizado |
+| Hallazgos contextuales | 2 | 2 |
+| Ruff | 4 | 4 |
+| Bandit | 11 | 11 |
+| Observaciones estáticas combinadas | 15 | 15 |
+| Fuentes recuperadas | 002, 001, 004 | 002, 001, 004 |
+| Tiempo HTTP observado | 12.970 ms | 16.375 ms |
+
+Los IDs abreviados llevan prefijo `seguridad_python-`. La recuperación no incluyó la regla 003 de comandos, aunque el archivo contiene una llamada con shell=True y la herramienta AST del agente localizó `subprocess.call` en línea 21. La síntesis final de ambos flujos solo reportó SQL y eval. La alerta estática B602 sí se conservó. Esto distingue pérdida de cobertura contextual de pérdida de observaciones del motor estático.
+
+### Defecto reproducido de ubicación
+
+La llamada eval está en línea **25**. El flujo normal indicó **24** (definición de función) y el agente **27** (línea vacía). La construcción SQL fue señalada correctamente en la 16. La validación de límites de línea no comprueba correspondencia entre el hallazgo y la instrucción concreta.
+
+La herramienta AST del propio agente sí devolvió eval en línea 25, pero ese resultado no se transmite al generador final. Debe integrarse evidencia con ubicación verificable en la síntesis, mejorar la representación numerada del código y probar el anclaje entre cada hallazgo y su fragmento. No basta con aceptar cualquier número de línea dentro del archivo.
+
+### Caso adicional fuera de las reglas seleccionadas
+
+Una comprobación local específica con Ruff B006 detectó la lista mutable predeterminada en línea 47. B006 no pertenece a E4,E7,E9,F. Es una falta de cobertura de la configuración actual, no una desaparición de una observación generada por esas reglas.
+
+### Conclusión de esta ejecución
+
+No se observó una caída de las 15 observaciones estáticas entre ambos flujos. No hubo ganancia de cobertura contextual en esta muestra; el agente reportó las mismas dos categorías, con peor ubicación de eval en esta ejecución. Es una pareja, no una estimación estadística ni una comparación con la versión histórica anterior.
+
+Prioridades concretas: transmitir la evidencia tipada a la síntesis, recuperar documentación para las categorías detectadas, verificar la ubicación de hallazgos y mostrar en una interfaz común los estados y conteos por procedencia. Después medir de nuevo sobre el conjunto congelado y este archivo.
