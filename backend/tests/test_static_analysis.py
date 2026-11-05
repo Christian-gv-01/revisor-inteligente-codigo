@@ -184,7 +184,7 @@ def test_ruff_real_detecta_import_no_usado():
     import importlib.util
     if importlib.util.find_spec("ruff") is None:
         pytest.skip("Ruff no está instalado en este entorno")
-    codigo = "import os\\nprint('hola')\\n".replace("\\\\n", "\\n")
+    codigo = "import os\nprint('hola')\n"
     with __import__("tempfile").TemporaryDirectory() as temp:
         estado, stdout = mod._ejecutar(
             [__import__("sys").executable, "-m", "ruff", "check", "--isolated",
@@ -201,7 +201,7 @@ def test_bandit_real_detecta_eval_sin_ejecutarlo():
     import importlib.util
     if importlib.util.find_spec("bandit") is None:
         pytest.skip("Bandit no está instalado en este entorno")
-    resultado = mod.analizar_estatico("eval(input())\\n".replace("\\\\n", "\\n"))
+    resultado = mod.analizar_estatico("eval(input())\n")
     bandit = next(h for h in resultado.herramientas if h.herramienta == "bandit")
     assert bandit.estado == "ok"
     assert any(h.herramienta == "bandit" and h.regla == "B307" for h in resultado.hallazgos)
