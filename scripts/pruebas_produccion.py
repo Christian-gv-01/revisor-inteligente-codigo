@@ -33,7 +33,7 @@ class ClienteQA(httpx.Client):
         remoto = self.base_url.host not in {"localhost", "127.0.0.1", "::1"}
         ruta = urlsplit(str(url)).path
         peso = 0
-        if method.upper() == "POST" and ruta != "/api/v1/agente/previsualizar":
+        if method.upper() == "POST":
             peso = 5 if ruta in {"/api/v1/archivos/zip", "/api/v1/repositorios/github"} else 1
             if ruta == "/api/v1/agente/analizar":
                 peso = 3
@@ -121,10 +121,12 @@ def ejecutar(
     )
 
 
-def casos(cliente: httpx.Client) -> list[Resultado]:
+def casos(cliente: httpx.Client, seleccion: set[str] | None = None) -> list[Resultado]:
     resultados: list[Resultado] = []
 
     def caso(*args, **kwargs) -> None:
+        if seleccion is not None and args[0] not in seleccion:
+            return
         resultados.append(ejecutar(cliente, *args, **kwargs))
 
     caso(
@@ -288,6 +290,7 @@ def main() -> int:
     parser.add_argument("--base-url", required=True, help="URL HTTPS pública o URL local de prueba")
     parser.add_argument("--output", type=Path, help="Archivo JSON de evidencia")
     parser.add_argument("--timeout", type=float, default=20.0)
+    parser.add_argument("--casos", nargs="+", choices=[f"P{n:02d}" for n in range(1, 27)], help="Repetir solo los casos indicados, conservando sus IDs")
     args = parser.parse_args()
 
     base_url = args.base_url.rstrip("/")
@@ -298,7 +301,7 @@ def main() -> int:
         trust_env=False,
         headers={"User-Agent": "CODEGUARD-QA-Entrega4/1.0"},
     ) as cliente:
-        resultados = casos(cliente)
+        resultados = casos(cliente, set(args.casos) if args.casos else None)
 
     aprobados = sum(resultado.aprobado for resultado in resultados)
     reporte = {

@@ -1,12 +1,14 @@
 # 08. Plan y resultados de pruebas — Entrega 4
 
+> Resultado público posterior a la integración: **26/26 aprobadas** y análisis con tres fuentes. Ver [15-verificacion-publica-integrada.md](15-verificacion-publica-integrada.md). La persistencia tras reinicio continúa pendiente.
+
 ## Alcance
 
 Este documento cubre el rol de QA, seguridad y documentación. Separa tres niveles:
 
 1. Pruebas unitarias e integración con servicios externos simulados.
 2. Pruebas HTTP contra una instancia local equivalente.
-3. Pruebas contra la URL pública HTTPS, pendientes hasta que exista el despliegue.
+3. Pruebas contra la URL pública HTTPS, con ejecuciones y alcances registrados por separado.
 
 No se convierten resultados locales en evidencia pública ni se presentan mocks como respuestas reales de Gemini.
 

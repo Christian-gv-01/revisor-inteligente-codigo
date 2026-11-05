@@ -1,0 +1,27 @@
+{
+  "fecha_utc": "2026-11-05T21:10:03.460567+00:00",
+  "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "estatico": {
+    "http": 200,
+    "estado": "completo",
+    "total_alertas_estaticas": 1,
+    "herramientas_completadas": [
+      "bandit",
+      "ruff"
+    ]
+  },
+  "analisis": {
+    "http": 200,
+    "estado": "analizado",
+    "total_alertas_estaticas": 1,
+    "herramientas_completadas": [
+      "bandit",
+      "ruff"
+    ],
+    "total_fuentes": 3,
+    "total_hallazgos": 1,
+    "baseline_guardado": true
+  },
+  "reinicio_realizado": false,
+  "persistencia_volumen_verificada": false
+}
