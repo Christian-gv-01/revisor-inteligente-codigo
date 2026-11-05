@@ -10,6 +10,8 @@ import argparse
 import json
 import sys
 import time
+from collections import deque
+from urllib.parse import urlsplit
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from io import BytesIO
@@ -18,6 +20,33 @@ from typing import Callable
 from zipfile import ZIP_DEFLATED, ZipFile
 
 import httpx
+
+
+class ClienteQA(httpx.Client):
+    """Respeta el presupuesto público documentado: 10 unidades/60 segundos."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.reservas = deque()
+
+    def request(self, method, url, *args, **kwargs):
+        remoto = self.base_url.host not in {"localhost", "127.0.0.1", "::1"}
+        ruta = urlsplit(str(url)).path
+        peso = 0
+        if method.upper() == "POST" and ruta != "/api/v1/agente/previsualizar":
+            peso = 5 if ruta in {"/api/v1/archivos/zip", "/api/v1/repositorios/github"} else 1
+            if ruta == "/api/v1/agente/analizar":
+                peso = 3
+        if remoto and peso:
+            while True:
+                ahora = time.monotonic()
+                while self.reservas and ahora - self.reservas[0][0] >= 61:
+                    self.reservas.popleft()
+                if sum(p for _, p in self.reservas) + peso <= 10:
+                    self.reservas.append((ahora, peso))
+                    break
+                time.sleep(min(30, max(0.1, 61 - (ahora - self.reservas[0][0]))))
+        return super().request(method, url, *args, **kwargs)
 
 
 @dataclass
@@ -50,15 +79,15 @@ def resumen_respuesta(respuesta: httpx.Response) -> str:
             return "JSON inválido"
         if isinstance(datos, dict):
             if isinstance(datos.get("detail"), str):
-                return datos["detail"][:180]
+                return "mensaje de error presente (contenido omitido)"
             if isinstance(datos.get("detail"), list):
                 return f"{len(datos['detail'])} error(es) de validación"
             if "status" in datos:
-                return f"status={datos['status']}"
+                return "campo status presente"
             if "modo" in datos:
-                return f"modo={datos['modo']}"
+                return "campo modo presente"
         return "respuesta JSON"
-    return f"content-type={tipo or 'ausente'}"
+    return "respuesta no JSON"
 
 
 def ejecutar(
@@ -75,11 +104,11 @@ def ejecutar(
         respuesta = solicitud(cliente)
         aprobado = validar(respuesta)
         obtenido = f"HTTP {respuesta.status_code}; {resumen_respuesta(respuesta)}"
-        detalle = "" if aprobado else respuesta.text[:300]
+        detalle = "" if aprobado else "No cumple la aserción; cuerpo omitido para proteger datos."
     except Exception as error:  # la evidencia debe registrar fallos de red controlados
         aprobado = False
         obtenido = type(error).__name__
-        detalle = str(error)[:300]
+        detalle = "Excepción durante la solicitud o validación; mensaje omitido."
     return Resultado(
         id=identificador,
         categoria=categoria,
@@ -262,7 +291,7 @@ def main() -> int:
     args = parser.parse_args()
 
     base_url = args.base_url.rstrip("/")
-    with httpx.Client(
+    with ClienteQA(
         base_url=base_url,
         timeout=httpx.Timeout(args.timeout),
         follow_redirects=False,

@@ -1,5 +1,7 @@
 # Evidencias verificables — Semana 4
 
+> Actualización integrada: ver `../../12-cierre-qa-entrega4.md`. Backend: 179 aprobadas; ejecutores QA: 8 aprobadas; producción: 24/26. `auditoria-secretos-integrado.json` requiere revisar un JWT en un fixture del historial. Los resultados anteriores se conservan como históricos.
+
 ## Reglas
 
 - Cada resultado debe provenir de un comando ejecutado.
@@ -14,8 +16,11 @@
 |---|---|---|
 | `pruebas-locales.json` | 26/26 aprobados | `scripts/pruebas_produccion.py` contra localhost |
 | `integracion-http/resultado-integracion.json` | 9/9 aprobadas | FastAPI y ChromaDB reales; proveedor controlado |
-| `pruebas-publicas.json` | Bloqueada hasta disponer de URL | Mismo script contra HTTPS público |
-| `auditoria-secretos.json` | Aprobada, 0 hallazgos | `scripts/auditar_secretos.py` |
+| `pruebas-publicas.json` | 24/26; dos fallos de sanitización 422 | Mismo script contra HTTPS público |
+| `auditoria-secretos.json` | Histórico previo a actualizar ramas | `scripts/auditar_secretos.py` |
+| `auditoria-secretos-integrado.json` | Requiere revisar JWT de fixture | Historial ampliado tras fetch |
+| `pytest-integrado.xml` | 179 aprobadas | Suite integrada con Ruff/Bandit reales |
+| `pytest-runners.xml` | 8 aprobadas | Protección de evidencias y comparación de citas |
 | `pruebas-automatizadas.md` | Backend, frontend y Docker documentados | pytest, Vitest, ESLint, build y Compose |
 | `persistencia-antes.json` | Bloqueada hasta análisis real | Captura de citas antes del reinicio |
 | `persistencia-despues.json` | Bloqueada hasta reinicio | Comparación posterior |

@@ -103,7 +103,7 @@ Las respuestas públicas no deben incluir excepciones, rutas internas, claves, c
 4. Ejecutar la acción `verificar` con el mismo baseline.
 5. Conservar `persistencia-antes.json`, `persistencia-despues.json` y logs del reinicio.
 
-La prueba aprueba si existe al menos un ID de cita coincidente. No basta con que `/health` responda.
+El comparador exige el mismo objetivo y el conjunto completo de IDs. Solo informa continuidad de citas: no certifica persistencia del volumen ni que hubo un reinicio. El arranque puede reconstruir IDs iguales. Se necesitan además el evento de reinicio, el volumen y la recuperación sin reingesta. No se dispone de acceso para reiniciar Railway y el responsable no puede hacerlo durante esta revisión.
 
 ## Auditoría de secretos
 
@@ -121,6 +121,8 @@ La prueba aprueba si existe al menos un ID de cita coincidente. No basta con que
 Los dos últimos puntos permanecen pendientes mientras no exista una URL pública accesible y un volumen remoto verificable.
 
 ## Resultados automatizados actuales
+
+> Los resultados siguientes corresponden a la base previa a Ruff/Bandit. La actualización integrada, los hallazgos y bloqueos están en `docs/12-cierre-qa-entrega4.md`.
 
 - Backend: 115 pruebas aprobadas, 0 fallidas.
 - Frontend habitual: 58 aprobadas, 9 integraciones HTTP omitidas de forma intencional, 0 fallidas.

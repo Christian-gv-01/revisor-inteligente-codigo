@@ -5,7 +5,8 @@ CODEGUARD analiza código Python como texto para identificar riesgos de segurida
 ## Estado de la Entrega 4
 
 - Rama QA: `feature/entrega-4-qa-seguridad-documentacion`.
-- URL pública HTTPS: **pendiente de publicación por el responsable del despliegue**. No se declara una URL local como evidencia pública.
+- URL pública: https://revisor-inteligente-codigo-production.up.railway.app . Salud y OpenAPI accesibles; la revisión desplegada exacta debe confirmarla el responsable de Railway.
+- Ruff/Bandit: integrados en esta rama QA desde `a394d65`; el OpenAPI público consultado todavía no anuncia su endpoint.
 - Contenedor: preparado para servir frontend y API desde un mismo origen.
 - Persistencia: ChromaDB utiliza un volumen externo configurable.
 - Pruebas públicas: `scripts/pruebas_produccion.py` incluye 26 escenarios seguros.
@@ -53,6 +54,10 @@ Copiar `.env.example` como `.env` y completar únicamente los valores locales. `
 | `RAG_MAX_DISTANCE` | No | Umbral de recuperación documental. |
 | `PORT` | Plataforma | Puerto asignado al contenedor. |
 | `SERVE_FRONTEND` | Docker | Sirve `frontend/dist` desde FastAPI. |
+| `STATIC_ANALYSIS_ENABLED` | No | Agrega resultados Ruff/Bandit separados de RAG. |
+| `RATE_LIMIT_ENABLED` | Producción | Presupuesto de peticiones por proceso. |
+| `CONCURRENCY_LIMIT_ENABLED` | Producción | Máximo de dos solicitudes costosas activas. |
+| `TRUST_RAILWAY_REAL_IP` | No | Activar solo con ingreso exclusivo por proxy confiable. |
 
 ## Ejecución local sin Docker
 
@@ -95,6 +100,7 @@ La guía de hosting y volumen está en [docs/despliegue.md](docs/despliegue.md).
 | `POST` | `/api/v1/repositorios/github` | Repositorio público. |
 | `POST` | `/api/v1/agente/previsualizar` | Herramientas AST sin IA. |
 | `POST` | `/api/v1/agente/analizar` | Agente supervisado y análisis RAG. |
+| `POST` | `/api/v1/estatico/analizar` | Ruff/Bandit autónomos, sin Gemini; pendiente en la URL consultada. |
 
 ## Pruebas
 
@@ -149,7 +155,7 @@ La matriz completa está en [docs/08-pruebas.md](docs/08-pruebas.md).
 
 ## Limitaciones
 
-- No hay autenticación, rate limiting global ni cuotas por usuario. No se recomienda mantener una demo pública con una clave de pago sin control de acceso.
+- No hay autenticación ni cuotas de tokens por usuario. Existen límites de peticiones y concurrencia por proceso; varias réplicas requieren coordinación compartida.
 - `/health` no demuestra por sí solo que Gemini y RAG funcionen.
 - Las herramientas AST son heurísticas y pueden producir falsos positivos o negativos.
 - Las pruebas con mocks validan contratos, no la calidad real de Gemini.
@@ -163,6 +169,7 @@ La matriz completa está en [docs/08-pruebas.md](docs/08-pruebas.md).
 - [RAG](docs/06-rag.md)
 - [Evaluación](docs/07-evaluacion.md)
 - [Pruebas de Entrega 4](docs/08-pruebas.md)
+- [Cierre QA e integración estática](docs/12-cierre-qa-entrega4.md)
 - [Decisiones](docs/09-decisiones.md)
 - [Aportes y uso de IA](docs/11-aportes-ia.md)
 - [Evidencias de semana 4](docs/evidencias/semana-4/README.md)
