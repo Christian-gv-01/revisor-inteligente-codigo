@@ -10,7 +10,7 @@ La siguiente relación se basa en el historial Git y debe ser validada por el eq
 | `Andyjr98` | QA, seguridad de entradas, RAG, filtros, abstención, regresiones y documentación de decisiones. |
 | `olmesaguilar` | Frontend, diseño, trazabilidad de fuentes, evaluación RAG e integración HTTP, según el historial. |
 
-Las identidades Git describen autoría registrada; no acreditan por sí solas el nombre ni el rol actual de la persona. La correspondencia entre cuentas e integrantes debe confirmarla el equipo. El responsable de Frontend y Evaluación comunicó sus avances por separado; el usuario de esta entrega asume el rol de Compañero 3, QA, seguridad y documentación. No se atribuye este rol a la cuenta configurada localmente sin esa confirmación.
+Las identidades Git describen autoría registrada; no acreditan por sí solas el nombre ni el rol actual de la persona. La correspondencia de las cuentas históricas con integrantes debe confirmarla el equipo. El responsable de Frontend y Evaluación comunicó sus avances por separado. El usuario de esta entrega confirmó la cuenta `0123445-20Alexis` y asume el rol de Compañero 3, QA, seguridad y documentación; esta confirmación no cambia la autoría histórica de los commits.
 
 ## Aporte del rol QA, seguridad y documentación — Entrega 4
 
@@ -20,7 +20,9 @@ Las identidades Git describen autoría registrada; no acreditan por sí solas el
 - Auditoría automatizada de secretos e historial.
 - Procedimiento automatizado para comparar citas antes y después del reinicio.
 - README reproducible y organización de evidencias de semana 4.
-- Registro explícito de pendientes que requieren URL pública, sin inventar resultados.
+- Aceptación del contrato Ruff/Bandit en las cuatro modalidades y comprobación con analizadores reales.
+- Ejecución de la matriz pública (24/26 aprobadas) y comprobación del HTTP 429, con evidencia sin cuerpos sensibles.
+- Registro de pendientes de despliegue, Frontend y reinicio, sin inventar resultados. Ver `12-cierre-qa-entrega4.md`.
 
 ## Herramientas de inteligencia artificial
 
