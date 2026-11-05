@@ -107,7 +107,7 @@ La consolidación en `integration/semana4-candidata`, el despliegue a `main` y l
 | Tasa de cambio de decisión | 0,00 (0/5) |
 | Respuestas del proveedor fallidas | 1 (HTTP 503, condición sin contexto) |
 | Latencia media sin contexto, solo los cinco pares válidos | 1.815,52 ms |
-| Latencia media con contexto, solo los cinco pares válidos | 3.085,12 ms |
+| Latencia media con contexto, solo los cinco pares válidos | 3.081,32 ms |
 
 ### Primera decisión observada
 
