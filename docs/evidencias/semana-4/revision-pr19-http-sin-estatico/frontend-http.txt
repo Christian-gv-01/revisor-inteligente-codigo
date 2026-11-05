@@ -1,0 +1,1 @@
+JSON report written to C:/Users/alexm/Desktop/TITULACION/codeguard-qa-pr19/docs/evidencias/semana-4/revision-pr19-http-sin-estatico/vitest-integracion.json

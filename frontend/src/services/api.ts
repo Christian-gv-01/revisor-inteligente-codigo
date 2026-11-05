@@ -344,7 +344,8 @@ function parseStaticReport(value: unknown, archivo: string): StaticAnalysis | un
     !["completo", "parcial", "no_disponible"].includes(value.estado as string) ||
     !Array.isArray(value.herramientas) ||
     !Array.isArray(value.hallazgos) ||
-    value.hallazgos.length > 200 ||
+    // El backend limita a 200 por motor y combina Ruff + Bandit.
+    value.hallazgos.length > 400 ||
     value.herramientas.length < 1 ||
     value.herramientas.length > 2 ||
     (value.mensaje !== null && value.mensaje !== undefined && typeof value.mensaje !== "string")
