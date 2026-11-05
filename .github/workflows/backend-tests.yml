@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - feature/semana4-endurecimiento-http
+      - feature/entrega-4-qa-seguridad-documentacion
   pull_request:
     paths:
       - "backend/**"
       - "scripts/**"
+      - "qa/**"
       - ".github/workflows/backend-tests.yml"
 
 permissions:
@@ -38,4 +40,11 @@ jobs:
           RATE_LIMIT_ENABLED: "0"
           CONCURRENCY_LIMIT_ENABLED: "0"
           TRUST_RAILWAY_REAL_IP: "0"
-        run: python -m pytest -q
+        run: python -m pytest -q --junitxml=../qa-backend.xml
+      - name: QA runner tests
+        run: python -m pytest qa -q --junitxml=qa-runners.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa-results
+          path: qa-*.xml

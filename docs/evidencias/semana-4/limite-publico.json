@@ -1,0 +1,68 @@
+{
+  "fecha_utc": "2026-11-05T02:38:37.921517+00:00",
+  "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "aprobado": true,
+  "solicitudes": [
+    {
+      "solicitud": 1,
+      "http": 422,
+      "retry_after_segundos": null,
+      "no_store": false
+    },
+    {
+      "solicitud": 2,
+      "http": 422,
+      "retry_after_segundos": null,
+      "no_store": false
+    },
+    {
+      "solicitud": 3,
+      "http": 422,
+      "retry_after_segundos": null,
+      "no_store": false
+    },
+    {
+      "solicitud": 4,
+      "http": 422,
+      "retry_after_segundos": null,
+      "no_store": false
+    },
+    {
+      "solicitud": 5,
+      "http": 422,
+      "retry_after_segundos": null,
+      "no_store": false
+    },
+    {
+      "solicitud": 6,
+      "http": 422,
+      "retry_after_segundos": null,
+      "no_store": false
+    },
+    {
+      "solicitud": 7,
+      "http": 422,
+      "retry_after_segundos": null,
+      "no_store": false
+    },
+    {
+      "solicitud": 8,
+      "http": 422,
+      "retry_after_segundos": null,
+      "no_store": false
+    },
+    {
+      "solicitud": 9,
+      "http": 422,
+      "retry_after_segundos": null,
+      "no_store": false
+    },
+    {
+      "solicitud": 10,
+      "http": 429,
+      "retry_after_segundos": 25,
+      "no_store": true
+    }
+  ],
+  "alcance": "Verifica rechazo y encabezados; no determina el umbral exacto ni identidad por IP, porque puede existir tráfico previo."
+}

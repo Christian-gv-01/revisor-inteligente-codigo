@@ -1,0 +1,10 @@
+{
+  "fecha_utc": "2026-11-05T14:45:37.042816+00:00",
+  "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "openapi_http": 200,
+  "endpoint_estatico_publicado": false,
+  "analisis_http": 502,
+  "captura": "sin baseline",
+  "reinicio_realizado": false,
+  "persistencia_volumen_verificada": false
+}

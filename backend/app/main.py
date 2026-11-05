@@ -1,13 +1,12 @@
 ﻿
-from fastapi import FastAPI, HTTPException, File, UploadFile
+from fastapi import FastAPI, HTTPException, File, Request, UploadFile
 import os
-
-from fastapi import Request
-from fastapi.responses import JSONResponse
 
 from app.services.rate_limit import ENDPOINT_WEIGHTS, LimitadorPonderado
 from app.services.http_security import ControlConcurrencia, identidad_cliente
 from fastapi.concurrency import run_in_threadpool
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 
 
@@ -36,6 +35,32 @@ app = FastAPI(
     description="API para el análisis inteligente de código Python",
     version="0.1.0",
 )
+
+
+def errores_validacion_publicos(error: RequestValidationError) -> list[dict]:
+    """Conserva la utilidad del 422 sin reflejar código o secretos recibidos."""
+
+    return [
+        {
+            "type": detalle.get("type", "validation_error"),
+            "loc": list(detalle.get("loc", ())),
+            "msg": detalle.get("msg", "Entrada inválida."),
+        }
+        for detalle in error.errors()
+    ]
+
+
+@app.exception_handler(RequestValidationError)
+async def manejar_error_validacion(
+    _request: Request,
+    error: RequestValidationError,
+) -> JSONResponse:
+    """Evita que FastAPI devuelva el valor completo de entradas sensibles."""
+
+    return JSONResponse(
+        status_code=422,
+        content={"detail": errores_validacion_publicos(error)},
+    )
 
 
 # Dos barreras complementarias: presupuesto por minuto y concurrencia.

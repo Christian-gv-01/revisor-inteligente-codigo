@@ -1,0 +1,42 @@
+# Evidencias verificables — Semana 4
+
+> Actualización integrada: ver `../../12-cierre-qa-entrega4.md`. Backend: 179 aprobadas; ejecutores QA: 8 aprobadas; producción: 24/26. `auditoria-secretos-integrado.json` requiere revisar un JWT en un fixture del historial. Los resultados anteriores se conservan como históricos.
+
+## Reglas
+
+- Cada resultado debe provenir de un comando ejecutado.
+- No guardar `.env`, claves, tokens, código privado ni valores del panel.
+- Distinguir `local` de `público` en nombres y contenido.
+- Las capturas deben mostrar URL, fecha o contexto suficiente para reproducirlas.
+- Un archivo pendiente no se reemplaza por una afirmación sin evidencia.
+
+## Inventario
+
+| Evidencia | Estado inicial | Cómo se genera |
+|---|---|---|
+| `pruebas-locales.json` | 26/26 aprobados | `scripts/pruebas_produccion.py` contra localhost |
+| `integracion-http/resultado-integracion.json` | 9/9 aprobadas | FastAPI y ChromaDB reales; proveedor controlado |
+| `pruebas-publicas.json` | 24/26; dos fallos de sanitización 422 | Mismo script contra HTTPS público |
+| `pruebas-publicas-2026-11-05.json` | Repetición: 24/26; persisten P05/P07 | Mismo script contra Railway el 5 de noviembre |
+| `revalidacion-cierre-2026-11-05.json` | Endpoint estático ausente; análisis 502; sin baseline | Consulta OpenAPI y un análisis sintético con el helper de persistencia |
+| `auditoria-secretos.json` | Histórico previo a actualizar ramas | `scripts/auditar_secretos.py` |
+| `auditoria-secretos-integrado.json` | Requiere revisar JWT de fixture | Historial ampliado tras fetch |
+| `pytest-integrado.xml` | 179 aprobadas | Suite integrada con Ruff/Bandit reales |
+| `pytest-runners.xml` | 8 aprobadas | Protección de evidencias y comparación de citas |
+| [GitHub Actions](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/41956677118) | Aprobado para `66d7f42` en Linux/Python 3.13 | Backend, ejecutores QA y artefacto `qa-results` |
+| `pruebas-automatizadas.md` | Backend, frontend y Docker documentados | pytest, Vitest, ESLint, build y Compose |
+| `persistencia-antes.json` | Bloqueada hasta análisis real | Captura de citas antes del reinicio |
+| `persistencia-despues.json` | Bloqueada hasta reinicio | Comparación posterior |
+| Capturas de hosting | Pendientes de acceso del responsable; HTTPS ya comprobado por HTTP | Volumen, variables ocultas y logs de reinicio |
+
+## Evidencia pública mínima
+
+1. Interfaz en el dominio HTTPS.
+2. `/health` en el mismo dominio.
+3. Resultado de un análisis real con citas.
+4. 26 escenarios del runner aprobados.
+5. Volumen montado en `/data`.
+6. Mismas citas después de reiniciar o volver a desplegar.
+7. Variables visibles solo por nombre, con valores ocultos.
+
+El estado final y las limitaciones se actualizarán después de cada ejecución.

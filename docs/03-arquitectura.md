@@ -1,6 +1,14 @@
 
 # 03. Arquitectura del sistema
 
+> **Revisión documental — Entrega 4, 4 de noviembre de 2026:** este archivo
+> conserva la arquitectura inicial para trazabilidad histórica. Desde entonces se
+> integraron frontend React, RAG/ChromaDB, análisis de GitHub, Agent Lab y
+> persistencia Docker. La propuesta, requisitos y topología vigente se resumen en
+> `docs/01-propuesta.md`, `docs/02-requisitos.md`, `README.md` y
+> `docs/despliegue.md`. Las afirmaciones posteriores que indiquen que esos
+> componentes aún no existen deben leerse como estado histórico de la revisión 2.
+
 - **Proyecto:** Revisor Inteligente de Código Seguro
 - **Rama de trabajo:** `feature/qa-seguridad`
 - **Estado:** Arquitectura inicial documentada; validación e integración pendientes de completar con el equipo.
