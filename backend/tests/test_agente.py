@@ -311,7 +311,9 @@ def test_dashboard_explicita_modo_degradado():
     r = client.get("/agente/demo")
     assert r.status_code == 200
     assert "ANÁLISIS PARCIAL" in r.text
-    assert "NO existen hallazgos de IA ni citas RAG" in r.text
+    assert "ANÁLISIS PARCIAL:" in r.text
+    assert "report.mensaje" in r.text
+    assert "No hay dictamen de IA ni citas RAG" in r.text
 
 
 def test_previsualizacion_ast_protegida_por_limite_de_tasa():
@@ -319,3 +321,142 @@ def test_previsualizacion_ast_protegida_por_limite_de_tasa():
     from app.services.rate_limit import ENDPOINT_WEIGHTS
     assert ENDPOINT_WEIGHTS["/api/v1/agente/previsualizar"] == 1
     assert ENDPOINT_WEIGHTS["/api/v1/agente/analizar"] == 3
+
+
+def test_decisiones_gemini_quedan_registradas_en_exito():
+    secuencia = iter([
+        DecisionAgente(herramienta="detectar_llamadas_sensibles", motivo="Revisar eval"),
+        DecisionAgente(herramienta="finalizar", motivo="Evidencia suficiente"),
+    ])
+    resultado = ejecutar_agente(
+        entrada(),
+        planificador=lambda codigo, pasos: next(secuencia),
+        analizador=informe_ficticio,
+    )
+    pasos, informe = resultado
+    assert informe.hallazgos == []
+    assert [p.origen for p in pasos] == ["automatico", "gemini"]
+    assert [d.herramienta for d in resultado.decisiones] == [
+        "detectar_llamadas_sensibles", "finalizar"
+    ]
+    assert [d.estado for d in resultado.decisiones] == ["ejecutada", "finalizar"]
+    assert resultado.decisiones[0].motivo == "Revisar eval"
+
+
+def test_informe_503_conserva_decisiones_e_inspeccion_gemini(monkeypatch):
+    import app.routes.agente as route_module
+    from app.services.llm import LLMError
+
+    decisiones = iter([
+        DecisionAgente(herramienta="detectar_llamadas_sensibles", motivo="Investigar eval"),
+        DecisionAgente(herramienta="finalizar", motivo="Sin otros análisis"),
+    ])
+
+    def fallar_informe(codigo):
+        raise LLMError("ERROR_INTERNO_PRIVADO_NO_PUBLICAR", 503)
+
+    def ejecutar_con_fallo(solicitud):
+        return ejecutar_agente(
+            solicitud,
+            planificador=lambda codigo, pasos: next(decisiones),
+            analizador=fallar_informe,
+        )
+
+    monkeypatch.setattr(route_module, "ejecutar_agente", ejecutar_con_fallo)
+    respuesta = client.post("/api/v1/agente/analizar", json=entrada().model_dump())
+    assert respuesta.status_code == 200
+    datos = respuesta.json()
+    assert datos["modo"] == "degradado"
+    assert datos["fase_error"] == "informe"
+    assert datos["informe"]["estado"] == "parcial"
+    assert datos["informe"]["hallazgos"] == []
+    assert datos["informe"]["fuentes"] == []
+    assert [d["herramienta"] for d in datos["decisiones"]] == [
+        "detectar_llamadas_sensibles", "finalizar"
+    ]
+    assert [p["origen"] for p in datos["pasos"]] == [
+        "automatico", "gemini", "local"
+    ]
+    assert len(set(p["herramienta"] for p in datos["pasos"])) == 3
+    assert len(datos["pasos"]) == datos["max_pasos"] == 3
+    assert "ERROR_INTERNO_PRIVADO_NO_PUBLICAR" not in respuesta.text
+
+
+def test_planificador_503_conserva_sus_pasos_anteriores(monkeypatch):
+    import app.routes.agente as route_module
+    from app.services.llm import LLMError
+
+    def elegir(codigo, pasos):
+        if len(pasos) == 1:
+            return DecisionAgente(
+                herramienta="revisar_consultas_sql", motivo="Inspección SQL"
+            )
+        raise LLMError("MARCADOR_PRIVADO_503", 503)
+
+    def ejecutar_con_fallo(solicitud):
+        return ejecutar_agente(
+            solicitud, planificador=elegir, analizador=informe_ficticio
+        )
+
+    monkeypatch.setattr(route_module, "ejecutar_agente", ejecutar_con_fallo)
+    respuesta = client.post("/api/v1/agente/analizar", json=entrada().model_dump())
+    assert respuesta.status_code == 200
+    datos = respuesta.json()
+    assert datos["fase_error"] == "planificacion"
+    assert datos["modo"] == "degradado"
+    assert [p["herramienta"] for p in datos["pasos"]] == [
+        "inspeccionar_estructura", "revisar_consultas_sql", "detectar_llamadas_sensibles"
+    ]
+    assert [p["origen"] for p in datos["pasos"]] == [
+        "automatico", "gemini", "local"
+    ]
+    assert len(datos["decisiones"]) == 1
+    assert datos["decisiones"][0]["herramienta"] == "revisar_consultas_sql"
+    assert "MARCADOR_PRIVADO_503" not in respuesta.text
+
+
+def test_maximo_un_paso_no_finge_planificacion_gemini(monkeypatch):
+    import app.routes.agente as route_module
+    from app.services.llm import LLMError
+
+    def no_planificar(*args):
+        raise AssertionError("No debe consultarse planificador con max_pasos=1")
+
+    def fallar_informe(codigo):
+        raise LLMError("Proveedor temporalmente no disponible", 503)
+
+    monkeypatch.setattr(
+        route_module, "ejecutar_agente",
+        lambda solicitud: ejecutar_agente(
+            solicitud, planificador=no_planificar, analizador=fallar_informe
+        ),
+    )
+    respuesta = client.post(
+        "/api/v1/agente/analizar", json=entrada(pasos=1).model_dump()
+    )
+    assert respuesta.status_code == 200
+    datos = respuesta.json()
+    assert datos["modo"] == "degradado"
+    assert datos["fase_error"] == "informe"
+    assert datos["decisiones"] == []
+    assert len(datos["pasos"]) == 1
+    assert datos["pasos"][0]["origen"] == "automatico"
+
+
+def test_ejecucion_agente_conserva_validacion_byte_nulo():
+    with pytest.raises(ValueError):
+        ejecutar_agente(
+            entrada(codigo="print(1)\x00"),
+            planificador=lambda *args: DecisionAgente(
+                herramienta="finalizar", motivo="Sin inspección"
+            ),
+            analizador=informe_ficticio,
+        )
+
+
+def test_panel_muestra_origen_y_decisiones_verificables():
+    respuesta = client.get("/agente/demo")
+    assert respuesta.status_code == 200
+    assert "Decisiones registradas del planificador" in respuesta.text
+    assert "ELEGIDO POR GEMINI" in respuesta.text
+    assert "RESPALDO LOCAL" in respuesta.text
