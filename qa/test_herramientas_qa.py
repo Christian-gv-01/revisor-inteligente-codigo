@@ -40,3 +40,21 @@ def test_citas_no_certifican_volumen(antes, despues, esperado):
 def test_no_compara_instancias_distintas():
     with pytest.raises(ValueError):
         persistencia.comparar({"objetivo":"local"}, {"objetivo":"publico"})
+
+
+def test_previsualizacion_agente_reserva_presupuesto_publico():
+    with runner.ClienteQA(base_url="https://qa.invalid", transport=httpx.MockTransport(lambda _: httpx.Response(200))) as cliente:
+        cliente.post("/api/v1/agente/previsualizar", json={})
+        assert sum(peso for _, peso in cliente.reservas) == 1
+
+
+def test_seleccion_solo_ejecuta_los_casos_solicitados():
+    rutas = []
+    def responder(request):
+        rutas.append(request.url.path)
+        return httpx.Response(200, json={"status":"ok"})
+    with runner.ClienteQA(base_url="http://127.0.0.1", transport=httpx.MockTransport(responder)) as cliente:
+        resultados = runner.casos(cliente, {"P01"})
+    assert rutas == ["/health"]
+    assert [resultado.id for resultado in resultados] == ["P01"]
+    assert resultados[0].aprobado
