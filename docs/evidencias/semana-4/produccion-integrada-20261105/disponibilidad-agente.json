@@ -1,0 +1,41 @@
+{
+  "fecha_utc": "2026-11-05T21:02:50.910459+00:00",
+  "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "comprobaciones": [
+    {
+      "ruta": "/agente/demo",
+      "http": 200,
+      "modo_local_disponible": true,
+      "modo_gemini_disponible": true,
+      "titulo": "CODEGUARD · Agent Mission Control"
+    },
+    {
+      "ruta": "/",
+      "http": 200
+    },
+    {
+      "ruta": "/health",
+      "http": 200
+    },
+    {
+      "ruta": "/openapi.json",
+      "http": 200,
+      "estatico_publicado": true
+    },
+    {
+      "caso": "P05",
+      "http": 422,
+      "aprobado": true
+    },
+    {
+      "caso": "P07",
+      "http": 422,
+      "aprobado": true
+    },
+    {
+      "ruta": "/api/v1/agente/previsualizar",
+      "http": 200,
+      "modo_local_confirmado": true
+    }
+  ]
+}

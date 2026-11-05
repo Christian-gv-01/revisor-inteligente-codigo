@@ -1,5 +1,7 @@
 # Cierre técnico de QA — Entrega 4
 
+> Verificación pública posterior: [15-verificacion-publica-integrada.md](15-verificacion-publica-integrada.md) registra 26/26, sanitización corregida, Ruff/Bandit publicados y baseline de tres citas. Los fallos descritos más abajo son evidencia histórica de las ejecuciones anteriores.
+
 > Actualización posterior: la revisión del PR #19 y las correcciones propuestas en el PR #23 están en [14-revision-qa-pr19.md](14-revision-qa-pr19.md). Los resultados siguientes conservan el estado de la revisión inicial; no sustituyen la evidencia posterior de integración estática.
 
 Fecha de revisión: 4 de noviembre de 2026, America/Bogota.
