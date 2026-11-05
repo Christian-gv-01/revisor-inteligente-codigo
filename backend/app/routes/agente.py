@@ -51,11 +51,13 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
         # Compatibilidad con los mocks previos que retornan una tupla.
         pasos, informe = ejecucion
         decisiones = getattr(ejecucion, "decisiones", [])
+        estatico = getattr(ejecucion, "estatico", None)
         return RespuestaAgente(
             archivo=solicitud.archivo,
             modo="gemini_real", pasos=pasos,
             max_pasos=solicitud.max_pasos,
             decisiones=decisiones,
+            analisis_estatico=estatico,
             informe=RespuestaAnalisis(
                 archivo=solicitud.archivo,
                 estado="abstenido" if informe.motivo_abstencion else "analizado",
@@ -75,6 +77,7 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
         # con respaldo local y no atribuirlos al modelo.
         fase = error.fase if isinstance(error, ErrorAgenteConTraza) else None
         decisiones = error.decisiones if isinstance(error, ErrorAgenteConTraza) else []
+        estatico = error.estatico if isinstance(error, ErrorAgenteConTraza) else None
         pasos = list(error.pasos) if isinstance(error, ErrorAgenteConTraza) else []
         ya_ejecutadas = {paso.herramienta for paso in pasos}
         for local in await run_in_threadpool(inspeccion_local, solicitud):
@@ -105,6 +108,7 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
             max_pasos=solicitud.max_pasos,
             decisiones=decisiones,
             fase_error=fase,
+            analisis_estatico=estatico,
             informe=RespuestaAnalisis(
                 archivo=solicitud.archivo,
                 estado="parcial",
