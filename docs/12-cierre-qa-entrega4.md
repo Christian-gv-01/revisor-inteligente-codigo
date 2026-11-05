@@ -1,5 +1,60 @@
 # Cierre técnico de QA — Entrega 4
 
+## Estado consolidado — 5 de noviembre de 2026
+
+Esta actualización recoge las evidencias publicadas por Christian en `main` hasta el commit `219069a`. Las secciones posteriores conservan la revisión histórica y su autoría; sus bloqueos de integración y producción deben leerse con este estado consolidado.
+
+### Integración y pruebas
+
+El [PR #25](https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/25) se fusionó a `main` en `d80e75c`. Antes de fusionar, las comprobaciones de la candidata `2dd76ad3490b10524674560b025d4e57c8b66a30` finalizaron en `success`:
+- [Backend, controles de Agent Lab y ejecutores QA](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42106521541).
+- [Frontend: lint, build y pruebas](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42106521518).
+- [Integración HTTP con y sin análisis estático](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42106521602).
+
+Las capturas de ejecución local aportadas por Christian registran 223 pruebas backend aprobadas, 71 frontend aprobadas, lint y build correctos. Las 15 HTTP omitidas en la suite frontend habitual se ejecutaron por separado: 15/15 con estático, 10/10 aplicables sin estático y cinco omisiones intencionales. No atribuir estos conteos locales a los logs de CI sin consultarlos.
+
+La integración HTTP emplea FastAPI y ChromaDB reales y Ruff/Bandit reales cuando están habilitados; Gemini y la API externa GitHub son simulados. No mide la precisión del modelo. Evidencias: [integración con estático](evidencias/semana-4/integracion-final-estatico-20261105-revision2/resultado-integracion.json) e [integración sin estático](evidencias/semana-4/integracion-final-sin-estatico-20261105/resultado-integracion.json).
+
+La interfaz y la exportación JSON separan hallazgos contextuales, citas y reglas estáticas. QA-S10/QA-H01 de la revisión inicial y las correcciones QA19-01 a QA19-04 cuentan con evidencia posterior en [la revisión del PR #19](14-revision-qa-pr19.md), su integración y las pruebas posteriores.
+
+### Gemini real y resultados parciales
+
+[sql-completo.json](evidencias/semana-4/agente-real-20261105/sql-completo.json) documenta una ejecución local del agente en `gemini_real`: tres pasos, dos decisiones ejecutadas, informe `analizado`, hallazgo SQL y referencias presentes en las fuentes recuperadas. [sql-degradado-503.json](evidencias/semana-4/agente-real-20261105/sql-degradado-503.json) registra otra ejecución, con distinto fragmento y nombre, que conservó decisiones y análisis estático al fallar el informe contextual. El log aportado identifica HTTP 503 del proveedor en esa fase.
+
+No son una comparación controlada del mismo código. Demuestran casos concretos de éxito y degradación, no disponibilidad general ni métricas de precisión. Los errores 503 reales siguen siendo una limitación observada.
+
+### Validación pública en Railway
+
+URL: https://revisor-inteligente-codigo-production.up.railway.app
+
+Railway mostró despliegue exitoso asociado a la fusión del PR #25. Las consultas públicas de `/health` y `/openapi.json` respondieron 200, y OpenAPI anunció `/api/v1/estatico/analizar` y `/api/v1/agente/analizar`. El SHA completo de cada despliegue no se publica en `/health`; no confundir un identificador de despliegue Railway con un SHA Git.
+
+La [matriz pública posterior a la fusión](evidencias/semana-4/pruebas-publicas-post-merge-20261105.json) obtuvo **26/26 aprobadas**, cero fallos, con fecha UTC `2026-11-05T21:03:36.273676+00:00`. P05 y P07 ya cumplen la sanitización 422 comprobada por sus aserciones. Los reportes previos de 24/26 se conservan como históricos.
+
+Esta matriz comprueba disponibilidad, entradas, ZIP, validación de URLs GitHub y AST local. No acredita un análisis Gemini real por sí sola; esa evidencia pública está en las capturas de citas siguientes.
+
+### Citas antes y después del reinicio
+
+El primer intento de captura falló tras un 503 del proveedor y no produjo baseline. Después se obtuvo un análisis público `analizado` con un hallazgo y tres fuentes. Se coordinó el reinicio desde Railway y se repitió el análisis:
+- [Antes](evidencias/semana-4/persistencia-antes-20261105.json): 16:29:32 del 5 de noviembre, America/Guayaquil.
+- [Después y comparación](evidencias/semana-4/persistencia-despues-20261105.json): 16:31:45 del mismo día.
+- [Log del reinicio](evidencias/semana-4/reinicio-railway-20261105.png): apagado, montaje del volumen, proceso UID 10001, mensaje de índice documental persistente recuperado y arranque completado.
+
+Ambos análisis devolvieron las fuentes `seguridad_python-001`, `seguridad_python-004` y `seguridad_python-005`, y un hallazgo. **`continuidad_citas: true`**.
+
+El comparador mantiene deliberadamente `persistencia_volumen_verificada: false`: la igualdad de IDs por HTTP no verifica por sí sola el volumen. El log independiente respalda la recuperación operacional del índice en este reinicio; no acredita una auditoría de integridad de todo el volumen, backups ni una prueba con marca única no regenerable. No modificar el JSON para convertir este alcance en una certificación más amplia.
+
+### Pendientes que permanecen abiertos
+
+- **QA-H02:** confirmar de forma trazable el carácter sintético o la revocación de la credencial histórica, sin publicar su valor. La referencia a una revocación comunicada y una exclusión del detector no equivalen a comprobación independiente.
+- **QA-H03:** el motor limita el tamaño de salida después de capturar stdout/stderr; falta acotar memoria durante la captura o aceptar expresamente la limitación con controles de despliegue.
+- Advertencia de tamaño del paquete frontend y errores 503 reales del proveedor.
+- Mantener trazabilidad del SHA de despliegue y distinguir recuperación operacional del índice de verificación completa del volumen.
+
+Se cierran los bloqueos observados de sanitización pública P05/P07, publicación del endpoint estático y ausencia de baseline/reinicio. No se declara una aceptación de seguridad sin reservas ni se cierran los hallazgos pendientes por el solo éxito de las pruebas.
+
+## Revisión histórica — se conserva sin cambios
+
 > Actualización posterior: la revisión del PR #19 y las correcciones propuestas en el PR #23 están en [14-revision-qa-pr19.md](14-revision-qa-pr19.md). Los resultados siguientes conservan el estado de la revisión inicial; no sustituyen la evidencia posterior de integración estática.
 
 Fecha de revisión: 4 de noviembre de 2026, America/Bogota.
