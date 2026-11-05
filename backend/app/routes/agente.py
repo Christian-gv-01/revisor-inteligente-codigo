@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse
 from app.models.analisis import RespuestaAnalisis
 from app.services.agente import (
     RespuestaAgente,
+    ErrorAgenteConTraza,
     SolicitudAgente,
     ejecutar_agente,
     inspeccion_local,
@@ -46,11 +47,15 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
     if not solicitud.codigo.strip() or "\x00" in solicitud.codigo:
         raise HTTPException(status_code=422, detail="Código Python inválido.")
     try:
-        pasos, informe = await run_in_threadpool(ejecutar_agente, solicitud)
+        ejecucion = await run_in_threadpool(ejecutar_agente, solicitud)
+        # Compatibilidad con los mocks previos que retornan una tupla.
+        pasos, informe = ejecucion
+        decisiones = getattr(ejecucion, "decisiones", [])
         return RespuestaAgente(
             archivo=solicitud.archivo,
             modo="gemini_real", pasos=pasos,
             max_pasos=solicitud.max_pasos,
+            decisiones=decisiones,
             informe=RespuestaAnalisis(
                 archivo=solicitud.archivo,
                 estado="abstenido" if informe.motivo_abstencion else "analizado",
@@ -65,21 +70,49 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
         if error.codigo not in (502, 503, 504):
             raise HTTPException(status_code=error.codigo, detail=str(error)) from error
 
-        pasos = await run_in_threadpool(inspeccion_local, solicitud)
+        # Si el planificador llegó a seleccionar herramientas, conservar
+        # sus pasos y decisiones reales. Completar únicamente los AST restantes
+        # con respaldo local y no atribuirlos al modelo.
+        fase = error.fase if isinstance(error, ErrorAgenteConTraza) else None
+        decisiones = error.decisiones if isinstance(error, ErrorAgenteConTraza) else []
+        pasos = list(error.pasos) if isinstance(error, ErrorAgenteConTraza) else []
+        ya_ejecutadas = {paso.herramienta for paso in pasos}
+        for local in await run_in_threadpool(inspeccion_local, solicitud):
+            if len(pasos) >= solicitud.max_pasos:
+                break
+            if local.herramienta in ya_ejecutadas:
+                continue
+            pasos.append(local.model_copy(update={"numero": len(pasos) + 1}))
+            ya_ejecutadas.add(local.herramienta)
+
+        if fase == "informe":
+            detalle = (
+                "La planificación pudo ejecutarse, pero Gemini no completó el "
+                "informe contextual. Se conservaron las decisiones registradas."
+            )
+        elif fase == "planificacion":
+            detalle = (
+                "Gemini no completó la planificación. Se conservaron los pasos "
+                "realmente ejecutados y se completó la inspección AST local."
+            )
+        else:
+            detalle = "Gemini no completó la solicitud; se realizó inspección AST local."
+
         return RespuestaAgente(
             archivo=solicitud.archivo,
             modo="degradado",
             pasos=pasos,
             max_pasos=solicitud.max_pasos,
+            decisiones=decisiones,
+            fase_error=fase,
             informe=RespuestaAnalisis(
                 archivo=solicitud.archivo,
                 estado="parcial",
                 hallazgos=[],
                 fuentes=[],
                 mensaje=(
-                    "La consulta a Gemini no pudo completarse. "
-                    "Se ejecutaron únicamente herramientas AST locales; "
-                    "no hay dictamen de IA ni referencias RAG."
+                    detalle + " No hay dictamen de IA ni referencias RAG. "
+                    "Los indicadores AST no garantizan que el código sea seguro."
                 ),
             ),
         )
