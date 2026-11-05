@@ -17,6 +17,11 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.analisis import InformeModelo, RespuestaAnalisis
 from app.services.llm import LLMError
+from app.services.static_analysis import (
+    EstadoHerramienta,
+    ResultadoEstatico,
+    analizar_estatico,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +66,7 @@ class ResultadoEjecucionAgente:
     pasos: list[PasoAgente]
     informe: InformeModelo
     decisiones: list[DecisionRegistrada]
+    estatico: ResultadoEstatico | None = None
 
     def __iter__(self):
         """Compatibilidad con llamadas existentes: pasos, informe = ejecutar_agente(...)."""
@@ -77,11 +83,13 @@ class ErrorAgenteConTraza(LLMError):
         fase: Literal["planificacion", "informe"],
         pasos: list[PasoAgente],
         decisiones: list[DecisionRegistrada],
+        estatico: ResultadoEstatico | None = None,
     ):
         super().__init__(str(causa), causa.codigo)
         self.fase = fase
         self.pasos = list(pasos)
         self.decisiones = list(decisiones)
+        self.estatico = estatico
 
 
 class RespuestaAgente(BaseModel):
@@ -92,6 +100,7 @@ class RespuestaAgente(BaseModel):
     informe: RespuestaAnalisis
     decisiones: list[DecisionRegistrada] = Field(default_factory=list)
     fase_error: Literal["planificacion", "informe"] | None = None
+    analisis_estatico: ResultadoEstatico | None = None
     requiere_confirmacion_humana: bool = False
     politica: str = "Solo lectura; sin ejecución de código ni cambios de archivos"
 
@@ -277,11 +286,34 @@ response_json_schema={
         client.close()
 
 
+def resumen_estatico_planificador(informe: ResultadoEstatico) -> dict:
+    """Solo hechos mínimos de herramientas; sin texto de código ni citas inventadas."""
+    return {
+        "estado": informe.estado,
+        "herramientas": [
+            {"herramienta": h.herramienta, "estado": h.estado, "hallazgos": h.hallazgos}
+            for h in informe.herramientas
+        ],
+        "total_hallazgos": len(informe.hallazgos),
+        "reglas": [
+            {
+                "herramienta": h.herramienta,
+                "regla": h.regla,
+                "tipo": h.tipo,
+                "linea": h.linea,
+                "severidad": h.severidad,
+            }
+            for h in informe.hallazgos[:20]
+        ],
+    }
+
+
 def ejecutar_agente(
     solicitud: SolicitudAgente,
     *,
     planificador: Callable[[str, list[PasoAgente]], DecisionAgente] | None = None,
     analizador: Callable[[str], InformeModelo] | None = None,
+    inspeccion_estatica: Callable[[str, str], ResultadoEstatico] | None = None,
 ) -> ResultadoEjecucionAgente:
     """Inspección inicial, decisiones limitadas y dictamen RAG independiente.
 
@@ -295,10 +327,32 @@ def ejecutar_agente(
         from app.services.llm import analizar_codigo
         analizador = analizar_codigo
 
+    # Ruff y Bandit son controles obligatorios: Gemini NO decide si ejecutarlos.
+    # Solo se expone al planificador un resumen acotado, nunca se editan
+    # ni se convierten sus reglas en citas RAG.
+    estatico = None
+    try:
+        estatico = (inspeccion_estatica or analizar_estatico)(
+            solicitud.codigo, solicitud.archivo,
+        )
+    except Exception as error:
+        logger.warning("agente_estatico_no_disponible tipo=%s", type(error).__name__)
+        estatico = ResultadoEstatico(
+            archivo=solicitud.archivo,
+            estado="no_disponible",
+            herramientas=[
+                EstadoHerramienta(herramienta="ruff", estado="error", hallazgos=0),
+                EstadoHerramienta(herramienta="bandit", estado="error", hallazgos=0),
+            ],
+            hallazgos=[],
+            mensaje="No se pudo completar el análisis estático de Ruff y Bandit.",
+        )
+    resultado_inicial = inspeccionar_estructura(solicitud.codigo)
+    resultado_inicial["evidencia_ruff_bandit"] = resumen_estatico_planificador(estatico)
     pasos = [PasoAgente(
         numero=1, herramienta="inspeccionar_estructura",
-        motivo="Inspección de sintaxis y estructura antes de consultar herramientas adicionales.",
-        resultado=inspeccionar_estructura(solicitud.codigo),
+        motivo="Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+        resultado=resultado_inicial,
         origen="automatico",
     )]
     decisiones: list[DecisionRegistrada] = []
@@ -314,6 +368,7 @@ def ejecutar_agente(
             )
             raise ErrorAgenteConTraza(
                 error, fase="planificacion", pasos=pasos, decisiones=decisiones,
+                estatico=estatico,
             ) from error
         except (ValueError, TypeError) as error:
             logger.warning(
@@ -323,6 +378,7 @@ def ejecutar_agente(
             raise ErrorAgenteConTraza(
                 LLMError("El planificador devolvió una decisión inválida.", 502),
                 fase="planificacion", pasos=pasos, decisiones=decisiones,
+                estatico=estatico,
             ) from error
 
         nombre = decision.herramienta
@@ -347,6 +403,7 @@ def ejecutar_agente(
             raise ErrorAgenteConTraza(
                 LLMError("Herramienta seleccionada no permitida.", 502),
                 fase="planificacion", pasos=pasos, decisiones=decisiones,
+                estatico=estatico,
             )
         pasos.append(PasoAgente(
             numero=numero, herramienta=nombre, motivo=decision.motivo,
@@ -368,6 +425,7 @@ def ejecutar_agente(
         )
         raise ErrorAgenteConTraza(
             error, fase="informe", pasos=pasos, decisiones=decisiones,
+            estatico=estatico,
         ) from error
 
     logger.info(
@@ -376,6 +434,7 @@ def ejecutar_agente(
     )
     return ResultadoEjecucionAgente(
         pasos=pasos, informe=informe, decisiones=decisiones,
+        estatico=estatico,
     )
 
 def inspeccion_local(solicitud: SolicitudAgente) -> list[PasoAgente]:

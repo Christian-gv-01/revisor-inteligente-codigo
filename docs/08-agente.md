@@ -73,6 +73,20 @@ El fragmento es un ejemplo de contrato, **no una evidencia de producción**. El 
 
 Las trazas no almacenan ni exponen claves, errores crudos del proveedor ni razonamiento interno. Los motivos públicos proceden de la decisión validada y son texto no confiable mostrado sin interpretarlo como HTML. No hay memoria persistente de decisiones entre solicitudes. Una inspección AST local no demuestra que el código sea seguro.
 
+## Integración Ruff + Bandit como contexto del agente (Semana 4)
+
+El modo avanzado del agente incorpora una **inspección estática obligatoria** mediante los analizadores existentes de CODEGUARD antes de solicitar decisiones a Gemini:
+
+1. Ejecuta Ruff (calidad) y Bandit (seguridad) sobre el código recibido con las mismas garantías de aislamiento y límites del motor estático.
+2. Publica el informe de ambos motores en `RespuestaAgente.analisis_estatico`, **separado** de `informe.hallazgos` y `informe.fuentes` (que pertenecen al dictamen Gemini + RAG).
+3. Entrega al planificador únicamente `pasos[0].resultado.evidencia_ruff_bandit`: estado de las herramientas, número de observaciones y un máximo de 20 reglas con herramienta, identificador, tipo, línea y severidad. **No incluye texto fuente, explicaciones ni rutas confidenciales** en este resumen; el código analizado continúa sujeto a los límites y políticas de CODEGUARD.
+4. Gemini decide únicamente qué inspección AST adicional ejecutar o cuándo finalizar; **no puede desactivar Ruff ni Bandit**, eliminar sus alertas ni fabricar citas documentales.
+5. Si Gemini falla durante planificación o informe, el informe de Ruff/Bandit previamente producido se conserva, junto con los pasos y decisiones ya registrados; el modo sigue siendo `degradado` y el dictamen RAG sigue siendo parcial.
+
+**Limitaciones:** se ejecutan dos procesos de análisis estático además de las llamadas habituales a Gemini; esto puede aumentar la latencia. Si Ruff o Bandit no están disponibles, el campo `analisis_estatico.estado` será `parcial` o `no_disponible` y la interfaz debe comunicarlo sin presentar la revisión como completa. Una alerta estática no es automáticamente una vulnerabilidad confirmada y la ausencia de alertas no garantiza seguridad.
+
+Los campos nuevos se incorporan manteniendo compatibles las respuestas previas, incluido `requiere_confirmacion_humana`. El endpoint de demostración conserva un modo de inspección AST sin IA. La validación comparativa contra casos vulnerables y limpios continúa siendo necesaria; incorporar alertas como contexto **no implica una mejora de precisión o recall demostrada**.
+
 ## Confirmación humana
 
 No se permite modificar, ejecutar o borrar código, por lo que **no hay decisiones destructivas que autorizar**. Toda corrección sugerida debe ser evaluada y aplicada por un humano. Si se añaden herramientas que cambien archivos, requerirán consentimiento explícito antes de ejecutarse.
