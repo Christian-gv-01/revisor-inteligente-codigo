@@ -6,6 +6,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 
 from app.services.rate_limit import ENDPOINT_WEIGHTS, LimitadorPonderado
+from app.services.http_security import ControlConcurrencia, identidad_cliente
 from fastapi.concurrency import run_in_threadpool
 
 
@@ -32,26 +33,36 @@ app = FastAPI(
 )
 
 
-# El presupuesto global también protege si el proveedor de hosting agrupa IPs.
-# No se confía en X-Forwarded-For suministrado por el cliente.
-# Se activa explícitamente en producción mediante RATE_LIMIT_ENABLED=1.
+# Dos barreras complementarias: presupuesto por minuto y concurrencia.
+# Ambas son por proceso; en varias réplicas se necesita un almacén compartido.
 limitador_peticiones = LimitadorPonderado(
     ventana=60,
     limite_global=30,
     limite_cliente=10,
 )
+control_concurrencia = ControlConcurrencia(max_activas=2)
 
 
 @app.middleware("http")
-async def limitar_analisis(request: Request, call_next):
-    if (
-        os.getenv("RATE_LIMIT_ENABLED", "0") == "1"
-        and request.method == "POST"
+async def proteger_analisis(request: Request, call_next):
+    es_costosa = (
+        request.method == "POST"
         and request.url.path in ENDPOINT_WEIGHTS
-    ):
-        ip = request.client.host if request.client else "desconocido"
+    )
+    if not es_costosa:
+        return await call_next(request)
+
+    if os.getenv("RATE_LIMIT_ENABLED", "0") == "1":
+        # No habilitar sin garantizar que no existen rutas privadas/directas
+        # hacia este servicio que puedan falsificar X-Real-IP.
+        confiar_proxy_publico = (
+            os.getenv("TRUST_RAILWAY_REAL_IP", "0") == "1"
+        )
+        identidad = identidad_cliente(
+            request, confiar_railway_publico=confiar_proxy_publico
+        )
         resultado = limitador_peticiones.comprobar(
-            ip, ENDPOINT_WEIGHTS[request.url.path]
+            identidad, ENDPOINT_WEIGHTS[request.url.path]
         )
         if not resultado.permitido:
             return JSONResponse(
@@ -62,7 +73,21 @@ async def limitar_analisis(request: Request, call_next):
                     "Cache-Control": "no-store",
                 },
             )
-    return await call_next(request)
+
+    if os.getenv("CONCURRENCY_LIMIT_ENABLED", "0") != "1":
+        return await call_next(request)
+
+    if not control_concurrencia.adquirir():
+        return JSONResponse(
+            status_code=503,
+            content={"detail": "Servicio ocupado. Reintenta más tarde."},
+            headers={"Retry-After": "3", "Cache-Control": "no-store"},
+        )
+
+    try:
+        return await call_next(request)
+    finally:
+        control_concurrencia.liberar()
 
 
 def construir_respuesta(
