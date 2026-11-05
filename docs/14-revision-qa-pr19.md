@@ -66,4 +66,7 @@ Usar carpetas de salida nuevas para preservar evidencia. El runner fija explíci
 - `evidencias/semana-4/revision-pr19-http-antes/`: 8/9 del contrato anterior con bandera activada.
 - `evidencias/semana-4/revision-pr19-http-estatico/`: 15/15 con analizadores reales.
 - `evidencias/semana-4/revision-pr19-http-sin-estatico/`: 10 aprobadas y cinco omitidas según configuración.
+- `evidencias/semana-4/revision-pr19-http-final-estatico/` y `revision-pr19-http-final-sin-estatico/`: repetición aprobada del ejecutor final, con hashes del runner HTTP, fixture GitHub y tests frontend. Conserva 15/15 y 10/10 aplicables, respectivamente.
 - `evidencias/semana-4/revision-pr19-http-original/`: primer intento bloqueado porque la copia aislada no tenía ChromaDB; se resolvió mediante ingesta local antes de medir integración.
+
+La primera ejecución del nuevo workflow detectó una importación incorrecta al añadir hashes de trazabilidad. Se corrigió usando `hashlib.sha256` directamente y se repitieron ambas configuraciones completas; las carpetas `http-final-*` registran esa verificación. Los resultados anteriores se conservan con su alcance original.

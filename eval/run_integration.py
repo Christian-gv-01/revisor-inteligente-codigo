@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 from contextlib import ExitStack
 from datetime import datetime, timezone
+from hashlib import sha256
 import json
 import logging
 import os
@@ -22,7 +23,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import zipfile
 
-from run_eval import DEFAULT_DATA, digest, load_cases, prepare_rag, provenance, request_analysis, validate_response
+from run_eval import DEFAULT_DATA, load_cases, prepare_rag, provenance, request_analysis, validate_response
 
 ROOT = Path(__file__).resolve().parents[1]
 SQL_CODE = 'nombre = input("Nombre: ")\ncursor.execute("SELECT * FROM usuarios WHERE nombre = \'" + nombre + "\'")\n'
@@ -79,9 +80,9 @@ def main(argv=None):
     report = {**provenance(DEFAULT_DATA), "tipo": "integracion_http", "proveedor_ia": "simulado",
               "rag": "ChromaDB local real", "llamadas_externas_ia": 0,
               "aviso": "Estas pruebas verifican integración; no miden precisión, recall ni F1 de Gemini."}
-    report["integracion_runner_sha256"] = digest(Path(__file__))
-    report["github_fixture_sha256"] = digest(ROOT / "eval/integration_github_fixture.py")
-    report["frontend_http_test_sha256"] = digest(ROOT / "frontend/tests/integration-http.test.tsx")
+    report["integracion_runner_sha256"] = sha256(Path(__file__).read_bytes()).hexdigest()
+    report["github_fixture_sha256"] = sha256((ROOT / "eval/integration_github_fixture.py").read_bytes()).hexdigest()
+    report["frontend_http_test_sha256"] = sha256((ROOT / "frontend/tests/integration-http.test.tsx").read_bytes()).hexdigest()
     FixtureClient.calls = 0
     server = None
     thread = None
