@@ -46,6 +46,26 @@
     function link(url){try{const u=new URL(url);return u.protocol==='https:'?u.href:null}catch{return null}}
     function render(data,elapsed){last=data;const root=$('output');root.replaceChildren();root.classList.remove('hidden');$('reportMeta').textContent=data.modo==='gemini_real'?'GEMINI REAL · RAG':data.modo==='degradado'?'GEMINI NO DISPONIBLE · AST LOCAL':'INSPECCIÓN ESTÁTICA · SIN IA';const row=e('div','statusrow');row.append(e('span','status-pill'+(data.modo!=='gemini_real'?' warning':''),data.modo==='gemini_real'?'● AUDITORÍA CON IA FINALIZADA':data.modo==='degradado'?'⚠ ANÁLISIS PARCIAL · IA NO DISPONIBLE':'○ INSPECCIÓN LOCAL FINALIZADA'));row.append(e('span','tiny',elapsed.toFixed(1)+' s · '+data.archivo));root.append(row);
       const steps=Array.isArray(data.pasos)?data.pasos:[], report=data.informe||{},findings=Array.isArray(report.hallazgos)?report.hallazgos:[];const indicators=steps.reduce((n,p)=>n+(Array.isArray(p.resultado?.indicadores)?p.resultado.indicadores.length:0),0);const stats=e('div','results-stat');for(const [value,label] of [[steps.length,'Herramientas'],[indicators,'Indicadores AST'],[findings.length,'Hallazgos RAG']]){const card=e('div','mini');card.append(e('strong','',value),e('span','',label));stats.append(card)}root.append(stats);
+       const estatico=data.analisis_estatico;
+       if(estatico&&Array.isArray(estatico.herramientas)){
+         root.append(e('div','section-title','Ruff + Bandit · evidencia independiente'));
+         const aviso=e('div','trace-note','Estas observaciones se obtuvieron mediante analizadores estáticos. Gemini recibe un resumen acotado de sus reglas para decidir inspecciones AST adicionales. No constituyen citas RAG ni certifican la seguridad del código.');
+         root.append(aviso);
+         const estado=e('div','facts');
+         for(const t of estatico.herramientas){
+           estado.append(e('span','fact',(t.herramienta||'herramienta')+': '+(t.estado||'no_disponible')+' · '+(t.hallazgos||0)+' observaciones'));
+         }
+         root.append(estado);
+         const hallazgos=Array.isArray(estatico.hallazgos)?estatico.hallazgos:[];
+         for(const h of hallazgos.slice(0,20)){
+           const item=e('article','trace-decision');
+           item.append(e('strong','',String(h.herramienta||'Herramienta')+' · '+String(h.regla||'')+' · línea '+String(h.linea||'')));
+           item.append(e('p','',String(h.tipo||'')+' · '+String(h.severidad||'')+' · '+String(h.descripcion||'')));
+           root.append(item);
+         }
+         if(hallazgos.length>20)root.append(e('div','trace-note','Se muestran 20 de '+hallazgos.length+' observaciones; el JSON conserva el informe completo.'));
+         if(estatico.estado!=='completo')root.append(e('div','trace-note','Análisis estático '+estatico.estado+': una o más herramientas no completaron la revisión. Ninguna ausencia de hallazgos implica seguridad.'));
+       }
       const decisiones=Array.isArray(data.decisiones)?data.decisiones:[];
        if(decisiones.length){
          root.append(e('div','section-title','Decisiones registradas del planificador'));
