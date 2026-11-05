@@ -58,7 +58,7 @@ class InformeModelo(BaseModel):
 
 class RespuestaAnalisis(BaseModel):
     archivo: str
-    estado: Literal["analizado", "abstenido"]
+    estado: Literal["analizado", "abstenido", "parcial"]
     hallazgos: list[Hallazgo]
     fuentes: list[Fuente] = Field(default_factory=list)
     # Independiente de las referencias RAG: Ruff/Bandit tienen sus propias reglas.
@@ -73,7 +73,7 @@ class RespuestaAnalisis(BaseModel):
 
 class RespuestaAnalisisZIP(BaseModel):
     archivo_zip: str
-    estado: Literal["analizado"]
+    estado: Literal["analizado", "parcial"]
     total_archivos: int = Field(ge=1)
     informes: list[RespuestaAnalisis]
 
@@ -85,7 +85,7 @@ class SolicitudGitHub(BaseModel):
 
 class RespuestaAnalisisRepositorio(BaseModel):
     repositorio: str
-    estado: Literal["analizado"]
+    estado: Literal["analizado", "parcial"]
     total_archivos: int = Field(ge=1)
     informes: list[RespuestaAnalisis]
 
