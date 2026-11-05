@@ -1,0 +1,31 @@
+name: CODEGUARD captura estatica multiplataforma
+
+on:
+  pull_request:
+    paths:
+      - "backend/app/services/static_analysis.py"
+      - "backend/tests/test_static_analysis.py"
+      - "backend/tests/test_static_output_limits.py"
+      - ".github/workflows/static-output-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Instalar dependencias del motor y pruebas
+        run: python -m pip install pydantic==2.14.1 pytest ruff==0.14.1 bandit==1.8.6
+      - name: Probar captura y herramientas reales
+        working-directory: backend
+        run: python -m pytest tests/test_static_analysis.py tests/test_static_output_limits.py -q

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 
 import pytest
 
@@ -115,35 +116,28 @@ def test_linea_bandit_fuera_de_rango_no_se_acepta(monkeypatch):
     assert resultado.hallazgos == []
 
 
-def test_subprocess_usa_shell_false_y_timeout(monkeypatch, tmp_path):
+def test_subprocess_usa_shell_false_y_entorno_reducido(monkeypatch, tmp_path):
     argumentos = {}
+    crear = subprocess.Popen
 
-    def falso_run(comando, **kwargs):
+    def registrar(comando, **kwargs):
         argumentos.update(kwargs)
-        return subprocess.CompletedProcess(comando, 0, stdout="[]", stderr="")
+        return crear(comando, **kwargs)
 
-    monkeypatch.setattr(mod.subprocess, "run", falso_run)
-    status, salida = mod._ejecutar(["python", "-m", "ruff"], cwd=str(tmp_path))
-    assert status == "ok"
-    assert salida == "[]"
+    monkeypatch.setattr(mod.subprocess, "Popen", registrar)
+    monkeypatch.setenv("GEMINI_API_KEY", "SECRETO_SINTETICO_QA")
+    status, salida = mod._ejecutar([sys.executable, "-I", "-c", "print('[]')"], cwd=str(tmp_path))
+    assert (status, salida.strip()) == ("ok", "[]")
     assert argumentos["shell"] is False
-    assert argumentos["timeout"] == mod.TOOL_TIMEOUT
+    assert argumentos["stdin"] == subprocess.DEVNULL
     assert argumentos["cwd"] == str(tmp_path)
     assert argumentos["env"]["HOME"] == str(tmp_path)
+    assert "GEMINI_API_KEY" not in argumentos["env"]
 
 
-def test_timeout_y_module_no_disponible(monkeypatch, tmp_path):
-    def lento(comando, **kwargs):
-        raise subprocess.TimeoutExpired(comando, kwargs["timeout"])
-    monkeypatch.setattr(mod.subprocess, "run", lento)
-    assert mod._ejecutar(["ruff"], cwd=str(tmp_path))[0] == "timeout"
-
-    def ausente(comando, **kwargs):
-        return subprocess.CompletedProcess(
-            comando, 1, stdout="", stderr="No module named ruff"
-        )
-    monkeypatch.setattr(mod.subprocess, "run", ausente)
-    assert mod._ejecutar(["python", "-m", "ruff"], cwd=str(tmp_path))[0] == "no_disponible"
+def test_modulo_y_ejecutable_no_disponibles(tmp_path):
+    assert mod._ejecutar([str(tmp_path / "no_existe_codeguard")], cwd=str(tmp_path))[0] == "no_disponible"
+    assert mod._ejecutar([sys.executable, "-m", "codeguard_modulo_qa_inexistente"], cwd=str(tmp_path))[0] == "no_disponible"
 
 
 def test_directorio_temporal_se_elimina(monkeypatch):
@@ -205,3 +199,4 @@ def test_bandit_real_detecta_eval_sin_ejecutarlo():
     bandit = next(h for h in resultado.herramientas if h.herramienta == "bandit")
     assert bandit.estado == "ok"
     assert any(h.herramienta == "bandit" and h.regla == "B307" for h in resultado.hallazgos)
+

@@ -11,7 +11,7 @@ Actualización del 5 de noviembre de 2026:
 - [Matriz pública posterior a la fusión](docs/evidencias/semana-4/pruebas-publicas-post-merge-20261105.json): **26/26 aprobadas**, incluidos P05/P07 de sanitización 422.
 - Agente Gemini real: evidencia local de una ejecución completa y otra degradada por 503, con traza conservada. Son casos distintos y no demuestran disponibilidad general.
 - Análisis públicos antes/después de un reinicio: un hallazgo y las mismas tres fuentes, con `continuidad_citas: true`; el log registra recuperación del índice persistente. La comparación HTTP por sí sola no certifica la integridad de todo el volumen.
-- Pendientes: cierre trazable de la credencial histórica QA-H02 y captura acotada de salida de subprocesos QA-H03. Persisten los 503 observados y la advertencia de tamaño del paquete frontend.
+- Seguridad: QA-H03 incorpora captura acotada durante la lectura de stdout/stderr (ver [contrato estático](docs/10-analisis-estatico.md)); requiere validación de la revisión desplegada. El cierre documental de QA-H02 sigue pendiente. Persisten los 503 observados y la advertencia de tamaño del paquete frontend.
 - Estado, enlaces de CI, evidencias y límites en [Cierre técnico de QA](docs/12-cierre-qa-entrega4.md).
 
 ## Funcionalidades

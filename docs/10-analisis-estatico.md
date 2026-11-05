@@ -18,8 +18,17 @@ herramienta suministra documentación. Nunca se inventan fuentes OWASP o MITRE.
   `S` para no duplicar los hallazgos de Bandit.
 - **Bandit:** `bandit -f json -q /tmp/…/codigo.py`.
   Procesa AST de Python, sin ejecutar código recibido, con límite 12 s.
-- Cada ejecución usa `subprocess.run(shell=False)`, `cwd` temporal,
-  ambiente reducido, tiempo máximo y límite de 1 MB de salida.
+- Cada ejecución usa `subprocess.Popen(shell=False)`, `cwd` temporal y ambiente reducido.
+  Dos lectores drenan stdout/stderr simultáneamente. Retienen como máximo
+  1.000.000 bytes combinados; al superar el presupuesto se mata y recolecta
+  el proceso y se devuelve `error`, sin salida parcial ni stderr público.
+  El timeout de 12 s cubre la espera del proceso y el drenaje; se devuelve
+  `timeout` tras la terminación y limpieza. Stdin es un archivo temporal acotado
+  por la entrada validada o DEVNULL; nunca hereda la terminal.
+  Cada lector puede retener además un bloque transitorio de hasta 64 KiB.
+  Esto limita la captura, no la memoria total del analizador, del JSON parseado
+  ni del contenedor. El control de recursos del árbol de procesos requiere
+  mecanismos de plataforma independientes.
   El nombre enviado por el usuario **no** se utiliza para construir la ruta
   temporal; solo se admiten rutas relativas seguras para archivos internos.
 
@@ -73,10 +82,10 @@ opcional **`analisis_estatico`**. Esto abarca:
 
 Con la bandera desactivada el campo se omite para conservar el contrato anterior.
 La salida del motor estático no modifica `hallazgos`, `fuentes` ni el estado de
-abstención de Gemini+RAG. Si la IA falla por error HTTP, la respuesta de la
-ruta principal también falla; el endpoint estático **sí** funciona autónomamente.
-Una política explícita de degradación de la ruta combinada queda como decisión
-pendiente de producto.
+abstención de Gemini+RAG. La integración resiliente puede conservar el resultado
+estático como respuesta contextual `parcial` ante errores de Gemini, según el
+contrato de [resiliencia](11-resiliencia-gemini.md); no representa un informe IA
+completo. El endpoint estático también funciona autónomamente.
 
 ## Estados y fallos
 `completo`: ambas herramientas disponibles y válidas.
@@ -86,12 +95,12 @@ Los fallos internos y `stderr` no se devuelven al usuario. Una ausencia de
 hallazgos con estado `parcial` no equivale a código sin vulnerabilidades.
 
 ## Integración de frontend (responsabilidad del equipo)
-El frontend necesita mostrar por separado el bloque
+El frontend muestra por separado el bloque
 `analisis_estatico.hallazgos` y los estados `herramientas`; no debe
 mezclarlo en la lista RAG ni inventar referencias. La documentación de la API
 está en `/docs` y se dispone de pruebas de contrato para las cuatro entradas.
-El componente visual queda pendiente hasta que el equipo de frontend valide
-esta estructura.
+El componente visual y la exportación fueron integrados mediante PR #19/#23;
+las evidencias y el alcance constan en [el cierre QA](12-cierre-qa-entrega4.md).
 
 ## Seguridad y límites pendientes de aceptación
 - Limitar carga de código a 12.000 caracteres y rutas relativas seguras.

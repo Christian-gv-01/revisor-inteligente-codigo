@@ -3,7 +3,7 @@ from io import BytesIO
 from pathlib import Path
 from zipfile import ZipFile
 import json
-import subprocess
+import sys
 
 import pytest
 from fastapi.testclient import TestClient
@@ -64,12 +64,9 @@ def test_cuatro_modalidades_preservan_abstencion_y_procedencia(monkeypatch, modo
 def test_subproceso_no_hereda_secretos_y_no_publica_stderr(monkeypatch, tmp_path):
     marcador = "SECRETO_SINTETICO_QA"
     monkeypatch.setenv("GEMINI_API_KEY", marcador)
-    def falso(comando, **kwargs):
-        assert "GEMINI_API_KEY" not in kwargs["env"]
-        assert not kwargs["shell"]
-        return subprocess.CompletedProcess(comando, 2, "", marcador)
-    monkeypatch.setattr(motor.subprocess, "run", falso)
-    estado, salida = motor._ejecutar(["herramienta"], cwd=str(tmp_path))
+    # Proceso controlado del test: comprueba entorno y emite un error privado.
+    script = "import os,sys; assert 'GEMINI_API_KEY' not in os.environ; sys.stderr.write('SECRETO_SINTETICO_QA'); sys.exit(2)"
+    estado, salida = motor._ejecutar([sys.executable, "-I", "-c", script], cwd=str(tmp_path))
     assert estado == "error" and salida is None
 
 
@@ -89,3 +86,4 @@ def test_herramientas_reales_no_ejecutan_payload_ni_dejan_temporal(tmp_path, mon
     assert temporal and all(not p.exists() for p in temporal)
     serializado = json.dumps(resultado.model_dump())
     assert '"fuentes"' not in serializado and '"referencias"' not in serializado
+

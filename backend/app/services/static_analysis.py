@@ -12,6 +12,8 @@ import re
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 from pathlib import Path, PurePosixPath
 from typing import Literal
 
@@ -19,6 +21,7 @@ from pydantic import BaseModel, Field
 
 MAX_CHARS = 12_000
 MAX_STDOUT = 1_000_000
+_READ_CHUNK = 64 * 1024
 TOOL_TIMEOUT = 12
 _SAFE_PART = re.compile(r"^[A-Za-z0-9_.-]{1,120}$", re.ASCII)
 _SEVERIDADES = {"HIGH": "alta", "MEDIUM": "media", "LOW": "baja"}
@@ -73,18 +76,10 @@ def _validar(codigo: str, archivo: str) -> tuple[str, str]:
 
 
 def _ejecutar(comando: list[str], *, entrada: str | None = None, cwd: str) -> tuple[str, str | None]:
-    """Captura salida acotada, sin shell, sin heredar stdin y con timeout."""
+    """Acota stdout + stderr durante la lectura; nunca publica stderr."""
     try:
-        r = subprocess.run(
-            comando,
-            input=entrada,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            encoding="utf-8",
-            errors="replace",
-            timeout=TOOL_TIMEOUT,
-            cwd=cwd,
-            env={
+        return _capturar_acotado(
+            comando, entrada=entrada, cwd=cwd, env={
                 "PATH": os.environ.get("PATH", ""),
                 "PYTHONIOENCODING": "utf-8",
                 "PYTHONUTF8": "1",
@@ -92,26 +87,93 @@ def _ejecutar(comando: list[str], *, entrada: str | None = None, cwd: str) -> tu
                 "XDG_CACHE_HOME": cwd,
                 "RUFF_CACHE_DIR": cwd,
             },
-            shell=False,
-            check=False,
         )
     except FileNotFoundError:
         return "no_disponible", None
-    except subprocess.TimeoutExpired:
-        return "timeout", None
     except (OSError, ValueError):
         return "error", None
 
-    # Nunca publicar stderr ni mensajes originales del analizador: podrían
-    # incluir contenido del archivo suministrado por el usuario.
-    if r.returncode not in (0, 1):
-        return "error", None
-    # Cuando un módulo falta, "python -m" termina con código 1 pero sin JSON.
-    if r.returncode == 1 and "No module named" in r.stderr and not r.stdout.strip():
-        return "no_disponible", None
-    if len(r.stdout.encode("utf-8")) > MAX_STDOUT:
-        return "error", None
-    return "ok", r.stdout
+
+def _capturar_acotado(
+    comando: list[str], *, entrada: str | None, cwd: str, env: dict[str, str],
+) -> tuple[str, str | None]:
+    """Drena ambas tuberías sin acumular más de MAX_STDOUT bytes entre ellas.
+
+    Los lectores retienen como máximo un bloque adicional cada uno. El límite
+    no es una cuota de memoria del analizador ni del JSON ya deserializado.
+    """
+    with tempfile.TemporaryFile() as datos_entrada:
+        if entrada is not None:
+            datos_entrada.write(entrada.encode("utf-8"))
+            datos_entrada.seek(0)
+        proceso = subprocess.Popen(
+            comando, stdin=datos_entrada if entrada is not None else subprocess.DEVNULL,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=0,
+            cwd=cwd, env=env, shell=False,
+        )
+        salidas = [bytearray(), bytearray()]
+        bloqueo = threading.Lock()
+        fallo = threading.Event()
+        total = 0
+
+        def detener() -> None:
+            try:
+                proceso.kill()
+            except OSError:
+                pass  # Puede haber terminado entre poll/lectura y kill.
+
+        def leer(tuberia, destino: bytearray) -> None:
+            nonlocal total
+            try:
+                while bloque := tuberia.read(_READ_CHUNK):
+                    with bloqueo:
+                        if total + len(bloque) > MAX_STDOUT:
+                            fallo.set()
+                        elif not fallo.is_set():
+                            destino.extend(bloque)
+                            total += len(bloque)
+                    if fallo.is_set():
+                        detener()
+                        return
+            except (OSError, ValueError):
+                fallo.set()
+                detener()
+            finally:
+                tuberia.close()
+
+        lectores = [
+            threading.Thread(target=leer, args=(tuberia, salida), daemon=True)
+            for tuberia, salida in zip((proceso.stdout, proceso.stderr), salidas)
+        ]
+        limite = time.monotonic() + TOOL_TIMEOUT
+        timeout = False
+        try:
+            for lector in lectores:
+                lector.start()
+            try:
+                proceso.wait(timeout=max(0, limite - time.monotonic()))
+                for lector in lectores:
+                    lector.join(timeout=max(0, limite - time.monotonic()))
+                timeout = any(lector.is_alive() for lector in lectores)
+            except subprocess.TimeoutExpired:
+                timeout = True
+        finally:
+            if proceso.poll() is None or timeout:
+                detener()
+            proceso.wait()  # Recolectar el hijo incluso en exceso de salida/timeout.
+            for lector in lectores:
+                if lector.ident is not None:
+                    lector.join(timeout=0.5)
+
+        if timeout:
+            return "timeout", None
+        if fallo.is_set() or proceso.returncode not in (0, 1):
+            return "error", None
+        stdout = salidas[0].decode("utf-8", errors="replace")
+        # Detectar módulos ausentes sin publicar su stderr ni su contenido.
+        if proceso.returncode == 1 and b"No module named" in salidas[1] and not stdout.strip():
+            return "no_disponible", None
+        return "ok", stdout
 
 
 def _texto(valor: object, limite: int = 400) -> str:
@@ -230,3 +292,4 @@ def analizar_estatico(codigo: str, archivo: str = "codigo.py") -> ResultadoEstat
         hallazgos=encontrados,
         mensaje=None if correctos == 2 else "Uno o más analizadores no pudieron completar la revisión.",
     )
+
