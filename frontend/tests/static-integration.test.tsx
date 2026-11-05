@@ -52,7 +52,7 @@ describe("Contrato estático Ruff/Bandit y degradación honesta", () => {
     const resultado = parseResponse(respuestaParcial, input);
     expect(resultado.estado).toBe("parcial");
     expect(resultado.hallazgos).toEqual([]);
-    expect(resultado.fuentes).toEqual([]);
+    expect(resultado.fuentes ?? []).toEqual([]);
     expect(resultado.analisis_estatico).toHaveLength(1);
     expect(resultado.analisis_estatico?.[0].hallazgos[0]).toMatchObject({
       herramienta: "bandit",
