@@ -28,8 +28,24 @@ DEFAULT_DATA = Path(__file__).with_name("preguntas_referencia.json")
 def load_cases(path: Path) -> list[dict]:
     data = json.loads(path.read_text(encoding="utf-8-sig"))
     cases = data["casos"]
-    if len(cases) != 20 or len({c["id"] for c in cases}) != 20:
-        raise ValueError("Se requieren exactamente 20 casos con identificadores únicos.")
+    if not isinstance(cases, list) or not cases:
+        raise ValueError("Se requiere una lista no vac?a de casos.")
+
+    ids = [
+        case.get("id")
+        for case in cases
+        if isinstance(case, dict)
+    ]
+
+    if len(ids) != len(cases) or any(
+        not isinstance(case_id, str) or not case_id.strip()
+        for case_id in ids
+    ):
+        raise ValueError("Cada caso debe tener un identificador no vac?o.")
+
+    if len(set(ids)) != len(ids):
+        raise ValueError("Los identificadores deben ser ?nicos.")
+
     for case in cases:
         for key in ("id", "nombre", "pregunta", "archivo", "codigo", "respuesta_referencia"):
             if not isinstance(case[key], str) or not case[key].strip():

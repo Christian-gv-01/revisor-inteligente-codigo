@@ -243,6 +243,63 @@ def test_servicio_rechaza_linea_inexistente(monkeypatch):
     cliente.close.assert_called_once()
 
 
+def test_servicio_rechaza_hallazgo_en_linea_vacia(monkeypatch):
+    """
+    Comprueba que el servicio no acepte hallazgos
+    asociados a líneas vacías del código fuente.
+    """
+
+    codigo = (
+        "import sqlite3\n"
+        "\n"
+        'conexion = sqlite3.connect("usuarios.db")\n'
+        "cursor = conexion.cursor()\n"
+        "\n"
+        'nombre = input("Nombre de usuario: ")\n'
+        "\n"
+        'consulta = "SELECT * FROM usuarios WHERE nombre = \'" + nombre + "\'"\n'
+        "\n"
+        "cursor.execute(consulta)\n"
+        "\n"
+        "print(cursor.fetchall())\n"
+    )
+
+    # La línea 9 está vacía.
+    assert codigo.splitlines()[8].strip() == ""
+
+    respuesta_json = json.dumps({
+        "hallazgos": [
+            {
+                "linea": 9,
+                "severidad": "alta",
+                "categoria": "Inyección SQL",
+                "titulo": "Consulta SQL construida mediante concatenación",
+                "explicacion": (
+                    "Se concatena directamente la entrada "
+                    "del usuario en una consulta SQL."
+                ),
+                "correccion_sugerida": (
+                    "Utilizar consultas SQL parametrizadas."
+                ),
+                "referencias": ["seguridad_python-002"],
+            }
+        ]
+    })
+
+    cliente = crear_cliente_simulado(
+        monkeypatch,
+        respuesta_json,
+    )
+
+    with pytest.raises(
+        llm_module.LLMError,
+        match=r"l[ií]nea vac[ií]a",
+    ):
+        llm_module.analizar_codigo(codigo)
+
+    cliente.close.assert_called_once()
+
+
 def test_servicio_trata_codigo_malicioso_como_datos(monkeypatch):
     """
     Comprueba que el código malicioso se envía como dato JSON

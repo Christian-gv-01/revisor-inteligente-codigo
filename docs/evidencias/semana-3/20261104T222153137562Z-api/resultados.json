@@ -1,0 +1,1673 @@
+{
+  "fecha_utc": "2026-11-04T22:21:53.246134+00:00",
+  "python": "3.13.2",
+  "commit_base": "563cc380ec7d5179ee646f5e7839321859377851",
+  "cambios_locales": true,
+  "dependencias": {
+    "chromadb": "1.5.9",
+    "google-genai": "2.31.0",
+    "fastapi": "0.156.1",
+    "pydantic": "2.14.1"
+  },
+  "dataset_sha256": "e72647994d9748b72b64dd7bef11f55853abbda5601052ee7299ab4fb8217fc0",
+  "runner_sha256": "c4e5d46a488eb4009f14e4e1cba6f8e69cb335e111abaf9d55c3c0798b113400",
+  "knowledge_sha256": "b106e021a4de2135e52c299cf0ae9141c90eb0177120ddcad3fc8a9fdb0d555f",
+  "llm_sha256": "102ad3fe5eeed82c684e9d0872be29bc5a5c4f1af587346373fad0639e289ddf",
+  "rag_sha256": "199ced47208d4b94d16e0bdc216e71a709435ed98c652a1057f03ac663e013a8",
+  "modo": "api",
+  "k": 3,
+  "casos": [
+    {
+      "id": "P01",
+      "nombre": "SQL concatenado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_01.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "alta",
+            "categoria": "Inyección SQL",
+            "titulo": "Consulta SQL construida mediante concatenación",
+            "explicacion": "La consulta SQL se construye concatenando directamente la variable no confiable 'nombre' procedente de la entrada del usuario, lo que permite alterar la estructura y la lógica de la instrucción SQL.",
+            "correccion_sugerida": "Utilizar consultas parametrizadas separando la estructura de la consulta de los valores, por ejemplo: cursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))",
+            "referencias": [
+              "seguridad_python-002"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.15600401163101196
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5526244640350342
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.714211642742157
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 13957.52
+    },
+    {
+      "id": "P02",
+      "nombre": "SQL interpolado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 2,
+        "referencias_resueltas": 2,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_02.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "alta",
+            "categoria": "Inyección SQL",
+            "titulo": "Consulta SQL construida mediante concatenación",
+            "explicacion": "La consulta SQL se construye utilizando f-strings para insertar directamente una entrada no confiable obtenida de un usuario, lo que puede permitir alterar la estructura de la consulta y ejecutar comandos SQL arbitrarios.",
+            "correccion_sugerida": "cursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))",
+            "referencias": [
+              "seguridad_python-002",
+              "seguridad_python-004"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.15600401163101196
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5526244640350342
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.714211642742157
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3457.21
+    },
+    {
+      "id": "P03",
+      "nombre": "SQL con formato",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 2,
+        "referencias_resueltas": 2,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_03.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "alta",
+            "categoria": "Inyección SQL",
+            "titulo": "Consulta SQL construida mediante concatenación",
+            "explicacion": "La consulta SQL se construye formateando directamente el valor de entrada proporcionado por el usuario mediante el método format(), lo que permite la modificación maliciosa de la estructura de la instrucción SQL.",
+            "correccion_sugerida": "Utilizar consultas parametrizadas o sentencias preparadas separando la estructura de la consulta de los valores, por ejemplo: cursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))",
+            "referencias": [
+              "seguridad_python-002",
+              "seguridad_python-004"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.15600401163101196
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5526244640350342
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.714211642742157
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3651.5
+    },
+    {
+      "id": "P04",
+      "nombre": "Identificador SQL externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_04.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "alta",
+            "categoria": "Inyección SQL",
+            "titulo": "Consulta SQL construida mediante concatenación",
+            "explicacion": "La consulta SQL se construye concatenando directamente la entrada no confiable de la variable 'tabla', lo que permite modificar la estructura de la instrucción e introducir consultas arbitrarias.",
+            "correccion_sugerida": "cursor.execute(\"SELECT * FROM %s\" % (tabla,))",
+            "referencias": [
+              "seguridad_python-002"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.15600401163101196
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5526244640350342
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.714211642742157
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3459.42
+    },
+    {
+      "id": "P07",
+      "nombre": "os.system externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_07.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "alta",
+            "categoria": "Inyección de comandos del sistema",
+            "titulo": "Uso inseguro de os.system con entradas controladas por el usuario",
+            "explicacion": "El código concatena directamente la entrada del usuario obtenida mediante input() en el argumento pasado a os.system(). Esto permite que un atacante inyecte comandos arbitrarios del sistema operativo aprovechando el intérprete de comandos subyacente.",
+            "correccion_sugerida": "Utilizar el módulo subprocess con una lista de argumentos y shell=False, o validar y sanitizar estrictamente la entrada antes de construir el comando.",
+            "referencias": [
+              "seguridad_python-003"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.40543854236602783
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5658223628997803
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.570195198059082
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3376.81
+    },
+    {
+      "id": "P08",
+      "nombre": "subprocess shell",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_08.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "critica",
+            "categoria": "Inyección de comandos del sistema",
+            "titulo": "Ejecución insegura de comandos con subprocess y shell=True",
+            "explicacion": "El código toma una entrada directamente de la función input() y la pasa a subprocess.run() con el argumento shell=True. Esto permite que un atacante inyecte y ejecute comandos arbitrarios del sistema operativo con los privilegios de la aplicación.",
+            "correccion_sugerida": "Evitar el uso de shell=True y pasar los argumentos como una lista de elementos separados en lugar de una cadena única concatenada o interpretada.",
+            "referencias": [
+              "seguridad_python-003"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.393011212348938
+          },
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.5724988579750061
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.6543362140655518
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 6482.97
+    },
+    {
+      "id": "P09",
+      "nombre": "os.popen externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_09.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "alta",
+            "categoria": "Inyección de Comandos",
+            "titulo": "Uso de os.popen con entrada no confiable",
+            "explicacion": "El código concatena directamente la entrada del usuario obtenida mediante input() en el argumento pasado a os.popen(). Esto permite que un atacante inyecte comandos arbitrarios del sistema operativo que se ejecutarán en el intérprete de comandos.",
+            "correccion_sugerida": "Evitar el uso de os.popen o funciones que invoquen un intérprete de comandos con entradas no confiables. Si es necesario ejecutar un proceso externo, utilizar el módulo subprocess con una lista de argumentos y shell=False.",
+            "referencias": [
+              "seguridad_python-003"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.4107876420021057
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.580498218536377
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5894253253936768
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3226.77
+    },
+    {
+      "id": "P10",
+      "nombre": "Comando interpolado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_10.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "critica",
+            "categoria": "Inyección de comandos",
+            "titulo": "Inyección de comandos del sistema mediante subprocess y shell=True",
+            "explicacion": "La aplicación utiliza la función subprocess.check_output pasando un comando construido mediante f-strings que incluye directamente datos controlados por el usuario ('ruta'). Al utilizar shell=True, cualquier entrada maliciosa puede alterar la sintaxis y ejecutar comandos arbitrarios en el sistema operativo.",
+            "correccion_sugerida": "Evitar el uso de shell=True y pasar los argumentos como una lista de elementos separados. Ejemplo: subprocess.check_output([\"cat\", ruta], shell=False). Adicionalmente, validar estrictamente la entrada.",
+            "referencias": [
+              "seguridad_python-003"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.3926094174385071
+          },
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.6564949750900269
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.6767148971557617
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3129.0
+    },
+    {
+      "id": "P13",
+      "nombre": "eval externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_13.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "CWE-94",
+            "titulo": "Uso de eval con entrada no confiable",
+            "explicacion": "El código utiliza la función eval() pasando directamente una entrada obtenida del usuario a través de input(). Esto permite la ejecución arbitraria de código Python en el sistema, lo que representa una vulnerabilidad crítica.",
+            "correccion_sugerida": "Evite utilizar eval() con datos de entrada no confiables. Si necesita evaluar expresiones matemáticas de forma segura, utilice bibliotecas especializadas o análisis sintáctico mediante ast.literal_eval() para estructuras literales simples.",
+            "referencias": [
+              "seguridad_python-001"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.38635241985321045
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.4574798345565796
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5011966228485107
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3040.99
+    },
+    {
+      "id": "P14",
+      "nombre": "exec externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "mrr_at_k": 0.0,
+        "hit_at_k": 0.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_14.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "Ejecución de Código Arbitrario",
+            "titulo": "Uso inseguro de exec() con entrada no confiable",
+            "explicacion": "El código pasa directamente el resultado de una entrada de usuario obtenida mediante input() a la función exec(). Esto permite la ejecución arbitraria de cualquier código Python suministrado por el usuario, comprometiendo totalmente la seguridad del sistema.",
+            "correccion_sugerida": "Evite completamente el uso de exec() con entradas no confiables. Si es necesario procesar datos del usuario, utilice mecanismos seguros de análisis y validación estricta en lugar de evaluar código dinámicamente.",
+            "referencias": [
+              "seguridad_python-004"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.43273818492889404
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.48014211654663086
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.4896758794784546
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3741.01
+    },
+    {
+      "id": "P15",
+      "nombre": "eval en función",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_15.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "CWE-94",
+            "titulo": "Uso de eval con entrada no confiable",
+            "explicacion": "La funcion eval recibe directamente una expresion controlada por el usuario a traves de la funcion input en la linea 3, lo que permite la ejecucion arbitraria de codigo Python en el sistema.",
+            "correccion_sugerida": "Evitar el uso de eval con entradas no confiables. Si es estrictamente necesario evaluar expresiones aritmeticas simples de forma segura, utilizar analizadores seguros o alternativas como ast.literal_eval restringiendo su alcance, o implementar un parser dedicado.",
+            "referencias": [
+              "seguridad_python-001"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.38635241985321045
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.4574798345565796
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5011966228485107
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3551.85
+    },
+    {
+      "id": "P16",
+      "nombre": "eval tras strip",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_16.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "CWE-94",
+            "titulo": "Uso inseguro de eval() con entrada no confiable",
+            "explicacion": "La función eval() procesa una cadena de texto obtenida directamente de la entrada del usuario sin ningún tipo de validación ni restricción previa, lo que permite la ejecución de código arbitrario dentro del entorno de la aplicación.",
+            "correccion_sugerida": "Evitar el uso de eval() para evaluar expresiones arbitrarias de los usuarios. Si se requiere evaluar expresiones matemáticas o literales de forma segura, se debe utilizar el módulo ast (por ejemplo, ast.literal_eval) o analizadores especializados que no ejecuten código arbitrario.",
+            "referencias": [
+              "seguridad_python-001"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.38635241985321045
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.4574798345565796
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5011966228485107
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3260.83
+    },
+    {
+      "id": "P21",
+      "nombre": "Contrase?a codificada",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_21.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 1,
+            "severidad": "alta",
+            "categoria": "CWE-798",
+            "titulo": "Credencial codificada en el código fuente",
+            "explicacion": "Se ha detectado una contraseña asignada directamente mediante un valor literal en el código fuente. Almacenar credenciales de forma estática expone información sensible si el código fuente es público o se comparte de manera insegura.",
+            "correccion_sugerida": "Utilizar variables de entorno para cargar las credenciales de forma segura, por ejemplo mediante os.getenv('PASSWORD').",
+            "referencias": [
+              "seguridad_python-005"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.31274688243865967
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5632460117340088
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.6116171479225159
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 4061.39
+    },
+    {
+      "id": "P23",
+      "nombre": "Path Traversal con entrada externa",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_23.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "alta",
+            "categoria": "Path Traversal",
+            "titulo": "Acceso inseguro a archivos mediante rutas controladas por el usuario",
+            "explicacion": "El código concatena la entrada del usuario ('nombre') directamente con el directorio base utilizando 'os.path.join'. Como la entrada proviene de una función de lectura externa sin validación ni normalización, un atacante podría utilizar secuencias como '../' para escapar del directorio permitido y acceder a archivos arbitrarios del sistema.",
+            "correccion_sugerida": "Valida y normaliza la ruta resultante para asegurar que permanece dentro del directorio autorizado antes de abrir el archivo, por ejemplo utilizando 'Path(ruta).resolve().is_relative_to(\"/srv/documentos\")'.",
+            "referencias": [
+              "seguridad_python-006"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.3872818946838379
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5386732220649719
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5409014225006104
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 5564.27
+    },
+    {
+      "id": "P25",
+      "nombre": "Contrase?a de base de datos codificada",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_25.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 1,
+            "severidad": "alta",
+            "categoria": "CWE-798",
+            "titulo": "Credencial o secreto codificado en el código fuente",
+            "explicacion": "Se ha detectado el almacenamiento de una contraseña o clave de base de datos directamente como valor literal en el código fuente (DB_PASSWORD), lo que puede exponer información sensible si el código se comparte o se almacena en un repositorio.",
+            "correccion_sugerida": "Utilice variables de entorno o un gestor de secretos seguro para cargar las credenciales, por ejemplo, utilizando os.getenv('DB_PASSWORD').",
+            "referencias": [
+              "seguridad_python-005"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.31274688243865967
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5632460117340088
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.6116171479225159
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3388.27
+    },
+    {
+      "id": "P26",
+      "nombre": "Token de acceso codificado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_26.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 1,
+            "severidad": "alta",
+            "categoria": "CWE-798",
+            "titulo": "Credencial o token codificado en el código fuente",
+            "explicacion": "El código contiene una cadena literal que aparenta ser un token de acceso codificado directamente en el archivo fuente, lo cual presenta un riesgo de exposición si el código es publicado o compartido.",
+            "correccion_sugerida": "Utilice variables de entorno o un gestor de secretos seguro para cargar el token en tiempo de ejecución, por ejemplo utilizando os.getenv().",
+            "referencias": [
+              "seguridad_python-005"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.31274688243865967
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5632460117340088
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.6116171479225159
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3389.38
+    },
+    {
+      "id": "P27",
+      "nombre": "Credenciales en cadena de conexi?n",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_27.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 1,
+            "severidad": "alta",
+            "categoria": "CWE-798",
+            "titulo": "Credenciales y secretos codificados",
+            "explicacion": "Se ha identificado una credencial (usuario y contraseña) almacenada directamente en una cadena de conexión dentro del código fuente en la variable DATABASE_URL.",
+            "correccion_sugerida": "Utilizar variables de entorno o un gestor de secretos para cargar las credenciales de la base de datos de forma segura, por ejemplo mediante os.getenv('DATABASE_URL').",
+            "referencias": [
+              "seguridad_python-005"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.31274688243865967
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5632460117340088
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.6116171479225159
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 4047.37
+    },
+    {
+      "id": "P28",
+      "nombre": "Path Traversal mediante concatenaci?n",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_28.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 5,
+            "severidad": "alta",
+            "categoria": "CWE-22",
+            "titulo": "Path Traversal (Acceso inseguro a archivos)",
+            "explicacion": "La aplicación utiliza una entrada proporcionada por el usuario a través de input() para construir una ruta de archivo sin validar ni normalizar adecuadamente su contenido, lo que permite el uso de secuencias como '../' para escapar del directorio base autorizado.",
+            "correccion_sugerida": "Utilizar pathlib.Path para resolver y normalizar la ruta combinada, y verificar mediante .resolve().is_relative_to(base) que el archivo resultante permanece dentro del directorio autorizado antes de abrirlo.",
+            "referencias": [
+              "seguridad_python-006"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.3872818946838379
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5386732220649719
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5409014225006104
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3476.15
+    },
+    {
+      "id": "P29",
+      "nombre": "Path Traversal mediante pathlib",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_29.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "alta",
+            "categoria": "CWE-22",
+            "titulo": "Posible Path Traversal al concatenar entrada de usuario en rutas de archivos",
+            "explicacion": "El codigo utiliza directamente el valor proporcionado por el usuario (nombre) a traves de la funcion input() para construir una ruta combinada con Path(\"/srv/documentos\"). Si el usuario proporciona una ruta con secuencias de navegacion como ../, es posible que se escape del directorio autorizado y permita acceder a archivos fuera de este.",
+            "correccion_sugerida": "Validar y normalizar la ruta resultante utilizando resolved_path.relative_to(\"/srv/documentos\") para comprobar que permanece estrictamente dentro del directorio autorizado antes de realizar operaciones de lectura.",
+            "referencias": [
+              "seguridad_python-006"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.3872818946838379
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5386732220649719
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5409014225006104
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3585.8
+    },
+    {
+      "id": "P30",
+      "nombre": "Extracci?n ZIP vulnerable a Zip Slip",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_30.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 7,
+            "severidad": "alta",
+            "categoria": "CWE-22",
+            "titulo": "Path Traversal potencial al extraer archivos ZIP",
+            "explicacion": "El código extrae los archivos contenidos en el archivo ZIP utilizando los nombres devueltos por `archivo.namelist()` y los combina directamente con el directorio de destino mediante `os.path.join(destino, miembro)`. Si el archivo ZIP contiene rutas relativas con secuencias de navegación como `../` (Zip Slip), los archivos resultantes podrían escribirse fuera del directorio autorizado `destino`.",
+            "correccion_sugerida": "Validar que la ruta resultante de la combinación permanezca estrictamente dentro del directorio de destino permitido antes de realizar la operación de escritura, utilizando funciones como `os.path.abspath` y comprobando que comience por la ruta base autorizada.",
+            "referencias": [
+              "seguridad_python-006"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.3872818946838379
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5386732220649719
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5409014225006104
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 5852.93
+    },
+    {
+      "id": "P05",
+      "nombre": "SQL parametrizado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_05.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.15600401163101196
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5526244640350342
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.714211642742157
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 4195.77
+    },
+    {
+      "id": "P06",
+      "nombre": "Tabla permitida",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_06.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.15600401163101196
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5526244640350342
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.714211642742157
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 3360.94
+    },
+    {
+      "id": "P11",
+      "nombre": "Argumentos constantes",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_11.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.393011212348938
+          },
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.5724988579750061
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.6543362140655518
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 2929.58
+    },
+    {
+      "id": "P22",
+      "nombre": "Clave API ficticia",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_22.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.31274688243865967
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5632460117340088
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.6116171479225159
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 2776.25
+    },
+    {
+      "id": "P24",
+      "nombre": "Ruta validada dentro del directorio",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_24.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.3872818946838379
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5386732220649719
+          },
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.5409014225006104
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 4182.28
+    }
+  ],
+  "configuracion": {
+    "base_url": "http://127.0.0.1:8000",
+    "timeout": 90,
+    "aviso": "La configuración y revisión del servidor deben registrarse por separado."
+  },
+  "resumen": {
+    "total": 25,
+    "completados": 25,
+    "errores": 0,
+    "tasa_completitud": 1.0,
+    "latencia_media_ms": 4205.8504,
+    "latencia_p95_ms": 6482.97,
+    "precision_at_k": 0.44,
+    "recall_at_k": 0.92,
+    "mrr_at_k": 0.96,
+    "hit_at_k": 0.96,
+    "sin_fuentes_fuera_cobertura": null,
+    "casos_con_referencias_esperadas_evaluados": 25,
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "hallazgos": 20,
+    "hallazgos_con_citas_resueltas": 20,
+    "referencias": 22,
+    "referencias_resueltas": 22,
+    "lineas_fuera_rango": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "cobertura_citas": 1.0,
+    "validez_referencias": 1.0,
+    "tasa_abstencion": 0,
+    "exactitud_casos_validos": 1,
+    "aciertos_sobre_total": 1.0
+  }
+}

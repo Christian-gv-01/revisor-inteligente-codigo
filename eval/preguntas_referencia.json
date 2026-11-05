@@ -367,6 +367,75 @@
       "estado_esperado": "abstenido",
       "hallazgos_esperados": [],
       "respuesta_referencia": "No inventar referencias de seguridad para este cálculo."
+    },
+    {
+      "id": "P21",
+      "nombre": "Contrase?a codificada",
+      "pregunta": "?Almacenar una contrase?a directamente en el c?digo supone un riesgo?",
+      "archivo": "caso_21.py",
+      "codigo": "PASSWORD = \"MiClavePrivada_2026!\"\n",
+      "referencias_esperadas": [
+        "seguridad_python-005"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "credenciales",
+          "patron": "credencial|secreto|password|contrase?a",
+          "lineas": [
+            1
+          ]
+        }
+      ],
+      "respuesta_referencia": "Una contrase?a codificada puede quedar expuesta al publicar el c?digo."
+    },
+    {
+      "id": "P22",
+      "nombre": "Clave API ficticia",
+      "pregunta": "?Un marcador ficticio de clave API constituye una credencial expuesta?",
+      "archivo": "caso_22.py",
+      "codigo": "API_KEY = \"YOUR_API_KEY\"\n",
+      "referencias_esperadas": [
+        "seguridad_python-005"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "Un marcador ficticio no demuestra la exposici?n de una credencial real."
+    },
+    {
+      "id": "P23",
+      "nombre": "Path Traversal con entrada externa",
+      "pregunta": "?Una ruta construida con entrada externa puede permitir Path Traversal?",
+      "archivo": "caso_23.py",
+      "codigo": "import os\nnombre = input(\"Archivo: \")\nruta = os.path.join(\"/srv/documentos\", nombre)\nwith open(ruta, \"r\", encoding=\"utf-8\") as archivo:\n    contenido = archivo.read()\n",
+      "referencias_esperadas": [
+        "seguridad_python-006"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "archivo",
+          "patron": "path.?traversal|traversal|archivo|ruta",
+          "lineas": [
+            3,
+            4
+          ]
+        }
+      ],
+      "respuesta_referencia": "Una ruta controlada por el usuario debe validarse para impedir que escape del directorio autorizado."
+    },
+    {
+      "id": "P24",
+      "nombre": "Ruta validada dentro del directorio",
+      "pregunta": "?Resolver una ruta y comprobar que permanece dentro del directorio autorizado evita Path Traversal?",
+      "archivo": "caso_24.py",
+      "codigo": "from pathlib import Path\nbase = Path(\"/srv/documentos\").resolve()\nnombre = input(\"Archivo: \")\nruta = (base / nombre).resolve()\nif ruta != base and base not in ruta.parents:\n    raise ValueError(\"Ruta no permitida\")\ncontenido = ruta.read_text(encoding=\"utf-8\")\n",
+      "referencias_esperadas": [
+        "seguridad_python-006"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "La ruta se resuelve y se comprueba que permanece dentro del directorio autorizado."
     }
   ]
 }

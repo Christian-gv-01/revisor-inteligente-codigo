@@ -1,0 +1,26 @@
+﻿id,nombre,estado_ejecucion,duracion_ms,error,precision_at_k,recall_at_k,mrr_at_k,tp,fp,fn,abstenido
+P01,SQL concatenado,ok,13957.52,,0.6666666666666666,1.0,1.0,1,0,0,False
+P02,SQL interpolado,ok,3457.21,,0.6666666666666666,1.0,1.0,1,0,0,False
+P03,SQL con formato,ok,3651.5,,0.6666666666666666,1.0,1.0,1,0,0,False
+P04,Identificador SQL externo,ok,3459.42,,0.6666666666666666,1.0,1.0,1,0,0,False
+P07,os.system externo,ok,3376.81,,0.6666666666666666,1.0,1.0,1,0,0,False
+P08,subprocess shell,ok,6482.97,,0.3333333333333333,0.5,1.0,1,0,0,False
+P09,os.popen externo,ok,3226.77,,0.6666666666666666,1.0,1.0,1,0,0,False
+P10,Comando interpolado,ok,3129.0,,0.6666666666666666,1.0,1.0,1,0,0,False
+P13,eval externo,ok,3040.99,,0.3333333333333333,1.0,1.0,1,0,0,False
+P14,exec externo,ok,3741.01,,0.0,0.0,0.0,1,0,0,False
+P15,eval en función,ok,3551.85,,0.3333333333333333,1.0,1.0,1,0,0,False
+P16,eval tras strip,ok,3260.83,,0.3333333333333333,1.0,1.0,1,0,0,False
+P21,Contrase?a codificada,ok,4061.39,,0.3333333333333333,1.0,1.0,1,0,0,False
+P23,Path Traversal con entrada externa,ok,5564.27,,0.3333333333333333,1.0,1.0,1,0,0,False
+P25,Contrase?a de base de datos codificada,ok,3388.27,,0.3333333333333333,1.0,1.0,1,0,0,False
+P26,Token de acceso codificado,ok,3389.38,,0.3333333333333333,1.0,1.0,1,0,0,False
+P27,Credenciales en cadena de conexi?n,ok,4047.37,,0.3333333333333333,1.0,1.0,1,0,0,False
+P28,Path Traversal mediante concatenaci?n,ok,3476.15,,0.3333333333333333,1.0,1.0,1,0,0,False
+P29,Path Traversal mediante pathlib,ok,3585.8,,0.3333333333333333,1.0,1.0,1,0,0,False
+P30,Extracci?n ZIP vulnerable a Zip Slip,ok,5852.93,,0.3333333333333333,1.0,1.0,1,0,0,False
+P05,SQL parametrizado,ok,4195.77,,0.6666666666666666,1.0,1.0,0,0,0,False
+P06,Tabla permitida,ok,3360.94,,0.6666666666666666,1.0,1.0,0,0,0,False
+P11,Argumentos constantes,ok,2929.58,,0.3333333333333333,0.5,1.0,0,0,0,False
+P22,Clave API ficticia,ok,2776.25,,0.3333333333333333,1.0,1.0,0,0,0,False
+P24,Ruta validada dentro del directorio,ok,4182.28,,0.3333333333333333,1.0,1.0,0,0,0,False

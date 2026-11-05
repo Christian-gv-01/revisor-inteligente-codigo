@@ -1,0 +1,508 @@
+{
+  "version": 1,
+  "descripcion": "20 casos propios, derivados de las cuatro reglas de knowledge/seguridad_python.md. Las preguntas explican el objetivo; se envía únicamente el código a la API.",
+  "casos": [
+    {
+      "id": "P01",
+      "nombre": "SQL concatenado",
+      "pregunta": "¿La concatenación de una entrada en SQL permite inyección?",
+      "archivo": "caso_01.py",
+      "codigo": "nombre = input(\"Nombre: \")\nconsulta = \"SELECT * FROM usuarios WHERE nombre = '\" + nombre + \"'\"\ncursor.execute(consulta)\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "sql",
+          "patron": "sql|consulta|query",
+          "lineas": [
+            2,
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Usar parámetros separados de la consulta."
+    },
+    {
+      "id": "P02",
+      "nombre": "SQL interpolado",
+      "pregunta": "¿Una f-string protege una consulta SQL?",
+      "archivo": "caso_02.py",
+      "codigo": "nombre = input(\"Nombre: \")\ncursor.execute(f\"SELECT * FROM usuarios WHERE nombre = '{nombre}'\")\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "sql",
+          "patron": "sql|consulta|query",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "La interpolación conserva el riesgo; parametrizar."
+    },
+    {
+      "id": "P03",
+      "nombre": "SQL con formato",
+      "pregunta": "¿Es seguro construir SQL con format?",
+      "archivo": "caso_03.py",
+      "codigo": "nombre = input(\"Nombre: \")\nconsulta = \"SELECT * FROM usuarios WHERE nombre = '{}'\".format(nombre)\ncursor.execute(consulta)\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "sql",
+          "patron": "sql|consulta|query",
+          "lineas": [
+            2,
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Sustituir format por parámetros del controlador."
+    },
+    {
+      "id": "P04",
+      "nombre": "Identificador SQL externo",
+      "pregunta": "¿Se puede insertar directamente el nombre de una tabla recibido?",
+      "archivo": "caso_04.py",
+      "codigo": "tabla = input(\"Tabla: \")\ncursor.execute(\"SELECT * FROM \" + tabla)\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "sql",
+          "patron": "sql|consulta|query",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "Elegir identificadores de un mapa fijo permitido."
+    },
+    {
+      "id": "P07",
+      "nombre": "os.system externo",
+      "pregunta": "¿Qué riesgo presenta concatenar un host en os.system?",
+      "archivo": "caso_07.py",
+      "codigo": "import os\nhost = input(\"Host: \")\nos.system(\"ping \" + host)\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "comandos",
+          "patron": "comando|command|shell|subprocess|popen|os\\.system",
+          "lineas": [
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Evitar el intérprete y validar el host."
+    },
+    {
+      "id": "P08",
+      "nombre": "subprocess shell",
+      "pregunta": "¿shell=True interpreta instrucciones introducidas por el usuario?",
+      "archivo": "caso_08.py",
+      "codigo": "import subprocess\ncomando = input(\"Comando: \")\nsubprocess.run(comando, shell=True)\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "comandos",
+          "patron": "comando|command|shell|subprocess|popen|os\\.system",
+          "lineas": [
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Comando fijo, argumentos validados y shell=False."
+    },
+    {
+      "id": "P09",
+      "nombre": "os.popen externo",
+      "pregunta": "¿Puede una entrada modificar un comando pasado a popen?",
+      "archivo": "caso_09.py",
+      "codigo": "import os\nnombre = input(\"Nombre: \")\nresultado = os.popen(\"echo \" + nombre).read()\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "comandos",
+          "patron": "comando|command|shell|subprocess|popen|os\\.system",
+          "lineas": [
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Usar una API que no interprete comandos."
+    },
+    {
+      "id": "P10",
+      "nombre": "Comando interpolado",
+      "pregunta": "¿Una f-string evita la inyección en check_output?",
+      "archivo": "caso_10.py",
+      "codigo": "import subprocess\nruta = input(\"Ruta: \")\nsubprocess.check_output(f\"cat {ruta}\", shell=True)\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "comandos",
+          "patron": "comando|command|shell|subprocess|popen|os\\.system",
+          "lineas": [
+            3
+          ]
+        }
+      ],
+      "respuesta_referencia": "Leer con una API de archivos y controlar las rutas permitidas."
+    },
+    {
+      "id": "P13",
+      "nombre": "eval externo",
+      "pregunta": "¿Es seguro evaluar directamente una expresión del usuario?",
+      "archivo": "caso_13.py",
+      "codigo": "entrada = input(\"Expresión: \")\nresultado = eval(entrada)\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "codigo",
+          "patron": "eval|exec|c[oó]digo|code injection",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "No evaluar expresiones externas con eval."
+    },
+    {
+      "id": "P14",
+      "nombre": "exec externo",
+      "pregunta": "¿Qué sucede al ejecutar instrucciones recibidas por entrada?",
+      "archivo": "caso_14.py",
+      "codigo": "entrada = input(\"Instrucciones: \")\nexec(entrada)\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "codigo",
+          "patron": "eval|exec|c[oó]digo|code injection",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "Definir operaciones permitidas sin ejecutar texto externo."
+    },
+    {
+      "id": "P15",
+      "nombre": "eval en función",
+      "pregunta": "¿Es seguro pasar una entrada a eval dentro de una función?",
+      "archivo": "caso_15.py",
+      "codigo": "def calcular(expresion):\n    return eval(expresion)\ncalcular(input(\"Expresión: \"))\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "codigo",
+          "patron": "eval|exec|c[oó]digo|code injection",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "La función no cambia el origen no confiable de la entrada."
+    },
+    {
+      "id": "P16",
+      "nombre": "eval tras strip",
+      "pregunta": "¿Eliminar espacios vuelve segura una expresión externa?",
+      "archivo": "caso_16.py",
+      "codigo": "entrada = input(\"Expresión: \").strip()\nresultado = eval(entrada)\n",
+      "referencias_esperadas": [
+        "seguridad_python-001"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "codigo",
+          "patron": "eval|exec|c[oó]digo|code injection",
+          "lineas": [
+            2
+          ]
+        }
+      ],
+      "respuesta_referencia": "strip no restringe las instrucciones que eval interpreta."
+    },
+    {
+      "id": "P21",
+      "nombre": "Contrase?a codificada",
+      "pregunta": "?Almacenar una contrase?a directamente en el c?digo supone un riesgo?",
+      "archivo": "caso_21.py",
+      "codigo": "PASSWORD = \"MiClavePrivada_2026!\"\n",
+      "referencias_esperadas": [
+        "seguridad_python-005"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "credenciales",
+          "patron": "credencial|secreto|password|contrase?a",
+          "lineas": [
+            1
+          ]
+        }
+      ],
+      "respuesta_referencia": "Una contrase?a codificada puede quedar expuesta al publicar el c?digo."
+    },
+    {
+      "id": "P23",
+      "nombre": "Path Traversal con entrada externa",
+      "pregunta": "?Una ruta construida con entrada externa puede permitir Path Traversal?",
+      "archivo": "caso_23.py",
+      "codigo": "import os\nnombre = input(\"Archivo: \")\nruta = os.path.join(\"/srv/documentos\", nombre)\nwith open(ruta, \"r\", encoding=\"utf-8\") as archivo:\n    contenido = archivo.read()\n",
+      "referencias_esperadas": [
+        "seguridad_python-006"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "archivo",
+          "patron": "path.?traversal|traversal|archivo|ruta",
+          "lineas": [
+            3,
+            4
+          ]
+        }
+      ],
+      "respuesta_referencia": "Una ruta controlada por el usuario debe validarse para impedir que escape del directorio autorizado."
+    },
+    {
+      "id": "P25",
+      "nombre": "Contrase?a de base de datos codificada",
+      "pregunta": "?Una contrase?a de base de datos almacenada en el c?digo supone un riesgo?",
+      "archivo": "caso_25.py",
+      "codigo": "DB_PASSWORD = \"Demo_DB_Clave_2026!\"\n",
+      "referencias_esperadas": [
+        "seguridad_python-005"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "credenciales",
+          "patron": "credencial|secreto|password|contrase?a",
+          "lineas": [
+            1
+          ]
+        }
+      ],
+      "respuesta_referencia": "La contrase?a est? almacenada directamente en el c?digo."
+    },
+    {
+      "id": "P26",
+      "nombre": "Token de acceso codificado",
+      "pregunta": "?Un token de acceso almacenado como literal puede exponerse?",
+      "archivo": "caso_26.py",
+      "codigo": "ACCESS_TOKEN = \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIn0.a8f2c91d7e4b6a3f5c0d9e1b2a7c4f8d\"\n",
+      "referencias_esperadas": [
+        "seguridad_python-005"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "credenciales",
+          "patron": "credencial|secreto|token",
+          "lineas": [
+            1
+          ]
+        }
+      ],
+      "respuesta_referencia": "El token est? codificado directamente y puede quedar expuesto."
+    },
+    {
+      "id": "P27",
+      "nombre": "Credenciales en cadena de conexi?n",
+      "pregunta": "?Incluir usuario y contrase?a directamente en una conexi?n supone un riesgo?",
+      "archivo": "caso_27.py",
+      "codigo": "DATABASE_URL = \"postgresql://admin:ClaveDB_2026!@db-interno:5432/app\"\n",
+      "referencias_esperadas": [
+        "seguridad_python-005"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "credenciales",
+          "patron": "credencial|secreto|password|contrase?a",
+          "lineas": [
+            1
+          ]
+        }
+      ],
+      "respuesta_referencia": "Las credenciales incluidas en una cadena de conexi?n pueden exponerse."
+    },
+    {
+      "id": "P28",
+      "nombre": "Path Traversal mediante concatenaci?n",
+      "pregunta": "?Concatenar una ruta con un nombre proporcionado por el usuario permite escapar del directorio?",
+      "archivo": "caso_28.py",
+      "codigo": "import os\nbase = \"/srv/documentos\"\nnombre = input(\"Archivo: \")\nruta = base + \"/\" + nombre\nwith open(ruta, \"r\", encoding=\"utf-8\") as archivo:\n    contenido = archivo.read()\n",
+      "referencias_esperadas": [
+        "seguridad_python-006"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "archivo",
+          "patron": "path.?traversal|traversal|archivo|ruta",
+          "lineas": [
+            4,
+            5
+          ]
+        }
+      ],
+      "respuesta_referencia": "La ruta incorpora una entrada externa sin comprobar que permanece dentro del directorio permitido."
+    },
+    {
+      "id": "P29",
+      "nombre": "Path Traversal mediante pathlib",
+      "pregunta": "?Utilizar pathlib sin validar la ruta permite acceder a archivos fuera del directorio autorizado?",
+      "archivo": "caso_29.py",
+      "codigo": "from pathlib import Path\nnombre = input(\"Archivo: \")\nruta = Path(\"/srv/documentos\") / nombre\ncontenido = ruta.read_text(encoding=\"utf-8\")\n",
+      "referencias_esperadas": [
+        "seguridad_python-006"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "archivo",
+          "patron": "path.?traversal|traversal|archivo|ruta",
+          "lineas": [
+            3,
+            4
+          ]
+        }
+      ],
+      "respuesta_referencia": "La ruta controlada por el usuario no se valida antes de acceder al archivo."
+    },
+    {
+      "id": "P30",
+      "nombre": "Extracci?n ZIP vulnerable a Zip Slip",
+      "pregunta": "?Extraer archivos ZIP utilizando sus nombres sin validar las rutas permite escapar del directorio de destino?",
+      "archivo": "caso_30.py",
+      "codigo": "import os\nimport zipfile\ndestino = \"/srv/extraidos\"\nwith zipfile.ZipFile(\"entrada.zip\") as archivo:\n    for miembro in archivo.namelist():\n        ruta = os.path.join(destino, miembro)\n        with archivo.open(miembro) as origen, open(ruta, \"wb\") as salida:\n            salida.write(origen.read())\n",
+      "referencias_esperadas": [
+        "seguridad_python-006"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [
+        {
+          "categoria": "archivo",
+          "patron": "path.?traversal|traversal|archivo|ruta|zip.?slip",
+          "lineas": [
+            6,
+            7
+          ]
+        }
+      ],
+      "respuesta_referencia": "Los nombres de los miembros ZIP no se validan antes de construir las rutas de extracci?n."
+    },
+    {
+      "id": "P05",
+      "nombre": "SQL parametrizado",
+      "pregunta": "¿La consulta separa correctamente datos y sintaxis?",
+      "archivo": "caso_05.py",
+      "codigo": "nombre = input(\"Nombre: \")\ncursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "No reportar inyección SQL en este fragmento."
+    },
+    {
+      "id": "P06",
+      "nombre": "Tabla permitida",
+      "pregunta": "¿Es segura una tabla elegida mediante un mapa fijo?",
+      "archivo": "caso_06.py",
+      "codigo": "tablas = {\"usuarios\": \"usuarios\", \"productos\": \"productos\"}\nopcion = input(\"Tabla: \")\nif opcion in tablas:\n    cursor.execute(\"SELECT * FROM \" + tablas[opcion])\n",
+      "referencias_esperadas": [
+        "seguridad_python-002",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "El identificador queda restringido a dos constantes."
+    },
+    {
+      "id": "P11",
+      "nombre": "Argumentos constantes",
+      "pregunta": "¿Un proceso con ejecutable y argumentos fijos tiene entrada inyectable?",
+      "archivo": "caso_11.py",
+      "codigo": "import subprocess\nsubprocess.run([\"python\", \"--version\"], shell=False, check=True)\n",
+      "referencias_esperadas": [
+        "seguridad_python-003",
+        "seguridad_python-004"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "No existe entrada externa en el fragmento."
+    },
+    {
+      "id": "P22",
+      "nombre": "Clave API ficticia",
+      "pregunta": "?Un marcador ficticio de clave API constituye una credencial expuesta?",
+      "archivo": "caso_22.py",
+      "codigo": "API_KEY = \"YOUR_API_KEY\"\n",
+      "referencias_esperadas": [
+        "seguridad_python-005"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "Un marcador ficticio no demuestra la exposici?n de una credencial real."
+    },
+    {
+      "id": "P24",
+      "nombre": "Ruta validada dentro del directorio",
+      "pregunta": "?Resolver una ruta y comprobar que permanece dentro del directorio autorizado evita Path Traversal?",
+      "archivo": "caso_24.py",
+      "codigo": "from pathlib import Path\nbase = Path(\"/srv/documentos\").resolve()\nnombre = input(\"Archivo: \")\nruta = (base / nombre).resolve()\nif ruta != base and base not in ruta.parents:\n    raise ValueError(\"Ruta no permitida\")\ncontenido = ruta.read_text(encoding=\"utf-8\")\n",
+      "referencias_esperadas": [
+        "seguridad_python-006"
+      ],
+      "estado_esperado": "analizado",
+      "hallazgos_esperados": [],
+      "respuesta_referencia": "La ruta se resuelve y se comprueba que permanece dentro del directorio autorizado."
+    }
+  ]
+}
