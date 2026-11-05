@@ -24,6 +24,11 @@ from app.services.github_repos import obtener_archivos_python_github
 from app.services.files import leer_python_seguro
 from app.services.llm import analizar_codigo, LLMError
 from app.services.zip_files import leer_zip_seguro
+from app.services.static_analysis import (
+    analizar_estatico,
+    EntradaEstaticaInvalida,
+    ResultadoEstatico,
+)
 
 
 app = FastAPI(
@@ -90,9 +95,33 @@ async def proteger_analisis(request: Request, call_next):
         control_concurrencia.liberar()
 
 
+async def _analisis_estatico_si_habilitado(
+    codigo: str, archivo: str
+) -> ResultadoEstatico | None:
+    if os.getenv("STATIC_ANALYSIS_ENABLED", "0") != "1":
+        return None
+    try:
+        return await run_in_threadpool(analizar_estatico, codigo, archivo)
+    except EntradaEstaticaInvalida:
+        # Los contratos de entrada del backend siguen siendo obligatorios.
+        return None
+
+
+@app.post("/api/v1/estatico/analizar", response_model=ResultadoEstatico)
+async def analizar_solo_estatico(solicitud: SolicitudAnalisis):
+    """Análisis autónomo sin consumo de Gemini ni recuperación RAG."""
+    try:
+        return await run_in_threadpool(
+            analizar_estatico, solicitud.codigo, solicitud.archivo
+        )
+    except EntradaEstaticaInvalida as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+
+
 def construir_respuesta(
     archivo: str,
     informe: InformeModelo,
+    analisis_estatico: ResultadoEstatico | None = None,
 ) -> RespuestaAnalisis:
     """
     Convierte el informe interno en una respuesta de la API.
@@ -107,6 +136,7 @@ def construir_respuesta(
         estado="abstenido" if motivo else "analizado",
         hallazgos=informe.hallazgos,
         fuentes=informe.fuentes,
+        analisis_estatico=analisis_estatico,
         mensaje=motivo,
     )
 
@@ -135,9 +165,13 @@ async def analizar(solicitud: SolicitudAnalisis):
             solicitud.codigo,
         )
 
+        estatico = await _analisis_estatico_si_habilitado(
+            solicitud.codigo, solicitud.archivo
+        )
         return construir_respuesta(
             solicitud.archivo,
             informe,
+            estatico,
         )
 
     except LLMError as error:
@@ -166,9 +200,11 @@ async def analizar_archivo(
             codigo,
         )
 
+        estatico = await _analisis_estatico_si_habilitado(codigo, nombre)
         return construir_respuesta(
             nombre,
             informe,
+            estatico,
         )
 
     except LLMError as error:
@@ -211,10 +247,12 @@ async def analizar_zip(
                 codigo,
             )
 
+            estatico = await _analisis_estatico_si_habilitado(codigo, nombre)
             informes.append(
                 construir_respuesta(
                     nombre,
                     informe,
+                    estatico,
                 )
             )
 
@@ -266,8 +304,9 @@ async def analizar_repositorio_github(
                 codigo,
             )
 
+            estatico = await _analisis_estatico_si_habilitado(codigo, nombre)
             informes.append(
-                construir_respuesta(nombre, informe)
+                construir_respuesta(nombre, informe, estatico)
             )
 
         return RespuestaAnalisisRepositorio(
