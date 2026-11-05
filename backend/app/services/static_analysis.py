@@ -100,6 +100,9 @@ def _ejecutar(comando: list[str], *, entrada: str | None = None, cwd: str) -> tu
     # incluir contenido del archivo suministrado por el usuario.
     if r.returncode not in (0, 1):
         return "error", None
+    # Cuando un módulo falta, "python -m" termina con código 1 pero sin JSON.
+    if r.returncode == 1 and "No module named" in r.stderr and not r.stdout.strip():
+        return "no_disponible", None
     if len(r.stdout.encode("utf-8")) > MAX_STDOUT:
         return "error", None
     return "ok", r.stdout
@@ -139,7 +142,7 @@ def _ruff(salida: str, total_lineas: int) -> list[HallazgoEstatico]:
             herramienta="ruff", regla=regla, tipo="calidad",
             linea=linea, columna=columna, severidad="baja",
             titulo=f"Ruff {regla}", descripcion=mensaje or "Observación de calidad Python.",
-            referencia=f"https://docs.astral.sh/ruff/rules/{_texto(item.get('url'))}/" if False else None,
+            referencia=None,
         ))
     return encontrados
 
