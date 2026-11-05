@@ -40,7 +40,7 @@ def simular_ambos(monkeypatch):
 
 def test_ruta_de_repositorio_interna_aceptada(monkeypatch):
     simular_ambos(monkeypatch)
-    reporte = mod.analizar_estatico("import os\\nx = eval(input())\\n".replace("\\\\n", "\\n"), "src/main.py")
+    reporte = mod.analizar_estatico("import os\nx = eval(input())\n", "src/main.py")
     assert reporte.archivo == "src/main.py"
     assert reporte.estado == "completo"
 
