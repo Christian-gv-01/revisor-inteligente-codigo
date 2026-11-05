@@ -1,0 +1,163 @@
+{
+  "archivo": "demo_sql.py",
+  "modo": "gemini_real",
+  "pasos": [
+    {
+      "numero": 1,
+      "herramienta": "inspeccionar_estructura",
+      "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+      "resultado": {
+        "sintaxis_valida": true,
+        "total_lineas": 6,
+        "funciones": 0,
+        "clases": 0,
+        "importaciones": 1,
+        "evidencia_ruff_bandit": {
+          "estado": "completo",
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "total_hallazgos": 1,
+          "reglas": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 5,
+              "severidad": "media"
+            }
+          ]
+        }
+      },
+      "origen": "automatico"
+    },
+    {
+      "numero": 2,
+      "herramienta": "revisar_consultas_sql",
+      "motivo": "Analizar la consulta SQL en busca de vulnerabilidades de inyección",
+      "resultado": {
+        "sintaxis_valida": true,
+        "indicadores": [
+          {
+            "linea": 5,
+            "patron": "SQL dinamico (concatenacion)"
+          }
+        ]
+      },
+      "origen": "gemini"
+    },
+    {
+      "numero": 3,
+      "herramienta": "detectar_llamadas_sensibles",
+      "motivo": "Detectar posibles llamadas a funciones sensibles en el codigo",
+      "resultado": {
+        "sintaxis_valida": true,
+        "indicadores": []
+      },
+      "origen": "gemini"
+    }
+  ],
+  "max_pasos": 3,
+  "informe": {
+    "archivo": "demo_sql.py",
+    "estado": "analizado",
+    "hallazgos": [
+      {
+        "linea": 5,
+        "severidad": "alta",
+        "categoria": "Inyeccion SQL",
+        "titulo": "Consulta SQL construida mediante concatenacion de cadenas",
+        "explicacion": "Insertar texto provisto por el usuario directamente en la instruccion SQL mediante concatenacion permite modificar la estructura de la consulta y comprometer la base de datos.",
+        "correccion_sugerida": "Utiliza consultas parametrizadas separando los datos de la estructura, por ejemplo: cursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))",
+        "referencias": [
+          "seguridad_python-002",
+          "seguridad_python-004"
+        ]
+      }
+    ],
+    "fuentes": [
+      {
+        "id": "seguridad_python-002",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 2: Prevenir inyeccion SQL",
+        "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.1560038924217224
+      },
+      {
+        "id": "seguridad_python-004",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 4: Prevencion general de inyecciones",
+        "fuente": "OWASP Injection Prevention Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.552624523639679
+      },
+      {
+        "id": "seguridad_python-001",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 1: Evitar eval con entradas no confiables",
+        "fuente": "MITRE CWE-94",
+        "url": "https://cwe.mitre.org/data/definitions/94.html",
+        "distancia": 0.7142115831375122
+      }
+    ],
+    "mensaje": null
+  },
+  "decisiones": [
+    {
+      "numero": 1,
+      "herramienta": "revisar_consultas_sql",
+      "motivo": "Analizar la consulta SQL en busca de vulnerabilidades de inyección",
+      "estado": "ejecutada"
+    },
+    {
+      "numero": 2,
+      "herramienta": "detectar_llamadas_sensibles",
+      "motivo": "Detectar posibles llamadas a funciones sensibles en el codigo",
+      "estado": "ejecutada"
+    }
+  ],
+  "fase_error": null,
+  "analisis_estatico": {
+    "archivo": "demo_sql.py",
+    "estado": "completo",
+    "hallazgos": [
+      {
+        "herramienta": "bandit",
+        "regla": "B608",
+        "tipo": "seguridad",
+        "linea": 5,
+        "columna": null,
+        "severidad": "media",
+        "titulo": "Bandit B608: hardcoded_sql_expressions",
+        "descripcion": "Possible SQL injection vector through string-based query construction.",
+        "confianza": "media",
+        "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+      }
+    ],
+    "herramientas": [
+      {
+        "herramienta": "ruff",
+        "estado": "ok",
+        "hallazgos": 0
+      },
+      {
+        "herramienta": "bandit",
+        "estado": "ok",
+        "hallazgos": 1
+      }
+    ],
+    "mensaje": null
+  },
+  "requiere_confirmacion_humana": false,
+  "politica": "Solo lectura; sin ejecución de código ni cambios de archivos"
+}
