@@ -1,0 +1,47 @@
+{
+  "proveedor_ia": "simulado",
+  "respuesta": {
+    "archivo": "caso_01.py",
+    "estado": "analizado",
+    "hallazgos": [
+      {
+        "linea": 2,
+        "severidad": "alta",
+        "categoria": "Inyección SQL",
+        "titulo": "Consulta SQL de la prueba de integración",
+        "explicacion": "Respuesta controlada del proveedor simulado para probar el contrato.",
+        "correccion_sugerida": "cursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))",
+        "referencias": [
+          "seguridad_python-002"
+        ]
+      }
+    ],
+    "fuentes": [
+      {
+        "id": "seguridad_python-002",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 2: Prevenir inyeccion SQL",
+        "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.1560038924217224
+      },
+      {
+        "id": "seguridad_python-004",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 4: Prevencion general de inyecciones",
+        "fuente": "OWASP Injection Prevention Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.552624523639679
+      },
+      {
+        "id": "seguridad_python-001",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 1: Evitar eval con entradas no confiables",
+        "fuente": "MITRE CWE-94",
+        "url": "https://cwe.mitre.org/data/definitions/94.html",
+        "distancia": 0.7142115831375122
+      }
+    ],
+    "mensaje": null
+  }
+}
