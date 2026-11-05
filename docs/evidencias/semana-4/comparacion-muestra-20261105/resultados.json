@@ -1,0 +1,500 @@
+{
+  "fecha": "2026-11-05",
+  "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "archivo": "muestra_vulnerable.py",
+  "revision_git_observada": "c2b9b06a10735cd21b0b623679f521e8b8a5ab60",
+  "sha_despliegue_anunciado_por_health": false,
+  "alcance": "Una solicitud por flujo, mismo contenido. No demuestra precision general ni superioridad del agente. Se omite codigo fuente y texto de alertas estaticas; se conservan reglas, lineas y estados.",
+  "ubicaciones_esperadas_revisadas": {
+    "construccion_sql": 16,
+    "ejecucion_sql": 17,
+    "subprocess_shell": 21,
+    "eval": 25,
+    "pickle_loads": 29,
+    "md5": 33,
+    "requests_sin_tls_y_timeout": 37,
+    "except_pass": 43,
+    "lista_mutable": 47
+  },
+  "resultados": {
+    "normal": {
+      "fecha_inicio_utc": "2026-11-05T23:25:09.995211+00:00",
+      "ruta": "/api/v1/analizar",
+      "http": 200,
+      "duracion_ms": 12970,
+      "codigo_sha256": "9a363f3fb3afec5b02b2fa45b508c18d92dc069e89d80a12896f04c71eb74090",
+      "modo": null,
+      "fase_error": null,
+      "estado": "analizado",
+      "fuentes_ids": [
+        "seguridad_python-002",
+        "seguridad_python-001",
+        "seguridad_python-004"
+      ],
+      "hallazgos_contextuales": [
+        {
+          "linea": 16,
+          "severidad": "alta",
+          "categoria": "Inyeccion SQL",
+          "titulo": "Construccion insegura de consulta SQL mediante concatenacion",
+          "explicacion": "La funcion buscar_usuario construye la consulta SQL concatenando directamente el parametro nombre sin parametrizacion previa, permitiendo potencialmente ataques de inyeccion SQL.",
+          "correccion_sugerida": "Utilizar consultas parametrizadas o sentencias preparadas provistas por el controlador de base de datos.",
+          "referencias": [
+            "seguridad_python-002"
+          ]
+        },
+        {
+          "linea": 24,
+          "severidad": "critica",
+          "categoria": "Ejecucion de codigo arbitrario",
+          "titulo": "Uso inseguro de la funcion eval",
+          "explicacion": "La funcion calcular utiliza eval con datos de entrada que podrian ser controlados por usuarios externos, lo que permite la ejecucion de codigo arbitrario.",
+          "correccion_sugerida": "Evitar el uso de eval. Si se requiere evaluar expresiones matematicas seguras, utilizar librerias dedicadas o alternativas que no ejecuten codigo arbitrario.",
+          "referencias": [
+            "seguridad_python-001"
+          ]
+        }
+      ],
+      "estatico": {
+        "estado": "completo",
+        "herramientas": [
+          {
+            "herramienta": "ruff",
+            "estado": "ok",
+            "hallazgos": 4
+          },
+          {
+            "herramienta": "bandit",
+            "estado": "ok",
+            "hallazgos": 11
+          }
+        ],
+        "observaciones": [
+          {
+            "regla": "E401",
+            "linea": 6,
+            "herramienta": "ruff",
+            "severidad": "baja"
+          },
+          {
+            "regla": "F401",
+            "linea": 6,
+            "herramienta": "ruff",
+            "severidad": "baja"
+          },
+          {
+            "regla": "F401",
+            "linea": 6,
+            "herramienta": "ruff",
+            "severidad": "baja"
+          },
+          {
+            "regla": "B403",
+            "linea": 7,
+            "herramienta": "bandit",
+            "severidad": "baja"
+          },
+          {
+            "regla": "B404",
+            "linea": 8,
+            "herramienta": "bandit",
+            "severidad": "baja"
+          },
+          {
+            "regla": "B105",
+            "linea": 12,
+            "herramienta": "bandit",
+            "severidad": "baja"
+          },
+          {
+            "regla": "B608",
+            "linea": 16,
+            "herramienta": "bandit",
+            "severidad": "media"
+          },
+          {
+            "regla": "B602",
+            "linea": 21,
+            "herramienta": "bandit",
+            "severidad": "alta"
+          },
+          {
+            "regla": "B307",
+            "linea": 25,
+            "herramienta": "bandit",
+            "severidad": "media"
+          },
+          {
+            "regla": "B301",
+            "linea": 29,
+            "herramienta": "bandit",
+            "severidad": "media"
+          },
+          {
+            "regla": "B324",
+            "linea": 33,
+            "herramienta": "bandit",
+            "severidad": "alta"
+          },
+          {
+            "regla": "B113",
+            "linea": 37,
+            "herramienta": "bandit",
+            "severidad": "media"
+          },
+          {
+            "regla": "B501",
+            "linea": 37,
+            "herramienta": "bandit",
+            "severidad": "alta"
+          },
+          {
+            "regla": "B110",
+            "linea": 43,
+            "herramienta": "bandit",
+            "severidad": "baja"
+          },
+          {
+            "regla": "E722",
+            "linea": 43,
+            "herramienta": "ruff",
+            "severidad": "baja"
+          }
+        ]
+      },
+      "decisiones": []
+    },
+    "agente": {
+      "fecha_inicio_utc": "2026-11-05T23:25:22.965951+00:00",
+      "ruta": "/api/v1/agente/analizar",
+      "http": 200,
+      "duracion_ms": 16375,
+      "codigo_sha256": "9a363f3fb3afec5b02b2fa45b508c18d92dc069e89d80a12896f04c71eb74090",
+      "modo": "gemini_real",
+      "fase_error": null,
+      "estado": "analizado",
+      "fuentes_ids": [
+        "seguridad_python-002",
+        "seguridad_python-001",
+        "seguridad_python-004"
+      ],
+      "hallazgos_contextuales": [
+        {
+          "linea": 16,
+          "severidad": "alta",
+          "categoria": "Inyeccion SQL",
+          "titulo": "Construccion insegura de consulta SQL mediante concatenacion",
+          "explicacion": "La funcion buscar_usuario concatena directamente el parametro nombre en la instruccion SQL, lo que permite ataques de inyeccion SQL si el usuario ingresa datos maliciosos.",
+          "correccion_sugerida": "Utilizar consultas parametrizadas o sentencias preparadas para separar la estructura de la consulta de los valores proporcionados por el usuario.",
+          "referencias": [
+            "seguridad_python-002"
+          ]
+        },
+        {
+          "linea": 27,
+          "severidad": "critica",
+          "categoria": "Ejecucion de codigo arbitrario",
+          "titulo": "Uso inseguro de la funcion eval",
+          "explicacion": "La funcion calcular utiliza eval con datos de entrada que podrian ser controlados externamente, permitiendo la ejecucion de codigo arbitrario en el sistema.",
+          "correccion_sugerida": "Evitar el uso de eval con entradas no confiables. Si es necesario evaluar expresiones seguras, utilizar alternativas como ast.literal_eval o implementar un parser dedicado.",
+          "referencias": [
+            "seguridad_python-001"
+          ]
+        }
+      ],
+      "estatico": {
+        "estado": "completo",
+        "herramientas": [
+          {
+            "herramienta": "ruff",
+            "estado": "ok",
+            "hallazgos": 4
+          },
+          {
+            "herramienta": "bandit",
+            "estado": "ok",
+            "hallazgos": 11
+          }
+        ],
+        "observaciones": [
+          {
+            "regla": "E401",
+            "linea": 6,
+            "herramienta": "ruff",
+            "severidad": "baja"
+          },
+          {
+            "regla": "F401",
+            "linea": 6,
+            "herramienta": "ruff",
+            "severidad": "baja"
+          },
+          {
+            "regla": "F401",
+            "linea": 6,
+            "herramienta": "ruff",
+            "severidad": "baja"
+          },
+          {
+            "regla": "B403",
+            "linea": 7,
+            "herramienta": "bandit",
+            "severidad": "baja"
+          },
+          {
+            "regla": "B404",
+            "linea": 8,
+            "herramienta": "bandit",
+            "severidad": "baja"
+          },
+          {
+            "regla": "B105",
+            "linea": 12,
+            "herramienta": "bandit",
+            "severidad": "baja"
+          },
+          {
+            "regla": "B608",
+            "linea": 16,
+            "herramienta": "bandit",
+            "severidad": "media"
+          },
+          {
+            "regla": "B602",
+            "linea": 21,
+            "herramienta": "bandit",
+            "severidad": "alta"
+          },
+          {
+            "regla": "B307",
+            "linea": 25,
+            "herramienta": "bandit",
+            "severidad": "media"
+          },
+          {
+            "regla": "B301",
+            "linea": 29,
+            "herramienta": "bandit",
+            "severidad": "media"
+          },
+          {
+            "regla": "B324",
+            "linea": 33,
+            "herramienta": "bandit",
+            "severidad": "alta"
+          },
+          {
+            "regla": "B113",
+            "linea": 37,
+            "herramienta": "bandit",
+            "severidad": "media"
+          },
+          {
+            "regla": "B501",
+            "linea": 37,
+            "herramienta": "bandit",
+            "severidad": "alta"
+          },
+          {
+            "regla": "B110",
+            "linea": 43,
+            "herramienta": "bandit",
+            "severidad": "baja"
+          },
+          {
+            "regla": "E722",
+            "linea": 43,
+            "herramienta": "ruff",
+            "severidad": "baja"
+          }
+        ]
+      },
+      "decisiones": [
+        {
+          "numero": 1,
+          "herramienta": "revisar_consultas_sql",
+          "motivo": "Revisar la consulta SQL insegura detectada en el código.",
+          "estado": "ejecutada"
+        },
+        {
+          "numero": 2,
+          "herramienta": "detectar_llamadas_sensibles",
+          "motivo": "Detectar llamadas a funciones potencialmente peligrosas o sensibles en el codigo.",
+          "estado": "ejecutada"
+        }
+      ],
+      "pasos": [
+        {
+          "numero": 1,
+          "herramienta": "inspeccionar_estructura",
+          "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+          "resultado": {
+            "sintaxis_valida": true,
+            "total_lineas": 49,
+            "funciones": 8,
+            "clases": 0,
+            "importaciones": 5,
+            "evidencia_ruff_bandit": {
+              "estado": "completo",
+              "herramientas": [
+                {
+                  "herramienta": "ruff",
+                  "estado": "ok",
+                  "hallazgos": 4
+                },
+                {
+                  "herramienta": "bandit",
+                  "estado": "ok",
+                  "hallazgos": 11
+                }
+              ],
+              "total_hallazgos": 15,
+              "reglas": [
+                {
+                  "herramienta": "ruff",
+                  "regla": "E401",
+                  "tipo": "calidad",
+                  "linea": 6,
+                  "severidad": "baja"
+                },
+                {
+                  "herramienta": "ruff",
+                  "regla": "F401",
+                  "tipo": "calidad",
+                  "linea": 6,
+                  "severidad": "baja"
+                },
+                {
+                  "herramienta": "ruff",
+                  "regla": "F401",
+                  "tipo": "calidad",
+                  "linea": 6,
+                  "severidad": "baja"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B403",
+                  "tipo": "seguridad",
+                  "linea": 7,
+                  "severidad": "baja"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B404",
+                  "tipo": "seguridad",
+                  "linea": 8,
+                  "severidad": "baja"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B105",
+                  "tipo": "seguridad",
+                  "linea": 12,
+                  "severidad": "baja"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B608",
+                  "tipo": "seguridad",
+                  "linea": 16,
+                  "severidad": "media"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B602",
+                  "tipo": "seguridad",
+                  "linea": 21,
+                  "severidad": "alta"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B307",
+                  "tipo": "seguridad",
+                  "linea": 25,
+                  "severidad": "media"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B301",
+                  "tipo": "seguridad",
+                  "linea": 29,
+                  "severidad": "media"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B324",
+                  "tipo": "seguridad",
+                  "linea": 33,
+                  "severidad": "alta"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B113",
+                  "tipo": "seguridad",
+                  "linea": 37,
+                  "severidad": "media"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B501",
+                  "tipo": "seguridad",
+                  "linea": 37,
+                  "severidad": "alta"
+                },
+                {
+                  "herramienta": "bandit",
+                  "regla": "B110",
+                  "tipo": "seguridad",
+                  "linea": 43,
+                  "severidad": "baja"
+                },
+                {
+                  "herramienta": "ruff",
+                  "regla": "E722",
+                  "tipo": "calidad",
+                  "linea": 43,
+                  "severidad": "baja"
+                }
+              ]
+            }
+          },
+          "origen": "automatico"
+        },
+        {
+          "numero": 2,
+          "herramienta": "revisar_consultas_sql",
+          "motivo": "Revisar la consulta SQL insegura detectada en el código.",
+          "resultado": {
+            "sintaxis_valida": true,
+            "indicadores": [
+              {
+                "linea": 17,
+                "patron": "SQL dinamico (variable)"
+              }
+            ]
+          },
+          "origen": "gemini"
+        },
+        {
+          "numero": 3,
+          "herramienta": "detectar_llamadas_sensibles",
+          "motivo": "Detectar llamadas a funciones potencialmente peligrosas o sensibles en el codigo.",
+          "resultado": {
+            "sintaxis_valida": true,
+            "indicadores": [
+              {
+                "linea": 21,
+                "llamada": "subprocess.call"
+              },
+              {
+                "linea": 25,
+                "llamada": "eval"
+              }
+            ]
+          },
+          "origen": "gemini"
+        }
+      ]
+    }
+  }
+}
