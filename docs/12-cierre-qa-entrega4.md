@@ -49,7 +49,7 @@ El comparador mantiene deliberadamente `persistencia_volumen_verificada: false`:
 ### Pendientes que permanecen abiertos
 
 - **QA-H02:** confirmar de forma trazable el carácter sintético o la revocación de la credencial histórica, sin publicar su valor. La referencia a una revocación comunicada y una exclusión del detector no equivalen a comprobación independiente.
-- **QA-H03:** el motor limita el tamaño de salida después de capturar stdout/stderr; falta acotar memoria durante la captura o aceptar expresamente la limitación con controles de despliegue.
+- **QA-H03:** corregido en esta propuesta mediante captura incremental de stdout/stderr con presupuesto combinado de 1.000.000 bytes, terminación al excederlo y timeout. Las pruebas nuevas usan procesos controlados y herramientas reales; la corrección requiere integración y validación del despliegue. No equivale a cuotas de memoria del analizador o del contenedor. La descripción posterior del hallazgo se conserva como histórica.
 - Advertencia de tamaño del paquete frontend y errores 503 reales del proveedor.
 - Mantener trazabilidad del SHA de despliegue y distinguir recuperación operacional del índice de verificación completa del volumen.
 
