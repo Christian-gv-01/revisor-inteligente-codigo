@@ -4,12 +4,15 @@ CODEGUARD analiza código Python como texto para identificar riesgos de segurida
 
 ## Estado de la Entrega 4
 
-- Rama QA: `feature/entrega-4-qa-seguridad-documentacion`.
-- URL pública: https://revisor-inteligente-codigo-production.up.railway.app . Salud y OpenAPI accesibles; la revisión desplegada exacta debe confirmarla el responsable de Railway.
-- Ruff/Bandit: integrados en esta rama QA desde `a394d65`; el OpenAPI público consultado todavía no anuncia su endpoint.
-- Contenedor: preparado para servir frontend y API desde un mismo origen.
-- Persistencia: ChromaDB utiliza un volumen externo configurable.
-- Pruebas públicas: `scripts/pruebas_produccion.py` incluye 26 escenarios seguros.
+Actualización del 5 de noviembre de 2026:
+- Integración fusionada a `main` mediante [PR #25](https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/25), commit `d80e75c`; evidencias posteriores publicadas hasta `219069a`.
+- Backend, frontend e integración HTTP de la candidata aprobados en GitHub Actions. En Windows se registraron 223 pruebas backend y 71 frontend aprobadas, más 15/15 HTTP con Ruff/Bandit y 10/10 aplicables sin estático.
+- URL pública: https://revisor-inteligente-codigo-production.up.railway.app . Salud y OpenAPI responden; el endpoint estático ya figura en el esquema público.
+- [Matriz pública posterior a la fusión](docs/evidencias/semana-4/pruebas-publicas-post-merge-20261105.json): **26/26 aprobadas**, incluidos P05/P07 de sanitización 422.
+- Agente Gemini real: evidencia local de una ejecución completa y otra degradada por 503, con traza conservada. Son casos distintos y no demuestran disponibilidad general.
+- Análisis públicos antes/después de un reinicio: un hallazgo y las mismas tres fuentes, con `continuidad_citas: true`; el log registra recuperación del índice persistente. La comparación HTTP por sí sola no certifica la integridad de todo el volumen.
+- Pendientes: cierre trazable de la credencial histórica QA-H02 y captura acotada de salida de subprocesos QA-H03. Persisten los 503 observados y la advertencia de tamaño del paquete frontend.
+- Estado, enlaces de CI, evidencias y límites en [Cierre técnico de QA](docs/12-cierre-qa-entrega4.md).
 
 ## Funcionalidades
 
@@ -100,7 +103,7 @@ La guía de hosting y volumen está en [docs/despliegue.md](docs/despliegue.md).
 | `POST` | `/api/v1/repositorios/github` | Repositorio público. |
 | `POST` | `/api/v1/agente/previsualizar` | Herramientas AST sin IA. |
 | `POST` | `/api/v1/agente/analizar` | Agente supervisado y análisis RAG. |
-| `POST` | `/api/v1/estatico/analizar` | Ruff/Bandit autónomos, sin Gemini; pendiente en la URL consultada. |
+| `POST` | `/api/v1/estatico/analizar` | Ruff/Bandit autónomos, sin Gemini; publicado en OpenAPI. |
 
 ## Pruebas
 
@@ -159,7 +162,7 @@ La matriz completa está en [docs/08-pruebas.md](docs/08-pruebas.md).
 - `/health` no demuestra por sí solo que Gemini y RAG funcionen.
 - Las herramientas AST son heurísticas y pueden producir falsos positivos o negativos.
 - Las pruebas con mocks validan contratos, no la calidad real de Gemini.
-- La URL, el reinicio en la plataforma y las capturas públicas deben obtenerse después del despliegue real.
+- Las evidencias públicas y del reinicio están versionadas para las ejecuciones documentadas; no certifican disponibilidad futura ni la integridad completa del volumen.
 
 ## Documentación
 
