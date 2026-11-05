@@ -1,133 +1,175 @@
-# Revisor Inteligente de Código Seguro
+# CODEGUARD — Revisor Inteligente de Código Seguro
 
-## 1. Descripción del proyecto
+CODEGUARD analiza código Python como texto para identificar riesgos de seguridad sin ejecutarlo. Combina una API FastAPI, una interfaz React, Gemini y recuperación documental con ChromaDB. Los hallazgos deben incluir citas recuperadas; si no existe evidencia suficiente, el sistema se abstiene.
 
- Caso 10. El objetivo es desarrollar un sistema que ayude a identificar posibles vulnerabilidades en código Python mediante análisis automatizado e inteligencia artificial.
+## Estado de la Entrega 4
 
-El proyecto se encuentra en desarrollo y sus funcionalidades se integrarán progresivamente mediante ramas de trabajo independientes.
+- Rama QA: `feature/entrega-4-qa-seguridad-documentacion`.
+- URL pública: https://revisor-inteligente-codigo-production.up.railway.app . Salud y OpenAPI accesibles; la revisión desplegada exacta debe confirmarla el responsable de Railway.
+- Ruff/Bandit: integrados en esta rama QA desde `a394d65`; el OpenAPI público consultado todavía no anuncia su endpoint.
+- Contenedor: preparado para servir frontend y API desde un mismo origen.
+- Persistencia: ChromaDB utiliza un volumen externo configurable.
+- Pruebas públicas: `scripts/pruebas_produccion.py` incluye 26 escenarios seguros.
 
-## 2. Objetivos
+## Funcionalidades
 
-- Identificar posibles problemas de seguridad en código Python.
-- Validar las entradas recibidas por el sistema.
-- Evitar la ejecución del código analizado.
-- Proteger credenciales y datos sensibles.
-- Proporcionar resultados estructurados.
-- Verificar el funcionamiento mediante pruebas automatizadas.
+- Análisis de código pegado y archivos `.py`.
+- Análisis de hasta cinco archivos Python dentro de un ZIP validado.
+- Descarga limitada de repositorios públicos de GitHub.
+- RAG con fuentes, citas y abstención verificable.
+- Agent Lab con herramientas AST de solo lectura.
+- Interfaz React con hallazgos, trazabilidad documental y exportación.
 
-## 3. Tecnologías
-
-- Python.
-- FastAPI para el backend.
-- Pytest para las pruebas automatizadas.
-- Google Gemini como proveedor de análisis asistido por inteligencia artificial, integrado mediante el servicio del backend. Las pruebas automatizadas utilizan mocks para evitar llamadas reales a la API.
-- Git y GitHub para el control de versiones y la colaboración.
-
-## 4. Estructura del proyecto
+## Arquitectura
 
 ```text
-revisor-inteligente-codigo/
-├── backend/
-│   ├── app/
-│   │   └── main.py
-│   └── tests/
-│       └── test_health.py
-├── docs/
-│   ├── evidencias/
-│   │   └── semana-2/
-│   │       └── bitacora.md
-│   ├── 03-arquitectura.md
-│   ├── 09-decisiones.md
-│   └── revision-seguridad.md
-├── frontend/
-├── .gitignore
-└── README.md
+Navegador ──HTTPS──> FastAPI
+                      ├── React compilado (/)
+                      ├── API (/api/v1/*)
+                      ├── Agent Lab (/agente/demo)
+                      ├── Gemini
+                      └── ChromaDB (/data/chroma en producción)
 ```
 
-## 5. Preparación del entorno
+El backend nunca importa ni ejecuta el código recibido. Las claves permanecen en el servidor y no deben utilizar variables `VITE_*`.
 
-Desde la raíz del repositorio, abre PowerShell y ejecuta:
+## Requisitos
+
+- Python 3.13 para reproducir la imagen de producción.
+- Node.js 22 para compilar el frontend.
+- Docker Desktop para la ejecución integrada.
+- Una clave válida de Gemini solamente para análisis reales.
+
+## Configuración
+
+Copiar `.env.example` como `.env` y completar únicamente los valores locales. `.env` está ignorado por Git y por Docker.
+
+| Variable | Obligatoria | Uso |
+|---|---:|---|
+| `GEMINI_API_KEY` | Sí, para análisis real | Secreto del proveedor; nunca se publica. |
+| `GEMINI_MODEL` | Recomendada | Modelo disponible en la cuenta. |
+| `LLM_TIMEOUT_SECONDS` | No | Tiempo máximo de Gemini. |
+| `LLM_MAX_OUTPUT_TOKENS` | No | Límite de respuesta. |
+| `CHROMA_PATH` | Producción | Ruta del índice persistente; `/data/chroma` en Docker. |
+| `RAG_MAX_DISTANCE` | No | Umbral de recuperación documental. |
+| `PORT` | Plataforma | Puerto asignado al contenedor. |
+| `SERVE_FRONTEND` | Docker | Sirve `frontend/dist` desde FastAPI. |
+| `STATIC_ANALYSIS_ENABLED` | No | Agrega resultados Ruff/Bandit separados de RAG. |
+| `RATE_LIMIT_ENABLED` | Producción | Presupuesto de peticiones por proceso. |
+| `CONCURRENCY_LIMIT_ENABLED` | Producción | Máximo de dos solicitudes costosas activas. |
+| `TRUST_RAILWAY_REAL_IP` | No | Activar solo con ingreso exclusivo por proxy confiable. |
+
+## Ejecución local sin Docker
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install fastapi uvicorn pytest httpx
-```
-
-Si ya tienes el entorno virtual configurado, no necesitas crearlo nuevamente.
-
-## 6. Iniciar el backend
-
-Desde la raíz del repositorio:
-
-```powershell
+python -m pip install -r backend\requirements.txt
+cd frontend
+npm ci
+npm run build
+cd ..
+python scripts\ingest.py
 cd backend
 python -m uvicorn app.main:app --reload
 ```
 
-Direcciones locales:
+La API queda en `http://127.0.0.1:8000`; en desarrollo, el frontend también puede iniciarse con `npm run dev`.
 
-- Endpoint de salud: `http://127.0.0.1:8000/health`
-- Documentación de FastAPI: `http://127.0.0.1:8000/docs`
-
-El endpoint `/health` comprueba el estado básico de la API.
-
-## 7. Ejecutar las pruebas
-
-Desde la carpeta `backend`:
+## Ejecución integrada con Docker
 
 ```powershell
-python -m pytest tests -v
+docker compose config --quiet
+docker compose up --build -d
+docker compose ps
+docker compose logs --tail 80 codeguard
 ```
 
-Los resultados deben registrarse como evidencias reales. Hasta el momento se ha comprobado una prueba inicial del endpoint de salud.
+Abrir `http://127.0.0.1:8080`. El volumen `codeguard-data` conserva ChromaDB. Para detener sin borrar datos: `docker compose down`. No utilizar `docker compose down -v` durante la prueba de persistencia.
 
-## 8. Variables de entorno y credenciales
+La guía de hosting y volumen está en [docs/despliegue.md](docs/despliegue.md).
 
-La integración con el proveedor de inteligencia artificial contempla estas variables:
+## Endpoints
 
-- `GEMINI_API_KEY`
-- `GEMINI_MODEL`
-- `LLM_TIMEOUT_SECONDS`
-- `LLM_MAX_OUTPUT_TOKENS`
+| Método | Ruta | Propósito |
+|---|---|---|
+| `GET` | `/health` | Disponibilidad básica. |
+| `POST` | `/api/v1/analizar` | Código JSON. |
+| `POST` | `/api/v1/archivos` | Archivo `.py`. |
+| `POST` | `/api/v1/archivos/zip` | Proyecto ZIP. |
+| `POST` | `/api/v1/repositorios/github` | Repositorio público. |
+| `POST` | `/api/v1/agente/previsualizar` | Herramientas AST sin IA. |
+| `POST` | `/api/v1/agente/analizar` | Agente supervisado y análisis RAG. |
+| `POST` | `/api/v1/estatico/analizar` | Ruff/Bandit autónomos, sin Gemini; pendiente en la URL consultada. |
 
-La configuración definitiva debe confirmarse con el equipo de backend.
+## Pruebas
 
-No deben subirse claves reales al repositorio. Los archivos `.env` deben permanecer excluidos del control de versiones y `.env.example` debe contener únicamente valores de ejemplo.
+Backend, desde `backend/`:
 
-## 9. Controles de seguridad
+```powershell
+python -m pytest tests -q
+```
 
-Se deben verificar los siguientes aspectos:
+Frontend:
 
-- Validación del código y las entradas recibidas.
-- Restricciones de tipos y tamaños de archivos.
-- Protección frente a archivos ZIP maliciosos y rutas inseguras.
-- Restricción de acceso a repositorios autorizados.
-- Prohibición de ejecutar o importar código recibido.
-- Límites de tiempo y recursos.
-- Protección de logs y mensajes de error.
-- Tratamiento del código analizado como contenido no confiable, incluidas las instrucciones maliciosas dirigidas a la IA.
+```powershell
+cd frontend
+npm test
+npm run lint
+npm run build
+```
 
-Los controles solo se considerarán aprobados cuando exista evidencia de su implementación y de las pruebas correspondientes.
+Escenarios contra una instancia desplegada:
 
-## 10. Limitaciones actuales
+```powershell
+python scripts\pruebas_produccion.py `
+  --base-url https://URL-PUBLICA `
+  --output docs\evidencias\semana-4\pruebas-publicas.json
+```
 
-La versión inicial dispone de una API básica y un endpoint de salud. Las funcionalidades de análisis de código, el tratamiento de errores del proveedor de IA, las validaciones avanzadas y la interfaz deben verificarse a medida que se integren los componentes del equipo.
+Persistencia de citas:
 
-## 11. Documentación y evidencias
+```powershell
+python scripts\verificar_persistencia_citas.py capturar --base-url https://URL-PUBLICA --baseline docs\evidencias\semana-4\persistencia-antes.json
+# Reiniciar o volver a desplegar conservando el volumen.
+python scripts\verificar_persistencia_citas.py verificar --base-url https://URL-PUBLICA --baseline docs\evidencias\semana-4\persistencia-antes.json --output docs\evidencias\semana-4\persistencia-despues.json
+```
 
-La carpeta `docs/` contiene la documentación de arquitectura, las decisiones arquitectónicas, la revisión de seguridad y las evidencias de QA.
+Auditoría de secretos:
 
-Se deben registrar los resultados de las pruebas, los problemas encontrados, las soluciones aplicadas y las capturas pertinentes sin inventar resultados.
+```powershell
+python scripts\auditar_secretos.py --output docs\evidencias\semana-4\auditoria-secretos.json
+```
 
-## 12. Organización del equipo
+La matriz completa está en [docs/08-pruebas.md](docs/08-pruebas.md).
 
-El proyecto se divide en áreas de trabajo:
+## Controles de seguridad
 
-- Backend e integración de inteligencia artificial.
-- Frontend e interfaz de usuario.
-- QA, seguridad y documentación técnica.
+- Límites de tamaño y cantidad para código, `.py`, ZIP y GitHub.
+- Rechazo de traversal, enlaces especiales, ZIP cifrados, bytes nulos y texto no UTF-8.
+- Dominio fijo `github.com` y llamadas solamente a `api.github.com`, sin redirecciones.
+- Separación explícita entre instrucciones confiables y código/documentos no confiables.
+- Citas RAG verificadas; referencias inventadas producen abstención.
+- Errores controlados para 429, 503, timeouts y respuestas inválidas.
+- Errores 422 sanitizados para no reflejar código o posibles secretos.
 
-Cada integrante debe trabajar en su rama asignada, registrar sus cambios mediante commits y coordinar la integración mediante Pull Requests.
+## Limitaciones
 
-**Entrega prevista:** viernes 23 de octubre de 2026.
+- No hay autenticación ni cuotas de tokens por usuario. Existen límites de peticiones y concurrencia por proceso; varias réplicas requieren coordinación compartida.
+- `/health` no demuestra por sí solo que Gemini y RAG funcionen.
+- Las herramientas AST son heurísticas y pueden producir falsos positivos o negativos.
+- Las pruebas con mocks validan contratos, no la calidad real de Gemini.
+- La URL, el reinicio en la plataforma y las capturas públicas deben obtenerse después del despliegue real.
+
+## Documentación
+
+- [Propuesta](docs/01-propuesta.md)
+- [Requisitos y trazabilidad](docs/02-requisitos.md)
+- [Arquitectura](docs/03-arquitectura.md)
+- [RAG](docs/06-rag.md)
+- [Evaluación](docs/07-evaluacion.md)
+- [Pruebas de Entrega 4](docs/08-pruebas.md)
+- [Cierre QA e integración estática](docs/12-cierre-qa-entrega4.md)
+- [Decisiones](docs/09-decisiones.md)
+- [Aportes y uso de IA](docs/11-aportes-ia.md)
+- [Evidencias de semana 4](docs/evidencias/semana-4/README.md)

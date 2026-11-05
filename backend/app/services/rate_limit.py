@@ -16,9 +16,11 @@ from typing import Callable
 # La unidad representa el coste relativo, NO el número real de tokens de Gemini.
 ENDPOINT_WEIGHTS: dict[str, int] = {
     "/api/v1/analizar": 1,
+    "/api/v1/estatico/analizar": 1,
     "/api/v1/archivos": 1,
     "/api/v1/archivos/zip": 5,
     "/api/v1/repositorios/github": 5,
+    "/api/v1/agente/previsualizar": 1,
     "/api/v1/agente/analizar": 3,
 }
 

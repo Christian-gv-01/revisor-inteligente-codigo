@@ -1,5 +1,11 @@
 # 09. Decisiones arquitectónicas (ADR)
 
+> **Revisión documental — Entrega 4, 4 de noviembre de 2026:** los ADR de este
+> archivo registran decisiones de la revisión 2. La implementación actual añadió
+> RAG con citas y abstención, GitHub público, Agent Lab y despliegue Docker con
+> volumen. Su verificación vigente está en `docs/08-pruebas.md`; las aprobaciones
+> grupales que continúan marcadas como pendientes deben confirmarse por el equipo.
+
 **Proyecto:** Revisor Inteligente de Código Seguro
 
 **Rama de trabajo:** `integration/revision-2`

@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "descripcion": "Casos sintéticos para comparar UNA decisión del planificador con y sin contexto Ruff/Bandit. No son una evaluación de recall de vulnerabilidades.",
+  "casos": [
+    {
+      "id": "eval_entrada",
+      "categoria": "llamada_sensible",
+      "archivo": "ejemplo_eval.py",
+      "codigo": "def interpretar():\n    expresion = input('Expresión: ')\n    return eval(expresion)\n"
+    },
+    {
+      "id": "exec_entrada",
+      "categoria": "llamada_sensible",
+      "archivo": "ejemplo_exec.py",
+      "codigo": "def ejecutar_texto(texto):\n    exec(texto)\n"
+    },
+    {
+      "id": "sql_concatenado",
+      "categoria": "sql_dinamico",
+      "archivo": "ejemplo_sql.py",
+      "codigo": "import sqlite3\nconexion = sqlite3.connect(':memory:')\ncursor = conexion.cursor()\nnombre = input('Nombre: ')\ncursor.execute(\"SELECT * FROM personas WHERE nombre = '\" + nombre + \"'\")\n"
+    },
+    {
+      "id": "comando_shell",
+      "categoria": "llamada_sensible",
+      "archivo": "ejemplo_shell.py",
+      "codigo": "import os\ncomando = input('Comando: ')\nos.system(comando)\n"
+    },
+    {
+      "id": "funcion_limpia",
+      "categoria": "control_limpio",
+      "archivo": "ejemplo_suma.py",
+      "codigo": "def sumar(a: int, b: int) -> int:\n    return a + b\n\nresultado = sumar(2, 3)\nprint(resultado)\n"
+    },
+    {
+      "id": "sql_parametrizado",
+      "categoria": "control_limpio",
+      "archivo": "ejemplo_sql_seguro.py",
+      "codigo": "import sqlite3\nconexion = sqlite3.connect(':memory:')\ncursor = conexion.cursor()\nnombre = input('Nombre: ')\ncursor.execute('SELECT * FROM personas WHERE nombre = ?', (nombre,))\n"
+    }
+  ]
+}

@@ -1,14 +1,12 @@
 ﻿
-from fastapi import FastAPI, HTTPException, File, UploadFile
-from fastapi.exceptions import RequestValidationError
+from fastapi import FastAPI, HTTPException, File, Request, UploadFile
 import os
-
-from fastapi import Request
-from fastapi.responses import JSONResponse
 
 from app.services.rate_limit import ENDPOINT_WEIGHTS, LimitadorPonderado
 from app.services.http_security import ControlConcurrencia, identidad_cliente
 from fastapi.concurrency import run_in_threadpool
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 
 
@@ -25,6 +23,11 @@ from app.services.github_repos import obtener_archivos_python_github
 from app.services.files import leer_python_seguro
 from app.services.llm import analizar_codigo, LLMError
 from app.services.zip_files import leer_zip_seguro
+from app.services.static_analysis import (
+    analizar_estatico,
+    EntradaEstaticaInvalida,
+    ResultadoEstatico,
+)
 
 
 app = FastAPI(
@@ -117,9 +120,33 @@ async def proteger_analisis(request: Request, call_next):
         control_concurrencia.liberar()
 
 
+async def _analisis_estatico_si_habilitado(
+    codigo: str, archivo: str
+) -> ResultadoEstatico | None:
+    if os.getenv("STATIC_ANALYSIS_ENABLED", "0") != "1":
+        return None
+    try:
+        return await run_in_threadpool(analizar_estatico, codigo, archivo)
+    except EntradaEstaticaInvalida:
+        # Los contratos de entrada del backend siguen siendo obligatorios.
+        return None
+
+
+@app.post("/api/v1/estatico/analizar", response_model=ResultadoEstatico)
+async def analizar_solo_estatico(solicitud: SolicitudAnalisis):
+    """Análisis autónomo sin consumo de Gemini ni recuperación RAG."""
+    try:
+        return await run_in_threadpool(
+            analizar_estatico, solicitud.codigo, solicitud.archivo
+        )
+    except EntradaEstaticaInvalida as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+
+
 def construir_respuesta(
     archivo: str,
     informe: InformeModelo,
+    analisis_estatico: ResultadoEstatico | None = None,
 ) -> RespuestaAnalisis:
     """
     Convierte el informe interno en una respuesta de la API.
@@ -134,8 +161,48 @@ def construir_respuesta(
         estado="abstenido" if motivo else "analizado",
         hallazgos=informe.hallazgos,
         fuentes=informe.fuentes,
+        analisis_estatico=analisis_estatico,
         mensaje=motivo,
     )
+
+
+async def analizar_con_respaldo(
+    codigo: str, archivo: str, *, omitir_ia: bool = False
+) -> RespuestaAnalisis:
+    """Analiza primero de forma estática; la IA es opcional si no responde.
+
+    Cuando el proveedor falla no se inventan hallazgos RAG ni citas.
+    Si tampoco queda un analizador estático útil, se conserva el error HTTP.
+    """
+    estatico = await _analisis_estatico_si_habilitado(codigo, archivo)
+    if omitir_ia:
+        if estatico is None or estatico.estado == "no_disponible":
+            raise LLMError("El análisis no está disponible temporalmente.", 503)
+        return RespuestaAnalisis(
+            archivo=archivo,
+            estado="parcial",
+            hallazgos=[],
+            fuentes=[],
+            analisis_estatico=estatico,
+            mensaje="Gemini no disponible temporalmente; se muestran únicamente resultados estáticos.",
+        )
+
+    try:
+        informe = await run_in_threadpool(analizar_codigo, codigo)
+    except LLMError as error:
+        if error.codigo not in (502, 503, 504):
+            raise
+        if estatico is None or estatico.estado == "no_disponible":
+            raise
+        return RespuestaAnalisis(
+            archivo=archivo,
+            estado="parcial",
+            hallazgos=[],
+            fuentes=[],
+            analisis_estatico=estatico,
+            mensaje="Gemini no completó el análisis; solo hay observaciones estáticas. No se realizó una revisión contextual con citas.",
+        )
+    return construir_respuesta(archivo, informe, estatico)
 
 
 @app.get("/health")
@@ -157,15 +224,7 @@ async def analizar(solicitud: SolicitudAnalisis):
     """
 
     try:
-        informe = await run_in_threadpool(
-            analizar_codigo,
-            solicitud.codigo,
-        )
-
-        return construir_respuesta(
-            solicitud.archivo,
-            informe,
-        )
+        return await analizar_con_respaldo(solicitud.codigo, solicitud.archivo)
 
     except LLMError as error:
         raise HTTPException(
@@ -188,15 +247,7 @@ async def analizar_archivo(
     try:
         nombre, codigo = await leer_python_seguro(archivo)
 
-        informe = await run_in_threadpool(
-            analizar_codigo,
-            codigo,
-        )
-
-        return construir_respuesta(
-            nombre,
-            informe,
-        )
+        return await analizar_con_respaldo(codigo, nombre)
 
     except LLMError as error:
         raise HTTPException(
@@ -231,23 +282,21 @@ async def analizar_zip(
             )
 
         informes = []
+        proveedor_no_disponible = False
 
         for nombre, codigo in archivos:
-            informe = await run_in_threadpool(
-                analizar_codigo,
-                codigo,
+            resultado = await analizar_con_respaldo(
+                codigo, nombre, omitir_ia=proveedor_no_disponible
             )
-
-            informes.append(
-                construir_respuesta(
-                    nombre,
-                    informe,
-                )
-            )
+            informes.append(resultado)
+            # Evitar repetir la misma espera de Gemini por cada archivo ZIP
+            # después de comprobar que el proveedor falla en esta petición.
+            if resultado.estado == "parcial":
+                proveedor_no_disponible = True
 
         return RespuestaAnalisisZIP(
             archivo_zip=archivo.filename or "proyecto.zip",
-            estado="analizado",
+            estado="parcial" if proveedor_no_disponible else "analizado",
             total_archivos=len(informes),
             informes=informes,
         )
@@ -286,20 +335,19 @@ async def analizar_repositorio_github(
         )
 
         informes = []
+        proveedor_no_disponible = False
 
         for nombre, codigo in archivos:
-            informe = await run_in_threadpool(
-                analizar_codigo,
-                codigo,
+            resultado = await analizar_con_respaldo(
+                codigo, nombre, omitir_ia=proveedor_no_disponible
             )
-
-            informes.append(
-                construir_respuesta(nombre, informe)
-            )
+            informes.append(resultado)
+            if resultado.estado == "parcial":
+                proveedor_no_disponible = True
 
         return RespuestaAnalisisRepositorio(
             repositorio=solicitud.url,
-            estado="analizado",
+            estado="parcial" if proveedor_no_disponible else "analizado",
             total_archivos=len(informes),
             informes=informes,
         )

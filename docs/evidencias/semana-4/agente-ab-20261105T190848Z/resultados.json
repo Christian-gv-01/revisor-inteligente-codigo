@@ -1,0 +1,227 @@
+{
+  "metadatos": {
+    "fecha_utc": "2026-11-05T19:08:48.118484+00:00",
+    "modelo": "gemini-3.5-flash-lite",
+    "casos": 6,
+    "repeticiones": 1,
+    "diseño": "Pares AB/BA contrabalanceados; primera decisión únicamente.",
+    "codigo_fuente_almacenado": false,
+    "proveedor_simulado": false
+  },
+  "resumen": {
+    "total_solicitudes": 12,
+    "casos_excluidos": [],
+    "pares_completos": 5,
+    "pares_no_comparables": 1,
+    "pares_con_cambio": 0,
+    "tasa_cambio_de_decision": 0.0,
+    "condiciones": {
+      "sin_contexto": {
+        "solicitudes": 6,
+        "exitos": 5,
+        "errores": 1,
+        "tasa_exito": 0.8333,
+        "latencia_media_ms_exitos": 2285.16,
+        "distribucion_decisiones": {
+          "detectar_llamadas_sensibles": 4,
+          "revisar_consultas_sql": 1
+        }
+      },
+      "con_contexto": {
+        "solicitudes": 6,
+        "exitos": 6,
+        "errores": 0,
+        "tasa_exito": 1.0,
+        "latencia_media_ms_exitos": 2727.23,
+        "distribucion_decisiones": {
+          "detectar_llamadas_sensibles": 4,
+          "revisar_consultas_sql": 2
+        }
+      }
+    },
+    "pares": [
+      {
+        "caso_id": "comando_shell",
+        "repeticion": 1,
+        "sin_contexto": "detectar_llamadas_sensibles",
+        "con_contexto": "detectar_llamadas_sensibles",
+        "cambio": false
+      },
+      {
+        "caso_id": "eval_entrada",
+        "repeticion": 1,
+        "sin_contexto": "detectar_llamadas_sensibles",
+        "con_contexto": "detectar_llamadas_sensibles",
+        "cambio": false
+      },
+      {
+        "caso_id": "exec_entrada",
+        "repeticion": 1,
+        "sin_contexto": "detectar_llamadas_sensibles",
+        "con_contexto": "detectar_llamadas_sensibles",
+        "cambio": false
+      },
+      {
+        "caso_id": "funcion_limpia",
+        "repeticion": 1,
+        "sin_contexto": "detectar_llamadas_sensibles",
+        "con_contexto": "detectar_llamadas_sensibles",
+        "cambio": false
+      },
+      {
+        "caso_id": "sql_concatenado",
+        "repeticion": 1,
+        "sin_contexto": "revisar_consultas_sql",
+        "con_contexto": "revisar_consultas_sql",
+        "cambio": false
+      }
+    ],
+    "advertencia": "Un cambio de herramienta NO demuestra mayor precisión ni mejor detección de vulnerabilidades. Se mide una decisión de planificación, sin ejecutar el informe Gemini + RAG. Los errores de proveedor se excluyen de las comparaciones, no son aciertos."
+  },
+  "solicitudes": [
+    {
+      "caso_id": "eval_entrada",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 1,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 1907.11,
+      "sha256_codigo": "519015016078a2fe"
+    },
+    {
+      "caso_id": "eval_entrada",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 2,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 1339.06,
+      "sha256_codigo": "519015016078a2fe"
+    },
+    {
+      "caso_id": "exec_entrada",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 3,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 2898.91,
+      "sha256_codigo": "da96e6cc8c27a6eb"
+    },
+    {
+      "caso_id": "exec_entrada",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 4,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 3537.81,
+      "sha256_codigo": "da96e6cc8c27a6eb"
+    },
+    {
+      "caso_id": "sql_concatenado",
+      "categoria": "sql_dinamico",
+      "repeticion": 1,
+      "orden": 5,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "revisar_consultas_sql",
+      "codigo_error": null,
+      "latencia_ms": 1440.02,
+      "sha256_codigo": "45090ad07a4cfe19"
+    },
+    {
+      "caso_id": "sql_concatenado",
+      "categoria": "sql_dinamico",
+      "repeticion": 1,
+      "orden": 6,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "revisar_consultas_sql",
+      "codigo_error": null,
+      "latencia_ms": 5450.84,
+      "sha256_codigo": "45090ad07a4cfe19"
+    },
+    {
+      "caso_id": "comando_shell",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 7,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 1370.4,
+      "sha256_codigo": "d7e763b1d39a2259"
+    },
+    {
+      "caso_id": "comando_shell",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 8,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 3079.69,
+      "sha256_codigo": "d7e763b1d39a2259"
+    },
+    {
+      "caso_id": "funcion_limpia",
+      "categoria": "control_limpio",
+      "repeticion": 1,
+      "orden": 9,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 1461.17,
+      "sha256_codigo": "6fe59df4f142c8c4"
+    },
+    {
+      "caso_id": "funcion_limpia",
+      "categoria": "control_limpio",
+      "repeticion": 1,
+      "orden": 10,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 1999.18,
+      "sha256_codigo": "6fe59df4f142c8c4"
+    },
+    {
+      "caso_id": "sql_parametrizado",
+      "categoria": "control_limpio",
+      "repeticion": 1,
+      "orden": 11,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "revisar_consultas_sql",
+      "codigo_error": null,
+      "latencia_ms": 3304.97,
+      "sha256_codigo": "a8f298b214bbd3ff"
+    },
+    {
+      "caso_id": "sql_parametrizado",
+      "categoria": "control_limpio",
+      "repeticion": 1,
+      "orden": 12,
+      "condicion": "sin_contexto",
+      "estado": "error_proveedor",
+      "herramienta": null,
+      "codigo_error": 503,
+      "latencia_ms": 2174.71,
+      "sha256_codigo": "a8f298b214bbd3ff"
+    }
+  ]
+}

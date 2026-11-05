@@ -1,0 +1,125 @@
+{
+  "archivo": "demo_eval.py",
+  "modo": "degradado",
+  "pasos": [
+    {
+      "numero": 1,
+      "herramienta": "inspeccionar_estructura",
+      "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+      "resultado": {
+        "sintaxis_valida": true,
+        "total_lineas": 9,
+        "funciones": 0,
+        "clases": 0,
+        "importaciones": 1,
+        "evidencia_ruff_bandit": {
+          "estado": "completo",
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "total_hallazgos": 1,
+          "reglas": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 6,
+              "severidad": "media"
+            }
+          ]
+        }
+      },
+      "origen": "automatico"
+    },
+    {
+      "numero": 2,
+      "herramienta": "revisar_consultas_sql",
+      "motivo": "Revisar la consulta SQL concatenada para detectar vulnerabilidades de inyección SQL",
+      "resultado": {
+        "sintaxis_valida": true,
+        "indicadores": [
+          {
+            "linea": 7,
+            "patron": "SQL dinamico (variable)"
+          }
+        ]
+      },
+      "origen": "gemini"
+    },
+    {
+      "numero": 3,
+      "herramienta": "detectar_llamadas_sensibles",
+      "motivo": "Analizar llamadas sensibles en el código",
+      "resultado": {
+        "sintaxis_valida": true,
+        "indicadores": []
+      },
+      "origen": "gemini"
+    }
+  ],
+  "max_pasos": 3,
+  "informe": {
+    "archivo": "demo_eval.py",
+    "estado": "parcial",
+    "hallazgos": [],
+    "fuentes": [],
+    "mensaje": "La planificación pudo ejecutarse, pero Gemini no completó el informe contextual. Se conservaron las decisiones registradas. No hay dictamen de IA ni referencias RAG. Los indicadores AST no garantizan que el código sea seguro."
+  },
+  "decisiones": [
+    {
+      "numero": 1,
+      "herramienta": "revisar_consultas_sql",
+      "motivo": "Revisar la consulta SQL concatenada para detectar vulnerabilidades de inyección SQL",
+      "estado": "ejecutada"
+    },
+    {
+      "numero": 2,
+      "herramienta": "detectar_llamadas_sensibles",
+      "motivo": "Analizar llamadas sensibles en el código",
+      "estado": "ejecutada"
+    }
+  ],
+  "fase_error": "informe",
+  "analisis_estatico": {
+    "archivo": "demo_eval.py",
+    "estado": "completo",
+    "hallazgos": [
+      {
+        "herramienta": "bandit",
+        "regla": "B608",
+        "tipo": "seguridad",
+        "linea": 6,
+        "columna": null,
+        "severidad": "media",
+        "titulo": "Bandit B608: hardcoded_sql_expressions",
+        "descripcion": "Possible SQL injection vector through string-based query construction.",
+        "confianza": "baja",
+        "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+      }
+    ],
+    "herramientas": [
+      {
+        "herramienta": "ruff",
+        "estado": "ok",
+        "hallazgos": 0
+      },
+      {
+        "herramienta": "bandit",
+        "estado": "ok",
+        "hallazgos": 1
+      }
+    ],
+    "mensaje": null
+  },
+  "requiere_confirmacion_humana": false,
+  "politica": "Solo lectura; sin ejecución de código ni cambios de archivos"
+}

@@ -1,5 +1,12 @@
 # Revisión de seguridad del sistema
 
+> **Actualización — Entrega 4, 4 de noviembre de 2026:** esta revisión conserva
+> hallazgos históricos de la semana 2. El estado actual incorpora controles para
+> repositorios GitHub, prompt injection documental, ZIP ampliado, errores seguros,
+> Docker y persistencia. La matriz ejecutable y los resultados actuales están en
+> `docs/08-pruebas.md` y `docs/evidencias/semana-4/`. Los apartados que describen
+> GitHub o el frontend como no implementados ya no representan el código vigente.
+
 **Proyecto:** Revisor Inteligente de Código Seguro\
 **Responsable:** Área de QA y seguridad\
 **Rama:** `feature/qa-seguridad`\

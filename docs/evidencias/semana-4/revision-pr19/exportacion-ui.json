@@ -1,0 +1,100 @@
+{
+  "modo": "backend",
+  "fecha": "2026-11-05T18:37:03.124Z",
+  "estado": "parcial",
+  "mensaje": "fallo.py: Gemini no completó el análisis; solo hay observaciones estáticas. No se realizó una revisión contextual con citas.\nsegundo.py: Gemini no disponible temporalmente; se muestran únicamente resultados estáticos.",
+  "archivos": [
+    "fallo.py",
+    "segundo.py"
+  ],
+  "fuentes": [],
+  "hallazgos": [],
+  "analisis_estatico": [
+    {
+      "archivo": "fallo.py",
+      "estado": "completo",
+      "hallazgos": [
+        {
+          "herramienta": "bandit",
+          "regla": "B307",
+          "tipo": "seguridad",
+          "linea": 2,
+          "columna": null,
+          "severidad": "media",
+          "titulo": "Bandit B307: blacklist",
+          "descripcion": "Use of possibly insecure function - consider using safer ast.literal_eval.",
+          "confianza": "alta",
+          "referencia": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b307-eval"
+        },
+        {
+          "herramienta": "ruff",
+          "regla": "F821",
+          "tipo": "calidad",
+          "linea": 2,
+          "columna": 6,
+          "severidad": "baja",
+          "titulo": "Ruff F821",
+          "descripcion": "Undefined name `user_input`",
+          "confianza": null,
+          "referencia": null
+        }
+      ],
+      "herramientas": [
+        {
+          "herramienta": "ruff",
+          "estado": "ok",
+          "hallazgos": 1
+        },
+        {
+          "herramienta": "bandit",
+          "estado": "ok",
+          "hallazgos": 1
+        }
+      ],
+      "mensaje": null
+    },
+    {
+      "archivo": "segundo.py",
+      "estado": "completo",
+      "hallazgos": [
+        {
+          "herramienta": "bandit",
+          "regla": "B307",
+          "tipo": "seguridad",
+          "linea": 1,
+          "columna": null,
+          "severidad": "media",
+          "titulo": "Bandit B307: blacklist",
+          "descripcion": "Use of possibly insecure function - consider using safer ast.literal_eval.",
+          "confianza": "alta",
+          "referencia": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b307-eval"
+        },
+        {
+          "herramienta": "ruff",
+          "regla": "F821",
+          "tipo": "calidad",
+          "linea": 1,
+          "columna": 6,
+          "severidad": "baja",
+          "titulo": "Ruff F821",
+          "descripcion": "Undefined name `user_input`",
+          "confianza": null,
+          "referencia": null
+        }
+      ],
+      "herramientas": [
+        {
+          "herramienta": "ruff",
+          "estado": "ok",
+          "hallazgos": 1
+        },
+        {
+          "herramienta": "bandit",
+          "estado": "ok",
+          "hallazgos": 1
+        }
+      ],
+      "mensaje": null
+    }
+  ]
+}

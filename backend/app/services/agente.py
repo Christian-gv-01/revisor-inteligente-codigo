@@ -5,6 +5,7 @@ lista cerrada; los hallazgos del LLM siguen bajo la validación RAG existente.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
 import ast
 import json
 import logging
@@ -16,6 +17,11 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.analisis import InformeModelo, RespuestaAnalisis
 from app.services.llm import LLMError
+from app.services.static_analysis import (
+    EstadoHerramienta,
+    ResultadoEstatico,
+    analizar_estatico,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -44,13 +50,57 @@ class PasoAgente(BaseModel):
     herramienta: HerramientaEjecutable
     motivo: str
     resultado: dict
+    origen: Literal["automatico", "gemini", "local"] = "automatico"
+
+
+class DecisionRegistrada(BaseModel):
+    """Decisión observable del planificador; no es razonamiento interno."""
+    numero: int = Field(ge=1, le=2)
+    herramienta: Herramienta
+    motivo: str = Field(min_length=1, max_length=240)
+    estado: Literal["ejecutada", "finalizar", "repetida"]
+
+
+@dataclass(frozen=True)
+class ResultadoEjecucionAgente:
+    pasos: list[PasoAgente]
+    informe: InformeModelo
+    decisiones: list[DecisionRegistrada]
+    estatico: ResultadoEstatico | None = None
+
+    def __iter__(self):
+        """Compatibilidad con llamadas existentes: pasos, informe = ejecutar_agente(...)."""
+        yield self.pasos
+        yield self.informe
+
+
+class ErrorAgenteConTraza(LLMError):
+    """Fallo controlado sin perder la evidencia anterior ni exponer el código."""
+    def __init__(
+        self,
+        causa: LLMError,
+        *,
+        fase: Literal["planificacion", "informe"],
+        pasos: list[PasoAgente],
+        decisiones: list[DecisionRegistrada],
+        estatico: ResultadoEstatico | None = None,
+    ):
+        super().__init__(str(causa), causa.codigo)
+        self.fase = fase
+        self.pasos = list(pasos)
+        self.decisiones = list(decisiones)
+        self.estatico = estatico
+
 
 class RespuestaAgente(BaseModel):
     archivo: str
-    modo: Literal["gemini_real", "inspeccion_local"]
+    modo: Literal["gemini_real", "inspeccion_local", "degradado"]
     pasos: list[PasoAgente]
     max_pasos: int = Field(ge=1, le=3)
     informe: RespuestaAnalisis
+    decisiones: list[DecisionRegistrada] = Field(default_factory=list)
+    fase_error: Literal["planificacion", "informe"] | None = None
+    analisis_estatico: ResultadoEstatico | None = None
     requiere_confirmacion_humana: bool = False
     politica: str = "Solo lectura; sin ejecución de código ni cambios de archivos"
 
@@ -141,7 +191,7 @@ def planificar_gemini(codigo: str, pasos: list[PasoAgente]) -> DecisionAgente:
     """El proveedor sugiere UNA siguiente acción de una lista cerrada."""
     from dotenv import load_dotenv
     from google import genai
-    from google.genai import types
+    from google.genai import errors, types
 
     load_dotenv(Path(__file__).resolve().parents[3] / ".env")
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
@@ -216,17 +266,46 @@ response_json_schema={
         return decision
     except LLMError:
         raise
-    except Exception as error:
+    except errors.APIError as error:
+        # Mensajes crudos del proveedor nunca se incluyen en la respuesta pública.
         logger.warning(
-            "agente_planificador_error tipo=%s codigo_http=%s",
-            type(error).__name__,
-            getattr(error, "code", "desconocido"),
+            "agente_planificador_proveedor status=%s", error.code
         )
-        raise LLMError(
-            "El planificador de Gemini no está disponible.", 503
-        ) from error
+        if error.code in (408, 504):
+            raise LLMError("El planificador superó el tiempo de espera.", 504) from error
+        if error.code in (429, 500, 502, 503):
+            raise LLMError("El planificador no está disponible temporalmente.", 503) from error
+        raise LLMError("El proveedor rechazó la planificación.", 502) from error
+    except (ValueError, TypeError) as error:
+        logger.warning("agente_planificador_respuesta_invalida tipo=%s", type(error).__name__)
+        raise LLMError("El planificador devolvió una decisión inválida.", 502) from error
+    except Exception as error:
+        logger.warning("agente_planificador_error tipo=%s", type(error).__name__)
+        raise LLMError("El planificador no está disponible.", 503) from error
     finally:
         client.close()
+
+
+def resumen_estatico_planificador(informe: ResultadoEstatico) -> dict:
+    """Solo hechos mínimos de herramientas; sin texto de código ni citas inventadas."""
+    return {
+        "estado": informe.estado,
+        "herramientas": [
+            {"herramienta": h.herramienta, "estado": h.estado, "hallazgos": h.hallazgos}
+            for h in informe.herramientas
+        ],
+        "total_hallazgos": len(informe.hallazgos),
+        "reglas": [
+            {
+                "herramienta": h.herramienta,
+                "regla": h.regla,
+                "tipo": h.tipo,
+                "linea": h.linea,
+                "severidad": h.severidad,
+            }
+            for h in informe.hallazgos[:20]
+        ],
+    }
 
 
 def ejecutar_agente(
@@ -234,8 +313,13 @@ def ejecutar_agente(
     *,
     planificador: Callable[[str, list[PasoAgente]], DecisionAgente] | None = None,
     analizador: Callable[[str], InformeModelo] | None = None,
-) -> tuple[list[PasoAgente], InformeModelo]:
-    """Hace un preflight determinista; Gemini decide las otras herramientas."""
+    inspeccion_estatica: Callable[[str, str], ResultadoEstatico] | None = None,
+) -> ResultadoEjecucionAgente:
+    """Inspección inicial, decisiones limitadas y dictamen RAG independiente.
+
+    Las decisiones seleccionadas por Gemini son acciones públicas verificables,
+    no una transcripción de razonamiento interno del modelo.
+    """
     if not solicitud.codigo.strip() or "\x00" in solicitud.codigo:
         raise ValueError("El código debe ser texto Python no vacío y sin bytes nulos.")
     elegir = planificador or planificar_gemini
@@ -243,32 +327,115 @@ def ejecutar_agente(
         from app.services.llm import analizar_codigo
         analizador = analizar_codigo
 
-    # Preflight obligatorio: siempre existe evidencia útil aunque el modelo decida finalizar.
+    # Ruff y Bandit son controles obligatorios: Gemini NO decide si ejecutarlos.
+    # Solo se expone al planificador un resumen acotado, nunca se editan
+    # ni se convierten sus reglas en citas RAG.
+    estatico = None
+    try:
+        estatico = (inspeccion_estatica or analizar_estatico)(
+            solicitud.codigo, solicitud.archivo,
+        )
+    except Exception as error:
+        logger.warning("agente_estatico_no_disponible tipo=%s", type(error).__name__)
+        estatico = ResultadoEstatico(
+            archivo=solicitud.archivo,
+            estado="no_disponible",
+            herramientas=[
+                EstadoHerramienta(herramienta="ruff", estado="error", hallazgos=0),
+                EstadoHerramienta(herramienta="bandit", estado="error", hallazgos=0),
+            ],
+            hallazgos=[],
+            mensaje="No se pudo completar el análisis estático de Ruff y Bandit.",
+        )
+    resultado_inicial = inspeccionar_estructura(solicitud.codigo)
+    resultado_inicial["evidencia_ruff_bandit"] = resumen_estatico_planificador(estatico)
     pasos = [PasoAgente(
         numero=1, herramienta="inspeccionar_estructura",
-        motivo="Inspección de sintaxis y estructura antes de consultar herramientas adicionales.",
-        resultado=inspeccionar_estructura(solicitud.codigo),
+        motivo="Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+        resultado=resultado_inicial,
+        origen="automatico",
     )]
+    decisiones: list[DecisionRegistrada] = []
     usados = {"inspeccionar_estructura"}
+
     for numero in range(2, solicitud.max_pasos + 1):
-        decision = DecisionAgente.model_validate(elegir(solicitud.codigo, list(pasos)))
+        try:
+            decision = DecisionAgente.model_validate(elegir(solicitud.codigo, list(pasos)))
+        except LLMError as error:
+            logger.warning(
+                "agente_fallo fase=planificacion status=%s pasos=%d decisiones=%d",
+                error.codigo, len(pasos), len(decisiones),
+            )
+            raise ErrorAgenteConTraza(
+                error, fase="planificacion", pasos=pasos, decisiones=decisiones,
+                estatico=estatico,
+            ) from error
+        except (ValueError, TypeError) as error:
+            logger.warning(
+                "agente_fallo fase=planificacion status=502 pasos=%d decisiones=%d",
+                len(pasos), len(decisiones),
+            )
+            raise ErrorAgenteConTraza(
+                LLMError("El planificador devolvió una decisión inválida.", 502),
+                fase="planificacion", pasos=pasos, decisiones=decisiones,
+                estatico=estatico,
+            ) from error
+
         nombre = decision.herramienta
-        if nombre == "finalizar" or nombre in usados:
+        estado: Literal["ejecutada", "finalizar", "repetida"] = (
+            "finalizar" if nombre == "finalizar" else
+            "repetida" if nombre in usados else "ejecutada"
+        )
+        decisiones.append(DecisionRegistrada(
+            numero=len(decisiones) + 1,
+            herramienta=nombre,
+            motivo=decision.motivo,
+            estado=estado,
+        ))
+        logger.info(
+            "agente_decision numero=%d herramienta=%s estado=%s",
+            len(decisiones), nombre, estado,
+        )
+        if estado != "ejecutada":
             break
         funcion = _HERRAMIENTAS.get(nombre)
         if funcion is None:
-            raise LLMError("Herramienta seleccionada no permitida.", 502)
+            raise ErrorAgenteConTraza(
+                LLMError("Herramienta seleccionada no permitida.", 502),
+                fase="planificacion", pasos=pasos, decisiones=decisiones,
+                estatico=estatico,
+            )
         pasos.append(PasoAgente(
             numero=numero, herramienta=nombre, motivo=decision.motivo,
-            resultado=funcion(solicitud.codigo),
+            resultado=funcion(solicitud.codigo), origen="gemini",
         ))
         usados.add(nombre)
         logger.info("agente_paso numero=%d herramienta=%s", numero, nombre)
 
-    # El informe final se obtiene de nuestro analizador existente con verificación RAG.
-    # El agente es de orquestación: NO declara automáticamente vulnerabilidades basadas en AST.
-    return pasos, analizador(solicitud.codigo)
+    logger.info(
+        "agente_planificacion_completada pasos=%d decisiones=%d",
+        len(pasos), len(decisiones),
+    )
+    try:
+        informe = analizador(solicitud.codigo)
+    except LLMError as error:
+        logger.warning(
+            "agente_fallo fase=informe status=%s pasos=%d decisiones=%d",
+            error.codigo, len(pasos), len(decisiones),
+        )
+        raise ErrorAgenteConTraza(
+            error, fase="informe", pasos=pasos, decisiones=decisiones,
+            estatico=estatico,
+        ) from error
 
+    logger.info(
+        "agente_informe_completado pasos=%d decisiones=%d",
+        len(pasos), len(decisiones),
+    )
+    return ResultadoEjecucionAgente(
+        pasos=pasos, informe=informe, decisiones=decisiones,
+        estatico=estatico,
+    )
 
 def inspeccion_local(solicitud: SolicitudAgente) -> list[PasoAgente]:
     """Ruta determinista de respaldo: NO llama a Gemini ni produce dictamen de seguridad."""
@@ -278,5 +445,5 @@ def inspeccion_local(solicitud: SolicitudAgente) -> list[PasoAgente]:
     return [PasoAgente(
         numero=i, herramienta=nombre,
         motivo="Herramienta estática programada; modo local sin IA.",
-        resultado=funcion(solicitud.codigo),
+        resultado=funcion(solicitud.codigo), origen="local",
     ) for i, (nombre, funcion) in enumerate(herramientas, start=1)]

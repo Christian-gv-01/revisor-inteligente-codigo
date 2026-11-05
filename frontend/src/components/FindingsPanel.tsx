@@ -4,6 +4,7 @@ import { SEVERITIES, SEVERITY_LABELS } from "../types/analysis";
 import { getFindingSources } from "../services/sources";
 import { Icon } from "./Icon";
 import { SourceList } from "./SourceList";
+import { StaticFindingsPanel } from "./StaticFindingsPanel";
 
 interface FindingsPanelProps {
   result: AnalysisResult | null;
@@ -17,6 +18,9 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
   const [filter, setFilter] = useState<Severity | "todas">("todas");
   const visible = result?.hallazgos.filter(finding => filter === "todas" || finding.severidad === filter) ?? [];
   const highest = SEVERITIES.find(severity => result?.hallazgos.some(finding => finding.severidad === severity));
+  const staticNeedsReview = result?.analisis_estatico?.some(
+    report => report.hallazgos.length > 0 || report.estado !== "completo",
+  );
   return (
     <section className="panel results-panel" aria-labelledby="results-title" aria-busy={loading}>
       <div className="panel-heading">
@@ -48,6 +52,14 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
           <div className="empty-state"><div className="empty-icon"><Icon name="shieldCode" size={42} /></div><span className="empty-eyebrow">REVISIÓN CON EVIDENCIA</span><h3>El informe empieza con tu código</h3><p>Pega un fragmento Python o selecciona un archivo. Aquí podrás explorar los riesgos, las correcciones y sus fuentes.</p><div className="empty-tags"><span>Archivo y línea</span><span>Corrección sugerida</span><span>Fuentes documentales</span></div></div>
         ) : result.estado === "abstenido" ? (
           <div className="empty-state"><div className="empty-icon"><Icon name="info" size={36} /></div><h3>No hay evidencia suficiente</h3><p>{result.mensaje || "El sistema no encontró información documental suficiente para fundamentar una respuesta."}</p><p>El sistema se abstuvo de generar hallazgos sin respaldo documental.</p></div>
+        ) : result.estado === "parcial" && result.hallazgos.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon"><Icon name="info" size={36} /></div>
+            <h3>Revisión contextual incompleta</h3>
+            <p>Gemini no completó el análisis. Revisa más abajo los resultados estáticos de Ruff y Bandit; no equivalen a una evaluación completa con citas RAG.</p>
+          </div>
+        ) : result.hallazgos.length === 0 && staticNeedsReview ? (
+          <div className="empty-state"><div className="empty-icon"><Icon name="info" size={36} /></div><h3>Sin hallazgos contextuales de Gemini</h3><p>Revisa las observaciones y el estado de Ruff y Bandit más abajo. El resultado contextual no descarta alertas estáticas ni revisiones incompletas.</p></div>
         ) : result.hallazgos.length === 0 ? (
           <div className="empty-state"><div className="empty-icon success"><Icon name="check" size={36} /></div><h3>No se encontraron hallazgos</h3><p>{result.demo ? "Resultado de demostración. No equivale a una revisión de seguridad real." : "El análisis no reportó problemas. Esto no garantiza que el código esté libre de vulnerabilidades."}</p></div>
         ) : visible.length === 0 ? (
@@ -72,6 +84,7 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
           );
         })}
       </div>
+      {!loading && <StaticFindingsPanel informes={result?.analisis_estatico} />}
       {!loading && result && (result.fuentes?.length ?? 0) > 0 && (
         <details className="sources-section"><summary><Icon name="book" size={17} /><span>{result.demo ? "Referencias de la demostración" : "Fuentes de conocimiento consultadas"}</span><span className="count-badge">{result.fuentes!.length}</span></summary><p>{result.demo ? "Documentos de ejemplo para recorrer la interfaz. No se realizó recuperación RAG." : "Documentos recuperados durante el análisis. Su recuperación no implica que respalden todos los hallazgos; revisa las citas indicadas en cada uno."}</p><SourceList sources={result.fuentes!} /></details>
       )}

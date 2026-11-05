@@ -1,0 +1,40 @@
+{
+  "fecha_utc": "2026-11-05T17:42:23.535429+00:00",
+  "python": "3.12.14",
+  "commit_base": "d85517ba5ad8d88be0f8f1bd66c861e47794afea",
+  "cambios_locales": true,
+  "dependencias": {
+    "chromadb": "1.5.9",
+    "google-genai": "2.31.0",
+    "fastapi": "0.156.1",
+    "pydantic": "2.14.1"
+  },
+  "dataset_sha256": "4e880db137d1350fda194482b7b3350320b61bc9e581ae99421804f8dc496fef",
+  "runner_sha256": "8d43e17b372fc8efd575470728b92c42e0cbcbd3dd1ab74dcc64e6dbeed9836d",
+  "knowledge_sha256": "b106e021a4de2135e52c299cf0ae9141c90eb0177120ddcad3fc8a9fdb0d555f",
+  "llm_sha256": "1fb7b9db62a11b98e916653d3e60cec257ebcec843e6d8bf03f08dc825b6298c",
+  "rag_sha256": "b25a1033dffddf55e35ecc16b40b1148b2149672a96ca3f00cb108a7c0187112",
+  "tipo": "integracion_http",
+  "proveedor_ia": "simulado",
+  "rag": "ChromaDB local real",
+  "llamadas_externas_ia": 0,
+  "aviso": "Estas pruebas verifican integración; no miden precisión, recall ni F1 de Gemini.",
+  "github": "API externa simulada; lector, validación y rutas reales",
+  "analisis_estatico": "Ruff/Bandit reales",
+  "configuracion_rag": {
+    "coleccion": "seguridad_python",
+    "fragmentos": 6,
+    "distancia_maxima": 0.75,
+    "proveedor_ia_utilizado": false,
+    "calentamiento_fuera_de_latencia": true
+  },
+  "evaluador_http": "aprobado: request_analysis y validate_response contra FastAPI",
+  "pruebas_frontend_http": {
+    "numTotalTests": 15,
+    "numPassedTests": 15,
+    "numFailedTests": 0,
+    "success": true
+  },
+  "estado": "aprobado",
+  "respuestas_controladas_proveedor": 16
+}
