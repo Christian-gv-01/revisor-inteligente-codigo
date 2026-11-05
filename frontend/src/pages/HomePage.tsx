@@ -7,6 +7,7 @@ import { Icon } from "../components/Icon";
 import { EvidenceTrace } from "../components/EvidenceTrace";
 import {
   analyzeCode,
+  analyzeWithAgent,
   AnalysisError,
   validateFile,
   validateInput,
@@ -143,7 +144,9 @@ export function HomePage() {
       const response =
         mode === "demo"
           ? await analyzeDemo(input, scenario, controller.signal)
-          : await analyzeCode(input, controller.signal);
+          : project
+             ? await analyzeCode(input, controller.signal)
+             : await analyzeWithAgent(input, controller.signal);
       if (controller.signal.aborted) return;
       setResult(response);
       setSelected(response.hallazgos[0] ?? null);
@@ -200,7 +203,7 @@ export function HomePage() {
       <main id="workspace">
         <section className={`mode-banner ${mode}`} aria-label="Configuración de análisis">
           <Icon name="info" size={17} />
-          <p>{mode === "demo" ? "Datos de ejemplo · Simulación local sin IA. Las referencias son ilustrativas." : "Análisis mediante el backend del proyecto. El código se analiza sin ejecutarlo."}</p>
+          <p>{mode === "demo" ? "Datos de ejemplo · Simulación local sin IA. Las referencias son ilustrativas." : project ? "Revisión de proyecto: análisis por archivo con fuentes y herramientas estáticas." : "Revisión con agente: inspecciones, herramientas y fuentes en un mismo informe. El código se analiza sin ejecutarlo."}</p>
           <div className="mode-switch" role="group" aria-label="Modo de análisis">
             <button disabled={busy} aria-pressed={mode === "demo"} onClick={() => { clearResult(); setMode("demo"); }}>Demo</button>
             <button disabled={busy} aria-pressed={mode === "api"} onClick={() => { clearResult(); setMode("api"); }}>API real</button>
@@ -408,3 +411,4 @@ export function HomePage() {
     </div>
   );
 }
+

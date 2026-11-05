@@ -44,6 +44,8 @@ class FixtureClient:
         FixtureClient.calls += 1
         from httpx import TimeoutException
 
+        if "DATOS_NO_CONFIABLES_JSON:\n" not in contents:
+            return SimpleNamespace(text=json.dumps({"herramienta": "finalizar", "motivo": "Inspección inicial suficiente para el caso controlado"}), usage_metadata=None)
         payload = json.loads(contents.split("DATOS_NO_CONFIABLES_JSON:\n", 1)[1])
         code = payload["codigo_python_no_confiable"]
         if "INTEGRACION_ERROR" in code:
@@ -59,6 +61,7 @@ class FixtureClient:
                     "explicacion": "Respuesta controlada del proveedor simulado para probar el contrato.",
                     "correccion_sugerida": 'cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre,))',
                     "referencias": refs,
+                    "fragmento_codigo": code.splitlines()[line - 1].strip(),
                 })
         return SimpleNamespace(text=json.dumps({"hallazgos": findings}), usage_metadata=None)
 
@@ -186,3 +189,4 @@ def main(argv=None):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.WARNING)
     raise SystemExit(main())
+

@@ -60,10 +60,10 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
             analisis_estatico=estatico,
             informe=RespuestaAnalisis(
                 archivo=solicitud.archivo,
-                estado="abstenido" if informe.motivo_abstencion else "analizado",
+                estado=informe.estado_validado,
                 hallazgos=informe.hallazgos,
                 fuentes=informe.fuentes,
-                mensaje=informe.motivo_abstencion,
+                mensaje=informe.mensaje_validado,
             ),
         )
     except LLMError as error:
@@ -120,3 +120,4 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
                 ),
             ),
         )
+

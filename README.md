@@ -20,10 +20,13 @@ Actualización del 5 de noviembre de 2026:
 - Análisis de hasta cinco archivos Python dentro de un ZIP validado.
 - Descarga limitada de repositorios públicos de GitHub.
 - RAG con fuentes, citas y abstención verificable.
-- Agent Lab con herramientas AST de solo lectura.
+- Agente integrado en la revisión principal de código pegado y archivos `.py`: evidencia Ruff/Bandit y AST para la síntesis RAG, pasos visibles y exportación de la traza. ZIP/GitHub conservan la revisión directa.
+- Agent Lab con herramientas AST de solo lectura para inspección técnica.
 - Interfaz React con hallazgos, trazabilidad documental y exportación.
 
 ## Arquitectura
+
+Contrato, límites y pruebas de la integración: [Agente en la revisión principal](docs/17-agente-integrado.md).
 
 ```text
 Navegador ──HTTPS──> FastAPI
@@ -176,3 +179,4 @@ La matriz completa está en [docs/08-pruebas.md](docs/08-pruebas.md).
 - [Decisiones](docs/09-decisiones.md)
 - [Aportes y uso de IA](docs/11-aportes-ia.md)
 - [Evidencias de semana 4](docs/evidencias/semana-4/README.md)
+

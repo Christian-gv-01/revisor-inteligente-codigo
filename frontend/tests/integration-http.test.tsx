@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import { analyzeCode } from "../src/services/api";
+import { analyzeCode, analyzeWithAgent } from "../src/services/api";
 import { createReport } from "../src/services/report";
 import { FindingsPanel } from "../src/components/FindingsPanel";
 import { EvidenceTrace } from "../src/components/EvidenceTrace";
@@ -24,6 +24,18 @@ suite("Integración HTTP: frontend → FastAPI → RAG real → proveedor simula
   });
   afterAll(() => vi.unstubAllEnvs());
 
+  it.each(["codigo", "python"] as const)("integra el agente con informe, herramientas y traza en la misma ejecución: %s", async tipo => {
+    const result = await analyzeWithAgent({ ...input, tipo, fichero: tipo === "python" ? new File([sql], "usuarios.py") : null });
+    expect(result.estado).toBe("analizado");
+    expect(result.hallazgos[0].fragmento_codigo).toContain("SELECT");
+    expect(result.traza_agente?.modo).toBe("gemini_real");
+    expect(result.traza_agente?.decisiones[0].herramienta).toBe("finalizar");
+    expect(result.analisis_estatico?.[0].estado).toBe(staticEnabled ? "completo" : "no_disponible");
+    const html = renderToStaticMarkup(<FindingsPanel result={result} loading={false} onSelect={() => {}} />);
+    expect(html).toContain("Proceso de revisión del agente");
+    expect(html).toContain("Consulta SQL de la prueba");
+    expect(createReport(result).traza_agente).toEqual(result.traza_agente);
+  });
   it("procesa JSON real y resuelve los IDs recuperados por ChromaDB", async () => {
     const result = await analyzeCode(input);
     expect(result.demo).toBe(false);
@@ -126,3 +138,4 @@ suite("Integración HTTP: frontend → FastAPI → RAG real → proveedor simula
     expect(createReport(result).analisis_estatico[0].hallazgos).toHaveLength(202);
   });
 });
+
