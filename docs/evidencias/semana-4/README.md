@@ -21,10 +21,11 @@
 | `auditoria-secretos-integrado.json` | Requiere revisar JWT de fixture | Historial ampliado tras fetch |
 | `pytest-integrado.xml` | 179 aprobadas | Suite integrada con Ruff/Bandit reales |
 | `pytest-runners.xml` | 8 aprobadas | Protección de evidencias y comparación de citas |
+| [GitHub Actions](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/41956677118) | Aprobado para `66d7f42` en Linux/Python 3.13 | Backend, ejecutores QA y artefacto `qa-results` |
 | `pruebas-automatizadas.md` | Backend, frontend y Docker documentados | pytest, Vitest, ESLint, build y Compose |
 | `persistencia-antes.json` | Bloqueada hasta análisis real | Captura de citas antes del reinicio |
 | `persistencia-despues.json` | Bloqueada hasta reinicio | Comparación posterior |
-| Capturas de hosting | Bloqueadas hasta despliegue | URL HTTPS, volumen, variables ocultas y logs |
+| Capturas de hosting | Pendientes de acceso del responsable; HTTPS ya comprobado por HTTP | Volumen, variables ocultas y logs de reinicio |
 
 ## Evidencia pública mínima
 

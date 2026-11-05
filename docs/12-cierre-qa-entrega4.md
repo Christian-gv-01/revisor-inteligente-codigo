@@ -12,6 +12,14 @@ Se integró `origin/feature/semana4-ruff-bandit` en el commit base `a394d65`, co
 - Las 158 pruebas comunicadas por el compañero no se presentan como ejecución propia de GitHub Actions. Los resultados anteriores son locales, Python 3.12.14 en Windows. El workflow del repositorio utiliza Python 3.13/Linux y se habilita también para esta rama.
 - Se preservan las evidencias previas de frontend; no acreditan aún la visualización de resultados estáticos.
 
+## Verificación en GitHub Actions y entrega
+
+La rama de entrega es `feature/entrega-4-qa-seguridad-documentacion` y está publicada en el [PR #12, en borrador](https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/12), con base en `feature/semana4-ruff-bandit`.
+
+GitHub Actions confirmó **success** para el commit `66d7f4218a72d64392b2b309743a2ad2c9d3dfe6`, tanto en el [evento push](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/41956636926) como en el [evento pull_request](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/41956677118). En Linux con Python 3.13 finalizaron correctamente la validación de sintaxis, las pruebas del backend, las pruebas de los ejecutores QA y la publicación del artefacto `qa-results` con los reportes JUnit. Estos enlaces acreditan esa revisión concreta; los conteos y tiempos locales se conservan por separado.
+
+La entrega QA queda preparada para revisión del equipo. La aprobación de CI no sustituye las comprobaciones de producción pendientes que se detallan a continuación.
+
 ## Aceptación del contrato estático
 
 | Caso | Validación | Resultado |
