@@ -1,5 +1,9 @@
 # CODEGUARD · Resiliencia cuando Gemini no responde
 
+Actualización del 6 de noviembre: [reintentos y plazo compartido](reintentos-presupuesto.md)
+registra la política nueva de este bloque. Las secciones siguientes conservan
+el diagnóstico histórico del 5 de noviembre.
+
 ## Incidente reproducido en Railway
 
 En las pruebas públicas del 5 de noviembre de 2026, después de resultados HTTP 200 en ZIP y archivo Python, Gemini devolvió errores HTTP 504 y 503. Los reintentos del SDK no garantizan disponibilidad. El backend no debe descartar alertas locales por un fallo externo.

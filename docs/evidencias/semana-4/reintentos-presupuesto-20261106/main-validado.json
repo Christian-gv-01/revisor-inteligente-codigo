@@ -1,0 +1,25 @@
+{
+  "commit_main": "2cb3e823e53be73b2546338c69eb4d498ee00233",
+  "pr_integrado": 40,
+  "autorizacion": "Integracion explicita de PR40; PR39 y PR41 fuera de alcance",
+  "workflows_push": [
+    {"id": 42298275963, "nombre": "backend", "conclusion": "success"},
+    {"id": 42298276030, "nombre": "frontend", "conclusion": "success"},
+    {"id": 42298275954, "nombre": "integracion HTTP", "conclusion": "success"},
+    {"id": 42298276033, "nombre": "Docker", "conclusion": "success"},
+    {"id": 42298276010, "nombre": "secretos", "conclusion": "success"},
+    {"id": 42298275950, "nombre": "captura estatica multiplataforma", "conclusion": "success"}
+  ],
+  "railway": {
+    "github_deployment_id": 7611418000,
+    "sha": "2cb3e823e53be73b2546338c69eb4d498ee00233",
+    "environment": "lucid-cat / production",
+    "state": "success",
+    "fecha_estado_utc": "2026-11-06T21:40:30Z",
+    "fuente": "https://api.github.com/repos/Christian-gv-01/revisor-inteligente-codigo/deployments/7611418000/statuses",
+    "tipo": "automatico tras integracion; sin despliegue manual"
+  },
+  "health_status": 200,
+  "limite_health": "El endpoint no identifica SHA ni certifica Gemini/RAG",
+  "lectura_railway_ui": "Sin sesion; estado verificado por deployment GitHub"
+}

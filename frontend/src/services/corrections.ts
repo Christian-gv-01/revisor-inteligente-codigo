@@ -90,7 +90,7 @@ async function send(path: string, body: unknown, signal: AbortSignal): Promise<u
   const base = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
   const response = await fetch(`${base}${path}`, {
     method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body), signal,
+    body: JSON.stringify(body), signal: AbortSignal.any([signal, AbortSignal.timeout(60_000)]),
   });
   if (!response.ok) {
     if (response.status === 409 || response.status === 410) throw new Error("La propuesta cambió o caducó. Solicita otra previsualización.");

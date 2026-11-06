@@ -398,8 +398,10 @@ def test_gemini_configura_reintentos_transitorios_sin_duplicar_el_bucle(monkeypa
     assert informe is not None
     configuracion = llm_module.genai.Client.call_args.kwargs["http_options"]
     politica = configuracion.retry_options
-    assert politica.attempts == 2
-    assert politica.http_status_codes == [502, 503, 504]
+    assert politica.attempts == 1
+    efectivo = cliente.models.generate_content.call_args.kwargs["config"].http_options
+    assert efectivo.retry_options.attempts == 1
+    assert efectivo.timeout == 27000
     assert configuracion.timeout == 27000
     cliente.models.generate_content.assert_called_once()
     cliente.close.assert_called_once()

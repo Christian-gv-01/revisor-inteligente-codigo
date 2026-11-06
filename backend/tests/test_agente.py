@@ -172,8 +172,10 @@ def test_planificador_gemini_configura_reintentos_transitorios(monkeypatch):
     assert decision.herramienta == "finalizar"
     http = crear_cliente.call_args.kwargs["http_options"]
     assert http.timeout == 45000
-    assert http.retry_options.attempts == 2
-    assert http.retry_options.http_status_codes == [502, 503, 504]
+    assert http.retry_options.attempts == 1
+    efectivo = cliente_falso.models.generate_content.call_args.kwargs["config"].http_options
+    assert efectivo.retry_options.attempts == 1
+    assert efectivo.timeout <= 45000
     cliente_falso.models.generate_content.assert_called_once()
     cliente_falso.close.assert_called_once()
 

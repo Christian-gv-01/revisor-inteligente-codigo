@@ -16,6 +16,7 @@ from app.models.analisis import InformeModelo
 from app.config import settings
 from app.services.priorizacion import priorizar_hallazgos
 from app.services.evidencia import EvidenciaRevision, consultas_por_evidencia
+from app.services.presupuesto import generar_con_presupuesto, ConsumoAgotado, comprobar_plazo, PlazoAgotado
 
 
 # =========================================================
@@ -510,6 +511,13 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
     del codigo y de los documentos recuperados.
     """
 
+    def comprobar_tiempo():
+        try:
+            comprobar_plazo()
+        except PlazoAgotado as error:
+            raise LLMError("Se agotó el plazo total del análisis.", 504) from error
+
+    comprobar_tiempo()
     # PASO A: Comprobar la configuracion del proveedor de IA.
     api_key = settings.obtener_clave_gemini()
     modelo = settings.obtener_modelo_gemini()
@@ -538,6 +546,7 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
     # PASO C: Recuperar contexto mediante RAG.
     contexto_rag, fuentes = (_recuperar_contexto_rag(codigo) if evidencia is None
                               else _recuperar_contexto_agente(codigo, evidencia))
+    comprobar_tiempo()
 
     # Sin documentacion de seguridad no se generan hallazgos
     # de seguridad basados unicamente en conocimiento general.
@@ -639,23 +648,16 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
         api_key=api_key,
         http_options=types.HttpOptions(
             timeout=timeout * 1000,
-            # SDK google-genai: sin retry_options hace un solo intento.
-            # Un reintento acotado en errores transitorios del proveedor;
-            # no repetir errores de autenticacion ni entradas invalidas.
-            retry_options=types.HttpRetryOptions(
-                attempts=2,
-                initial_delay=0.6,
-                max_delay=2.0,
-                jitter=0.2,
-                http_status_codes=[502, 503, 504],
-            ),
+            # La aplicación controla esperas, intentos y plazo compartido.
+            retry_options=types.HttpRetryOptions(attempts=1),
         ),
     )
 
     try:
         # PASO G: Enviar instrucciones y datos por separado.
         # El codigo recibido nunca se ejecuta ni se importa.
-        respuesta = client.models.generate_content(
+        respuesta = generar_con_presupuesto(
+            client, timeout_ms=timeout * 1000,
             model=modelo,
             contents=contenido_usuario,
             config=types.GenerateContentConfig(
@@ -725,6 +727,9 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
         )
 
         return informe
+
+    except ConsumoAgotado as error:
+        raise LLMError("Se agotó el presupuesto de llamadas de la solicitud.", 503) from error
 
     except httpx.TimeoutException as error:
         logger.warning(

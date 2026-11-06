@@ -5,6 +5,7 @@ from app.config import settings
 
 from app.services.rate_limit import ENDPOINT_WEIGHTS, LimitadorPonderado
 from app.services.http_security import ControlConcurrencia, identidad_cliente
+from app.services.presupuesto import presupuesto_solicitud
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -107,6 +108,11 @@ async def proteger_analisis(request: Request, call_next):
     if not es_costosa:
         return await call_next(request)
 
+    with presupuesto_solicitud(*settings.limites_solicitud(request.url.path)):
+        return await _proteger_con_limites(request, call_next)
+
+
+async def _proteger_con_limites(request: Request, call_next):
     if settings.bandera("RATE_LIMIT_ENABLED"):
         # No habilitar sin garantizar que no existen rutas privadas/directas
         # hacia este servicio que puedan falsificar X-Real-IP.
