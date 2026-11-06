@@ -1,7 +1,6 @@
 """Regresiones de aislamiento, límites y decisiones simultáneas; sin Gemini."""
 from concurrent.futures import ThreadPoolExecutor
 import hashlib
-from pathlib import Path
 import sqlite3
 
 from fastapi.testclient import TestClient
@@ -130,7 +129,7 @@ def test_correcciones_tienen_presupuesto_publico(cliente, monkeypatch):
 def test_ruta_de_propuestas_junto_al_volumen_chroma(monkeypatch):
     monkeypatch.delenv('CORRECTIONS_DB_PATH',raising=False)
     monkeypatch.setenv('CHROMA_PATH','/data/chroma')
-    assert settings.obtener_ruta_correcciones() == Path('/data/correcciones.sqlite3')
+    assert settings.obtener_ruta_correcciones().as_posix() == '/data/correcciones.sqlite3'
 
 
 @pytest.mark.parametrize('motivo',['STOP','MAX_TOKENS'])
