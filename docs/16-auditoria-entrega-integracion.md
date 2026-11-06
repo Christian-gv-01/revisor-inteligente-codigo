@@ -1,5 +1,18 @@
 # Auditoría de entrega e integración de CODEGUARD
 
+> Auditoría histórica de `c2b9b06a`, conservada para trazabilidad. Posteriormente
+> PR #31 integró el agente en React para código/`.py`, incorporó evidencia a la
+> síntesis y validación individual de hallazgos. Ver
+> [17-agente-integrado.md](17-agente-integrado.md). La subsanación de documentos
+> base, inventario y responsabilidades se registra en
+> [19-cierre-documental.md](19-cierre-documental.md). Las tablas siguientes no son
+> el estado actual completo y no se modifican para aparentar una auditoría nueva.
+>
+> Corrección de evidencia: la imagen `reinicio-railway-20261105.png` se inspeccionó
+> en el cierre documental y muestra el comparador de citas, no el log del hosting.
+> Las referencias posteriores a un log independiente no están sustentadas por ese
+> archivo; sigue pendiente aportarlo. Ver [cierre QA corregido](12-cierre-qa-entrega4.md).
+
 Fecha: 5 de noviembre de 2026, America/Guayaquil.
 Revisión auditada: `c2b9b06a10735cd21b0b623679f521e8b8a5ab60` de `main`.
 

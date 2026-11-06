@@ -7,6 +7,11 @@
 - Entrega: 4.
 - Producto: aplicación web para revisión asistida de código Python.
 
+Actualización documental: 5 de noviembre de 2026, sobre `main` en `65675e2`.
+Esta consolidación no sustituye evidencias originales de Semana 1. Responsables:
+Ronald Yépez (QA, seguridad y documentación), Andy (Frontend y evaluación) y
+Christian Gamboa (Backend, IA, agente y despliegue), confirmados por Ronald.
+
 ## Problema
 
 La revisión manual de seguridad consume tiempo, depende de la experiencia del revisor y puede producir resultados poco trazables. Las herramientas generativas, si se usan sin controles, también pueden inventar referencias, obedecer instrucciones incluidas en el código o exponer información sensible.
@@ -15,7 +20,21 @@ La revisión manual de seguridad consume tiempo, depende de la experiencia del r
 
 CODEGUARD recibe código Python como texto, archivo, ZIP o repositorio público de GitHub. El backend valida la entrada, recupera documentación de seguridad desde ChromaDB y solicita a Gemini un informe estructurado. Cada hallazgo debe citar fragmentos realmente recuperados. Si no existe respaldo documental suficiente, el sistema se abstiene.
 
-El sistema incorpora una interfaz React y un Agent Lab limitado a herramientas AST de solo lectura. Ningún flujo ejecuta o importa el código recibido.
+La interfaz React utiliza el agente supervisado para código pegado y `.py`: combina Ruff/Bandit, inspecciones AST y evidencia RAG en la síntesis. ZIP y GitHub conservan el flujo directo por archivo. Las alertas estáticas se muestran aparte de los hallazgos contextuales, sin asignarles citas inventadas. Agent Lab permite explorar el agente. Ningún flujo ejecuta o importa el código recibido como programa.
+
+## Modelo elegido y justificación
+
+La integración implementada utiliza Google Gemini mediante `google-genai`. El identificador predeterminado del código es `gemini-3.5-flash-lite`; `GEMINI_MODEL` permite sustituirlo por un modelo disponible en la cuenta. Este dato describe la configuración del repositorio, no verifica el catálogo ni las condiciones comerciales del proveedor.
+
+Se mantiene esta integración porque ya dispone de generación estructurada, validación Pydantic, manejo de errores y pruebas acumuladas. Cambiarla durante el cierre exigiría repetir los contratos y la evaluación. No hay un estudio controlado que demuestre superioridad de coste, velocidad o precisión frente a otros modelos.
+
+| Alternativa | Valor y limitación | Decisión técnica actual |
+|---|---|---|
+| Solo Ruff/Bandit | Reglas reproducibles; no proporciona por sí solo una explicación contextual fundamentada por RAG | Complemento obligatorio del agente y endpoint independiente |
+| Gemini con recuperación documental | Reutiliza el adaptador probado y permite síntesis con fuentes; depende de cuota, disponibilidad y revisión humana | Implementado para el MVP |
+| Otro proveedor o modelo local | Requiere adaptador, recursos y evaluación equivalente antes de asegurar compatibilidad | Fuera de esta entrega; no existe fallback Groq funcional |
+
+La aprobación formal del equipo y la configuración exacta del despliegue se registran por separado de esta justificación técnica; ver [decisiones](09-decisiones.md).
 
 ## Objetivo general
 
@@ -56,7 +75,7 @@ No incluye autenticación, organizaciones, repositorios privados, ejecución ais
 
 ## Riesgos
 
-- Consumo de cuota de Gemini en una URL pública sin rate limiting.
+- Consumo de cuota de Gemini: existen límites de peticiones y concurrencia por proceso, pero no autenticación ni cuotas individuales de tokens.
 - Diferencias entre mocks y comportamiento real del proveedor.
 - Pérdida del índice si la plataforma no monta `/data` como volumen.
 - Resultados generativos variables y limitaciones de las heurísticas AST.

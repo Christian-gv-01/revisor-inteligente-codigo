@@ -1,5 +1,21 @@
 # 11. Aportes del equipo y declaración de uso de IA
 
+## Integrantes y responsabilidades confirmadas
+
+Información proporcionada por Ronald el 5 de noviembre de 2026. La tabla distingue
+responsabilidad actual de autoría histórica y no sustituye la aprobación final de
+cada integrante.
+
+| Integrante | Rol confirmado | Entregables asociados |
+|---|---|---|
+| Ronald Yépez | QA, seguridad y documentación | Matriz pública, revisión de errores/entradas, auditoría, trazabilidad y consolidación documental |
+| Andy | Frontend y evaluación | Interfaz, visualización y exportación, dataset, métricas, comparación final y presentación |
+| Christian Gamboa | Backend, IA, agente y despliegue | API, proveedor, RAG/agente, analizadores estáticos, Docker, Railway y volumen |
+
+Se conserva «Andy» tal como fue confirmado; su apellido no fue aportado. Ronald
+confirmó para este trabajo la cuenta `0123445-20Alexis`. No se asignan otras cuentas
+a personas por inferencia ni se cambia el autor registrado de commits previos.
+
 ## Participación identificada
 
 La siguiente relación se basa en el historial Git y debe ser validada por el equipo antes de la entrega final.
@@ -21,8 +37,11 @@ Las identidades Git describen autoría registrada; no acreditan por sí solas el
 - Procedimiento automatizado para comparar citas antes y después del reinicio.
 - README reproducible y organización de evidencias de semana 4.
 - Aceptación del contrato Ruff/Bandit en las cuatro modalidades y comprobación con analizadores reales.
-- Ejecución de la matriz pública (24/26 aprobadas) y comprobación del HTTP 429, con evidencia sin cuerpos sensibles.
-- Registro de pendientes de despliegue, Frontend y reinicio, sin inventar resultados. Ver `12-cierre-qa-entrega4.md`.
+- Primera ejecución pública 24/26; ejecución posterior propia 26/26, preservadas por separado. Ver [verificación pública](15-verificacion-publica-integrada.md).
+- Comprobación del HTTP 429 con evidencia sin cuerpos sensibles.
+- Revisión del panel/exportación estática y regresiones de la integración del PR #19.
+- Consolidación del inventario, doce historias de usuario, arquitectura vigente, decisiones y comparación documental de semanas.
+- Registro de límites y pendientes reales en [cierre documental](19-cierre-documental.md). El reinicio y su log fueron aportados posteriormente por Christian; no se atribuyen a Ronald.
 
 ## Herramientas de inteligencia artificial
 
@@ -44,4 +63,4 @@ Se utilizó como apoyo en la Entrega 4 para analizar el repositorio, proponer pr
 
 ## Declaración final
 
-El equipo conserva la responsabilidad sobre la arquitectura, el código, la seguridad, las pruebas y las conclusiones. Las herramientas de IA se utilizaron como asistencia técnica; sus sugerencias fueron verificadas mediante código, documentación oficial y pruebas reproducibles. Cualquier otra herramienta de IA utilizada individualmente debe añadirse a este documento antes de la entrega.
+El equipo conserva la responsabilidad sobre la arquitectura, el código, la seguridad, las pruebas y las conclusiones. El uso registrado de IA incluye el componente Gemini y la asistencia de Codex en este trabajo. La evidencia permite comprobar los cambios y pruebas indicados, pero no implica que todos los integrantes hayan aprobado cada sugerencia. Cualquier otra herramienta utilizada individualmente y la revisión final de aportes deben añadirse antes de la entrega. No se certifica una aceptación grupal que no haya sido comunicada.

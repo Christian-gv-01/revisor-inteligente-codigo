@@ -1,6 +1,13 @@
 # Evidencias verificables — Semana 4
 
-> Estado actualizado al 5 de noviembre de 2026: matriz pública 26/26 y continuidad de tres citas tras reinicio, con log independiente de recuperación del índice. CI de backend, frontend y HTTP aprobado para la candidata. QA-H02 y QA-H03 siguen abiertos. Ver [cierre consolidado](../../12-cierre-qa-entrega4.md). Los reportes previos se conservan como históricos.
+> Revisión documental `65675e2`: [validación de PR #31](agente-integrado-20261105/validacion.json)
+> y [contrato integrado](../../17-agente-integrado.md) registran la integración
+> posterior. QA-H03 tiene corrección en código, con validación del despliegue aún
+> pendiente. El [cierre documental](../../19-cierre-documental.md) diferencia
+> resultados actuales, históricos y datos no aportados. No se ejecutaron de nuevo
+> las pruebas públicas para esta edición de documentos.
+
+> Matriz pública 26/26 y continuidad de tres citas entre dos consultas. La imagen llamada `reinicio-railway` muestra el comparador, no un log independiente del reinicio/volumen; ese respaldo falta. CI de la candidata y hallazgos se detallan en [cierre consolidado](../../12-cierre-qa-entrega4.md). Los reportes previos se conservan como históricos.
 
 ## Reglas
 
@@ -21,10 +28,10 @@
 | [agente-real-20261105/sql-degradado-503.json](agente-real-20261105/sql-degradado-503.json) | Otro fragmento, informe parcial, decisiones y estático conservados; 503 identificado en el log aportado |
 | [persistencia-antes-20261105.json](persistencia-antes-20261105.json) | Análisis público con un hallazgo y tres fuentes, antes del reinicio |
 | [persistencia-despues-20261105.json](persistencia-despues-20261105.json) | Mismas tres fuentes y un hallazgo; continuidad true; volumen no verificado por el comparador HTTP |
-| [reinicio-railway-20261105.png](reinicio-railway-20261105.png) | Log independiente de apagado, volumen, recuperación del índice y arranque |
+| [reinicio-railway-20261105.png](reinicio-railway-20261105.png) | Captura del comando comparador y continuidad de citas; no contiene logs del hosting |
 | [CI backend](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42106521541), [frontend](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42106521518), [HTTP](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42106521602) | Success para candidata 2dd76ad, antes de fusionar PR #25 |
 
-Los nombres históricos `persistencia-antes.json` y `persistencia-despues.json` de la tabla siguiente no son los archivos generados en la verificación final: las evidencias efectivas incluyen el sufijo `-20261105`. La continuidad HTTP y el log respaldan recuperación operacional en el reinicio documentado; no constituyen auditoría completa del volumen.
+Los nombres históricos `persistencia-antes.json` y `persistencia-despues.json` de la tabla siguiente no son los archivos de la comparación posterior: las evidencias efectivas incluyen el sufijo `-20261105`. La continuidad HTTP está respaldada; falta el log independiente del reinicio y del volumen. No constituye una auditoría completa de persistencia.
 
 ## Inventario histórico
 
