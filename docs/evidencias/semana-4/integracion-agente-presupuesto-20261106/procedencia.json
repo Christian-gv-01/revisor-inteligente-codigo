@@ -25,16 +25,17 @@
   "hashes_evidencia_sha256": {
     "backend-junit.xml": "3ed340ffddbf16cf587db8f96fd36f5523c7e67589dbed64a1059cfdb0c4032d",
     "frontend-junit.xml": "81d4a77cf8f0383509ccc6337c6f3bafb4393594b1ce56479a8d604d258b5172",
-    "http-estatico.json": "da2563bc2c85fdc7d44438e7ca8a4430af8cdec395fd168e68ea65295997d554",
-    "http-sin-estatico.json": "aad9ec17f08282d0e41cd26cd48fa53c194c4e025e8b82a16e2c514eaae26f5c",
+    "http-estatico.json": "a6bf7d040566b921eb95e1669e71fa040d62a2ab16ac27e3f62ccbb6c3954049",
+    "http-sin-estatico.json": "2e7d3c633abcec06355fcbc890f6673e42bc9f8ddb401c4c3c89dec7d141bc4e",
     "navegador-agente-v2.json": "9deb54f0fc4e3bb24657abb8c9e7fd1930e9e6d185f1102267b8feaa7d0344b8",
-    "navegador-agente-v2.txt": "605474548762114bd71e79809f03e5f02df78a36cefe6a654fd1bc9759b99b08",
+    "navegador-agente-v2.txt": "56f23279865365b0c89d433347e2a157aafcb491de078e12fce28a9dc338812b",
     "navegador-presupuesto.json": "dbf824eca83a2b83a220cd52d7ece8089884233f32632a4b6757a59266159855",
-    "navegador-presupuesto.txt": "d6540bd0c5f08bb81a3ae4b7f4cddc694acc8bef820f01c6c9ca9bbd46113f61",
+    "navegador-presupuesto.txt": "72613d8af32606a1ce611021251d61edd7ed2f57df9bec738e62c00d2efbc89f",
     "qa-eval-junit.xml": "28e58743ba66c44ac46e98f5f132adbf01debc800d557022af30e58b866dd193",
     "respuesta-v2-early.json": "09e603d3a5c769a90990f896772bc247ed52d38a466c31deda99ab7b42b71a62",
     "respuesta-v2-error.json": "4d80d11ccd0457824459937e2d5a978aa56b88a5c1140271eb723a9ef4039c83",
     "respuesta-v2-full.json": "e2ac6769c24feaaaf88d593acee6ee74f8d3e03dbecaa881426a807949991364",
     "respuesta-v2-repeat.json": "a854b104a288111448cbc7d24720b5d833a29e31445e9f1399054fc9b571f8fc"
-  }
+  },
+  "normalizacion_hashes": "Contenido UTF-8 de los blobs Git publicados, con finales de linea LF; no la copia CRLF de Windows."
 }
