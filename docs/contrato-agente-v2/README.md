@@ -1,9 +1,10 @@
 # Contrato optativo v2: herramientas contextuales del agente
 
-Base: main `605d142`. Endpoint existente: `POST /api/v1/agente/analizar`.
+Base inicial: `605d142`. Referencia integrada: `9c97ca1` (PR #45).
+Endpoint existente: `POST /api/v1/agente/analizar`.
 Enviar `version_herramientas: "2"` habilita el contrato nuevo. Omitirlo o enviar
-"1" conserva el recorrido que consume el frontend actual. Este bloque no cambia
-el frontend ni el evaluador del PR #41; deberán optar a v2 cuando se coordinen.
+"1" conserva el recorrido anterior. Desde PR #45, el frontend solicita v2 para
+código y .py y sigue interpretando v1. ZIP/GitHub conservan análisis por archivo.
 
 **Los diez JSON son ejemplos sintéticos**, generados por FastAPI y el orquestador
 reales con proveedor, RAG y Ruff/Bandit simulados. `modo: "gemini_real"` es el
@@ -92,11 +93,13 @@ de150 s para la solicitud. Ruff/Bandit siguen siendo obligatorios. Buscar en el
 índice local no añade llamadas Gemini. Repetir herramienta/argumentos detiene el
 bucle; argumentos diferentes ocupan otro paso dentro del mismo máximo.
 
-El frontend actual reconoce solo AST: no debe optar a v2 hasta adaptar sus tipos,
-parser y panel. Para el panel futuro distinguir ventanas de código, fragmentos
-documentales, errores y motivo de terminación. El campo `resultado` de una
+El frontend integrado valida y muestra ventanas de código, fragmentos documentales,
+argumentos, errores y motivo de terminación, conservándolos al exportar JSON.
+El campo `resultado` de una
 herramienta contextual tiene su forma propia y no lleva una falsa
 `sintaxis_valida`. Las citas del informe conservan su validación actual.
 
-Fuera de alcance: cambios visuales, priorización, confirmación del presupuesto
-ZIP/GitHub, evaluador PR41, corrida real comparativa, integración y despliegue.
+La [revisión frontend y trazabilidad](../29-revision-frontend-agente-presupuesto.md)
+describe el recorrido integrado. La comparación real, la regla severidad × confianza
+y la versión activa en Railway requieren evidencias independientes. Los ejemplos
+de esta carpeta siguen siendo sintéticos, no resultados de la comparación final.

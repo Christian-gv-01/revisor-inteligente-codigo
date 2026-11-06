@@ -1,0 +1,45 @@
+{
+  "proveedor": "simulado",
+  "github": "simulado",
+  "backend": "real",
+  "sqlite": "real",
+  "rag": "real",
+  "casos": [
+    {
+      "caso": "Previsualización real sin Gemini y consentimiento desmarcado",
+      "aprobado": true
+    },
+    {
+      "caso": "Presupuesto legible sin desbordamiento en móvil",
+      "aprobado": true
+    },
+    {
+      "caso": "Rechazo desde interfaz sin consumo",
+      "aprobado": true
+    },
+    {
+      "caso": "Aprobación real con RAG y Ruff/Bandit reales; Gemini simulado",
+      "aprobado": true
+    },
+    {
+      "caso": "Repetición HTTP idempotente sin llamadas adicionales",
+      "aprobado": true
+    },
+    {
+      "caso": "Cambiar entrada invalida consentimiento sin analizar",
+      "aprobado": true
+    },
+    {
+      "caso": "Caducidad del servidor 410 sin consumo adicional",
+      "aprobado": true
+    },
+    {
+      "caso": "ZIP de dos archivos: ambas consultas solo después de aprobar",
+      "aprobado": true
+    },
+    {
+      "caso": "Manifiesto alterado rechazado con 409",
+      "aprobado": true
+    }
+  ]
+}
