@@ -1,0 +1,73 @@
+{
+  "commit_servidor": "caecd719a92fa40c060f24051b765e77721ee19b",
+  "archivos": [
+    {
+      "archivo": "backend/app/config/settings.py",
+      "git_blob_main": "010902c699b3dd9e6d309d185937ecde46ac454d",
+      "git_blob_local": "010902c699b3dd9e6d309d185937ecde46ac454d",
+      "coincide": true,
+      "sha256": "6fcbef88badbc92b83354535b9170287180f20c6b56d0134a1c2835f384cb45f"
+    },
+    {
+      "archivo": "backend/app/prompts/system_v1.md",
+      "git_blob_main": "f983fca618773d58f907a190c49858d7343ce01d",
+      "git_blob_local": "f983fca618773d58f907a190c49858d7343ce01d",
+      "coincide": true,
+      "sha256": "34aa807d59dba7c60c23a7c18509f4cd8d727a9f2052f8819f78c5639c070ee1"
+    },
+    {
+      "archivo": "backend/app/services/agente.py",
+      "git_blob_main": "c1ce7331c344b425b8368dce5ccfa1a232721b2d",
+      "git_blob_local": "c1ce7331c344b425b8368dce5ccfa1a232721b2d",
+      "coincide": true,
+      "sha256": "bd2fef433fe8be4996fbd80c19b472f8cf9854e0b98591f6c24a9d9707f9d24d"
+    },
+    {
+      "archivo": "backend/app/services/correcciones.py",
+      "git_blob_main": "70a7e09e92d02972df942ff04db316d96c00e8b5",
+      "git_blob_local": "70a7e09e92d02972df942ff04db316d96c00e8b5",
+      "coincide": true,
+      "sha256": "132ff43cf1927c48e5b40268bd23dd59b1dc7390b45756f166bdcab290e09efe"
+    },
+    {
+      "archivo": "backend/app/services/llm.py",
+      "git_blob_main": "d430a212a8126064e52b98db0e818d9d65c8659e",
+      "git_blob_local": "d430a212a8126064e52b98db0e818d9d65c8659e",
+      "coincide": true,
+      "sha256": "efbb406a5c902ec6066c0bcba2e00c7b61aeffe63d0ad27bbb263186984f2b48"
+    },
+    {
+      "archivo": "backend/app/services/priorizacion.py",
+      "git_blob_main": "652f7da39fa3ceac83877e4204d764cf428f89d4",
+      "git_blob_local": "652f7da39fa3ceac83877e4204d764cf428f89d4",
+      "coincide": true,
+      "sha256": "e593c155cf3f3515dee111b4a872b247369ba9d282414d18229bbc86aaa237a2"
+    },
+    {
+      "archivo": "backend/app/services/rag.py",
+      "git_blob_main": "bc50926748bdae25812a4644b3f69cd882f4abcb",
+      "git_blob_local": "bc50926748bdae25812a4644b3f69cd882f4abcb",
+      "coincide": true,
+      "sha256": "221de9ff6b12573699f7c8bd96efe25bcb37573077bc746348b76abcefba01e5"
+    },
+    {
+      "archivo": "eval/preguntas_referencia.json",
+      "git_blob_main": "019e37e50b137f1e59c5f14ce4bc16b604a16282",
+      "git_blob_local": "019e37e50b137f1e59c5f14ce4bc16b604a16282",
+      "coincide": true,
+      "sha256": "9908373c5650a9fb87992a50d56a05636c0dc2d615a25c0189c02b31e85d85ac"
+    },
+    {
+      "archivo": "knowledge/seguridad_python.md",
+      "git_blob_main": "e49e5ad71624389c0fc73c43e51fce6fa8ee24eb",
+      "git_blob_local": "55e236087dccddcf3a0c029562175e802c8f0823",
+      "coincide": false,
+      "sha256": "7e16eaee4982b0a43126250e7b377e555bac71f0f6a7b7f1b3e7d3ae43b7d7c3"
+    }
+  ],
+  "todos_coinciden": false,
+  "codigo_dataset_y_prompt_coinciden": true,
+  "corpus_local_diferencia": "Una línea final adicional en la copia local; texto restante idéntico",
+  "corpus_normalizado_coincide": true,
+  "corpus_servidor_sha256": "c1f414688331f9456d7c9d4bb08972fca14c0c270765a6603851885eb8ce5da3"
+}

@@ -1,5 +1,10 @@
 # Integración de confirmación humana: PR 34 y PR 35
 
+> Actualización: PR #36 fue fusionado en `caecd71` el 6 de noviembre.
+> El despliegue y la evaluación posterior se registran en
+> [24-validacion-real-postmerge.md](24-validacion-real-postmerge.md).
+> El estado de candidata descrito a continuación corresponde a su preparación.
+
 Estado: candidata aislada de QA, sin fusión en main ni despliegue. Base de producción
 `089f7142f96f3ca261f9aabdee0ef862efea67d6`, frontend `3719437c3bc7f78da6c1fba4319b14db3d8faeef`,
 backend `5644f9570058dfce4f8e2060652867b5511de449`. La rama conserva esos commits

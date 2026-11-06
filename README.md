@@ -1,15 +1,11 @@
 # CODEGUARD — Revisor Inteligente de Código Seguro
 
-> Candidata conjunta de QA: consultar [integración de confirmación](docs/23-integracion-confirmacion-qa.md).
-> Incluye backend real de propuestas; su activación en producción continúa pendiente.
-
-
-> Rama de Frontend y documentación, 6 de noviembre: incluye previsualización,
-> confirmación y cancelación de una copia en demo. La API real de correcciones está
-> deshabilitada hasta acordar el [contrato con Backend](docs/20-contrato-confirmacion-humana.md).
-> Preparada para revisión mediante PR en borrador, sin despliegue. Ver
-> [entrega para integración](docs/22-entrega-frontend-integracion.md), [alcance y ocho historias](docs/21-frontend-producto.md)
-> y [presentación de doce minutos](docs/presentacion/README.md).
+> Actualización del 6 de noviembre: frontend y backend de confirmación integrados
+> mediante PR #36, commit `caecd71`, con CI en main y despliegue verificados.
+> La evaluación real y sus límites se registran en
+> [validación posterior a la integración](docs/24-validacion-real-postmerge.md).
+> La previsualización real sigue deshabilitada por defecto en el frontend público;
+> habilitarla requiere la decisión del equipo y un nuevo build.
 
 CODEGUARD analiza código Python como texto para identificar riesgos de seguridad sin ejecutarlo. Combina una API FastAPI, una interfaz React, Gemini y recuperación documental con ChromaDB. Los hallazgos deben incluir citas recuperadas; si no existe evidencia suficiente, el sistema se abstiene.
 

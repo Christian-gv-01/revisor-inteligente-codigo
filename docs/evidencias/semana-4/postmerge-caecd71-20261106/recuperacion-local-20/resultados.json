@@ -1,0 +1,1165 @@
+{
+  "fecha_utc": "2026-11-06T19:47:53.001798+00:00",
+  "python": "3.12.14",
+  "commit_base": null,
+  "cambios_locales": null,
+  "dependencias": {
+    "chromadb": "1.5.9",
+    "google-genai": "2.31.0",
+    "fastapi": "0.156.1",
+    "pydantic": "2.14.1"
+  },
+  "dataset_sha256": "9908373c5650a9fb87992a50d56a05636c0dc2d615a25c0189c02b31e85d85ac",
+  "runner_sha256": "2384c8e149f9eabc39bbbe5f2980b62d50deaba1d3841625f581f8456edb34f1",
+  "knowledge_sha256": "7e16eaee4982b0a43126250e7b377e555bac71f0f6a7b7f1b3e7d3ae43b7d7c3",
+  "llm_sha256": "efbb406a5c902ec6066c0bcba2e00c7b61aeffe63d0ad27bbb263186984f2b48",
+  "rag_sha256": "221de9ff6b12573699f7c8bd96efe25bcb37573077bc746348b76abcefba01e5",
+  "modo": "rag",
+  "k": 3,
+  "casos": [
+    {
+      "id": "P01",
+      "nombre": "SQL concatenado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables dentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar la estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos, usar opciones fijas permitidas por la aplicacion. Validar una entrada no sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 175.91
+    },
+    {
+      "id": "P02",
+      "nombre": "SQL interpolado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables dentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar la estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos, usar opciones fijas permitidas por la aplicacion. Validar una entrada no sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 180.61
+    },
+    {
+      "id": "P03",
+      "nombre": "SQL con formato",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables dentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar la estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos, usar opciones fijas permitidas por la aplicacion. Validar una entrada no sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 151.24
+    },
+    {
+      "id": "P04",
+      "nombre": "Identificador SQL externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables dentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar la estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos, usar opciones fijas permitidas por la aplicacion. Validar una entrada no sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 153.56
+    },
+    {
+      "id": "P05",
+      "nombre": "SQL parametrizado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables dentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar la estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos, usar opciones fijas permitidas por la aplicacion. Validar una entrada no sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 182.09
+    },
+    {
+      "id": "P06",
+      "nombre": "Tabla permitida",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección SQL consultas construidas mediante concatenación de entradas del usuario consultas parametrizadas",
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables dentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar la estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos, usar opciones fijas permitidas por la aplicacion. Validar una entrada no sustituye la parametrizacion de la consulta.",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Primary Defenses y Allow-List Input Validation",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 151.43
+    },
+    {
+      "id": "P07",
+      "nombre": "os.system externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python os.system con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando del sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar entradas no confiables en comandos. Si una operacion del sistema es necesaria, limitar las opciones permitidas y aplicar el principio de minimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos y comprobar de donde proceden sus argumentos.\n\n### Ampliacion de la Regla 3: subprocess y shell=True\n\nPatrones de revision:\n\n- subprocess.run()\n\n- subprocess.call()\n\n- subprocess.Popen()\n\n- subprocess.check_output()\n\n- os.system()\n\n- os.popen()\n\n- shell=True\n\nExiste riesgo de inyeccion de comandos cuando argumentos controlados por usuarios o fuentes externas llegan a un interprete de comandos sin proteccion adecuada.\n\nRevisar especialmente llamadas como:\n\n```python\n\nsubprocess.run(comando, shell=True)\n\nos.system(comando)\n\nsubprocess.Popen(comando, shell=True)\n\n```\n\nPreferir subprocess con una lista de argumentos y shell=False.\n\nUtilizar ejecutables permitidos, validar los argumentos y evitar que datos externos puedan modificar la operacion.\n\nNo clasificar automaticamente cualquier llamada a subprocess como vulnerable. Comprobar el origen y el tratamiento de los argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.40543854236602783,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5658223032951355,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5701951384544373,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Use of Hard-coded Credentials",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 152.67
+    },
+    {
+      "id": "P08",
+      "nombre": "subprocess shell",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python subprocess.run con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando del sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar entradas no confiables en comandos. Si una operacion del sistema es necesaria, limitar las opciones permitidas y aplicar el principio de minimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos y comprobar de donde proceden sus argumentos.\n\n### Ampliacion de la Regla 3: subprocess y shell=True\n\nPatrones de revision:\n\n- subprocess.run()\n\n- subprocess.call()\n\n- subprocess.Popen()\n\n- subprocess.check_output()\n\n- os.system()\n\n- os.popen()\n\n- shell=True\n\nExiste riesgo de inyeccion de comandos cuando argumentos controlados por usuarios o fuentes externas llegan a un interprete de comandos sin proteccion adecuada.\n\nRevisar especialmente llamadas como:\n\n```python\n\nsubprocess.run(comando, shell=True)\n\nos.system(comando)\n\nsubprocess.Popen(comando, shell=True)\n\n```\n\nPreferir subprocess con una lista de argumentos y shell=False.\n\nUtilizar ejecutables permitidos, validar los argumentos y evitar que datos externos puedan modificar la operacion.\n\nNo clasificar automaticamente cualquier llamada a subprocess como vulnerable. Comprobar el origen y el tratamiento de los argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.393011212348938,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-006",
+            "texto": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos\n\nDocumento complementario: OWASP Path Traversal\n\nExiste riesgo cuando una aplicacion utiliza rutas o nombres de archivos controlados por usuarios sin comprobar que el archivo solicitado permanece dentro del directorio permitido.\n\nPatrones que deben revisarse:\n\n```python\n\nopen(ruta, \"r\")\n\nopen(nombre_archivo, \"w\")\n\nos.path.join(directorio, nombre)\n\nPath(directorio) / nombre\n\npathlib.Path\n\n```\n\nPrestar especial atencion a:\n\n- Uso de ../ para acceder a directorios superiores.\n\n- Rutas absolutas proporcionadas externamente.\n\n- Separadores de directorios manipulados.\n\n- Rutas codificadas o normalizadas incorrectamente.\n\n- Archivos simbolicos que puedan escapar del directorio permitido.\n\nRecomendar:\n\n- Resolver y normalizar las rutas.\n\n- Comprobar que la ruta final permanece dentro del directorio autorizado.\n\n- Aplicar listas de nombres permitidos cuando corresponda.\n\n- Controlar los permisos de acceso.\n\n- Considerar los enlaces simbolicos durante la validacion.\n\nNo considerar automaticamente cualquier llamada a open() como una vulnerabilidad. Comprobar si la ruta puede ser controlada por una fuente no confiable.",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.5724987983703613,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Improper Limitation of a Pathname to a Restricted Directory",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.6543362140655518,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Use of Hard-coded Credentials",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 156.06
+    },
+    {
+      "id": "P09",
+      "nombre": "os.popen externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python os.popen con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando del sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar entradas no confiables en comandos. Si una operacion del sistema es necesaria, limitar las opciones permitidas y aplicar el principio de minimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos y comprobar de donde proceden sus argumentos.\n\n### Ampliacion de la Regla 3: subprocess y shell=True\n\nPatrones de revision:\n\n- subprocess.run()\n\n- subprocess.call()\n\n- subprocess.Popen()\n\n- subprocess.check_output()\n\n- os.system()\n\n- os.popen()\n\n- shell=True\n\nExiste riesgo de inyeccion de comandos cuando argumentos controlados por usuarios o fuentes externas llegan a un interprete de comandos sin proteccion adecuada.\n\nRevisar especialmente llamadas como:\n\n```python\n\nsubprocess.run(comando, shell=True)\n\nos.system(comando)\n\nsubprocess.Popen(comando, shell=True)\n\n```\n\nPreferir subprocess con una lista de argumentos y shell=False.\n\nUtilizar ejecutables permitidos, validar los argumentos y evitar que datos externos puedan modificar la operacion.\n\nNo clasificar automaticamente cualquier llamada a subprocess como vulnerable. Comprobar el origen y el tratamiento de los argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.41078758239746094,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.580498218536377,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Use of Hard-coded Credentials",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5894253849983215,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 153.72
+    },
+    {
+      "id": "P10",
+      "nombre": "Comando interpolado",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python subprocess.check_output con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando del sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar entradas no confiables en comandos. Si una operacion del sistema es necesaria, limitar las opciones permitidas y aplicar el principio de minimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos y comprobar de donde proceden sus argumentos.\n\n### Ampliacion de la Regla 3: subprocess y shell=True\n\nPatrones de revision:\n\n- subprocess.run()\n\n- subprocess.call()\n\n- subprocess.Popen()\n\n- subprocess.check_output()\n\n- os.system()\n\n- os.popen()\n\n- shell=True\n\nExiste riesgo de inyeccion de comandos cuando argumentos controlados por usuarios o fuentes externas llegan a un interprete de comandos sin proteccion adecuada.\n\nRevisar especialmente llamadas como:\n\n```python\n\nsubprocess.run(comando, shell=True)\n\nos.system(comando)\n\nsubprocess.Popen(comando, shell=True)\n\n```\n\nPreferir subprocess con una lista de argumentos y shell=False.\n\nUtilizar ejecutables permitidos, validar los argumentos y evitar que datos externos puedan modificar la operacion.\n\nNo clasificar automaticamente cualquier llamada a subprocess como vulnerable. Comprobar el origen y el tratamiento de los argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.39260947704315186,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-006",
+            "texto": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos\n\nDocumento complementario: OWASP Path Traversal\n\nExiste riesgo cuando una aplicacion utiliza rutas o nombres de archivos controlados por usuarios sin comprobar que el archivo solicitado permanece dentro del directorio permitido.\n\nPatrones que deben revisarse:\n\n```python\n\nopen(ruta, \"r\")\n\nopen(nombre_archivo, \"w\")\n\nos.path.join(directorio, nombre)\n\nPath(directorio) / nombre\n\npathlib.Path\n\n```\n\nPrestar especial atencion a:\n\n- Uso de ../ para acceder a directorios superiores.\n\n- Rutas absolutas proporcionadas externamente.\n\n- Separadores de directorios manipulados.\n\n- Rutas codificadas o normalizadas incorrectamente.\n\n- Archivos simbolicos que puedan escapar del directorio permitido.\n\nRecomendar:\n\n- Resolver y normalizar las rutas.\n\n- Comprobar que la ruta final permanece dentro del directorio autorizado.\n\n- Aplicar listas de nombres permitidos cuando corresponda.\n\n- Controlar los permisos de acceso.\n\n- Considerar los enlaces simbolicos durante la validacion.\n\nNo considerar automaticamente cualquier llamada a open() como una vulnerabilidad. Comprobar si la ruta puede ser controlada por una fuente no confiable.",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.6564950942993164,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Improper Limitation of a Pathname to a Restricted Directory",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.6767148971557617,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 150.29
+    },
+    {
+      "id": "P11",
+      "nombre": "Argumentos constantes",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python subprocess.run con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando del sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar entradas no confiables en comandos. Si una operacion del sistema es necesaria, limitar las opciones permitidas y aplicar el principio de minimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos y comprobar de donde proceden sus argumentos.\n\n### Ampliacion de la Regla 3: subprocess y shell=True\n\nPatrones de revision:\n\n- subprocess.run()\n\n- subprocess.call()\n\n- subprocess.Popen()\n\n- subprocess.check_output()\n\n- os.system()\n\n- os.popen()\n\n- shell=True\n\nExiste riesgo de inyeccion de comandos cuando argumentos controlados por usuarios o fuentes externas llegan a un interprete de comandos sin proteccion adecuada.\n\nRevisar especialmente llamadas como:\n\n```python\n\nsubprocess.run(comando, shell=True)\n\nos.system(comando)\n\nsubprocess.Popen(comando, shell=True)\n\n```\n\nPreferir subprocess con una lista de argumentos y shell=False.\n\nUtilizar ejecutables permitidos, validar los argumentos y evitar que datos externos puedan modificar la operacion.\n\nNo clasificar automaticamente cualquier llamada a subprocess como vulnerable. Comprobar el origen y el tratamiento de los argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.393011212348938,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-006",
+            "texto": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos\n\nDocumento complementario: OWASP Path Traversal\n\nExiste riesgo cuando una aplicacion utiliza rutas o nombres de archivos controlados por usuarios sin comprobar que el archivo solicitado permanece dentro del directorio permitido.\n\nPatrones que deben revisarse:\n\n```python\n\nopen(ruta, \"r\")\n\nopen(nombre_archivo, \"w\")\n\nos.path.join(directorio, nombre)\n\nPath(directorio) / nombre\n\npathlib.Path\n\n```\n\nPrestar especial atencion a:\n\n- Uso de ../ para acceder a directorios superiores.\n\n- Rutas absolutas proporcionadas externamente.\n\n- Separadores de directorios manipulados.\n\n- Rutas codificadas o normalizadas incorrectamente.\n\n- Archivos simbolicos que puedan escapar del directorio permitido.\n\nRecomendar:\n\n- Resolver y normalizar las rutas.\n\n- Comprobar que la ruta final permanece dentro del directorio autorizado.\n\n- Aplicar listas de nombres permitidos cuando corresponda.\n\n- Controlar los permisos de acceso.\n\n- Considerar los enlaces simbolicos durante la validacion.\n\nNo considerar automaticamente cualquier llamada a open() como una vulnerabilidad. Comprobar si la ruta puede ser controlada por una fuente no confiable.",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.5724987983703613,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Improper Limitation of a Pathname to a Restricted Directory",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.6543362140655518,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Use of Hard-coded Credentials",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 151.6
+    },
+    {
+      "id": "P12",
+      "nombre": "Comandos permitidos",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Prevención de inyección de comandos del sistema Python subprocess.run con entradas no confiables",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando del sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar entradas no confiables en comandos. Si una operacion del sistema es necesaria, limitar las opciones permitidas y aplicar el principio de minimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos y comprobar de donde proceden sus argumentos.\n\n### Ampliacion de la Regla 3: subprocess y shell=True\n\nPatrones de revision:\n\n- subprocess.run()\n\n- subprocess.call()\n\n- subprocess.Popen()\n\n- subprocess.check_output()\n\n- os.system()\n\n- os.popen()\n\n- shell=True\n\nExiste riesgo de inyeccion de comandos cuando argumentos controlados por usuarios o fuentes externas llegan a un interprete de comandos sin proteccion adecuada.\n\nRevisar especialmente llamadas como:\n\n```python\n\nsubprocess.run(comando, shell=True)\n\nos.system(comando)\n\nsubprocess.Popen(comando, shell=True)\n\n```\n\nPreferir subprocess con una lista de argumentos y shell=False.\n\nUtilizar ejecutables permitidos, validar los argumentos y evitar que datos externos puedan modificar la operacion.\n\nNo clasificar automaticamente cualquier llamada a subprocess como vulnerable. Comprobar el origen y el tratamiento de los argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.393011212348938,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-006",
+            "texto": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos\n\nDocumento complementario: OWASP Path Traversal\n\nExiste riesgo cuando una aplicacion utiliza rutas o nombres de archivos controlados por usuarios sin comprobar que el archivo solicitado permanece dentro del directorio permitido.\n\nPatrones que deben revisarse:\n\n```python\n\nopen(ruta, \"r\")\n\nopen(nombre_archivo, \"w\")\n\nos.path.join(directorio, nombre)\n\nPath(directorio) / nombre\n\npathlib.Path\n\n```\n\nPrestar especial atencion a:\n\n- Uso de ../ para acceder a directorios superiores.\n\n- Rutas absolutas proporcionadas externamente.\n\n- Separadores de directorios manipulados.\n\n- Rutas codificadas o normalizadas incorrectamente.\n\n- Archivos simbolicos que puedan escapar del directorio permitido.\n\nRecomendar:\n\n- Resolver y normalizar las rutas.\n\n- Comprobar que la ruta final permanece dentro del directorio autorizado.\n\n- Aplicar listas de nombres permitidos cuando corresponda.\n\n- Controlar los permisos de acceso.\n\n- Considerar los enlaces simbolicos durante la validacion.\n\nNo considerar automaticamente cualquier llamada a open() como una vulnerabilidad. Comprobar si la ruta puede ser controlada por una fuente no confiable.",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.5724987983703613,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Improper Limitation of a Pathname to a Restricted Directory",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.6543362140655518,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Use of Hard-coded Credentials",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 182.95
+    },
+    {
+      "id": "P13",
+      "nombre": "eval externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Uso inseguro de eval con entradas no confiables Python ejecución arbitraria de código",
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.3863523006439209,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45747995376586914,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5011967420578003,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Use of Hard-coded Credentials",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 180.35
+    },
+    {
+      "id": "P14",
+      "nombre": "exec externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "mrr_at_k": 0.0,
+        "hit_at_k": 0.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Uso inseguro de exec con entradas no confiables Python ejecución arbitraria de código",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando del sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar entradas no confiables en comandos. Si una operacion del sistema es necesaria, limitar las opciones permitidas y aplicar el principio de minimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos y comprobar de donde proceden sus argumentos.\n\n### Ampliacion de la Regla 3: subprocess y shell=True\n\nPatrones de revision:\n\n- subprocess.run()\n\n- subprocess.call()\n\n- subprocess.Popen()\n\n- subprocess.check_output()\n\n- os.system()\n\n- os.popen()\n\n- shell=True\n\nExiste riesgo de inyeccion de comandos cuando argumentos controlados por usuarios o fuentes externas llegan a un interprete de comandos sin proteccion adecuada.\n\nRevisar especialmente llamadas como:\n\n```python\n\nsubprocess.run(comando, shell=True)\n\nos.system(comando)\n\nsubprocess.Popen(comando, shell=True)\n\n```\n\nPreferir subprocess con una lista de argumentos y shell=False.\n\nUtilizar ejecutables permitidos, validar los argumentos y evitar que datos externos puedan modificar la operacion.\n\nNo clasificar automaticamente cualquier llamada a subprocess como vulnerable. Comprobar el origen y el tratamiento de los argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.43273812532424927,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.48014217615127563,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.4896758198738098,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Use of Hard-coded Credentials",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 184.88
+    },
+    {
+      "id": "P15",
+      "nombre": "eval en función",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Uso inseguro de eval con entradas no confiables Python ejecución arbitraria de código",
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.3863523006439209,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45747995376586914,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5011967420578003,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Use of Hard-coded Credentials",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 180.87
+    },
+    {
+      "id": "P16",
+      "nombre": "eval tras strip",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "Uso inseguro de eval con entradas no confiables Python ejecución arbitraria de código",
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.3863523006439209,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45747995376586914,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5011967420578003,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Use of Hard-coded Credentials",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 151.41
+    },
+    {
+      "id": "P17",
+      "nombre": "Conversión numérica",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 0.5,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "entrada = input(\"Número: \")\ntry:\n    resultado = int(entrada) + 1\nexcept ValueError:\n    resultado = None\n",
+        "fuentes": [
+          {
+            "id": "seguridad_python-004",
+            "texto": "Regla 4: Prevencion general de inyecciones\n\nUna inyeccion ocurre cuando datos no confiables alteran la sintaxis o el significado de una consulta o instruccion interpretada.\n\nPriorizar APIs seguras y mecanismos parametrizados. Aplicar validacion positiva de entradas cuando corresponda. Si no existe una API segura, el escape debe ser especifico del contexto y del interprete.\n\nNo asumir que una entrada es segura unicamente porque supera una validacion superficial.",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.7221401929855347,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Injection Prevention Rules",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          },
+          {
+            "id": "seguridad_python-001",
+            "texto": "Regla 1: Evitar eval con entradas no confiables\n\nLa funcion eval puede ejecutar expresiones construidas a partir de datos externos. Si una persona puede controlar la entrada evaluada, puede provocar ejecucion de codigo no prevista.\n\nDurante la revision, comprobar si eval recibe datos controlados por el usuario. Recomendar alternativas que no ejecuten codigo arbitrario.\n\nast.literal_eval limita la evaluacion a literales, pero tampoco debe considerarse una solucion universal para entradas no confiables, porque entradas profundamente anidadas pueden consumir demasiados recursos.",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "documento": "seguridad_python.md",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7248492240905762,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Code Injection y recomendaciones para Python",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 152.98
+    },
+    {
+      "id": "P18",
+      "nombre": "Operaciones fijas",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "mrr_at_k": 0.0,
+        "hit_at_k": 0.0,
+        "sin_fuentes_fuera_cobertura": null
+      },
+      "respuesta": {
+        "consulta_transformada": "import operator\noperaciones = {\"sumar\": operator.add, \"restar\": operator.sub}\nopcion = input(\"Operación: \")\nif opcion in operaciones:\n    resultado = operaciones[opcion](2, 3)\n",
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "texto": "Regla 3: Prevenir inyeccion de comandos del sistema\n\nExiste riesgo cuando datos controlados externamente modifican el comando del sistema que ejecuta la aplicacion.\n\nPreferir APIs que no invoquen un interprete de comandos. No concatenar entradas no confiables en comandos. Si una operacion del sistema es necesaria, limitar las opciones permitidas y aplicar el principio de minimo privilegio.\n\nDurante la revision, buscar usos de funciones de ejecucion de comandos y comprobar de donde proceden sus argumentos.\n\n### Ampliacion de la Regla 3: subprocess y shell=True\n\nPatrones de revision:\n\n- subprocess.run()\n\n- subprocess.call()\n\n- subprocess.Popen()\n\n- subprocess.check_output()\n\n- os.system()\n\n- os.popen()\n\n- shell=True\n\nExiste riesgo de inyeccion de comandos cuando argumentos controlados por usuarios o fuentes externas llegan a un interprete de comandos sin proteccion adecuada.\n\nRevisar especialmente llamadas como:\n\n```python\n\nsubprocess.run(comando, shell=True)\n\nos.system(comando)\n\nsubprocess.Popen(comando, shell=True)\n\n```\n\nPreferir subprocess con una lista de argumentos y shell=False.\n\nUtilizar ejecutables permitidos, validar los argumentos y evitar que datos externos puedan modificar la operacion.\n\nNo clasificar automaticamente cualquier llamada a subprocess como vulnerable. Comprobar el origen y el tratamiento de los argumentos.",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "documento": "seguridad_python.md",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.7198848724365234,
+            "area": "seguridad",
+            "tipo_fuente": "seguridad",
+            "coleccion": "seguridad_python",
+            "source_section": "Defensas contra la inyeccion de comandos",
+            "review_date": "2026-10-28",
+            "effective_date": ""
+          }
+        ]
+      },
+      "duracion_ms": 165.03
+    },
+    {
+      "id": "P19",
+      "nombre": "Fuera de cobertura: estadística",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": null,
+        "recall_at_k": null,
+        "mrr_at_k": null,
+        "hit_at_k": null,
+        "sin_fuentes_fuera_cobertura": 1.0
+      },
+      "respuesta": {
+        "consulta_transformada": "def media(valores):\n    return sum(valores) / len(valores) if valores else 0\n",
+        "fuentes": []
+      },
+      "duracion_ms": 161.91
+    },
+    {
+      "id": "P20",
+      "nombre": "Fuera de cobertura: geometría",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": null,
+        "recall_at_k": null,
+        "mrr_at_k": null,
+        "hit_at_k": null,
+        "sin_fuentes_fuera_cobertura": 1.0
+      },
+      "respuesta": {
+        "consulta_transformada": "def area_rectangulo(ancho, alto):\n    return ancho * alto\n",
+        "fuentes": []
+      },
+      "duracion_ms": 158.02
+    }
+  ],
+  "configuracion": {
+    "coleccion": "seguridad_python",
+    "fragmentos": 6,
+    "distancia_maxima": 0.75,
+    "proveedor_ia_utilizado": false,
+    "calentamiento_fuera_de_latencia": true
+  },
+  "resumen": {
+    "total": 20,
+    "completados": 20,
+    "errores": 0,
+    "tasa_completitud": 1.0,
+    "latencia_media_ms": 163.879,
+    "latencia_p95_ms": 182.95,
+    "precision_at_k": 0.4629629629629629,
+    "recall_at_k": 0.8055555555555556,
+    "mrr_at_k": 0.8611111111111112,
+    "hit_at_k": 0.8888888888888888,
+    "sin_fuentes_fuera_cobertura": 1.0,
+    "casos_con_referencias_esperadas_evaluados": 18
+  }
+}

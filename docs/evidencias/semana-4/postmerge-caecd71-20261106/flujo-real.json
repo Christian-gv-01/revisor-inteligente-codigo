@@ -1,0 +1,254 @@
+{
+  "fecha_utc": "2026-11-06T20:00:48.935127+00:00",
+  "base_url": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "commit_servidor_verificado": "caecd719a92fa40c060f24051b765e77721ee19b",
+  "proveedor": "real mediante servidor",
+  "casos": [
+    {
+      "caso": "Agente real: decisiones, informe y citas",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Previsualización real para aprobar",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Sin sesión: no permite decidir",
+      "http_status": 404,
+      "aprobado": true
+    },
+    {
+      "caso": "Decisión real: aprobar",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Aprobación idempotente: contenido idéntico",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Decisión opuesta: conflicto",
+      "http_status": 409,
+      "aprobado": true
+    },
+    {
+      "caso": "Previsualización real para rechazar",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Decisión real: rechazar",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Decisión opuesta: conflicto",
+      "http_status": 409,
+      "aprobado": true
+    }
+  ],
+  "codigo_ejecutado": false,
+  "original_sobrescrito": false,
+  "nota": "Sesión HTTP, sin cookies en evidencia; no activa la interfaz de correcciones en producción.",
+  "respuesta_agente": {
+    "archivo": "usuarios.py",
+    "modo": "gemini_real",
+    "pasos": [
+      {
+        "numero": 1,
+        "herramienta": "inspeccionar_estructura",
+        "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+        "resultado": {
+          "sintaxis_valida": true,
+          "total_lineas": 9,
+          "funciones": 0,
+          "clases": 0,
+          "importaciones": 1,
+          "evidencia_ruff_bandit": {
+            "estado": "completo",
+            "herramientas": [
+              {
+                "herramienta": "ruff",
+                "estado": "ok",
+                "hallazgos": 0
+              },
+              {
+                "herramienta": "bandit",
+                "estado": "ok",
+                "hallazgos": 1
+              }
+            ],
+            "total_hallazgos": 1,
+            "reglas": [
+              {
+                "herramienta": "bandit",
+                "regla": "B608",
+                "tipo": "seguridad",
+                "linea": 6,
+                "severidad": "media"
+              }
+            ]
+          }
+        },
+        "origen": "automatico"
+      },
+      {
+        "numero": 2,
+        "herramienta": "revisar_consultas_sql",
+        "motivo": "Analizar la consulta SQL concatenada para verificar vulnerabilidades de inyeccion SQL.",
+        "resultado": {
+          "sintaxis_valida": true,
+          "indicadores": [
+            {
+              "linea": 7,
+              "patron": "SQL dinamico (variable)"
+            }
+          ]
+        },
+        "origen": "gemini"
+      },
+      {
+        "numero": 3,
+        "herramienta": "detectar_llamadas_sensibles",
+        "motivo": "Detectar llamadas a metodos sensibles en el codigo.",
+        "resultado": {
+          "sintaxis_valida": true,
+          "indicadores": []
+        },
+        "origen": "gemini"
+      }
+    ],
+    "max_pasos": 3,
+    "informe": {
+      "archivo": "usuarios.py",
+      "estado": "analizado",
+      "hallazgos": [
+        {
+          "linea": 6,
+          "severidad": "alta",
+          "categoria": "Inyección SQL",
+          "titulo": "Construcción insegura de consulta SQL mediante concatenación",
+          "explicacion": "La consulta SQL se construye concatenando directamente una entrada de usuario no confiable ('nombre'), lo que permite alterar la sintaxis y ejecutar comandos maliciosos en la base de datos.",
+          "correccion_sugerida": "Utilizar consultas parametrizadas separando la estructura de la consulta de los valores, por ejemplo: cursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))",
+          "referencias": [
+            "seguridad_python-002",
+            "seguridad_python-004"
+          ],
+          "fragmento_codigo": "consulta = \"SELECT * FROM usuarios WHERE nombre = '\" + nombre + \"'\""
+        }
+      ],
+      "fuentes": [
+        {
+          "id": "seguridad_python-002",
+          "documento": "seguridad_python.md",
+          "seccion": "Regla 2: Prevenir inyeccion SQL",
+          "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+          "distancia": 0.19564729928970337
+        },
+        {
+          "id": "seguridad_python-004",
+          "documento": "seguridad_python.md",
+          "seccion": "Regla 4: Prevencion general de inyecciones",
+          "fuente": "OWASP Injection Prevention Cheat Sheet",
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+          "distancia": 0.5743893384933472
+        },
+        {
+          "id": "seguridad_python-001",
+          "documento": "seguridad_python.md",
+          "seccion": "Regla 1: Evitar eval con entradas no confiables",
+          "fuente": "MITRE CWE-94",
+          "url": "https://cwe.mitre.org/data/definitions/94.html",
+          "distancia": 0.7142115831375122
+        }
+      ],
+      "mensaje": null
+    },
+    "decisiones": [
+      {
+        "numero": 1,
+        "herramienta": "revisar_consultas_sql",
+        "motivo": "Analizar la consulta SQL concatenada para verificar vulnerabilidades de inyeccion SQL.",
+        "estado": "ejecutada"
+      },
+      {
+        "numero": 2,
+        "herramienta": "detectar_llamadas_sensibles",
+        "motivo": "Detectar llamadas a metodos sensibles en el codigo.",
+        "estado": "ejecutada"
+      }
+    ],
+    "fase_error": null,
+    "analisis_estatico": {
+      "archivo": "usuarios.py",
+      "estado": "completo",
+      "hallazgos": [
+        {
+          "herramienta": "bandit",
+          "regla": "B608",
+          "tipo": "seguridad",
+          "linea": 6,
+          "columna": null,
+          "severidad": "media",
+          "titulo": "Bandit B608: hardcoded_sql_expressions",
+          "descripcion": "Possible SQL injection vector through string-based query construction.",
+          "confianza": "baja",
+          "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+        }
+      ],
+      "herramientas": [
+        {
+          "herramienta": "ruff",
+          "estado": "ok",
+          "hallazgos": 0
+        },
+        {
+          "herramienta": "bandit",
+          "estado": "ok",
+          "hallazgos": 1
+        }
+      ],
+      "mensaje": null
+    },
+    "requiere_confirmacion_humana": false,
+    "politica": "Solo lectura; sin ejecución de código ni cambios de archivos"
+  },
+  "propuesta_aprobar": {
+    "version": "1",
+    "propuesta_id": "4feVhf-u8DqLO92nu8s4KE6ChoezMOURAJD7onxp08o",
+    "estado": "pendiente_confirmacion",
+    "accion": "descargar_copia",
+    "archivo_original": "usuarios.py",
+    "archivo_salida": "usuarios.corregido.py",
+    "sha256_original": "dce6a1429c08c8e5edbb3054793a31c641fbcba89eacc13fa49911f13dff0495",
+    "sha256_propuesto": "04265bbfc331fedcb6797a4845eaa01bd20d903755eb79dcb55f8f3b041ad7af",
+    "codigo_propuesto": "import sqlite3\n\nconexion = sqlite3.connect(\"usuarios.db\")\ncursor = conexion.cursor()\nnombre = input(\"Nombre de usuario: \")\nconsulta = \"SELECT * FROM usuarios WHERE nombre = ?\"\ncursor.execute(consulta, (nombre,))\n\nprint(cursor.fetchall())",
+    "caduca_en": "2026-11-06T20:06:14.486Z",
+    "advertencias": [
+      "La propuesta requiere revisión humana antes de utilizar la copia.",
+      "No se ejecutó el código ni se modificó el archivo original."
+    ]
+  },
+  "propuesta_rechazar": {
+    "version": "1",
+    "propuesta_id": "i8-NjL2U4H-GdszEYjKH_vx6a9I8UXiwvzi8nCBwF5c",
+    "estado": "pendiente_confirmacion",
+    "accion": "descargar_copia",
+    "archivo_original": "usuarios.py",
+    "archivo_salida": "usuarios.corregido.py",
+    "sha256_original": "dce6a1429c08c8e5edbb3054793a31c641fbcba89eacc13fa49911f13dff0495",
+    "sha256_propuesto": "04265bbfc331fedcb6797a4845eaa01bd20d903755eb79dcb55f8f3b041ad7af",
+    "codigo_propuesto": "import sqlite3\n\nconexion = sqlite3.connect(\"usuarios.db\")\ncursor = conexion.cursor()\nnombre = input(\"Nombre de usuario: \")\nconsulta = \"SELECT * FROM usuarios WHERE nombre = ?\"\ncursor.execute(consulta, (nombre,))\n\nprint(cursor.fetchall())",
+    "caduca_en": "2026-11-06T20:06:55.411Z",
+    "advertencias": [
+      "La propuesta requiere revisión humana antes de utilizar la copia.",
+      "No se ejecutó el código ni se modificó el archivo original."
+    ]
+  },
+  "total": 9,
+  "aprobados": 9
+}

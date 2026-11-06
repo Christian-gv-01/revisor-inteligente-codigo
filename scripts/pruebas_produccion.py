@@ -35,7 +35,7 @@ class ClienteQA(httpx.Client):
         peso = 0
         if method.upper() == "POST":
             peso = 5 if ruta in {"/api/v1/archivos/zip", "/api/v1/repositorios/github"} else 1
-            if ruta == "/api/v1/agente/analizar":
+            if ruta in {"/api/v1/agente/analizar", "/api/v1/correcciones/previsualizar"}:
                 peso = 3
         if remoto and peso:
             while True:
@@ -290,6 +290,7 @@ def main() -> int:
     parser.add_argument("--base-url", required=True, help="URL HTTPS pública o URL local de prueba")
     parser.add_argument("--output", type=Path, help="Archivo JSON de evidencia")
     parser.add_argument("--timeout", type=float, default=20.0)
+    parser.add_argument("--usar-proxy-entorno", action="store_true", help="Usa el proxy configurado en el equipo de QA; no cambia la validación TLS")
     parser.add_argument("--casos", nargs="+", choices=[f"P{n:02d}" for n in range(1, 27)], help="Repetir solo los casos indicados, conservando sus IDs")
     args = parser.parse_args()
 
@@ -298,7 +299,7 @@ def main() -> int:
         base_url=base_url,
         timeout=httpx.Timeout(args.timeout),
         follow_redirects=False,
-        trust_env=False,
+        trust_env=args.usar_proxy_entorno,
         headers={"User-Agent": "CODEGUARD-QA-Entrega4/1.0"},
     ) as cliente:
         resultados = casos(cliente, set(args.casos) if args.casos else None)
