@@ -21,6 +21,9 @@ async def ciclo_vida(_app):
         while True:
             try:
                 await run_in_threadpool(limpiar_caducadas)
+                if settings.bandera("PROJECT_BUDGET_ENABLED"):
+                    from app.services.proyectos import limpiar
+                    await run_in_threadpool(limpiar)
             except Exception as exc:
                 logging.getLogger(__name__).warning("correction_cleanup_failed tipo=%s", type(exc).__name__)
             await asyncio.sleep(60)
@@ -43,7 +46,7 @@ from app.models.analisis import (
     SolicitudGitHub,
 )
 
-from app.services.github_repos import obtener_archivos_python_github
+from app.services.github_repos import obtener_archivos_python_github, validar_url_github
 from app.services.files import leer_python_seguro
 from app.services.llm import analizar_codigo, LLMError
 from app.services.zip_files import leer_zip_seguro
@@ -103,12 +106,13 @@ async def proteger_analisis(request: Request, call_next):
     es_costosa = (
         request.method == "POST"
         and (request.url.path in ENDPOINT_WEIGHTS or
-             (request.url.path.startswith("/api/v1/correcciones/") and request.url.path.endswith("/decision")))
+             (request.url.path.startswith(("/api/v1/correcciones/", "/api/v1/proyectos/")) and request.url.path.endswith("/decision")))
     )
     if not es_costosa:
         return await call_next(request)
 
-    with presupuesto_solicitud(*settings.limites_solicitud(request.url.path)):
+    ruta_presupuesto = "/api/v1/archivos/zip" if request.url.path.startswith("/api/v1/proyectos/") else request.url.path
+    with presupuesto_solicitud(*settings.limites_solicitud(ruta_presupuesto)):
         return await _proteger_con_limites(request, call_next)
 
 
@@ -123,7 +127,7 @@ async def _proteger_con_limites(request: Request, call_next):
             request, confiar_railway_publico=confiar_proxy_publico
         )
         resultado = limitador_peticiones.comprobar(
-            identidad, ENDPOINT_WEIGHTS.get(request.url.path, 1)
+            identidad, ENDPOINT_WEIGHTS.get(request.url.path, 5 if request.url.path.startswith("/api/v1/proyectos/") else 1)
         )
         if not resultado.permitido:
             return JSONResponse(
@@ -302,6 +306,8 @@ async def analizar_zip(
 
     try:
         archivos = await leer_zip_seguro(archivo)
+        if settings.bandera("PROJECT_BUDGET_ENABLED"):
+            raise HTTPException(428, "Revisa y aprueba el presupuesto en /api/v1/proyectos/previsualizar/zip.")
 
         # Limitar el consumo del proveedor de IA.
         if len(archivos) > 5:
@@ -359,6 +365,9 @@ async def analizar_repositorio_github(
     """
 
     try:
+        if settings.bandera("PROJECT_BUDGET_ENABLED"):
+            validar_url_github(solicitud.url)
+            raise HTTPException(428, "Revisa y aprueba el presupuesto en /api/v1/proyectos/previsualizar/github.")
         archivos = await run_in_threadpool(
             obtener_archivos_python_github,
             solicitud.url,
@@ -394,6 +403,8 @@ from app.routes.agente import router as agente_router
 app.include_router(agente_router)
 from app.routes.correcciones import router as correcciones_router
 app.include_router(correcciones_router)
+from app.routes.proyectos import router as proyectos_router
+app.include_router(proyectos_router)
 
 
 # En producción, servir el frontend compilado desde el mismo origen.
