@@ -4,6 +4,7 @@ import { SEVERITIES, SEVERITY_LABELS } from "../types/analysis";
 import { getFindingSources } from "../services/sources";
 import { Icon } from "./Icon";
 import { SourceList } from "./SourceList";
+import { AgentTracePanel } from "./AgentTracePanel";
 import { StaticFindingsPanel } from "./StaticFindingsPanel";
 
 interface FindingsPanelProps {
@@ -27,6 +28,8 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
         <div><Icon name="file" size={23} /><h2 id="results-title">Informe de revisión</h2></div>
         {onExport ? <button className="text-button export-button" disabled={loading} onClick={onExport}><Icon name="download" size={18} />Exportar JSON</button> : <span className="count-badge">{result?.hallazgos.length ?? "—"}</span>}
       </div>
+      {!loading && result && <p className="analysis-origins">{result.hallazgos.length} hallazgos contextuales · {result.analisis_estatico?.reduce((n, r) => n + r.hallazgos.length, 0) ?? 0} observaciones de herramientas. Los conteos pueden referirse al mismo riesgo.</p>}
+      {!loading && <AgentTracePanel trace={result?.traza_agente} />}
       {!loading && result && result.hallazgos.length > 0 && (
         <>
           <div className={`analysis-summary summary-${highest}`}>
@@ -92,3 +95,4 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
     </section>
   );
 }
+

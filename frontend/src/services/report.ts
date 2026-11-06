@@ -9,7 +9,9 @@ export function createReport(result: AnalysisResult) {
     archivos: result.archivos.map((file) => file.nombre),
     fuentes: result.fuentes ?? [],
     hallazgos: result.hallazgos,
+    ...(result.traza_agente ? { traza_agente: result.traza_agente } : {}),
     // Procedencia separada: las reglas Ruff/Bandit no son citas RAG.
     analisis_estatico: result.analisis_estatico ?? [],
   };
 }
+

@@ -1,0 +1,64 @@
+{
+  "base_main": "ddf55ece51fe9c0604387d39ba1c48fe309346a3",
+  "proveedor_ia": "simulado en pruebas automatizadas; sin evaluación nueva de Gemini real",
+  "backend_y_qa": {
+    "aprobadas": 250
+  },
+  "frontend_unitarias": {
+    "aprobadas": 76,
+    "http_omitidas_en_comando_unitario": 17
+  },
+  "lint": "aprobado",
+  "build": "aprobado; advertencia existente del tamaño del paquete",
+  "http": {
+    "con_estatico": {
+      "estado": "aprobado",
+      "pruebas": {
+        "numTotalTests": 17,
+        "numPassedTests": 17,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "success": true
+      },
+      "rag": "ChromaDB local real",
+      "proveedor_ia": "simulado",
+      "analisis_estatico": "Ruff/Bandit reales"
+    },
+    "sin_estatico": {
+      "estado": "aprobado",
+      "pruebas": {
+        "numTotalTests": 17,
+        "numPassedTests": 12,
+        "numFailedTests": 0,
+        "numPendingTests": 5,
+        "success": true
+      },
+      "rag": "ChromaDB local real",
+      "proveedor_ia": "simulado",
+      "analisis_estatico": "desactivado"
+    }
+  },
+  "recuperacion_muestra_real": {
+    "proveedor_ia_utilizado": false,
+    "codigo_ejecutado": false,
+    "reglas_estaticas": 15,
+    "fuentes_recuperadas": [
+      "seguridad_python-002",
+      "seguridad_python-003",
+      "seguridad_python-001",
+      "seguridad_python-005",
+      "seguridad_python-004",
+      "seguridad_python-006"
+    ],
+    "cobertura_comandos": true
+  },
+  "visual_navegador": "pendiente; ejecutable Chromium no disponible",
+  "comparacion_gemini_real_nueva": "pendiente de despliegue",
+  "fuentes_codigo": {
+    "backend/app/services/llm.py": "ebe76448734f416cb183ee1ef723ca2bbdad2c25d8cb46ada0f243ac14e02f84",
+    "backend/app/services/evidencia.py": "230642ac65550dab2149931dd8afdfa57dcb746ae1f9c9682213b474185e1aad",
+    "backend/app/services/agente.py": "b0be7690382a78409942f88b76b62eda1448680d51021b3b1209a1943cc2292c",
+    "frontend/src/services/api.ts": "caf1e2d70583d3302e248f2567cd5051df0e7dcb82634dd72fdb9107fadeed42",
+    "frontend/src/pages/HomePage.tsx": "b7b6a7f647c3c9fbed0ce4c8c0a62ba77efad8ae57157a68ed3df3c08e883c2c"
+  }
+}

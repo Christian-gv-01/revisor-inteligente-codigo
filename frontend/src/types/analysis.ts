@@ -22,6 +22,8 @@ export interface Finding {
   titulo: string;
   explicacion: string;
   correccion_sugerida: string;
+  fragmento_codigo?: string;
+  linea_reportada_modelo?: number;
 
   // IDs exactos de los fragmentos RAG
   // que respaldan el hallazgo.
@@ -101,6 +103,7 @@ export interface AnalysisResult {
   fuentes?: SourceReference[];
   // Uno por archivo; separado de los hallazgos que requieren citas RAG.
   analisis_estatico?: StaticAnalysis[];
+  traza_agente?: AgentTrace;
 
   // Indica si se utilizó el modo demostración.
   demo: boolean;
@@ -110,6 +113,28 @@ export interface AnalysisResult {
 
   // Explicación de la abstención, si corresponde.
   mensaje?: string | null;
+}
+
+export type AgentTool = "inspeccionar_estructura" | "detectar_llamadas_sensibles" | "revisar_consultas_sql";
+export interface AgentTrace {
+  archivo: string;
+  modo: "gemini_real" | "degradado";
+  max_pasos: number;
+  fase_error: "planificacion" | "informe" | null;
+  pasos: {
+    numero: number;
+    herramienta: AgentTool;
+    motivo: string;
+    origen: "automatico" | "gemini" | "local";
+    sintaxis_valida: boolean;
+    indicadores: { linea: number; detalle: string }[];
+  }[];
+  decisiones: {
+    numero: number;
+    herramienta: AgentTool | "finalizar";
+    motivo: string;
+    estado: "ejecutada" | "finalizar" | "repetida";
+  }[];
 }
 
 // =========================================================
@@ -141,3 +166,4 @@ export const SEVERITY_LABELS: Record<Severity, string> = {
   media: "Media",
   baja: "Baja",
 };
+

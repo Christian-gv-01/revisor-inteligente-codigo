@@ -17,6 +17,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.analisis import InformeModelo, RespuestaAnalisis
 from app.services.llm import LLMError
+from app.services.evidencia import construir_evidencia
 from app.services.static_analysis import (
     EstadoHerramienta,
     ResultadoEstatico,
@@ -323,6 +324,7 @@ def ejecutar_agente(
     if not solicitud.codigo.strip() or "\x00" in solicitud.codigo:
         raise ValueError("El código debe ser texto Python no vacío y sin bytes nulos.")
     elegir = planificador or planificar_gemini
+    analizador_inyectado = analizador is not None
     if analizador is None:
         from app.services.llm import analizar_codigo
         analizador = analizar_codigo
@@ -417,7 +419,13 @@ def ejecutar_agente(
         len(pasos), len(decisiones),
     )
     try:
-        informe = analizador(solicitud.codigo)
+        if analizador_inyectado:
+            informe = analizador(solicitud.codigo)
+        else:
+            evidencia = construir_evidencia(
+                solicitud.archivo, [p.model_dump() for p in pasos], estatico,
+            )
+            informe = analizador(solicitud.codigo, evidencia=evidencia)
     except LLMError as error:
         logger.warning(
             "agente_fallo fase=informe status=%s pasos=%d decisiones=%d",
@@ -447,3 +455,4 @@ def inspeccion_local(solicitud: SolicitudAgente) -> list[PasoAgente]:
         motivo="Herramienta estática programada; modo local sin IA.",
         resultado=funcion(solicitud.codigo), origen="local",
     ) for i, (nombre, funcion) in enumerate(herramientas, start=1)]
+

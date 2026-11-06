@@ -1,0 +1,8 @@
+.agent-trace { margin: 16px; padding: 14px 16px; border: 1px solid #bedde2; border-radius: 10px; background: #f1fbfc; color: #163b4a; overflow-wrap: anywhere; }
+.agent-trace summary { cursor: pointer; font-weight: 700; }
+.agent-trace summary span { display: block; margin: 5px 0 0 16px; font-weight: 400; font-size: .85em; }
+.agent-trace ol { padding-left: 22px; }
+.agent-trace ol > li { margin: 14px 0; padding-left: 4px; }
+.agent-trace small { display: block; margin-top: 3px; color: #35576a; }
+.agent-trace p, .agent-trace ul { margin: 8px 0; font-size: .9em; line-height: 1.6; }
+.analysis-origins { padding: 10px 18px; margin: 0; color: #35576a; font-size: .85em; overflow-wrap: anywhere; border-bottom: 1px solid #deebf0; }

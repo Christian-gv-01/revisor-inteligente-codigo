@@ -1,4 +1,4 @@
-﻿
+
 from typing import Literal
 
 from pydantic import BaseModel, Field, PrivateAttr
@@ -22,6 +22,8 @@ class Hallazgo(BaseModel):
     # Identificadores exactos de los fragmentos que respaldan
     # el hallazgo. Se validarán en el servicio LLM.
     referencias: list[str] = Field(default_factory=list)
+    fragmento_codigo: str | None = Field(default=None, max_length=500, exclude_if=lambda v: v is None)
+    linea_reportada_modelo: int | None = Field(default=None, ge=1, exclude_if=lambda v: v is None)
 
 
 class Fuente(BaseModel):
@@ -46,6 +48,15 @@ class InformeModelo(BaseModel):
     # Metadatos internos que no forman parte del JSON de Gemini.
     _fuentes: list[dict] = PrivateAttr(default_factory=list)
     _motivo_abstencion: str | None = PrivateAttr(default=None)
+    _revision_parcial: str | None = PrivateAttr(default=None)
+
+    @property
+    def estado_validado(self) -> str:
+        return "abstenido" if self._motivo_abstencion else "parcial" if self._revision_parcial else "analizado"
+
+    @property
+    def mensaje_validado(self) -> str | None:
+        return self._motivo_abstencion or self._revision_parcial
 
     @property
     def fuentes(self) -> list[dict]:
@@ -88,4 +99,5 @@ class RespuestaAnalisisRepositorio(BaseModel):
     estado: Literal["analizado", "parcial"]
     total_archivos: int = Field(ge=1)
     informes: list[RespuestaAnalisis]
+
 
