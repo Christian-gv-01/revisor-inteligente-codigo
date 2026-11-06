@@ -1,34 +1,14 @@
-﻿import os
+import os
 from pathlib import Path
 
 import chromadb
 
 
-ROOT = Path(__file__).resolve().parents[3]
-def obtener_ruta_chroma() -> Path:
-    """Ubicacion del indice vectorial; CHROMA_PATH permite un volumen externo."""
-    configurada = os.getenv("CHROMA_PATH", "").strip()
-    return Path(configurada).expanduser() if configurada else ROOT / "data" / "chroma"
-
+from app.config.settings import ROOT, obtener_ruta_chroma, obtener_distancia_rag
 
 DB_PATH = obtener_ruta_chroma()
-
-COLLECTION_NAMES = (
-    "seguridad_python",
-    "contexto_proyecto",
-)
-
-# Umbral maximo de distancia permitido.
-# Puede configurarse mediante RAG_MAX_DISTANCE.
-try:
-    MAX_DISTANCE = float(
-        os.getenv("RAG_MAX_DISTANCE", "0.75")
-    )
-except (TypeError, ValueError):
-    MAX_DISTANCE = 0.75
-
-# La distancia coseno de ChromaDB se limita a [0, 2].
-MAX_DISTANCE = max(0.0, min(MAX_DISTANCE, 2.0))
+COLLECTION_NAMES = ("seguridad_python", "contexto_proyecto")
+MAX_DISTANCE = obtener_distancia_rag()
 
 
 class RAGNoDisponibleError(RuntimeError):

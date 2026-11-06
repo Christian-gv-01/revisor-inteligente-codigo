@@ -1,0 +1,99 @@
+{
+  "fecha_revision_documental": "2026-11-05",
+  "base_git": "65675e27fd996a7e71a926336dba6dffb5e539e2",
+  "nota": "Copias consultadas durante Entrega 4, no evidencia histórica de Semana 1. Las páginas son datos de referencia; no se ejecutan ni se ingieren automáticamente.",
+  "fuente_curada": "knowledge/seguridad_python.md",
+  "sha256_fuente_curada": "b106e021a4de2135e52c299cf0ae9141c90eb0177120ddcad3fc8a9fdb0d555f",
+  "fecha_revision_declarada_resumen": "2026-10-28",
+  "vigencia_legal": "No declarada; referencias técnicas",
+  "fuentes": [
+    {
+      "id": "cwe-94",
+      "url": "https://cwe.mitre.org/data/definitions/94.html",
+      "fragmento": "seguridad_python-001",
+      "archivo": "originales/cwe-94.html",
+      "fecha_descarga_utc": "2026-11-06T01:53:08.7663017Z",
+      "http_status": 200,
+      "formato": "HTML guardado como UTF-8",
+      "sha256": "fdbcbfe5a7e11d07fb0faaf3a0297ae5253337d9173160aaf644708ebb6b84e9",
+      "bytes": 232510
+    },
+    {
+      "id": "owasp-sql-injection",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+      "fragmento": "seguridad_python-002",
+      "archivo": "originales/owasp-sql-injection.html",
+      "fecha_descarga_utc": "2026-11-06T01:53:09.4677628Z",
+      "http_status": 200,
+      "formato": "HTML guardado como UTF-8",
+      "sha256": "4da4c0e0fbd8a43fb26083bcb2e6038f8559975ff19c2ffcfae2db3512f2166b",
+      "bytes": 79850
+    },
+    {
+      "id": "owasp-command-injection",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+      "fragmento": "seguridad_python-003",
+      "archivo": "originales/owasp-command-injection.html",
+      "fecha_descarga_utc": "2026-11-06T01:53:09.7862492Z",
+      "http_status": 200,
+      "formato": "HTML guardado como UTF-8",
+      "sha256": "e8a703134c995466b928386501c1aa784a9051c9d27f16ddda04352ab684e134",
+      "bytes": 91207
+    },
+    {
+      "id": "owasp-injection",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+      "fragmento": "seguridad_python-004",
+      "archivo": "originales/owasp-injection.html",
+      "fecha_descarga_utc": "2026-11-06T01:53:10.0338239Z",
+      "http_status": 200,
+      "formato": "HTML guardado como UTF-8",
+      "sha256": "504fc7f454a69e7af475e143dfd38b99c367688ff3f6f960b8a69a7ba54b5f14",
+      "bytes": 85354
+    },
+    {
+      "id": "cwe-798",
+      "url": "https://cwe.mitre.org/data/definitions/798.html",
+      "fragmento": "seguridad_python-005",
+      "archivo": "originales/cwe-798.html",
+      "fecha_descarga_utc": "2026-11-06T01:53:11.1768491Z",
+      "http_status": 200,
+      "formato": "HTML guardado como UTF-8",
+      "sha256": "5b1f456e0e311d70166dc41fdd932afb67dbf7f541cb31eab62a472b39028e6f",
+      "bytes": 272530
+    },
+    {
+      "id": "owasp-secrets",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html",
+      "fragmento": "seguridad_python-005",
+      "archivo": "originales/owasp-secrets.html",
+      "fecha_descarga_utc": "2026-11-06T01:53:11.4066887Z",
+      "http_status": 200,
+      "formato": "HTML guardado como UTF-8",
+      "sha256": "a7bab99f06f1b50ca3a561fb2b880137c7730945f5ad606e38cecacafe78eb20",
+      "bytes": 172168
+    },
+    {
+      "id": "cwe-22",
+      "url": "https://cwe.mitre.org/data/definitions/22.html",
+      "fragmento": "seguridad_python-006",
+      "archivo": "originales/cwe-22.html",
+      "fecha_descarga_utc": "2026-11-06T01:53:12.8143339Z",
+      "http_status": 200,
+      "formato": "HTML guardado como UTF-8",
+      "sha256": "654cd4b71d847764fccd8a2e3790931cc4332e80db9708e8a5094921ba017382",
+      "bytes": 351605
+    },
+    {
+      "id": "owasp-path-traversal",
+      "url": "https://owasp.org/www-community/attacks/Path_Traversal",
+      "fragmento": "seguridad_python-006",
+      "archivo": "originales/owasp-path-traversal.html",
+      "fecha_descarga_utc": "2026-11-06T01:53:13.4335964Z",
+      "http_status": 200,
+      "formato": "HTML guardado como UTF-8",
+      "sha256": "ba073650dc78f79a9aa1a453f1b0d3e54e7069e38628ad77c064cc028a5216a4",
+      "bytes": 40995
+    }
+  ]
+}

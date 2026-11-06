@@ -19,10 +19,12 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-MAX_CHARS = 12_000
-MAX_STDOUT = 1_000_000
+from app.config import settings
+
+MAX_CHARS = settings.MAX_CODIGO
+MAX_STDOUT = settings.MAX_SALIDA_HERRAMIENTAS
 _READ_CHUNK = 64 * 1024
-TOOL_TIMEOUT = 12
+TOOL_TIMEOUT = settings.TIMEOUT_HERRAMIENTAS
 _SAFE_PART = re.compile(r"^[A-Za-z0-9_.-]{1,120}$", re.ASCII)
 _SEVERIDADES = {"HIGH": "alta", "MEDIUM": "media", "LOW": "baja"}
 

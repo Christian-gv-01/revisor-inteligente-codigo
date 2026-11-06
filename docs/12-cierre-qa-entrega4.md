@@ -1,6 +1,14 @@
 # Cierre técnico de QA — Entrega 4
 
-> Aporte complementario de QA (PR #26): [verificación pública integrada](15-verificacion-publica-integrada.md), con evidencias propias de `0123445-20Alexis`. Su baseline corresponde a una ejecución anterior al reinicio; la comparación posterior y el log de Christian se documentan en el estado consolidado siguiente. Se conserva la procedencia de cada ejecución.
+> Actualización documental sobre `65675e2`: PR #31 integra el agente para código
+> y `.py`; [17-agente-integrado.md](17-agente-integrado.md) registra 250 pruebas
+> backend/QA, 76 frontend y las corridas HTTP de esa integración. No se atribuyen
+> esos conteos a las corridas públicas anteriores. QA-H03 está corregido en el
+> código de esta base; sigue pendiente verificar su revisión desplegada. El
+> [cierre documental](19-cierre-documental.md) reúne requisitos académicos y
+> responsables, incluida la evidencia histórica aún no aportada.
+
+> Aporte complementario de QA (PR #26): [verificación pública integrada](15-verificacion-publica-integrada.md), con evidencias propias de `0123445-20Alexis`. Su baseline es anterior a la comparación aportada después por Christian. La inspección visual de esta edición corrige la descripción de la captura: muestra el comparador de citas, no el log del reinicio. Se conserva la procedencia de cada ejecución.
 
 ## Estado consolidado — 5 de noviembre de 2026
 
@@ -35,16 +43,16 @@ La [matriz pública posterior a la fusión](evidencias/semana-4/pruebas-publicas
 
 Esta matriz comprueba disponibilidad, entradas, ZIP, validación de URLs GitHub y AST local. No acredita un análisis Gemini real por sí sola; esa evidencia pública está en las capturas de citas siguientes.
 
-### Citas antes y después del reinicio
+### Comparación de citas y evidencia pendiente del reinicio
 
-El primer intento de captura falló tras un 503 del proveedor y no produjo baseline. Después se obtuvo un análisis público `analizado` con un hallazgo y tres fuentes. Se coordinó el reinicio desde Railway y se repitió el análisis:
+El primer intento de captura falló tras un 503 del proveedor y no produjo baseline. Después se obtuvo un análisis público `analizado` con un hallazgo y tres fuentes. El equipo documentó estas capturas como antes/después de un reinicio; los archivos disponibles acreditan las dos consultas:
 - [Antes](evidencias/semana-4/persistencia-antes-20261105.json): 16:29:32 del 5 de noviembre, America/Guayaquil.
 - [Después y comparación](evidencias/semana-4/persistencia-despues-20261105.json): 16:31:45 del mismo día.
-- [Log del reinicio](evidencias/semana-4/reinicio-railway-20261105.png): apagado, montaje del volumen, proceso UID 10001, mensaje de índice documental persistente recuperado y arranque completado.
+- [Captura del comparador](evidencias/semana-4/reinicio-railway-20261105.png): comando de verificación, `Continuidad de citas: True` y ruta del resultado. A pesar del nombre del archivo, no muestra apagado, montaje del volumen ni recuperación del índice en Railway.
 
 Ambos análisis devolvieron las fuentes `seguridad_python-001`, `seguridad_python-004` y `seguridad_python-005`, y un hallazgo. **`continuidad_citas: true`**.
 
-El comparador mantiene deliberadamente `persistencia_volumen_verificada: false`: la igualdad de IDs por HTTP no verifica por sí sola el volumen. El log independiente respalda la recuperación operacional del índice en este reinicio; no acredita una auditoría de integridad de todo el volumen, backups ni una prueba con marca única no regenerable. No modificar el JSON para convertir este alcance en una certificación más amplia.
+El comparador mantiene deliberadamente `persistencia_volumen_verificada: false`: la igualdad de IDs por HTTP no verifica por sí sola el volumen. Falta incorporar evidencia independiente del reinicio, el volumen montado y la recuperación sin reingesta. La descripción anterior que atribuía esos datos a esta imagen era incorrecta y queda corregida tras inspeccionarla. No modificar el JSON para ampliar su alcance. Tampoco existe aquí una auditoría de integridad de todo el volumen, backups o prueba con marca única no regenerable.
 
 ### Pendientes que permanecen abiertos
 
@@ -53,7 +61,7 @@ El comparador mantiene deliberadamente `persistencia_volumen_verificada: false`:
 - Advertencia de tamaño del paquete frontend y errores 503 reales del proveedor.
 - Mantener trazabilidad del SHA de despliegue y distinguir recuperación operacional del índice de verificación completa del volumen.
 
-Se cierran los bloqueos observados de sanitización pública P05/P07, publicación del endpoint estático y ausencia de baseline/reinicio. No se declara una aceptación de seguridad sin reservas ni se cierran los hallazgos pendientes por el solo éxito de las pruebas.
+Se cierran los bloqueos observados de sanitización pública P05/P07, publicación del endpoint estático y ausencia de baseline/comparación. Permanece pendiente el respaldo independiente del reinicio. No se declara una aceptación de seguridad sin reservas ni se cierran otros hallazgos por el solo éxito de las pruebas.
 
 ## Revisión histórica — se conserva sin cambios
 

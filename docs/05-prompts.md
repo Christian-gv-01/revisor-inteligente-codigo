@@ -1,5 +1,12 @@
 # 05. Ingeniería de prompts — Comparación experimental
 
+> Alcance histórico: las corridas descritas conservan su fecha y configuración.
+> En `65675e2`, la síntesis utiliza `backend/app/prompts/system_v1.md`; la presencia
+> de V2/V3 no significa que estén activas. El script histórico
+> `backend/scripts/probar_analisis.py` mencionado abajo no está en el árbol actual;
+> no se ofrece como comando vigente. Ver [evaluador actual](../eval/README.md) y
+> [comparación de semanas](18-comparacion-semanas-3-4.md). No se reejecutó este experimento.
+
 **Proyecto:** Revisor Inteligente de Código Seguro (CODEGUARD)  
 **Universidad:** UNIANDES  
 **Caso:** 10  

@@ -1,0 +1,30 @@
+{
+  "fecha_local": "2026-11-06",
+  "zona": "America/Bogota",
+  "base_producto": "65675e27fd996a7e71a926336dba6dffb5e539e2",
+  "base_documental": "578adee2af129da19a571792ffffe913c1657737",
+  "rama_local": "feature/entrega4-frontend-producto",
+  "tipo_registro": "Resumen de comandos ejecutados y salidas observadas durante la edición; no sustituye una integración real con Backend",
+  "frontend": {
+    "comando": "npm test -- --reporter=dot",
+    "aprobadas": 91,
+    "omitidas_http": 17,
+    "fallidas": 0,
+    "lint": "npm run lint: aprobado",
+    "build": "npm run build: aprobado",
+    "advertencia_build": "Paquete de frontend superior a 500 kB; advertencia existente"
+  },
+  "navegador": {
+    "motor": "Edge headless",
+    "casos_aprobados": 8,
+    "evidencia": "navegador.json",
+    "modo": "local con respuestas simuladas y conexiones externas bloqueadas"
+  },
+  "contrato_backend": "Propuesto, pendiente de acuerdo e implementación por Christian",
+  "correcciones_api_habilitadas": false,
+  "codigo_python_de_entrada_ejecutado": false,
+  "originales_sobrescritos": false,
+  "push_realizado_en_esta_entrega": false,
+  "despliegue_realizado": false,
+  "backend_modificado": false
+}

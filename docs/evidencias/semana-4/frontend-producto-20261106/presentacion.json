@@ -1,0 +1,12 @@
+{
+  "fecha": "2026-11-06",
+  "diapositivas": 12,
+  "segundos_planificados": 720,
+  "sha256": "34c5a18dbebb0c8427cf5d2982aad38a60df487d75a6c0bb7036e11fdaefbaab",
+  "integridad_paquete": "pass",
+  "hallazgos_layout": 0,
+  "reimportacion_correcta": true,
+  "revision_visual": "12 renders inspeccionados; la diapositiva 3 se corrigió y volvió a revisar",
+  "powerpoint_nativo": "No se abrió PowerPoint",
+  "limite": "Borrador con contrato real pendiente y pruebas locales simuladas"
+}

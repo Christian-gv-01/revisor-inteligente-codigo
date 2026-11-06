@@ -1,0 +1,13 @@
+{
+  "fecha_utc": "2026-11-06T15:15:32.782Z",
+  "frontend_commit": "4c483dd",
+  "origen": "demoCorrectionClient, usando el mismo ejemplo SQL y validadores del frontend",
+  "solicitud_objetivo": "Mismo contexto del caso fixture en correction-contract.test.ts",
+  "propuesta_validada": true,
+  "copia_aprobada_validada": true,
+  "rechazo_validado": true,
+  "original_modificado": false,
+  "codigo_python_ejecutado": false,
+  "backend_contactado": false,
+  "aviso": "Aprobar y rechazar representan escenarios alternativos. ID y caducidad son de ejemplo, no una propuesta real activa."
+}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { AnalysisResult, Finding, Severity } from "../types/analysis";
-import { SEVERITIES, SEVERITY_LABELS } from "../types/analysis";
+import { REVIEW_PRIORITY, SEVERITIES, SEVERITY_LABELS } from "../types/analysis";
 import { getFindingSources } from "../services/sources";
 import { Icon } from "./Icon";
 import { SourceList } from "./SourceList";
@@ -17,7 +17,8 @@ interface FindingsPanelProps {
 
 export function FindingsPanel({ result, loading, selectedId, onSelect, onExport }: FindingsPanelProps) {
   const [filter, setFilter] = useState<Severity | "todas">("todas");
-  const visible = result?.hallazgos.filter(finding => filter === "todas" || finding.severidad === filter) ?? [];
+  const visible = (result?.hallazgos.filter(finding => filter === "todas" || finding.severidad === filter) ?? [])
+    .sort((a, b) => REVIEW_PRIORITY[a.severidad] - REVIEW_PRIORITY[b.severidad]);
   const highest = SEVERITIES.find(severity => result?.hallazgos.some(finding => finding.severidad === severity));
   const staticNeedsReview = result?.analisis_estatico?.some(
     report => report.hallazgos.length > 0 || report.estado !== "completo",
@@ -29,6 +30,12 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
         {onExport ? <button className="text-button export-button" disabled={loading} onClick={onExport}><Icon name="download" size={18} />Exportar JSON</button> : <span className="count-badge">{result?.hallazgos.length ?? "—"}</span>}
       </div>
       {!loading && result && <p className="analysis-origins">{result.hallazgos.length} hallazgos contextuales · {result.analisis_estatico?.reduce((n, r) => n + r.hallazgos.length, 0) ?? 0} observaciones de herramientas. Los conteos pueden referirse al mismo riesgo.</p>}
+      {!loading && result?.estado === "parcial" && (
+        <div className="analysis-notice" role="status">
+          <strong>Análisis parcial: revisión incompleta</strong>
+          <p>{result.mensaje || "Se conservan los resultados disponibles, pero parte de la revisión no pudo completarse o validarse. Esto no confirma que el código sea seguro."}</p>
+        </div>
+      )}
       {!loading && <AgentTracePanel trace={result?.traza_agente} />}
       {!loading && result && result.hallazgos.length > 0 && (
         <>
@@ -43,9 +50,10 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
               {SEVERITIES.map(severity => <option key={severity} value={severity}>{SEVERITY_LABELS[severity]}</option>)}
             </select>
           </div>
+          <p className="analysis-origins">Prioridad de revisión según severidad: 1 crítica, 2 alta, 3 media y 4 baja. Los hallazgos requieren revisión humana.</p>
         </>
       )}
-      {!loading && result?.estado !== "abstenido" && result?.mensaje && (
+      {!loading && result?.estado !== "abstenido" && result?.estado !== "parcial" && result?.mensaje && (
         <div className="analysis-notice" role="status"><strong>Análisis con observaciones</strong><p>{result.mensaje}</p></div>
       )}
       <div className="findings-content">
@@ -59,7 +67,7 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
           <div className="empty-state">
             <div className="empty-icon"><Icon name="info" size={36} /></div>
             <h3>Revisión contextual incompleta</h3>
-            <p>Gemini no completó el análisis. Revisa más abajo los resultados estáticos de Ruff y Bandit; no equivalen a una evaluación completa con citas RAG.</p>
+            <p>La revisión no pudo completarse o validarse. Revisa más abajo los resultados estáticos de Ruff y Bandit; no equivalen a una evaluación completa con citas RAG.</p>
           </div>
         ) : result.hallazgos.length === 0 && staticNeedsReview ? (
           <div className="empty-state"><div className="empty-icon"><Icon name="info" size={36} /></div><h3>Sin hallazgos contextuales de Gemini</h3><p>Revisa las observaciones y el estado de Ruff y Bandit más abajo. El resultado contextual no descarta alertas estáticas ni revisiones incompletas.</p></div>
@@ -74,6 +82,7 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
           const line = sourceCode?.split("\n")[finding.linea - 1];
           return (
             <article key={finding.id} className={`finding finding-${finding.severidad} ${selectedId === finding.id ? "selected" : ""}`}>
+              <p className="finding-priority">Prioridad de revisión {REVIEW_PRIORITY[finding.severidad]} · {SEVERITY_LABELS[finding.severidad]}</p>
               <div className="finding-heading"><span className="finding-category">{finding.categoria}</span><span className={`severity severity-${finding.severidad}`}>{SEVERITY_LABELS[finding.severidad]}</span><button className="finding-title" onClick={() => onSelect(finding)}>{finding.titulo}<Icon name="arrow" size={17} /></button><button className="location-link" onClick={() => onSelect(finding)}><Icon name="file" size={14} />{finding.archivo}<span>· Línea {finding.linea}</span></button></div>
               {line !== undefined && <pre className="finding-code-line"><span>{finding.linea}</span><code>{line}</code></pre>}
               <div className="explanation"><h3><Icon name="info" size={18} />Por qué es un riesgo</h3><p>{finding.explicacion}</p></div>

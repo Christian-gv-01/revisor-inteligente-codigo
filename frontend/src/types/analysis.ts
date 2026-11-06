@@ -167,3 +167,11 @@ export const SEVERITY_LABELS: Record<Severity, string> = {
   baja: "Baja",
 };
 
+// Orden de revisión derivado de la severidad, no una evaluación de impacto nueva.
+export const REVIEW_PRIORITY: Record<Severity, number> = {
+  critica: 1,
+  alta: 2,
+  media: 3,
+  baja: 4,
+};
+
