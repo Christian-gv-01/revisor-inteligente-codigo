@@ -1,5 +1,11 @@
 # 07. Evaluación — semana 3
 
+> Este informe conserva las corridas de Semana 3 y sus limitaciones. El bloqueo
+> local por clave ausente describe esa ejecución, no la disponibilidad actual de
+> Railway. La comparación documental con evidencias posteriores está en
+> [18-comparacion-semanas-3-4.md](18-comparacion-semanas-3-4.md); no se sobrescriben
+> cifras históricas ni se atribuyen a Gemini los resultados de mocks.
+
 **Responsable:** Compañero 2, Frontend y Evaluación.  
 **Fecha:** 30 de octubre de 2026, America/Bogota.  
 **Rama de trabajo:** `feature/frontend`, actualizada con `origin/main`.  

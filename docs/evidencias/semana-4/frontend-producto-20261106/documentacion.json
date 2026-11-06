@@ -1,0 +1,17 @@
+{
+  "fecha_utc": "2026-11-06T10:20:29.250616+00:00",
+  "base_git": "65675e27fd996a7e71a926336dba6dffb5e539e2",
+  "alcance": "Validacion documental local: enlaces relativos de Markdown editados/nuevos, UTF-8, cercas, historias, preguntas, hashes y copias historicas. Sin pruebas nuevas del producto, Gemini o produccion.",
+  "markdown_revisados": 31,
+  "enlaces_relativos_comprobados": 219,
+  "fuentes_html_con_hash_correcto": 8,
+  "historias": 12,
+  "preguntas_instrumento_no_aplicado": 18,
+  "historicos_conservados": {
+    "03-arquitectura-revision2.md": true,
+    "09-decisiones-revision2.md": true
+  },
+  "errores": [],
+  "resultado": "aprobado",
+  "observacion_evidencia": "La imagen reinicio-railway-20261105.png fue inspeccionada visualmente: muestra el comparador de citas, no logs del reinicio o montaje del volumen. Se corrigieron las descripciones sin modificar la evidencia original."
+}

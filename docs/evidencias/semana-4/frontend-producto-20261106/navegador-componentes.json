@@ -1,0 +1,37 @@
+{
+  "fecha_utc": "2026-11-06T10:09:13.332Z",
+  "entorno": "Edge headless local, respuestas simuladas, sin Backend/Gemini/Railway",
+  "casos": [
+    {
+      "caso": "Previsualización sin aprobación no descarga; botón inicialmente bloqueado",
+      "aprobado": true
+    },
+    {
+      "caso": "Cancelar rechaza, no descarga y reinicia consentimiento",
+      "aprobado": true
+    },
+    {
+      "caso": "Confirmar descarga exactamente la propuesta bajo nombre nuevo",
+      "aprobado": true
+    },
+    {
+      "caso": "Respuesta alterada después de aprobar no descarga y revoca consentimiento",
+      "aprobado": true
+    },
+    {
+      "caso": "Cancelar mientras llega la aprobación impide la descarga tardía",
+      "aprobado": true
+    },
+    {
+      "caso": "Cambiar entrada descarta aprobación anterior y no conserva consentimiento",
+      "aprobado": true
+    },
+    {
+      "caso": "Previsualización móvil 390 px sin desbordamiento horizontal",
+      "aprobado": true
+    }
+  ],
+  "peticiones_externas_bloqueadas": [],
+  "codigo_ejecutado": false,
+  "original_sobrescrito": false
+}

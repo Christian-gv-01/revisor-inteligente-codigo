@@ -1,5 +1,10 @@
 # 08 — Agente supervisado CODEGUARD (Agent Mission Control)
 
+> Evolución posterior: PR #31 integra el agente en React para código/`.py` y
+> entrega evidencia estática/AST tipada a la síntesis. El contrato vigente y las
+> pruebas están en [17-agente-integrado.md](17-agente-integrado.md). Este registro
+> conserva el diseño inicial de Agent Lab; ZIP/GitHub mantienen el flujo directo.
+
 ## Propósito
 
 Ampliar el revisor de seguridad con una **capa de orquestación limitada** y una trazabilidad observable de herramientas. El objetivo es demostrar un agente que observa la estructura del código, escoge herramientas autorizadas y entrega al usuario los resultados **sin ejecutar código no confiable**.

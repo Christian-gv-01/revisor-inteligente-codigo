@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "propuesta_id": "demo-bd83ff55-7b89-43a0-be8c-0f4e3fd4e98a",
+  "estado": "pendiente_confirmacion",
+  "accion": "descargar_copia",
+  "archivo_original": "usuarios.py",
+  "archivo_salida": "usuarios.corregido.py",
+  "sha256_original": "dce6a1429c08c8e5edbb3054793a31c641fbcba89eacc13fa49911f13dff0495",
+  "sha256_propuesto": "04265bbfc331fedcb6797a4845eaa01bd20d903755eb79dcb55f8f3b041ad7af",
+  "codigo_propuesto": "import sqlite3\n\nconexion = sqlite3.connect(\"usuarios.db\")\ncursor = conexion.cursor()\nnombre = input(\"Nombre de usuario: \")\nconsulta = \"SELECT * FROM usuarios WHERE nombre = ?\"\ncursor.execute(consulta, (nombre,))\n\nprint(cursor.fetchall())",
+  "caduca_en": "2026-11-06T15:20:32.779Z",
+  "advertencias": [
+    "Ejemplo local ilustrativo. No se consultó Gemini ni se ejecutó el código."
+  ]
+}

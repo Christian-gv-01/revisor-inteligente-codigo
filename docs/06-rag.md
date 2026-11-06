@@ -1,5 +1,14 @@
 # Diseño e implementación de RAG
 
+> Consolidación del 5 de noviembre: este documento conserva resultados y pendientes
+> de su revisión original, incluidos conteos históricos. El corpus actual tiene
+> seis reglas; su [inventario](04-fuentes.md) registra fuentes y materia prima.
+> El agente integrado aplica recuperación por categorías con hasta seis fuentes,
+> descrita en [17-agente-integrado.md](17-agente-integrado.md). El flujo directo
+> conserva límite tres. Los resultados actuales y su alcance están en
+> [comparación de semanas](18-comparacion-semanas-3-4.md); no se consideran actuales
+> las 51 pruebas o la falta del dataset citadas al final del registro original.
+
 ## 1. Objetivo
 
 El sistema utiliza recuperación aumentada por generación (RAG) para proporcionar al modelo documentación relacionada con la seguridad del código Python.

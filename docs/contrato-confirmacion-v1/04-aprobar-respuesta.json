@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "propuesta_id": "demo-bd83ff55-7b89-43a0-be8c-0f4e3fd4e98a",
+  "estado": "aprobada",
+  "archivo_salida": "usuarios.corregido.py",
+  "contenido": "import sqlite3\n\nconexion = sqlite3.connect(\"usuarios.db\")\ncursor = conexion.cursor()\nnombre = input(\"Nombre de usuario: \")\nconsulta = \"SELECT * FROM usuarios WHERE nombre = ?\"\ncursor.execute(consulta, (nombre,))\n\nprint(cursor.fetchall())",
+  "sha256_contenido": "04265bbfc331fedcb6797a4845eaa01bd20d903755eb79dcb55f8f3b041ad7af",
+  "tipo_contenido": "text/x-python; charset=utf-8"
+}
