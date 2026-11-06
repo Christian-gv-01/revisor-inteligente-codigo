@@ -115,25 +115,39 @@ export interface AnalysisResult {
   mensaje?: string | null;
 }
 
-export type AgentTool = "inspeccionar_estructura" | "detectar_llamadas_sensibles" | "revisar_consultas_sql";
+export type AstAgentTool = "inspeccionar_estructura" | "detectar_llamadas_sensibles" | "revisar_consultas_sql";
+export type AgentTool = AstAgentTool | "ampliar_contexto" | "buscar_referencia";
+export type ReferenceCategory = "ejecucion_codigo" | "inyeccion_sql" | "inyeccion_comandos" | "inyeccion" | "credenciales" | "rutas";
+export type AgentArguments = { linea: number } | { categoria: ReferenceCategory } | Record<string, never>;
+export interface ContextResult {
+  linea_objetivo: number; linea_inicio: number; linea_fin: number;
+  lineas: { numero: number; texto: string; truncada: boolean }[];
+}
+export interface ReferenceResult {
+  categoria: ReferenceCategory;
+  fragmentos: (SourceReference & { area: "seguridad"; texto: string })[];
+}
+interface AgentStepBase {
+  numero: number; motivo: string; origen: "automatico" | "gemini" | "local";
+}
+export type AgentStep =
+  | (AgentStepBase & { herramienta: AstAgentTool; argumentos?: Record<string, never>; sintaxis_valida: boolean; indicadores: { linea: number; detalle: string }[]; resultado: Record<string, unknown> })
+  | (AgentStepBase & { herramienta: "ampliar_contexto"; argumentos: { linea: number }; resultado: ContextResult })
+  | (AgentStepBase & { herramienta: "buscar_referencia"; argumentos: { categoria: ReferenceCategory }; resultado: ReferenceResult });
 export interface AgentTrace {
   archivo: string;
   modo: "gemini_real" | "degradado";
   max_pasos: number;
-  fase_error: "planificacion" | "informe" | null;
-  pasos: {
-    numero: number;
-    herramienta: AgentTool;
-    motivo: string;
-    origen: "automatico" | "gemini" | "local";
-    sintaxis_valida: boolean;
-    indicadores: { linea: number; detalle: string }[];
-  }[];
+  fase_error: "planificacion" | "informe" | "herramienta" | null;
+  version_herramientas?: "2";
+  terminacion?: "finalizacion_anticipada" | "max_pasos" | "herramienta_repetida";
+  pasos: AgentStep[];
   decisiones: {
     numero: number;
     herramienta: AgentTool | "finalizar";
     motivo: string;
-    estado: "ejecutada" | "finalizar" | "repetida";
+    estado: "ejecutada" | "finalizar" | "repetida" | "error";
+    argumentos?: AgentArguments;
   }[];
 }
 

@@ -14,7 +14,18 @@
         "importaciones": 0,
         "evidencia_ruff_bandit": {
           "estado": "completo",
-          "herramientas": [],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 0
+            }
+          ],
           "total_hallazgos": 0,
           "reglas": []
         }
@@ -72,7 +83,18 @@
     "archivo": "ejemplo.py",
     "estado": "completo",
     "hallazgos": [],
-    "herramientas": [],
+    "herramientas": [
+      {
+        "herramienta": "ruff",
+        "estado": "ok",
+        "hallazgos": 0
+      },
+      {
+        "herramienta": "bandit",
+        "estado": "ok",
+        "hallazgos": 0
+      }
+    ],
     "mensaje": null
   },
   "requiere_confirmacion_humana": false,

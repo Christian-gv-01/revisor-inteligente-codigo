@@ -44,7 +44,10 @@ def generar(destino: Path) -> dict:
             pendientes = iter(decisiones)
             def elegir(c, p, **kw): return next(pendientes)
             def estatico(c, archivo):
-                return ResultadoEstatico(archivo=archivo, estado="completo", hallazgos=[], herramientas=[])
+                return ResultadoEstatico(archivo=archivo, estado="completo", hallazgos=[], herramientas=[
+                    {"herramienta": "ruff", "estado": "ok", "hallazgos": 0},
+                    {"herramienta": "bandit", "estado": "ok", "hallazgos": 0},
+                ])
             with patch.object(correcciones, "limpiar_caducadas", lambda: None), \
                 patch.object(agente, "planificar_gemini", elegir), \
                 patch.object(agente, "analizar_estatico", estatico), \

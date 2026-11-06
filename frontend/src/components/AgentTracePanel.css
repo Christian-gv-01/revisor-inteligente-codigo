@@ -5,4 +5,12 @@
 .agent-trace ol > li { margin: 14px 0; padding-left: 4px; }
 .agent-trace small { display: block; margin-top: 3px; color: #35576a; }
 .agent-trace p, .agent-trace ul { margin: 8px 0; font-size: .9em; line-height: 1.6; }
+.agent-context ol { padding-left: 3em; }
+.agent-context code { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .9em; }
+.agent-context li { margin: 3px 0 !important; }
+.agent-references section { padding: 10px; margin: 8px 0; border: 1px solid #bedde2; border-radius: 6px; }
+.agent-references blockquote { margin: 8px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.agent-counts { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: .9em; }
+.agent-counts div { display: flex; gap: 6px; }
+.agent-counts dd { margin: 0; font-weight: 700; }
 .analysis-origins { padding: 10px 18px; margin: 0; color: #35576a; font-size: .85em; overflow-wrap: anywhere; border-bottom: 1px solid #deebf0; }
