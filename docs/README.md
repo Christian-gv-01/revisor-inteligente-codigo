@@ -53,3 +53,20 @@ Responsable de esta edición: Ronald Yépez, QA, seguridad y documentación.
 Se conservan nombres numerados heredados para no romper referencias. El número
 de archivo no representa la fecha de la última ejecución. Una prueba local, una
 respuesta simulada y una ejecución pública son evidencias distintas.
+
+<!-- BEGIN BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
+## Cierre de la asignación backend — 6 de noviembre de 2026
+
+La asignación de backend (priorización determinista, configuración centralizada, confirmación humana, documentación y Ruff/Bandit) está completada en la candidata y validada localmente.
+
+Documentos de cierre:
+- [Pruebas backend](08-pruebas.md)
+- [Decisiones de priorización y configuración](09-decisiones.md)
+- [Análisis estático Ruff/Bandit](10-analisis-estatico.md)
+- [Cierre QA](12-cierre-qa-entrega4.md)
+- [Cierre documental de la asignación](19-cierre-documental.md)
+- [Contrato de confirmación humana](20-contrato-confirmacion-humana.md)
+- [Integración y QA de confirmación](23-integracion-confirmacion-qa.md)
+
+La implementación y las pruebas locales no implican automáticamente fusión en `main` ni despliegue.
+<!-- END BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->

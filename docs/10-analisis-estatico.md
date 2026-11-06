@@ -116,3 +116,11 @@ las evidencias y el alcance constan en [el cierre QA](12-cierre-qa-entrega4.md).
   compartida.
 - Ejecutar tests unitarios, tests HTTP y pruebas smoke reales antes de fusionar
   esta implementación a la rama que despliega Railway.
+
+<!-- BEGIN BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
+## Estado de integración y evidencia — 6 de noviembre de 2026
+
+**Estado: incorporado.** El backend integra análisis estático con Ruff para calidad y Bandit para seguridad. El código recibido se trata como dato: el análisis no requiere importarlo ni ejecutarlo como programa. La ejecución de herramientas se realiza con límites de tiempo/salida y manejo controlado de errores.
+
+La evidencia de Ruff/Bandit está incorporada al flujo de análisis y a la documentación de resultados. Las pruebas locales y las pruebas HTTP deben identificarse como tales; no deben presentarse como validación de producción.
+<!-- END BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->

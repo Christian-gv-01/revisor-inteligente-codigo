@@ -134,3 +134,19 @@ Los dos últimos puntos permanecen pendientes mientras no exista una URL públic
 - Auditoría de secretos: aprobada, 0 patrones de secreto detectados.
 - Sintaxis de Compose: válida.
 - Contenedor y reinicio local: pendientes porque Docker Desktop Engine no estaba iniciado.
+
+<!-- BEGIN BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
+## Cierre de validación backend — 6 de noviembre de 2026
+
+### Resultados registrados
+
+- La documentación de la candidata registra **296 pruebas backend/QA aprobadas**. Esta es la cifra global registrada; no se deben sumar nuevamente pruebas específicas que formen parte de esa suite.
+- `tests/test_config.py`: **11/11 aprobadas**. Se verifican valores predeterminados, sobrescritura por variables de entorno, tratamiento de la clave Gemini, límites RAG, activación del análisis estático y valores de timeout inválidos.
+- `tests/test_correcciones_integracion.py`: **12/12 aprobadas**. Se verifican cookies `HttpOnly`/`SameSite`/`Secure`, `no-store`, aislamiento entre sesiones, borrado al rechazar, purga por caducidad, límite por sesión, decisiones simultáneas, ausencia de filtración del código en errores, presupuesto de peticiones, ruta SQLite y cierre del cliente Gemini/rechazo de truncamiento.
+- Las 12 regresiones de confirmación humana usan dobles de prueba para el generador; no constituyen una evaluación con Gemini real.
+- Ruff y Bandit forman parte del análisis estático integrado y de su evidencia técnica.
+
+### Alcance de la evidencia
+
+Los resultados anteriores corresponden a ejecuciones locales compartidas en el registro de trabajo. No equivalen por sí solos a una ejecución de CI, una fusión en `main`, un despliegue o una prueba del servicio público.
+<!-- END BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->

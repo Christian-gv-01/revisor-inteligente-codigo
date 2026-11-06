@@ -158,3 +158,11 @@ Se ejecutó de nuevo `scripts/pruebas_produccion.py` contra la URL de Railway y 
 Después de dejar transcurrir una ventana del limitador, se consultó `/openapi.json` y se repitió una sola llamada a `analizar` del script `verificar_persistencia_citas.py`, con su payload sintético habitual y timeout de 90 segundos. OpenAPI devolvió 200 y continúa sin publicar `/api/v1/estatico/analizar`; el análisis volvió a responder **502**. No se creó baseline de citas. Se guardaron únicamente estados HTTP y booleanos en `evidencias/semana-4/revalidacion-cierre-2026-11-05.json`; no se conservaron cuerpos ni mensajes privados del servidor.
 
 Para continuar, Backend debe integrar/desplegar la sanitización del PR #12 y diagnosticar el 502 con logs privados; Frontend debe publicar la integración estática y la comparación anunciada; el responsable del hosting debe proporcionar acceso operativo o coordinar un reinicio después de obtener citas. QA repetirá las aserciones sobre la revisión integrada. Ninguna evidencia de esta revisión acredita un reinicio, una migración a Cloud Run ni un análisis Gemini exitoso.
+
+<!-- BEGIN BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
+## Actualización de estado backend — 6 de noviembre de 2026
+
+La implementación de priorización determinista, configuración centralizada, confirmación humana y análisis estático Ruff/Bandit está completada en la candidata backend. La evidencia local registrada incluye 296 pruebas backend/QA, 11 pruebas de configuración y 12 regresiones específicas de confirmación humana; las cifras específicas no se agregan nuevamente al total si ya están incluidas.
+
+El cierre de esta asignación no sustituye la verificación independiente de CI, fusión en `main`, despliegue, persistencia en producción ni evaluación generativa con Gemini real. Esos estados deben mantenerse separados de la validación local.
+<!-- END BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
