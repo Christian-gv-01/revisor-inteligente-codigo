@@ -1,0 +1,4 @@
+# Fixture P26 del dataset historico: literal JWT ilustrativo con firma HS256
+# de 24 bytes (deberia tener 32). Clasificacion en docs/18-ci-main-docker.md.
+# Se ignora solo este hallazgo de este commit inmutable, no el archivo ni JWT.
+288616b3fe1be68a52f1971b8713e87c0a1cba80:eval/preguntas_referencia_final.json:jwt:336

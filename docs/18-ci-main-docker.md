@@ -12,6 +12,8 @@ Gitleaks 8.30.1 se descarga desde su publicación oficial y se verifica contra e
 
 `.gitleaks.toml` conserva las reglas por defecto. Su única excepción inicial es la línea exacta y el SHA-256 conocido de `frontend/src/services/api.ts` en la evidencia `agente-integrado-20261105/validacion.json`. Se contrastó con el hash del archivo y se verificó que otro valor en ese campo sigue siendo detectado. No se excluyen directorios completos de pruebas, documentos ni commits.
 
+El primer escaneo completo de Actions revisó 168 commits y detectó además el fixture P26 del dataset histórico `eval/preguntas_referencia_final.json`, commit `288616b3fe1be68a52f1971b8713e87c0a1cba80`, línea 336. Su contexto es un caso de evaluación de credenciales almacenadas como literal. La cabecera declara HS256, pero la firma decodificada tiene 24 bytes en lugar de 32: no es una firma HS256 válida. Se clasifica como token ilustrativo de prueba, sin evidencia de una credencial real; no se afirma que haya sido revocado. `.gitleaksignore` registra únicamente su fingerprint completo, ligado a ese commit y ubicación inmutables. Los JWT nuevos y el resto del archivo siguen bajo las reglas por defecto.
+
 Un resultado sin hallazgos no certifica ausencia absoluta de secretos, revocación de credenciales ni las variables privadas configuradas en Railway. Cualquier detección adicional del historial debe clasificarse sin mostrar su valor; no se aceptan excepciones generales para obtener una corrida verde.
 
 ## Modelo dentro de la imagen
