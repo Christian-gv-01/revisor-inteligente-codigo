@@ -2,13 +2,14 @@ name: CODEGUARD integracion HTTP
 
 on:
   push:
-    branches: [feature/entrega4-qa-pr19]
+    branches: [main, feature/entrega4-qa-pr19]
   pull_request:
     paths:
       - "frontend/**"
       - "backend/**"
       - "eval/**"
       - ".github/workflows/integration-tests.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -43,3 +44,4 @@ jobs:
         with:
           name: integracion-http
           path: tmp/http-*/
+
