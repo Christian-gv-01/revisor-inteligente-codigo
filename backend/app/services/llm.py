@@ -731,7 +731,7 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
     except ConsumoAgotado as error:
         raise LLMError("Se agotó el presupuesto de llamadas de la solicitud.", 503) from error
 
-    except httpx.TimeoutException as error:
+    except (httpx.TimeoutException, PlazoAgotado) as error:
         logger.warning(
             "llm_timeout model=%s duration_ms=%d",
             modelo,

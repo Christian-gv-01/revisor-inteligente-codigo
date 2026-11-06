@@ -65,4 +65,8 @@ Estado final de la base: Railway success a las 21:40:30 UTC del 6 de noviembre,
 según registro del deployment GitHub; seis workflows push success. Reserva
 implementada con pruebas primero y revisión independiente sin bloqueos. Revisión
 general aprobada tras corregir plazo en el retorno RAG sin fuentes. Validación
-local final: 363 backend, 23 QA/eval y una omisión; frontend91; HTTP24/24 y19/19.
+local final: 364 backend, 23 QA/eval y una omisión; frontend91; HTTP24/24 y19/19.
+La primera CI detectó dependencia accidental del motor estático en HTTPX/SDK.
+Se corrigió con excepción estándar e importación diferida de Google; regresión
+en proceso nuevo primero fallida y después aprobada. Revisión independiente
+del ajuste: 63 pruebas focalizadas aprobadas. PR de entrega: #42 en borrador.

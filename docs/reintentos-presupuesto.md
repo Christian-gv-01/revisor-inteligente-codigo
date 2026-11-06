@@ -45,6 +45,8 @@ RAG comprueba el plazo antes/después, incluso sin fuentes; GitHub ajusta timeou
 y comprueba durante el cuerpo; Ruff/Bandit ajustan su espera y recolectan al hijo.
 Respuestas generativas tardías no se publican como completas. Se conservan
 respaldo estático, trazas y liberación de concurrencia cuando termina el trabajo.
+El reloj utiliza solo biblioteca estándar; el SDK se importa al generar. El
+motor estático mantiene su ejecución con dependencias mínimas, sin HTTPX/Gemini.
 
 El plazo es **cooperativo**. HTTPX aplica timeout de E/S; una fase de CPU,
 almacenamiento o transporte que no coopere puede sobrepasar el plazo, pero su

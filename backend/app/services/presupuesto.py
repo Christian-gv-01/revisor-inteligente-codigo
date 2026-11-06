@@ -6,13 +6,10 @@ from math import isfinite
 from threading import Lock
 from time import monotonic, sleep, time
 
-import httpx
-from google.genai import errors, types
-
 from app.config import settings
 
 
-class PlazoAgotado(httpx.TimeoutException):
+class PlazoAgotado(TimeoutError):
     """El presupuesto temporal no permite publicar ni iniciar más trabajo de IA."""
 
 
@@ -65,7 +62,7 @@ def comprobar_plazo() -> None:
         actual.restante()
 
 
-def _espera_proveedor(error: errors.APIError) -> float | None:
+def _espera_proveedor(error) -> float | None:
     response = getattr(error, "response", None)
     valor = getattr(response, "headers", {}).get("Retry-After")
     if not isinstance(valor, str) or len(valor) > 128:
@@ -86,6 +83,9 @@ def generar_con_presupuesto(cliente, *, model, contents, config, timeout_ms: int
     HttpOptions aplica timeout de E/S; los chequeos antes/después evitan aceptar
     respuestas tardías. No abandona hilos ni libera concurrencia con trabajo vivo.
     """
+    # El reloj y el motor estático funcionan sin clientes de red/IA instalados.
+    from google.genai import errors, types
+
     actual = _actual.get()
     if actual is None:
         segundos, llamadas = settings.limites_solicitud("/api/v1/analizar")

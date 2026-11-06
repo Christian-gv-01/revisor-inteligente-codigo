@@ -5,13 +5,13 @@ locales de `codex/reintentos-presupuesto`. No se atribuyen estas ejecuciones a C
 
 | Comprobación | Resultado | Evidencia |
 |---|---|---|
-| Backend | 363 aprobadas, 0 fallos | [JUnit](backend.xml), incluye 47 casos nuevos |
+| Backend | 364 aprobadas, 0 fallos | [JUnit](backend.xml), incluye 48 casos nuevos |
 | QA y evaluador | 23 aprobadas, 1 omitida | [JUnit](qa-eval.xml); enlace simbólico no permitido en este equipo |
 | Frontend | 91 aprobadas, 24 HTTP omitidas en la suite unitaria | npm test; HTTP se ejecuta por separado |
 | ESLint y TypeScript/Vite | Aprobados | npm run lint/build; persiste advertencia de bundle >500 kB |
 | Agent Lab | Aprobado | node qa/check_agent_lab_ui.cjs |
-| HTTP con estático | 24/24 | [Reporte](http-estatico.json) |
-| HTTP sin estático opcional | 19 aprobadas, 5 no aplicables | [Reporte](http-sin-estatico.json) |
+| HTTP con estático | 24/24 | [Reporte final](http-estatico-final.json) |
+| HTTP sin estático opcional | 19 aprobadas, 5 no aplicables | [Reporte final](http-sin-estatico-final.json) |
 | Revisión independiente de reservas | Sin bloqueos, 27 pruebas focalizadas aprobadas | SQLite, fallo, hilos/proceso y recuperación |
 | Revisión independiente general | Sin bloqueos pendientes, 34 pruebas de presupuesto/HTTP aprobadas | Retorno prematuro RAG reproducido y corregido |
 | Política de severidad/modelos públicos | Sin cambios frente a base | git diff --quiet sobre modelos y dos archivos de priorización |
@@ -30,6 +30,15 @@ en 503; validan plazo consumido por RAG, aislamiento entre solicitudes, estado
 parcial con estático, traza conservada del agente y reserva liberada al vencer.
 El test de proceso hijo usa spawn y el mismo archivo SQLite: el padre no consigue
 el último cupo mientras genera el hijo, sin depender de un bloqueo en memoria.
+
+La primera CI del PR42 detectó dependencia accidental del motor estático en
+HTTPX/SDK, ausentes del workflow mínimo ([corrida](https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42300854663)).
+Se añadió una regresión en proceso nuevo que bloquea esas importaciones, falló
+antes de corregirlas y aprobó después: excepción de plazo estándar e importación
+del SDK solo al generar. Los reportes http-estatico.json/http-sin-estatico.json
+conservan la primera ejecución previa a ese ajuste; los enlaces finales registran
+la repetición con el código corregido. El JUnit inicial de 363 casos se conserva
+en el commit 9d07600, antes de añadir la nueva regresión.
 
 Las pruebas de RAG/integración usan ChromaDB real; Ruff/Bandit son reales cuando
 están activados. Gemini y la API externa GitHub son simulados. Los informes

@@ -20,7 +20,7 @@ from app.models.analisis import InformeModelo, RespuestaAnalisis
 from app.services.llm import LLMError
 from app.services.evidencia import construir_evidencia
 from app.config import settings
-from app.services.presupuesto import generar_con_presupuesto
+from app.services.presupuesto import generar_con_presupuesto, PlazoAgotado
 from app.services.static_analysis import (
     EstadoHerramienta,
     ResultadoEstatico,
@@ -265,7 +265,7 @@ response_json_schema={
         return decision
     except LLMError:
         raise
-    except httpx.TimeoutException as error:
+    except (httpx.TimeoutException, PlazoAgotado) as error:
         raise LLMError("El planificador superó el plazo de respuesta.", 504) from error
     except errors.APIError as error:
         # Mensajes crudos del proveedor nunca se incluyen en la respuesta pública.

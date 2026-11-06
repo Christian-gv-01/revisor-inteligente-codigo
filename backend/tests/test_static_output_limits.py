@@ -1,11 +1,29 @@
 """Procesos controlados del test; nunca se ejecuta el código recibido por la API."""
 import subprocess
 import sys
+from pathlib import Path
 import time
 
 import pytest
 
 from app.services import static_analysis as motor
+
+
+def test_importacion_estatica_no_requiere_clientes_de_ia():
+    codigo = '''
+import importlib.abc
+import sys
+class SinIA(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname == "httpx" or fullname == "google" or fullname.startswith("google."):
+            raise ModuleNotFoundError("Dependencia de IA no disponible: " + fullname)
+sys.meta_path.insert(0, SinIA())
+from app.services import static_analysis
+assert static_analysis.TOOL_TIMEOUT > 0
+'''
+    proceso = subprocess.run([sys.executable, "-c", codigo],
+        cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True, timeout=15)
+    assert proceso.returncode == 0, proceso.stderr
 
 
 def ejecutar(script, tmp_path, entrada=None):

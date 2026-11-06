@@ -314,7 +314,7 @@ def _generar_codigo_propuesto(
         raise
     except ConsumoAgotado as exc:
         raise CorreccionError("Se agotó el presupuesto de llamadas de la solicitud.", 503) from exc
-    except httpx.TimeoutException as exc:
+    except (httpx.TimeoutException, PlazoAgotado) as exc:
         raise CorreccionError("El proveedor superó el tiempo de espera.", 504) from exc
     except errors.APIError as exc:
         codigo = 504 if exc.code in (408, 504) else 503 if exc.code in (429, 500, 502, 503) else 502
