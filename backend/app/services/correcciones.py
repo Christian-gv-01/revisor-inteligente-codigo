@@ -34,6 +34,7 @@ from app.models.correcciones import (
     unidades_utf16,
 )
 from app.config import settings
+from app.services.presupuesto import generar_con_presupuesto, ConsumoAgotado, comprobar_plazo, PlazoAgotado
 
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,7 @@ logger = logging.getLogger(__name__)
 # El ID no autoriza por sí solo: se exige la sesión HttpOnly del solicitante.
 DB_PATH = settings.obtener_ruta_correcciones()
 TTL_PROPUESTA_SEGUNDOS = settings.TTL_CORRECCION
+TTL_RESERVA_SEGUNDOS = 180
 RETENCION_TOMBSTONE_SEGUNDOS = settings.RETENCION_CORRECCION
 ID_RE = re.compile(r"^[A-Za-z0-9_-]{6,128}$")
 ARCHIVO_SALIDA_RE = re.compile(r"^[A-Za-z0-9_-][A-Za-z0-9_.-]{0,115}\.py$")
@@ -128,10 +130,23 @@ def _conectar() -> sqlite3.Connection:
         ON propuestas_correccion(caduca_en)
         """
     )
+    conexion.execute(
+        """
+        CREATE TABLE IF NOT EXISTS reservas_correccion (
+            id_hash TEXT PRIMARY KEY,
+            solicitante_hash TEXT NOT NULL,
+            caduca_en REAL NOT NULL
+        )
+        """
+    )
+    conexion.execute(
+        "CREATE INDEX IF NOT EXISTS idx_reservas_caducidad ON reservas_correccion(caduca_en)"
+    )
     return conexion
 
 
 def _limpiar_propuestas_antiguas(conexion: sqlite3.Connection, ahora: float) -> None:
+    conexion.execute("DELETE FROM reservas_correccion WHERE caduca_en <= ?", (ahora,))
     # Se conserva un tombstone por 24 horas para distinguir una propuesta
     # caducada de un ID inexistente, pero se elimina el código almacenado.
     conexion.execute(
@@ -160,6 +175,63 @@ def limpiar_caducadas() -> None:
         _limpiar_propuestas_antiguas(conexion, time.time())
     finally:
         conexion.close()
+
+
+def _reservar_cupo(solicitante_hash: str) -> str:
+    """Adquiere cupo entre procesos; nunca mantiene el bloqueo durante Gemini."""
+    reserva_hash = _id_hash(secrets.token_urlsafe(32))
+    conexion = None
+    try:
+        conexion = _conectar()
+        conexion.execute("BEGIN IMMEDIATE")
+        ahora = time.time()
+        _limpiar_propuestas_antiguas(conexion, ahora)
+        reservas = conexion.execute("SELECT count(*) FROM reservas_correccion").fetchone()[0]
+        total = conexion.execute("SELECT count(*) FROM propuestas_correccion").fetchone()[0]
+        # El límite global sigue contando filas físicas. Solo se retiran
+        # tombstones cuando hacen falta para adquirir el siguiente cupo.
+        if total + reservas >= settings.MAX_PROPUESTAS:
+            conexion.execute(
+                "DELETE FROM propuestas_correccion WHERE id_hash IN "
+                "(SELECT id_hash FROM propuestas_correccion WHERE caduca_en <= ? "
+                "ORDER BY caduca_en LIMIT ?)",
+                (ahora, total + reservas - settings.MAX_PROPUESTAS + 1),
+            )
+            total = conexion.execute("SELECT count(*) FROM propuestas_correccion").fetchone()[0]
+        propias = conexion.execute(
+            "SELECT (SELECT count(*) FROM propuestas_correccion "
+            "WHERE solicitante_hash = ? AND caduca_en > ?) + "
+            "(SELECT count(*) FROM reservas_correccion WHERE solicitante_hash = ?)",
+            (solicitante_hash, ahora, solicitante_hash),
+        ).fetchone()[0]
+        if total + reservas >= settings.MAX_PROPUESTAS or propias >= settings.MAX_PROPUESTAS_SESION:
+            raise CorreccionError("Límite temporal de propuestas alcanzado. Reintenta más tarde.", 429)
+        conexion.execute(
+            "INSERT INTO reservas_correccion (id_hash, solicitante_hash, caduca_en) VALUES (?, ?, ?)",
+            (reserva_hash, solicitante_hash, ahora + TTL_RESERVA_SEGUNDOS),
+        )
+        conexion.commit()
+        return reserva_hash
+    except sqlite3.Error as exc:
+        raise CorreccionError("No fue posible almacenar temporalmente la propuesta.", 500) from exc
+    finally:
+        if conexion is not None:
+            if conexion.in_transaction:
+                conexion.rollback()
+            conexion.close()
+
+
+def _liberar_reserva(reserva_hash: str) -> None:
+    """Liberación de mejor esfuerzo: conserva el error original si SQLite falla."""
+    conexion = None
+    try:
+        conexion = _conectar()
+        conexion.execute("DELETE FROM reservas_correccion WHERE id_hash = ?", (reserva_hash,))
+    except (sqlite3.Error, OSError) as exc:
+        logger.warning("correction_reservation_release_failed", extra={"error_type": type(exc).__name__})
+    finally:
+        if conexion is not None:
+            conexion.close()
 
 
 def _limpiar_bloque_codigo(texto: str) -> str:
@@ -214,11 +286,11 @@ def _generar_codigo_propuesto(
             api_key=api_key,
             http_options=types.HttpOptions(
                 timeout=obtener_timeout_llm() * 1000,
-                retry_options=types.HttpRetryOptions(attempts=2, initial_delay=0.6,
-                    max_delay=2.0, jitter=0.2, http_status_codes=[502, 503, 504]),
+                retry_options=types.HttpRetryOptions(attempts=1),
             ),
         )
-        respuesta = cliente.models.generate_content(
+        respuesta = generar_con_presupuesto(
+            cliente, timeout_ms=obtener_timeout_llm() * 1000,
             model=obtener_modelo_gemini(),
             contents=contenido,
             config=types.GenerateContentConfig(
@@ -240,7 +312,9 @@ def _generar_codigo_propuesto(
         return _limpiar_bloque_codigo(texto)
     except CorreccionError:
         raise
-    except httpx.TimeoutException as exc:
+    except ConsumoAgotado as exc:
+        raise CorreccionError("Se agotó el presupuesto de llamadas de la solicitud.", 503) from exc
+    except (httpx.TimeoutException, PlazoAgotado) as exc:
         raise CorreccionError("El proveedor superó el tiempo de espera.", 504) from exc
     except errors.APIError as exc:
         codigo = 504 if exc.code in (408, 504) else 503 if exc.code in (429, 500, 502, 503) else 502
@@ -308,35 +382,47 @@ def crear_previsualizacion(
             409,
         )
 
-    codigo_propuesto = _generar_codigo_propuesto(
-        solicitud.codigo_original,
-        solicitud.objetivo.model_dump(),
-    )
-    _validar_codigo_propuesto(solicitud.codigo_original, codigo_propuesto)
-
     archivo_salida = _archivo_salida(solicitud.archivo)
-    hash_propuesto = _sha256(codigo_propuesto)
-    ahora = time.time()
-    caduca_en = ahora + TTL_PROPUESTA_SEGUNDOS
     propuesta_id = secrets.token_urlsafe(32)
     advertencias = [
         "La propuesta requiere revisión humana antes de utilizar la copia.",
         "No se ejecutó el código ni se modificó el archivo original.",
     ]
+    def comprobar_tiempo():
+        try:
+            comprobar_plazo()
+        except PlazoAgotado as exc:
+            raise CorreccionError("Se agotó el plazo total de la propuesta.", 504) from exc
 
-    conexion = _conectar()
+    comprobar_tiempo()
+    reserva_hash = _reservar_cupo(solicitante_hash)
     try:
+        comprobar_tiempo()
+        codigo_propuesto = _generar_codigo_propuesto(
+            solicitud.codigo_original,
+            solicitud.objetivo.model_dump(),
+        )
+        _validar_codigo_propuesto(solicitud.codigo_original, codigo_propuesto)
+        comprobar_tiempo()
+        hash_propuesto = _sha256(codigo_propuesto)
+    except BaseException:
+        _liberar_reserva(reserva_hash)
+        raise
+
+    conexion = None
+    try:
+        conexion = _conectar()
         conexion.execute("BEGIN IMMEDIATE")
+        comprobar_tiempo()
+        ahora = time.time()
+        caduca_en = ahora + TTL_PROPUESTA_SEGUNDOS
         _limpiar_propuestas_antiguas(conexion, ahora)
-        # Mantener un límite físico de filas: los tombstones pueden retirarse
-        # antes de 24 h cuando se necesita espacio, nunca propuestas vigentes.
-        total = conexion.execute("SELECT count(*) FROM propuestas_correccion").fetchone()[0]
-        if total >= settings.MAX_PROPUESTAS:
-            conexion.execute("DELETE FROM propuestas_correccion WHERE id_hash IN (SELECT id_hash FROM propuestas_correccion WHERE caduca_en <= ? ORDER BY caduca_en LIMIT ?)", (ahora, total - settings.MAX_PROPUESTAS + 1))
-        total = conexion.execute("SELECT count(*) FROM propuestas_correccion").fetchone()[0]
-        propias = conexion.execute("SELECT count(*) FROM propuestas_correccion WHERE solicitante_hash = ? AND caduca_en > ?", (solicitante_hash, ahora)).fetchone()[0]
-        if total >= settings.MAX_PROPUESTAS or propias >= settings.MAX_PROPUESTAS_SESION:
-            raise CorreccionError("Límite temporal de propuestas alcanzado. Reintenta más tarde.", 429)
+        consumida = conexion.execute(
+            "DELETE FROM reservas_correccion WHERE id_hash = ? AND solicitante_hash = ? AND caduca_en > ?",
+            (reserva_hash, solicitante_hash, ahora),
+        )
+        if consumida.rowcount != 1:
+            raise CorreccionError("La generación superó el tiempo de espera de su reserva.", 504)
         conexion.execute(
             """
             INSERT INTO propuestas_correccion (
@@ -369,11 +455,11 @@ def crear_previsualizacion(
         )
         conexion.commit()
     except CorreccionError:
-        if conexion.in_transaction:
+        if conexion is not None and conexion.in_transaction:
             conexion.rollback()
         raise
     except sqlite3.Error as exc:
-        if conexion.in_transaction:
+        if conexion is not None and conexion.in_transaction:
             conexion.rollback()
         logger.error(
             "correction_proposal_storage_failed",
@@ -384,7 +470,9 @@ def crear_previsualizacion(
             500,
         ) from exc
     finally:
-        conexion.close()
+        if conexion is not None:
+            conexion.close()
+        _liberar_reserva(reserva_hash)
 
     return {
         "version": "1",

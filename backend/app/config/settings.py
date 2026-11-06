@@ -32,6 +32,21 @@ RETENCION_CORRECCION = 86400
 MAX_PROPUESTAS = 200
 MAX_PROPUESTAS_SESION = 10
 COOKIE_CORRECCIONES = "codeguard_correcciones"
+RETRY_INITIAL_DELAY = 0.6
+RETRY_MAX_DELAY = 2.0
+
+
+def limites_solicitud(ruta: str) -> tuple[int, int]:
+    """Plazo cooperativo y máximo de intentos reales, sin cambiar contratos HTTP."""
+    if ruta in {"/api/v1/archivos/zip", "/api/v1/repositorios/github"}:
+        return min(_obtener_entero_positivo("PROJECT_TOTAL_SECONDS", 150), 150), 15
+    if ruta == "/api/v1/agente/analizar":
+        return min(_obtener_entero_positivo("AGENT_TOTAL_SECONDS", 150), 150), 9
+    return min(_obtener_entero_positivo("ANALYSIS_TOTAL_SECONDS", 45), 45), 3
+
+
+def obtener_intentos_llm() -> int:
+    return min(_obtener_entero_positivo("LLM_RETRY_ATTEMPTS", 2), 3)
 
 
 def bandera(nombre: str, predeterminado: bool = False) -> bool:
