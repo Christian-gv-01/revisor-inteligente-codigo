@@ -30,7 +30,9 @@ suite("Integración HTTP: frontend → FastAPI → RAG real → proveedor simula
     expect(result.hallazgos[0].fragmento_codigo).toContain("SELECT");
     expect(result.traza_agente?.modo).toBe("gemini_real");
     expect(result.traza_agente?.decisiones[0].herramienta).toBe("finalizar");
-    expect(result.analisis_estatico?.[0].estado).toBe(staticEnabled ? "completo" : "no_disponible");
+    // El agente ejecuta Ruff/Bandit obligatoriamente, incluso si las rutas
+    // directas tienen desactivado el análisis estático opcional.
+    expect(result.analisis_estatico?.[0].estado).toBe("completo");
     const html = renderToStaticMarkup(<FindingsPanel result={result} loading={false} onSelect={() => {}} />);
     expect(html).toContain("Proceso de revisión del agente");
     expect(html).toContain("Consulta SQL de la prueba");

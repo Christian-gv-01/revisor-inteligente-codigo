@@ -32,7 +32,7 @@ python eval/run_integration.py --static-analysis --output tmp/agente-http-estati
 python eval/run_integration.py --output tmp/agente-http-sin-estatico
 ```
 
-Resultados locales: 250 pruebas backend/QA y 76 frontend aprobadas; 17/17 HTTP con estático y 12/12 aplicables sin él (cinco omitidas por configuración). Las pruebas HTTP usan FastAPI, ChromaDB y Ruff/Bandit reales, con Gemini y la API externa de GitHub simulados. No miden precisión de Gemini.
+Resultados locales: 250 pruebas backend/QA y 76 frontend aprobadas; 17/17 HTTP con estático y 12/12 aplicables con el estático opcional de las rutas directas desactivado (cinco omitidas por configuración). El agente ejecuta Ruff/Bandit obligatoriamente en ambas configuraciones. Las pruebas HTTP usan FastAPI, ChromaDB y Ruff/Bandit reales, con Gemini y la API externa de GitHub simulados. No miden precisión de Gemini.
 
 Las regresiones incluyen la corrección de `eval` de las líneas 24/27 a la línea real 25, fragmentos repetidos, citas inválidas, conservación de hallazgos válidos y transmisión real de evidencia a la síntesis. Se utilizan casos controlados y no se ejecuta la muestra del usuario.
 
