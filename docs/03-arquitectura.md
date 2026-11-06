@@ -1,5 +1,38 @@
 # 03. Arquitectura vigente de CODEGUARD
 
+> Extensión frontend local del 6 de noviembre: el análisis mantiene los flujos
+> descritos abajo. Se añade `CorrectionPreview`, con original/propuesta, casilla,
+> confirmación y cancelación. Un adaptador separado valida identidad, hashes y
+> contenido antes de generar una descarga nueva. La demo es local; el adaptador
+> real permanece desactivado hasta acordar el [contrato](20-contrato-confirmacion-humana.md).
+> No hay endpoints de aprobación implementados por esta rama ni cambios de hosting.
+
+```mermaid
+sequenceDiagram
+    actor U as Usuario
+    participant F as Frontend
+    participant B as Backend de correcciones propuesto
+    U->>F: Solicitar previsualización
+    F->>B: Original, hash y objetivo de corrección
+    B-->>F: Propuesta, ID, hashes, nombre nuevo y caducidad
+    F-->>U: Original y propuesta como texto
+    alt Confirmación explícita
+        U->>F: Marcar casilla y confirmar
+        F->>B: Aprobar ID y hashes
+        B-->>F: Contenido exacto aprobado
+        F->>F: Comprobar integridad
+        F-->>U: Descarga de copia con nombre distinto
+    else Cancelar
+        U->>F: Cancelar
+        F->>B: Rechazar si hay ID
+        F-->>U: Sin descarga ni cambio del original
+    end
+```
+
+Este diagrama es el contrato propuesto para integración; la validación actual
+utiliza un cliente simulado. El análisis y la generación de una propuesta no
+autorizan ejecutar el código.
+
 Revisión documental: 5 de noviembre de 2026. Base: `main`, `65675e2` (PR #31).
 La [arquitectura de revisión 2](historico/03-arquitectura-revision2.md) se conserva
 como registro histórico. La revisión Git no identifica por sí sola la versión

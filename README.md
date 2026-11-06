@@ -1,5 +1,11 @@
 # CODEGUARD — Revisor Inteligente de Código Seguro
 
+> Rama local de Frontend y documentación, 6 de noviembre: incluye previsualización,
+> confirmación y cancelación de una copia en demo. La API real de correcciones está
+> deshabilitada hasta acordar el [contrato con Backend](docs/20-contrato-confirmacion-humana.md).
+> No se publicó ni desplegó esta rama. Ver [alcance y ocho historias](docs/21-frontend-producto.md)
+> y [presentación de doce minutos](docs/presentacion/README.md).
+
 CODEGUARD analiza código Python como texto para identificar riesgos de seguridad sin ejecutarlo. Combina una API FastAPI, una interfaz React, Gemini y recuperación documental con ChromaDB. Los hallazgos deben incluir citas recuperadas; si no existe evidencia suficiente, el sistema se abstiene.
 
 ## Estado de la Entrega 4

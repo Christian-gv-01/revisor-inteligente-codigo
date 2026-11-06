@@ -1,5 +1,5 @@
 import type { StaticAnalysis } from "../types/analysis";
-import { SEVERITY_LABELS } from "../types/analysis";
+import { REVIEW_PRIORITY, SEVERITY_LABELS } from "../types/analysis";
 import "./StaticFindingsPanel.css";
 
 interface Props {
@@ -68,7 +68,7 @@ export function StaticFindingsPanel({ informes }: Props) {
                 ? "Los analizadores no emitieron observaciones para este archivo. Esto no garantiza que sea seguro."
                 : "No hay observaciones disponibles; uno o más analizadores no completaron la revisión."}
             </p>
-          ) : informe.hallazgos.map((hallazgo, indice) => {
+          ) : [...informe.hallazgos].sort((a, b) => REVIEW_PRIORITY[a.severidad] - REVIEW_PRIORITY[b.severidad]).map((hallazgo, indice) => {
             const enlace = enlaceExterno(hallazgo.referencia);
             return (
               <article className="static-report-finding" key={`${informe.archivo}-${hallazgo.herramienta}-${hallazgo.regla}-${hallazgo.linea}-${indice}`}>
@@ -79,6 +79,7 @@ export function StaticFindingsPanel({ informes }: Props) {
                   </span>
                 </div>
                 <p><strong>{hallazgo.titulo}</strong></p>
+                <p>Prioridad de revisión {REVIEW_PRIORITY[hallazgo.severidad]} según severidad de la herramienta.</p>
                 <p className="static-report-location">
                   {informe.archivo} · Línea {hallazgo.linea}
                   {hallazgo.columna !== null ? `, columna ${hallazgo.columna}` : ""}

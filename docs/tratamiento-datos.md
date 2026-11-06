@@ -1,5 +1,11 @@
 # Aviso de IA, tratamiento de datos y limitaciones
 
+> Flujo de corrección propuesto el 6 de noviembre: si se habilita tras acuerdo,
+> previsualizar enviará el original y el objetivo de corrección al backend; confirmar
+> o rechazar enviará ID y hashes. La copia descargada se limita al texto revisado.
+> El backend debe acordar caducidad y protección del acceso a propuestas. En esta
+> rama la demostración es local y la conexión real está deshabilitada.
+
 Descripción técnica del producto en `65675e2`, consolidada el 5 de noviembre de
 2026. No constituye una certificación legal ni atribuye al proveedor condiciones
 de retención que el equipo no haya verificado.

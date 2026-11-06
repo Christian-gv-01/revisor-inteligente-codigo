@@ -1,5 +1,11 @@
 # 01. Propuesta del proyecto
 
+> Ampliación local del 6 de noviembre: Ronald asume Frontend y documentación del
+> producto. Se incorpora un flujo de previsualización y aprobación de una copia,
+> probado con simulación; la conexión real espera acuerdo con Backend. Ver
+> [alcance actual](21-frontend-producto.md). No se ejecuta código, se sobrescriben
+> originales ni se afirma que esta ampliación esté publicada.
+
 ## Identificación
 
 - Proyecto: CODEGUARD — Revisor Inteligente de Código Seguro.

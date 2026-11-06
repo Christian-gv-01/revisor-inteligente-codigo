@@ -1,5 +1,18 @@
 # 11. Aportes del equipo y declaración de uso de IA
 
+## Nueva asignación — 6 de noviembre de 2026
+
+Ronald confirmó que en esta etapa asume **Compañero 2: Frontend y documentación
+del producto**. Su aporte local comprende interfaz de aprobación/cancelación,
+prioridad y estado parcial, ocho historias específicas, contrato propuesto con
+Christian y borrador de presentación de doce minutos. Ver
+[21-frontend-producto.md](21-frontend-producto.md).
+
+Christian conserva la responsabilidad de los endpoints del backend. No se
+reinterpreta como trabajo de Ronald la implementación de esos endpoints ni las
+199 pruebas comunicadas por Christian. La asignación actual de Andy no se ha
+confirmado; la tabla siguiente conserva los roles informados el 5 de noviembre.
+
 ## Integrantes y responsabilidades confirmadas
 
 Información proporcionada por Ronald el 5 de noviembre de 2026. La tabla distingue

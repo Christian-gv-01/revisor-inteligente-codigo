@@ -1,0 +1,12 @@
+.correction-preview { margin: 18px 0; padding: 20px; border: 1px solid #b8ccdc; border-radius: 10px; background: #f6fafc; color: #203e58; }
+.correction-preview h3 { margin-top: 0; font-size: 19px; }
+.correction-preview p, .correction-preview li { font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.correction-comparison { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.correction-comparison h4 { overflow-wrap: anywhere; }
+.correction-comparison pre { margin: 0; padding: 16px; max-height: 420px; overflow: auto; background: #102538; color: #e4f2ff; border-radius: 6px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.correction-consent { display: flex; align-items: flex-start; gap: 10px; margin: 20px 0; line-height: 1.6; font-size: 14px; }
+.correction-consent input { width: 18px; height: 18px; margin-top: 3px; flex: 0 0 auto; }
+.correction-cancel { margin: 10px 0 0 12px; }
+.correction-warning { border-left: 4px solid #986400; padding-left: 12px; color: #714b00; }
+.finding-priority { margin: 0 0 10px; font-size: 12px; font-weight: 700; color: #375b7c; }
+@media (max-width: 800px) { .correction-comparison { grid-template-columns: 1fr; } .correction-preview { padding: 14px; } .correction-cancel { margin-left: 0; } .correction-preview button { max-width: 100%; white-space: normal; } }

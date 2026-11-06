@@ -1,5 +1,10 @@
 # 09. Decisiones técnicas y éticas
 
+> Ampliación local del 6 de noviembre: se propone aprobar únicamente la descarga
+> de una copia, tras revisar la propuesta. No se autoriza ejecución ni modificación
+> automática por el agente. El [contrato](20-contrato-confirmacion-humana.md) sigue
+> pendiente de acuerdo con Backend y su adaptador real permanece deshabilitado.
+
 Consolidación: 5 de noviembre de 2026, base `65675e2`.
 Responsables: Christian Gamboa (Backend, IA, agente y despliegue), Andy (Frontend
 y evaluación), Ronald Yépez (QA, seguridad y documentación).

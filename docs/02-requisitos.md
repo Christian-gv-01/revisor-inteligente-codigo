@@ -1,5 +1,11 @@
 # 02. Requisitos y trazabilidad
 
+> Asignación de Frontend y documentación del 6 de noviembre: las ocho historias
+> específicas de previsualización, confirmación, cancelación, prioridad, estado,
+> fuentes y proceso del agente están en [21-frontend-producto.md](21-frontend-producto.md).
+> El [contrato de corrección](20-contrato-confirmacion-humana.md) está propuesto;
+> no se considera integrado hasta acordarlo y probarlo con Backend.
+
 Actualizado el 5 de noviembre de 2026 sobre `65675e2`. Historias reconstruidas
 desde el producto y la rúbrica; no se presentan como entrevistas de Semana 1.
 La aceptación por usuarios se registra en el [levantamiento](levantamiento.md).

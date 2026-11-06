@@ -5,6 +5,9 @@ import { CodeInput } from "../components/CodeInput";
 import { FindingsPanel } from "../components/FindingsPanel";
 import { Icon } from "../components/Icon";
 import { EvidenceTrace } from "../components/EvidenceTrace";
+import { CorrectionPreview } from "../components/CorrectionPreview";
+import { configuredCorrectionClient } from "../services/corrections";
+import { demoCorrectionAvailable, demoCorrectionClient } from "../services/correctionDemo";
 import {
   analyzeCode,
   analyzeWithAgent,
@@ -297,6 +300,11 @@ export function HomePage() {
                   <span>UTF-8</span>
                 </div>
               </div>
+              {result && selected && code !== null && selected.archivo === filename && !busy && (
+                <CorrectionPreview key={`${filename}:${selected.id}`} archivo={filename} codigo={code}
+                  finding={selected} demo={result.demo} partial={result.estado === "parcial"}
+                  client={result.demo ? (demoCorrectionAvailable(code) ? demoCorrectionClient : undefined) : configuredCorrectionClient()} />
+              )}
               {mode === "demo" && (
                 <div className="demo-controls">
                   <label htmlFor="scenario">Escenario de demostración</label>

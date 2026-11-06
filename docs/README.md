@@ -1,5 +1,9 @@
 # Documentación de CODEGUARD
 
+Nueva asignación del 6 de noviembre: [Frontend y documentación del producto](21-frontend-producto.md),
+[contrato propuesto de confirmación](20-contrato-confirmacion-humana.md) y
+[borrador de presentación de doce minutos](presentacion/README.md).
+
 Consolidación del 5 de noviembre de 2026 sobre `main` en `65675e2`.
 Responsable de esta edición: Ronald Yépez, QA, seguridad y documentación.
 
