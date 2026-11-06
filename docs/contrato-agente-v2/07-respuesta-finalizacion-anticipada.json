@@ -1,0 +1,62 @@
+{
+  "archivo": "ejemplo.py",
+  "modo": "gemini_real",
+  "pasos": [
+    {
+      "numero": 1,
+      "herramienta": "inspeccionar_estructura",
+      "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+      "resultado": {
+        "sintaxis_valida": true,
+        "total_lineas": 1,
+        "funciones": 0,
+        "clases": 0,
+        "importaciones": 0,
+        "evidencia_ruff_bandit": {
+          "estado": "completo",
+          "herramientas": [],
+          "total_hallazgos": 0,
+          "reglas": []
+        }
+      },
+      "origen": "automatico"
+    }
+  ],
+  "max_pasos": 3,
+  "informe": {
+    "archivo": "ejemplo.py",
+    "estado": "analizado",
+    "hallazgos": [],
+    "fuentes": [
+      {
+        "id": "seguridad_python-002",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 2",
+        "fuente": "OWASP",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.1
+      }
+    ],
+    "mensaje": null
+  },
+  "decisiones": [
+    {
+      "herramienta": "finalizar",
+      "motivo": "La evidencia reunida permite pasar a la síntesis.",
+      "numero": 1,
+      "estado": "finalizar"
+    }
+  ],
+  "fase_error": null,
+  "version_herramientas": "2",
+  "terminacion": "finalizacion_anticipada",
+  "analisis_estatico": {
+    "archivo": "ejemplo.py",
+    "estado": "completo",
+    "hallazgos": [],
+    "herramientas": [],
+    "mensaje": null
+  },
+  "requiere_confirmacion_humana": false,
+  "politica": "Solo lectura; sin ejecución de código ni cambios de archivos"
+}

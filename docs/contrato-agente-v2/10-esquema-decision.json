@@ -1,0 +1,89 @@
+{
+  "$defs": {
+    "ArgumentosCategoria": {
+      "additionalProperties": false,
+      "properties": {
+        "categoria": {
+          "enum": [
+            "ejecucion_codigo",
+            "inyeccion_sql",
+            "inyeccion_comandos",
+            "inyeccion",
+            "credenciales",
+            "rutas"
+          ],
+          "title": "Categoria",
+          "type": "string"
+        }
+      },
+      "required": [
+        "categoria"
+      ],
+      "title": "ArgumentosCategoria",
+      "type": "object"
+    },
+    "ArgumentosLinea": {
+      "additionalProperties": false,
+      "properties": {
+        "linea": {
+          "maximum": 12000,
+          "minimum": 1,
+          "title": "Linea",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "linea"
+      ],
+      "title": "ArgumentosLinea",
+      "type": "object"
+    },
+    "ArgumentosVacios": {
+      "additionalProperties": false,
+      "properties": {},
+      "title": "ArgumentosVacios",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "herramienta": {
+      "enum": [
+        "inspeccionar_estructura",
+        "detectar_llamadas_sensibles",
+        "revisar_consultas_sql",
+        "ampliar_contexto",
+        "buscar_referencia",
+        "finalizar"
+      ],
+      "title": "Herramienta",
+      "type": "string"
+    },
+    "motivo": {
+      "maxLength": 240,
+      "minLength": 1,
+      "title": "Motivo",
+      "type": "string"
+    },
+    "argumentos": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArgumentosLinea"
+        },
+        {
+          "$ref": "#/$defs/ArgumentosCategoria"
+        },
+        {
+          "$ref": "#/$defs/ArgumentosVacios"
+        }
+      ],
+      "title": "Argumentos"
+    }
+  },
+  "required": [
+    "herramienta",
+    "motivo"
+  ],
+  "title": "DecisionAgente",
+  "type": "object"
+}

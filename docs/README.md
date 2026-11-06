@@ -39,6 +39,7 @@ Responsable de esta edición: Ronald Yépez, QA, seguridad y documentación.
 
 - [Abstención explícita y conservación parcial](26-abstencion-parcial.md).
 - [Reintentos del proveedor y presupuesto compartido](reintentos-presupuesto.md).
+- [Contrato optativo v2 del agente y ejemplos JSON](contrato-agente-v2/README.md).
 - [Semana 1: registro de originales faltantes](evidencias/semana-1/README.md).
 - [Semana 4: evidencias versionadas](evidencias/semana-4/README.md).
 - [Revisión PR #19](14-revision-qa-pr19.md) y

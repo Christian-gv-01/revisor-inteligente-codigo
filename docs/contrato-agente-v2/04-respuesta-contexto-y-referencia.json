@@ -1,0 +1,142 @@
+{
+  "archivo": "ejemplo.py",
+  "modo": "gemini_real",
+  "pasos": [
+    {
+      "numero": 1,
+      "herramienta": "inspeccionar_estructura",
+      "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+      "resultado": {
+        "sintaxis_valida": true,
+        "total_lineas": 3,
+        "funciones": 0,
+        "clases": 0,
+        "importaciones": 0,
+        "evidencia_ruff_bandit": {
+          "estado": "completo",
+          "herramientas": [],
+          "total_hallazgos": 0,
+          "reglas": []
+        }
+      },
+      "origen": "automatico"
+    },
+    {
+      "numero": 2,
+      "herramienta": "ampliar_contexto",
+      "motivo": "Comprobar la construcción SQL y su uso cercano.",
+      "resultado": {
+        "linea_objetivo": 2,
+        "linea_inicio": 1,
+        "linea_fin": 3,
+        "lineas": [
+          {
+            "numero": 1,
+            "texto": "usuario = input()",
+            "truncada": false
+          },
+          {
+            "numero": 2,
+            "texto": "consulta = 'SELECT ' + usuario",
+            "truncada": false
+          },
+          {
+            "numero": 3,
+            "texto": "cursor.execute(consulta)",
+            "truncada": false
+          }
+        ]
+      },
+      "origen": "gemini",
+      "argumentos": {
+        "linea": 2
+      }
+    },
+    {
+      "numero": 3,
+      "herramienta": "buscar_referencia",
+      "motivo": "Recuperar respaldo documental para SQL.",
+      "resultado": {
+        "categoria": "inyeccion_sql",
+        "fragmentos": [
+          {
+            "area": "seguridad",
+            "id": "seguridad_python-002",
+            "texto": "Usar consultas parametrizadas para separar datos de SQL.",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2",
+            "fuente": "OWASP",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1
+          }
+        ]
+      },
+      "origen": "gemini",
+      "argumentos": {
+        "categoria": "inyeccion_sql"
+      }
+    }
+  ],
+  "max_pasos": 3,
+  "informe": {
+    "archivo": "ejemplo.py",
+    "estado": "analizado",
+    "hallazgos": [
+      {
+        "linea": 2,
+        "severidad": "alta",
+        "categoria": "Inyección SQL",
+        "titulo": "Consulta dinámica de ejemplo",
+        "explicacion": "Salida sintética para revisar el contrato.",
+        "correccion_sugerida": "Separar datos y consulta mediante parámetros.",
+        "referencias": [
+          "seguridad_python-002"
+        ],
+        "fragmento_codigo": "consulta = 'SELECT ' + usuario"
+      }
+    ],
+    "fuentes": [
+      {
+        "id": "seguridad_python-002",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 2",
+        "fuente": "OWASP",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.1
+      }
+    ],
+    "mensaje": null
+  },
+  "decisiones": [
+    {
+      "herramienta": "ampliar_contexto",
+      "motivo": "Comprobar la construcción SQL y su uso cercano.",
+      "argumentos": {
+        "linea": 2
+      },
+      "numero": 1,
+      "estado": "ejecutada"
+    },
+    {
+      "herramienta": "buscar_referencia",
+      "motivo": "Recuperar respaldo documental para SQL.",
+      "argumentos": {
+        "categoria": "inyeccion_sql"
+      },
+      "numero": 2,
+      "estado": "ejecutada"
+    }
+  ],
+  "fase_error": null,
+  "version_herramientas": "2",
+  "terminacion": "max_pasos",
+  "analisis_estatico": {
+    "archivo": "ejemplo.py",
+    "estado": "completo",
+    "hallazgos": [],
+    "herramientas": [],
+    "mensaje": null
+  },
+  "requiere_confirmacion_humana": false,
+  "politica": "Solo lectura; sin ejecución de código ni cambios de archivos"
+}

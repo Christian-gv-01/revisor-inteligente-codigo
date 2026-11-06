@@ -55,6 +55,8 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
         return RespuestaAgente(
             archivo=solicitud.archivo,
             modo="gemini_real", pasos=pasos,
+            version_herramientas="2" if solicitud.version_herramientas == "2" else None,
+            terminacion=getattr(ejecucion, "terminacion", None),
             max_pasos=solicitud.max_pasos,
             decisiones=decisiones,
             analisis_estatico=estatico,
@@ -98,12 +100,19 @@ async def analizar_con_agente(solicitud: SolicitudAgente):
                 "Gemini no completó la planificación. Se conservaron los pasos "
                 "realmente ejecutados y se completó la inspección AST local."
             )
+        elif fase == "herramienta":
+            detalle = (
+                "Una herramienta contextual no pudo completarse. Se conservaron "
+                "los pasos anteriores y el estado de error de la decisión."
+            )
         else:
             detalle = "Gemini no completó la solicitud; se realizó inspección AST local."
 
         return RespuestaAgente(
             archivo=solicitud.archivo,
             modo="degradado",
+            version_herramientas="2" if solicitud.version_herramientas == "2" else None,
+            terminacion=getattr(error, "terminacion", None),
             pasos=pasos,
             max_pasos=solicitud.max_pasos,
             decisiones=decisiones,
