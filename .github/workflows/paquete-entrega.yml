@@ -1,0 +1,37 @@
+name: CODEGUARD paquete candidato
+
+on:
+  pull_request:
+    paths:
+      - "scripts/empaquetar_entrega.py"
+      - "qa/test_empaquetado.py"
+      - ".github/workflows/paquete-entrega.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  paquete:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Probar limpieza e integridad del empaquetador
+        run: python -m unittest discover -s qa -p test_empaquetado.py -v
+      - name: Crear ZIP desde la revision exacta
+        run: python scripts/empaquetar_entrega.py --output dist/entrega/CODEGUARD_Semana4.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CODEGUARD-Semana4-candidato
+          path: |
+            dist/entrega/CODEGUARD_Semana4.zip
+            dist/entrega/CODEGUARD_Semana4.verificacion.json
+          if-no-files-found: error
+          retention-days: 30
