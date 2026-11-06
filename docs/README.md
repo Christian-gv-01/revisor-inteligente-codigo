@@ -1,5 +1,7 @@
 # Documentación de CODEGUARD
 
+Candidato conjunto PR43/44: [compatibilidad y evidencias](evidencias/semana-4/integracion-agente-presupuesto-20261106/README.md).
+
 Nueva asignación del 6 de noviembre: [Frontend y documentación del producto](21-frontend-producto.md),
 [contrato propuesto de confirmación](20-contrato-confirmacion-humana.md) y
 [borrador de presentación de doce minutos](presentacion/README.md).

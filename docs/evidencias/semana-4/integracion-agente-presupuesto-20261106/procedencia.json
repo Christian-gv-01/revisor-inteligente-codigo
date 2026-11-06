@@ -1,0 +1,40 @@
+{
+  "fecha_utc": "2026-11-06T23:16:25.650543+00:00",
+  "commit_probado": "0cdaba0263c577445fab0daaec9e3dce7b2046d9",
+  "arbol_probado": "4e392f0f89dbba04ccb99aab57cafb8589e31aeb",
+  "checkout_limpio_al_ejecutar": true,
+  "subarboles_codigo": {
+    "backend": "3c8e2ff7e489fca8e8112f6e0d3070abcc18e164",
+    "frontend": "2721328455931d591b00307b598ea25de6e0ea63",
+    "qa": "b046a02546570fdc7e27de977ef01a30ad1f2d41",
+    "eval": "206057224283b98faaee188de887aa2b0c0199f6",
+    ".github/workflows": "72d82f96c7d1bc6f8266f47c420c18d97a662ad0"
+  },
+  "base_comun": "605d142ff8f643d755689e257c649e0a9e79a8ea",
+  "pr43": "f2dbfa38dd0c5325bc84cdebd57d26a3c297e51c",
+  "pr44": "f2935f2b306bf0130c6051bff7df0a985f3436f1",
+  "proveedor_ia": "simulado",
+  "github_externo": "simulado",
+  "llamadas_externas_ia": 0,
+  "backend": 495,
+  "frontend": 132,
+  "qa_eval": 23,
+  "qa_eval_omitidas": 1,
+  "escenarios_navegador_agente": 6,
+  "escenarios_navegador_presupuesto": 9,
+  "hashes_evidencia_sha256": {
+    "backend-junit.xml": "3ed340ffddbf16cf587db8f96fd36f5523c7e67589dbed64a1059cfdb0c4032d",
+    "frontend-junit.xml": "81d4a77cf8f0383509ccc6337c6f3bafb4393594b1ce56479a8d604d258b5172",
+    "http-estatico.json": "da2563bc2c85fdc7d44438e7ca8a4430af8cdec395fd168e68ea65295997d554",
+    "http-sin-estatico.json": "aad9ec17f08282d0e41cd26cd48fa53c194c4e025e8b82a16e2c514eaae26f5c",
+    "navegador-agente-v2.json": "9deb54f0fc4e3bb24657abb8c9e7fd1930e9e6d185f1102267b8feaa7d0344b8",
+    "navegador-agente-v2.txt": "605474548762114bd71e79809f03e5f02df78a36cefe6a654fd1bc9759b99b08",
+    "navegador-presupuesto.json": "dbf824eca83a2b83a220cd52d7ece8089884233f32632a4b6757a59266159855",
+    "navegador-presupuesto.txt": "d6540bd0c5f08bb81a3ae4b7f4cddc694acc8bef820f01c6c9ca9bbd46113f61",
+    "qa-eval-junit.xml": "28e58743ba66c44ac46e98f5f132adbf01debc800d557022af30e58b866dd193",
+    "respuesta-v2-early.json": "09e603d3a5c769a90990f896772bc247ed52d38a466c31deda99ab7b42b71a62",
+    "respuesta-v2-error.json": "4d80d11ccd0457824459937e2d5a978aa56b88a5c1140271eb723a9ef4039c83",
+    "respuesta-v2-full.json": "e2ac6769c24feaaaf88d593acee6ee74f8d3e03dbecaa881426a807949991364",
+    "respuesta-v2-repeat.json": "a854b104a288111448cbc7d24720b5d833a29e31445e9f1399054fc9b571f8fc"
+  }
+}

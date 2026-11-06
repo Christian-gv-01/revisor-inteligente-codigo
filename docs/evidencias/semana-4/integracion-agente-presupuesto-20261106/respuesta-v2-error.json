@@ -1,0 +1,142 @@
+{
+  "archivo": "muestra.py",
+  "modo": "degradado",
+  "pasos": [
+    {
+      "numero": 1,
+      "herramienta": "inspeccionar_estructura",
+      "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+      "resultado": {
+        "sintaxis_valida": true,
+        "total_lineas": 3,
+        "funciones": 0,
+        "clases": 0,
+        "importaciones": 0,
+        "evidencia_ruff_bandit": {
+          "estado": "completo",
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 1
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "total_hallazgos": 2,
+          "reglas": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 2,
+              "severidad": "media"
+            },
+            {
+              "herramienta": "ruff",
+              "regla": "F821",
+              "tipo": "calidad",
+              "linea": 2,
+              "severidad": "baja"
+            }
+          ]
+        }
+      },
+      "origen": "automatico"
+    },
+    {
+      "numero": 2,
+      "herramienta": "detectar_llamadas_sensibles",
+      "motivo": "Herramienta estática programada; modo local sin IA.",
+      "resultado": {
+        "sintaxis_valida": true,
+        "indicadores": []
+      },
+      "origen": "local"
+    },
+    {
+      "numero": 3,
+      "herramienta": "revisar_consultas_sql",
+      "motivo": "Herramienta estática programada; modo local sin IA.",
+      "resultado": {
+        "sintaxis_valida": true,
+        "indicadores": [
+          {
+            "linea": 2,
+            "patron": "SQL dinamico (concatenacion)"
+          }
+        ]
+      },
+      "origen": "local"
+    }
+  ],
+  "max_pasos": 3,
+  "informe": {
+    "archivo": "muestra.py",
+    "estado": "parcial",
+    "hallazgos": [],
+    "fuentes": [],
+    "mensaje": "Una herramienta contextual no pudo completarse. Se conservaron los pasos anteriores y el estado de error de la decisión. No hay dictamen de IA ni referencias RAG. Los indicadores AST no garantizan que el código sea seguro."
+  },
+  "decisiones": [
+    {
+      "herramienta": "ampliar_contexto",
+      "motivo": "Acción controlada del proveedor simulado para probar el contrato visual.",
+      "argumentos": {
+        "linea": 999
+      },
+      "numero": 1,
+      "estado": "error"
+    }
+  ],
+  "fase_error": "herramienta",
+  "version_herramientas": "2",
+  "analisis_estatico": {
+    "archivo": "muestra.py",
+    "estado": "completo",
+    "hallazgos": [
+      {
+        "herramienta": "bandit",
+        "regla": "B608",
+        "tipo": "seguridad",
+        "linea": 2,
+        "columna": null,
+        "severidad": "media",
+        "titulo": "Bandit B608: hardcoded_sql_expressions",
+        "descripcion": "Possible SQL injection vector through string-based query construction.",
+        "confianza": "media",
+        "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+      },
+      {
+        "herramienta": "ruff",
+        "regla": "F821",
+        "tipo": "calidad",
+        "linea": 2,
+        "columna": 1,
+        "severidad": "baja",
+        "titulo": "Ruff F821",
+        "descripcion": "Undefined name `cursor`",
+        "confianza": null,
+        "referencia": null
+      }
+    ],
+    "herramientas": [
+      {
+        "herramienta": "ruff",
+        "estado": "ok",
+        "hallazgos": 1
+      },
+      {
+        "herramienta": "bandit",
+        "estado": "ok",
+        "hallazgos": 1
+      }
+    ],
+    "mensaje": null
+  },
+  "requiere_confirmacion_humana": false,
+  "politica": "Solo lectura; sin ejecución de código ni cambios de archivos"
+}

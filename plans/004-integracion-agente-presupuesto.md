@@ -28,16 +28,16 @@ se activa solo dentro del proceso fixture de QA autorizado.
 ## Ejecución y verificación
 
 - [x] Leer contratos, verificar SHAs, integrar ambos en worktree aislado.
-- [ ] Confirmar baseline backend/frontend integrado antes de adaptar.
-- [ ] Escribir pruebas frontend que fallen con ejemplos reales del PR43:
+- [x] Confirmar baseline backend/frontend integrado antes de adaptar.
+- [x] Escribir pruebas frontend que fallen con ejemplos reales del PR43:
   contexto/referencias/argumentos, finalización, errores, v1 y exportación.
-- [ ] Implementar tipos, validación estricta de resultados/argumentos y panel.
+- [x] Implementar tipos, validación estricta de resultados/argumentos y panel.
   Probar rechazo de categorías/URLs/ventanas inválidas y repetición por argumentos.
-- [ ] Añadir prueba de navegador contra FastAPI real/orquestador real con SDK
+- [x] Añadir prueba de navegador contra FastAPI real/orquestador real con SDK
   simulado para v2; conservar y ejecutar los nueve escenarios de presupuesto.
-- [ ] Ejecutar backend, frontend tests/lint/build, QA/eval sin cambios e HTTP con
+- [x] Ejecutar backend, frontend tests/lint/build, QA/eval sin cambios e HTTP con
   y sin análisis estático en el mismo candidato. Cero Gemini externo.
-- [ ] Fijar commit candidato, verificar checkout limpio, registrar JUnit,
+- [x] Fijar commit candidato, verificar checkout limpio, registrar JUnit,
   resultados/capturas y hashes/procedencia. Publicar rama/PR borrador de revisión.
 
 Archivos nuevos: parser de traza `frontend/src/services/agentTrace.ts`, pruebas
