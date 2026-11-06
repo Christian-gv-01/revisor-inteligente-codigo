@@ -1,0 +1,6 @@
+{
+  "archivo": "ejemplo.py",
+  "codigo": "usuario = input()\nconsulta = 'SELECT ' + usuario\ncursor.execute(consulta)\n",
+  "max_pasos": 3,
+  "version_herramientas": "2"
+}

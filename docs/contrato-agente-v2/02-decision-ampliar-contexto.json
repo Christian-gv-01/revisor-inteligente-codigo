@@ -1,0 +1,7 @@
+{
+  "herramienta": "ampliar_contexto",
+  "motivo": "Comprobar la construcción SQL y su uso cercano.",
+  "argumentos": {
+    "linea": 2
+  }
+}

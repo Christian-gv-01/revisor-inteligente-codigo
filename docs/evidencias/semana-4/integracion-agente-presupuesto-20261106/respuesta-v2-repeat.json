@@ -1,0 +1,196 @@
+{
+  "archivo": "muestra.py",
+  "modo": "gemini_real",
+  "pasos": [
+    {
+      "numero": 1,
+      "herramienta": "inspeccionar_estructura",
+      "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+      "resultado": {
+        "sintaxis_valida": true,
+        "total_lineas": 3,
+        "funciones": 0,
+        "clases": 0,
+        "importaciones": 0,
+        "evidencia_ruff_bandit": {
+          "estado": "completo",
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 1
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "total_hallazgos": 2,
+          "reglas": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 2,
+              "severidad": "media"
+            },
+            {
+              "herramienta": "ruff",
+              "regla": "F821",
+              "tipo": "calidad",
+              "linea": 2,
+              "severidad": "baja"
+            }
+          ]
+        }
+      },
+      "origen": "automatico"
+    },
+    {
+      "numero": 2,
+      "herramienta": "ampliar_contexto",
+      "motivo": "Acción controlada del proveedor simulado para probar el contrato visual.",
+      "resultado": {
+        "linea_objetivo": 2,
+        "linea_inicio": 1,
+        "linea_fin": 3,
+        "lineas": [
+          {
+            "numero": 1,
+            "texto": "nombre=input()",
+            "truncada": false
+          },
+          {
+            "numero": 2,
+            "texto": "cursor.execute(\"SELECT * FROM usuarios WHERE nombre = '\" + nombre + \"'\")",
+            "truncada": false
+          },
+          {
+            "numero": 3,
+            "texto": "# V2_REPEAT",
+            "truncada": false
+          }
+        ]
+      },
+      "origen": "gemini",
+      "argumentos": {
+        "linea": 2
+      }
+    }
+  ],
+  "max_pasos": 3,
+  "informe": {
+    "archivo": "muestra.py",
+    "estado": "analizado",
+    "hallazgos": [
+      {
+        "linea": 2,
+        "severidad": "alta",
+        "categoria": "Inyección SQL",
+        "titulo": "Consulta SQL de la prueba de integración",
+        "explicacion": "Respuesta controlada del proveedor simulado para probar el contrato.",
+        "correccion_sugerida": "cursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))",
+        "referencias": [
+          "seguridad_python-002"
+        ],
+        "fragmento_codigo": "cursor.execute(\"SELECT * FROM usuarios WHERE nombre = '\" + nombre + \"'\")"
+      }
+    ],
+    "fuentes": [
+      {
+        "id": "seguridad_python-002",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 2: Prevenir inyeccion SQL",
+        "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.19564729928970337
+      },
+      {
+        "id": "seguridad_python-004",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 4: Prevencion general de inyecciones",
+        "fuente": "OWASP Injection Prevention Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.5743893384933472
+      },
+      {
+        "id": "seguridad_python-001",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 1: Evitar eval con entradas no confiables",
+        "fuente": "MITRE CWE-94",
+        "url": "https://cwe.mitre.org/data/definitions/94.html",
+        "distancia": 0.7142115831375122
+      }
+    ],
+    "mensaje": null
+  },
+  "decisiones": [
+    {
+      "herramienta": "ampliar_contexto",
+      "motivo": "Acción controlada del proveedor simulado para probar el contrato visual.",
+      "argumentos": {
+        "linea": 2
+      },
+      "numero": 1,
+      "estado": "ejecutada"
+    },
+    {
+      "herramienta": "ampliar_contexto",
+      "motivo": "Acción controlada del proveedor simulado para probar el contrato visual.",
+      "argumentos": {
+        "linea": 2
+      },
+      "numero": 2,
+      "estado": "repetida"
+    }
+  ],
+  "fase_error": null,
+  "version_herramientas": "2",
+  "terminacion": "herramienta_repetida",
+  "analisis_estatico": {
+    "archivo": "muestra.py",
+    "estado": "completo",
+    "hallazgos": [
+      {
+        "herramienta": "bandit",
+        "regla": "B608",
+        "tipo": "seguridad",
+        "linea": 2,
+        "columna": null,
+        "severidad": "media",
+        "titulo": "Bandit B608: hardcoded_sql_expressions",
+        "descripcion": "Possible SQL injection vector through string-based query construction.",
+        "confianza": "media",
+        "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+      },
+      {
+        "herramienta": "ruff",
+        "regla": "F821",
+        "tipo": "calidad",
+        "linea": 2,
+        "columna": 1,
+        "severidad": "baja",
+        "titulo": "Ruff F821",
+        "descripcion": "Undefined name `cursor`",
+        "confianza": null,
+        "referencia": null
+      }
+    ],
+    "herramientas": [
+      {
+        "herramienta": "ruff",
+        "estado": "ok",
+        "hallazgos": 1
+      },
+      {
+        "herramienta": "bandit",
+        "estado": "ok",
+        "hallazgos": 1
+      }
+    ],
+    "mensaje": null
+  },
+  "requiere_confirmacion_humana": false,
+  "politica": "Solo lectura; sin ejecución de código ni cambios de archivos"
+}

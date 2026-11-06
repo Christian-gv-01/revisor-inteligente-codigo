@@ -1,0 +1,222 @@
+{
+  "archivo": "muestra.py",
+  "modo": "gemini_real",
+  "pasos": [
+    {
+      "numero": 1,
+      "herramienta": "inspeccionar_estructura",
+      "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+      "resultado": {
+        "sintaxis_valida": true,
+        "total_lineas": 3,
+        "funciones": 0,
+        "clases": 0,
+        "importaciones": 0,
+        "evidencia_ruff_bandit": {
+          "estado": "completo",
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 1
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "total_hallazgos": 2,
+          "reglas": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 2,
+              "severidad": "media"
+            },
+            {
+              "herramienta": "ruff",
+              "regla": "F821",
+              "tipo": "calidad",
+              "linea": 2,
+              "severidad": "baja"
+            }
+          ]
+        }
+      },
+      "origen": "automatico"
+    },
+    {
+      "numero": 2,
+      "herramienta": "ampliar_contexto",
+      "motivo": "Acción controlada del proveedor simulado para probar el contrato visual.",
+      "resultado": {
+        "linea_objetivo": 2,
+        "linea_inicio": 1,
+        "linea_fin": 3,
+        "lineas": [
+          {
+            "numero": 1,
+            "texto": "nombre=input()",
+            "truncada": false
+          },
+          {
+            "numero": 2,
+            "texto": "cursor.execute(\"SELECT * FROM usuarios WHERE nombre = '\" + nombre + \"'\")",
+            "truncada": false
+          },
+          {
+            "numero": 3,
+            "texto": "# V2_FULL",
+            "truncada": false
+          }
+        ]
+      },
+      "origen": "gemini",
+      "argumentos": {
+        "linea": 2
+      }
+    },
+    {
+      "numero": 3,
+      "herramienta": "buscar_referencia",
+      "motivo": "Acción controlada del proveedor simulado para probar el contrato visual.",
+      "resultado": {
+        "categoria": "inyeccion_sql",
+        "fragmentos": [
+          {
+            "area": "seguridad",
+            "id": "seguridad_python-002",
+            "texto": "Regla 2: Prevenir inyeccion SQL\n\nLas consultas SQL no deben construirse concatenando datos no confiables dentro de la instruccion SQL.\n\nPreferir consultas parametrizadas o sentencias preparadas para separar la estructura de la consulta de sus valores.\n\nSi el usuario puede elegir nombres de columnas, tablas u ordenamientos, usar opciones fijas permitidas por la aplicacion. Validar una entrada no sustituye la parametrizacion de la consulta.",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45446163415908813
+          },
+          {
+            "area": "seguridad",
+            "id": "seguridad_python-005",
+            "texto": "Regla 5: Prevenir exposicion de credenciales y secretos\n\nDocumento complementario: OWASP Secrets Management Cheat Sheet\n\nExiste riesgo cuando contraseñas, tokens, claves API o credenciales reales se almacenan directamente en el codigo fuente o en archivos de configuracion que pueden exponerse.\n\nDurante la revision, buscar patrones como:\n\n```python\n\nPASSWORD = \"...\"\n\nAPI_KEY = \"...\"\n\nSECRET_KEY = \"...\"\n\nTOKEN = \"...\"\n\n```\n\nTambien revisar credenciales incluidas en conexiones a bases de datos, servicios externos y configuraciones.\n\nRecomendar:\n\n- Utilizar variables de entorno.\n\n- Utilizar gestores de secretos.\n\n- No publicar credenciales en repositorios.\n\n- Revocar y rotar inmediatamente los secretos expuestos.\n\n- Aplicar el principio de minimo privilegio.\n\nIMPORTANTE:\n\nNo considerar automaticamente una cadena de ejemplo, una contraseña ficticia o un marcador como una credencial real expuesta. Evaluar el contexto y la evidencia disponible.",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.6508566737174988
+          }
+        ]
+      },
+      "origen": "gemini",
+      "argumentos": {
+        "categoria": "inyeccion_sql"
+      }
+    }
+  ],
+  "max_pasos": 3,
+  "informe": {
+    "archivo": "muestra.py",
+    "estado": "analizado",
+    "hallazgos": [
+      {
+        "linea": 2,
+        "severidad": "alta",
+        "categoria": "Inyección SQL",
+        "titulo": "Consulta SQL de la prueba de integración",
+        "explicacion": "Respuesta controlada del proveedor simulado para probar el contrato.",
+        "correccion_sugerida": "cursor.execute(\"SELECT * FROM usuarios WHERE nombre = ?\", (nombre,))",
+        "referencias": [
+          "seguridad_python-002"
+        ],
+        "fragmento_codigo": "cursor.execute(\"SELECT * FROM usuarios WHERE nombre = '\" + nombre + \"'\")"
+      }
+    ],
+    "fuentes": [
+      {
+        "id": "seguridad_python-002",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 2: Prevenir inyeccion SQL",
+        "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+        "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+        "distancia": 0.45446163415908813
+      },
+      {
+        "id": "seguridad_python-005",
+        "documento": "seguridad_python.md",
+        "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+        "fuente": "MITRE CWE-798",
+        "url": "https://cwe.mitre.org/data/definitions/798.html",
+        "distancia": 0.6508566737174988
+      }
+    ],
+    "mensaje": null
+  },
+  "decisiones": [
+    {
+      "herramienta": "ampliar_contexto",
+      "motivo": "Acción controlada del proveedor simulado para probar el contrato visual.",
+      "argumentos": {
+        "linea": 2
+      },
+      "numero": 1,
+      "estado": "ejecutada"
+    },
+    {
+      "herramienta": "buscar_referencia",
+      "motivo": "Acción controlada del proveedor simulado para probar el contrato visual.",
+      "argumentos": {
+        "categoria": "inyeccion_sql"
+      },
+      "numero": 2,
+      "estado": "ejecutada"
+    }
+  ],
+  "fase_error": null,
+  "version_herramientas": "2",
+  "terminacion": "max_pasos",
+  "analisis_estatico": {
+    "archivo": "muestra.py",
+    "estado": "completo",
+    "hallazgos": [
+      {
+        "herramienta": "bandit",
+        "regla": "B608",
+        "tipo": "seguridad",
+        "linea": 2,
+        "columna": null,
+        "severidad": "media",
+        "titulo": "Bandit B608: hardcoded_sql_expressions",
+        "descripcion": "Possible SQL injection vector through string-based query construction.",
+        "confianza": "media",
+        "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+      },
+      {
+        "herramienta": "ruff",
+        "regla": "F821",
+        "tipo": "calidad",
+        "linea": 2,
+        "columna": 1,
+        "severidad": "baja",
+        "titulo": "Ruff F821",
+        "descripcion": "Undefined name `cursor`",
+        "confianza": null,
+        "referencia": null
+      }
+    ],
+    "herramientas": [
+      {
+        "herramienta": "ruff",
+        "estado": "ok",
+        "hallazgos": 1
+      },
+      {
+        "herramienta": "bandit",
+        "estado": "ok",
+        "hallazgos": 1
+      }
+    ],
+    "mensaje": null
+  },
+  "requiere_confirmacion_humana": false,
+  "politica": "Solo lectura; sin ejecución de código ni cambios de archivos"
+}

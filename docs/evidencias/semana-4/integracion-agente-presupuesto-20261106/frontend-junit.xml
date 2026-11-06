@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="156" failures="0" errors="0" time="0.2716895">
+    <testsuite name="tests/agent-integration.test.tsx" timestamp="2026-11-06T23:14:30.381Z" hostname="RoseWhite-Codeverse" tests="5" failures="0" errors="0" skipped="0" time="0.0183771">
+        <testcase classname="tests/agent-integration.test.tsx" name="presenta y exporta informe y traza de una sola respuesta" time="0.0146551">
+        </testcase>
+        <testcase classname="tests/agent-integration.test.tsx" name="rechaza una traza inventada con herramienta fuera de la lista" time="0.0005416">
+        </testcase>
+        <testcase classname="tests/agent-integration.test.tsx" name="rechaza indicadores fuera del archivo y hallazgos sin anclaje" time="0.0004228">
+        </testcase>
+        <testcase classname="tests/agent-integration.test.tsx" name="mantiene el respaldo parcial y la fase de error" time="0.0003582">
+        </testcase>
+        <testcase classname="tests/agent-integration.test.tsx" name="el servicio usa el endpoint del agente también para un archivo Python" time="0.0015771">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/agent-v2.test.tsx" timestamp="2026-11-06T23:14:30.383Z" hostname="RoseWhite-Codeverse" tests="32" failures="0" errors="0" skipped="0" time="0.0262848">
+        <testcase classname="tests/agent-v2.test.tsx" name="conserva resultados y argumentos v2 del contrato publicado al mostrar y exportar" time="0.0126213">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="presenta finalización anticipada con síntesis, sin inventar pasos adicionales" time="0.0012">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="muestra decisión fallida, fase herramienta y respaldo sin resultado inventado" time="0.0012941">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="mantiene la lectura del contrato v1" time="0.0006148">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: version_herramientas = &quot;3&quot;" time="0.0009382">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: version_herramientas = undefined" time="0.0002197">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: terminacion = &quot;seguro&quot;" time="0.0001255">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: terminacion = &quot;finalizacion_anticipada&quot;" time="0.0003282">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.argumentos.linea = &quot;2&quot;" time="0.000571">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.argumentos.linea = true" time="0.0003622">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.argumentos.linea = 0" time="0.0012372">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.argumentos.url = &quot;https://evil.invalid&quot;" time="0.0002783">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.resultado.linea_objetivo = 1" time="0.0002252">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.resultado.lineas.0.numero = 2" time="0.0001358">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.resultado.lineas.0.texto = &quot;inventado&quot;" time="0.0001019">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.resultado.lineas.0.truncada = true" time="0.0001046">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.resultado.linea_fin = 1000" time="0.00009">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.1.resultado.lineas.0.url = &quot;https://evil.invalid&quot;" time="0.0000772">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.2.argumentos.categoria = &quot;arbitraria&quot;" time="0.000097">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.2.resultado.categoria = &quot;rutas&quot;" time="0.0001144">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.2.resultado.fragmentos.0.texto = &quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;" time="0.0001099">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.2.resultado.fragmentos.0.area = &quot;proyecto&quot;" time="0.000117">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.2.resultado.fragmentos.0.url = &quot;javascript:alert(1)&quot;" time="0.0001081">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.2.resultado.fragmentos.0.url = &quot;https://evil.invalid&quot;" time="0.0001057">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.2.resultado.fragmentos.0.distancia = null" time="0.0002255">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: pasos.2.resultado.fragmentos = [{&quot;area&quot;:&quot;seguridad&quot;,&quot;id&quot;:&quot;seguridad_python-002&quot;,&quot;texto&quot;:&quot;Usar consultas parametrizadas para separar datos de SQL.&quot;,&quot;documento&quot;:&quot;seguridad_python.md&quot;,&quot;seccion&quot;:&quot;Regla 2&quot;,&quot;fuente&quot;:&quot;OWASP&quot;,&quot;url&quot;:&quot;https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html&quot;,&quot;distancia&quot;:0.1},{&quot;area&quot;:&quot;seguridad&quot;,&quot;id&quot;:&quot;seguridad_python-002&quot;,&quot;texto&quot;:&quot;Usar consultas parametrizadas para separar datos de SQL.&quot;,&quot;documento&quot;:&quot;seguridad_python.md&quot;,&quot;seccion&quot;:&quot;Regla 2&quot;,&quot;fuente&quot;:&quot;OWASP&quot;,&quot;url&quot;:&quot;https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html&quot;,&quot;distancia&quot;:0.1},{&quot;area&quot;:&quot;seguridad&quot;,&quot;id&quot;:&quot;seguridad_python-002&quot;,&quot;texto&quot;:&quot;Usar consultas parametrizadas para separar datos de SQL.&quot;,&quot;documento&quot;:&quot;seguridad_python.md&quot;,&quot;seccion&quot;:&quot;Regla 2&quot;,&quot;fuente&quot;:&quot;OWASP&quot;,&quot;url&quot;:&quot;https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html&quot;,&quot;distancia&quot;:0.1}]" time="0.0001429">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: decisiones.0.argumentos.linea = 1" time="0.0001231">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: decisiones.0.estado = &quot;error&quot;" time="0.0001129">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="rechaza contrato incoherente o fuera de límites: decisiones.0.herramienta = &quot;ejecutar_codigo&quot;" time="0.000102">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="permite repetir herramienta con argumentos distintos y detiene una repetición exacta" time="0.0005724">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="escapa código y documentos sin enlaces activos" time="0.00138">
+        </testcase>
+        <testcase classname="tests/agent-v2.test.tsx" name="solicita v2 explícitamente sin cambiar el máximo de pasos" time="0.0011388">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/analysis.test.ts" timestamp="2026-11-06T23:14:30.387Z" hostname="RoseWhite-Codeverse" tests="38" failures="0" errors="0" skipped="0" time="0.0411393">
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; acepta https://github.com/user/repo" time="0.0019932">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; acepta https://github.com/user/repo.git" time="0.0003159">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; rechaza http://github.com/user/repo" time="0.000287">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; rechaza https://github.com.evil.test/user/repo" time="0.000396">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; rechaza https://github.com/user/repo/tree/main" time="0.0002483">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; rechaza https://u:p@github.com/user/repo" time="0.0001301">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; rechaza https://github.com/user/repo?token=secret" time="0.0001126">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; rechaza texto" time="0.0001023">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; rechaza código vacío, demasiado largo o binario" time="0.0013974">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; permite el límite exacto" time="0.0004325">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; rechaza nombres inválidos y archivos no elegidos" time="0.0003237">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Validación de entradas &gt; valida extensión, archivo vacío y tamaño" time="0.0006393">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; normaliza los hallazgos del backend y mantiene el código original" time="0.0012731">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; acepta un informe sin hallazgos" time="0.0001814">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; rechaza respuestas incompatibles" time="0.0002189">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; rechaza respuestas incompatibles" time="0.0001039">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; rechaza respuestas incompatibles" time="0.000068">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; rechaza respuestas incompatibles" time="0.000074">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; rechaza respuestas incompatibles" time="0.0000788">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; envía solo archivo y codigo al endpoint acordado" time="0.0193476">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; clasifica HTTP 422" time="0.000926">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; clasifica HTTP 503" time="0.0003653">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; clasifica HTTP 429" time="0.000288">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; distingue error de red de error de servidor" time="0.0003519">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; rechaza JSON inválido sin presentarlo como resultado vacío" time="0.0005885">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; analiza un repositorio GitHub y conserva la abstención" time="0.0011508">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Contrato y servicio HTTP &gt; expone la cancelación al consumidor" time="0.000568">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Demostración explícita &gt; vincula los tres ejemplos con las líneas correctas" time="0.0006014">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Demostración explícita &gt; no asigna hallazgos fijos a código diferente" time="0.0001082">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Demostración explícita &gt; permite probar el estado sin hallazgos" time="0.0000859">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Demostración explícita &gt; usa archivos ficticios identificables para proyectos" time="0.0001317">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Demostración explícita &gt; simula errores identificados" time="0.0002548">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Demostración explícita &gt; cancela una simulación en curso" time="0.0019209">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Carga multipart y respuesta ZIP &gt; envía el Python editado al endpoint de archivos" time="0.0010773">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Carga multipart y respuesta ZIP &gt; envía ZIP como archivo sin descomprimir en el navegador" time="0.0006359">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Carga multipart y respuesta ZIP &gt; rechaza totales inconsistentes, duplicados y nombre de ZIP incorrecto" time="0.0003916">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Carga multipart y respuesta ZIP &gt; produce identificadores únicos entre archivos" time="0.0002239">
+        </testcase>
+        <testcase classname="tests/analysis.test.ts" name="Carga multipart y respuesta ZIP &gt; rechaza ZIP mayores de 5 MiB" time="0.0018101">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/correction-contract.test.ts" timestamp="2026-11-06T23:14:30.391Z" hostname="RoseWhite-Codeverse" tests="11" failures="0" errors="0" skipped="0" time="0.0260236">
+        <testcase classname="tests/correction-contract.test.ts" name="no habilita peticiones de corrección real por defecto" time="0.0020628">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="valida una copia diferente y conserva el original completo" time="0.006547">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="rechaza nombre de salida no seguro o igual al original: ../salida.py" time="0.0035438">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="rechaza nombre de salida no seguro o igual al original: /tmp/salida.py" time="0.001828">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="rechaza nombre de salida no seguro o igual al original: C:\salida.py" time="0.0024527">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="rechaza nombre de salida no seguro o igual al original: usuarios.py" time="0.0012487">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="rechaza nombre de salida no seguro o igual al original: salida.html" time="0.0014153">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="rechaza propuestas vinculadas a otro archivo, hash o contenido original" time="0.0009785">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="rechaza caducidad, modificación de la propuesta y contenido idéntico al original" time="0.0018184">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="no descarga una respuesta que cambió después de aprobar la vista previa" time="0.0016447">
+        </testcase>
+        <testcase classname="tests/correction-contract.test.ts" name="rechazar solo devuelve un estado y no un archivo" time="0.0014175">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/corrections-http.test.ts" timestamp="2026-11-06T23:14:30.393Z" hostname="RoseWhite-Codeverse" tests="7" failures="0" errors="0" skipped="7" time="0">
+        <testcase classname="tests/corrections-http.test.ts" name="Correcciones: validadores frontend y backend reales, proveedor simulado &gt; previsualiza y aprueba exactamente el contenido; repetir conserva la copia" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/corrections-http.test.ts" name="Correcciones: validadores frontend y backend reales, proveedor simulado &gt; rechaza sin contenido y bloquea aprobación posterior con 409" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/corrections-http.test.ts" name="Correcciones: validadores frontend y backend reales, proveedor simulado &gt; otro navegador no accede con ID y hashes; propietario conserva acceso" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/corrections-http.test.ts" name="Correcciones: validadores frontend y backend reales, proveedor simulado &gt; hash alterado produce conflicto sin cerrar la propuesta válida" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/corrections-http.test.ts" name="Correcciones: validadores frontend y backend reales, proveedor simulado &gt; propuesta caducada produce 410 real" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/corrections-http.test.ts" name="Correcciones: validadores frontend y backend reales, proveedor simulado &gt; el 422 no refleja el código recibido" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/corrections-http.test.ts" name="Correcciones: validadores frontend y backend reales, proveedor simulado &gt; timeout del generador conserva un error 504 sanitizado" time="0">
+            <skipped/>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/integration-http.test.tsx" timestamp="2026-11-06T23:14:30.395Z" hostname="RoseWhite-Codeverse" tests="17" failures="0" errors="0" skipped="17" time="0">
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; integra el agente con informe, herramientas y traza en la misma ejecución: codigo" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; integra el agente con informe, herramientas y traza en la misma ejecución: python" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; procesa JSON real y resuelve los IDs recuperados por ChromaDB" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; muestra en la interfaz y exporta las fuentes devueltas por FastAPI" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; envía multipart Python al validador real del backend" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; integra ZIP con un archivo analizado y otro abstenido" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; conserva la abstención generada por la validación real: INTEGRACION_SIN_CITA" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; conserva la abstención generada por la validación real: INTEGRACION_CITA_INVALIDA" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; distingue una respuesta analizada sin hallazgos de una abstención" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; un timeout conserva el contrato de la configuración estática" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; rechaza un archivo no Python en el endpoint real" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; integra GitHub con lector real y API externa controlada" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; muestra y exporta análisis parcial con Ruff/Bandit reales: codigo" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; muestra y exporta análisis parcial con Ruff/Bandit reales: python" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; muestra y exporta análisis parcial con Ruff/Bandit reales: zip" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; muestra y exporta análisis parcial con Ruff/Bandit reales: github" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="tests/integration-http.test.tsx" name="Integración HTTP: frontend → FastAPI → RAG real → proveedor simulado &gt; acepta por HTTP 202 alertas combinadas reales sin perderlas en JSON" time="0">
+            <skipped/>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/product-review.test.tsx" timestamp="2026-11-06T23:14:30.398Z" hostname="RoseWhite-Codeverse" tests="4" failures="0" errors="0" skipped="0" time="0.017026">
+        <testcase classname="tests/product-review.test.tsx" name="muestra parcial incluso con hallazgos y sin mensaje del backend" time="0.0103001">
+        </testcase>
+        <testcase classname="tests/product-review.test.tsx" name="prioriza por severidad sin cambiar el resultado que se exporta" time="0.0022191">
+        </testcase>
+        <testcase classname="tests/product-review.test.tsx" name="oculta el estado anterior mientras carga otra revisión" time="0.0012355">
+        </testcase>
+        <testcase classname="tests/product-review.test.tsx" name="prioriza observaciones estáticas dentro de su panel, sin inventar fuentes RAG" time="0.001523">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/project-budget.test.tsx" timestamp="2026-11-06T23:14:30.399Z" hostname="RoseWhite-Codeverse" tests="9" failures="0" errors="0" skipped="0" time="0.0567532">
+        <testcase classname="tests/project-budget.test.tsx" name="valida el manifiesto y vincula la entrada" time="0.0077445">
+        </testcase>
+        <testcase classname="tests/project-budget.test.tsx" name="rechaza alteraciones de presupuesto, archivos y contenido" time="0.0026858">
+        </testcase>
+        <testcase classname="tests/project-budget.test.tsx" name="impide aprobar un presupuesto caducado antes de enviar HTTP" time="0.0014386">
+        </testcase>
+        <testcase classname="tests/project-budget.test.tsx" name="previsualizar solo pide una propuesta, nunca envía aprobación" time="0.0195647">
+        </testcase>
+        <testcase classname="tests/project-budget.test.tsx" name="aprobar envía consentimiento explícito y normaliza el informe real" time="0.0014103">
+        </testcase>
+        <testcase classname="tests/project-budget.test.tsx" name="no acepta el resultado de otra autorización" time="0.0007631">
+        </testcase>
+        <testcase classname="tests/project-budget.test.tsx" name="rechazar envía confirmar=false" time="0.0007979">
+        </testcase>
+        <testcase classname="tests/project-budget.test.tsx" name="muestra límite y aprobación bloqueada inicialmente" time="0.0198095">
+        </testcase>
+        <testcase classname="tests/project-budget.test.tsx" name="una señal ya abortada no permite enviar aprobación" time="0.0011684">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/qa-pr19.test.tsx" timestamp="2026-11-06T23:14:30.400Z" hostname="RoseWhite-Codeverse" tests="6" failures="0" errors="0" skipped="0" time="0.0201301">
+        <testcase classname="tests/qa-pr19.test.tsx" name="Regresiones QA de PR19 &gt; acepta 101 alertas de cada motor y conserva las 202 al exportar" time="0.0036047">
+        </testcase>
+        <testcase classname="tests/qa-pr19.test.tsx" name="Regresiones QA de PR19 &gt; no presenta un resultado global limpio cuando Ruff/Bandit emiten alertas" time="0.0107291">
+        </testcase>
+        <testcase classname="tests/qa-pr19.test.tsx" name="Regresiones QA de PR19 &gt; no oculta un motor incompleto: error" time="0.0011904">
+        </testcase>
+        <testcase classname="tests/qa-pr19.test.tsx" name="Regresiones QA de PR19 &gt; no oculta un motor incompleto: timeout" time="0.0011648">
+        </testcase>
+        <testcase classname="tests/qa-pr19.test.tsx" name="Regresiones QA de PR19 &gt; no oculta un motor incompleto: no_disponible" time="0.0011341">
+        </testcase>
+        <testcase classname="tests/qa-pr19.test.tsx" name="Regresiones QA de PR19 &gt; mantiene un límite de 400 alertas combinadas" time="0.0009044">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/sources.test.tsx" timestamp="2026-11-06T23:14:30.401Z" hostname="RoseWhite-Codeverse" tests="14" failures="0" errors="0" skipped="0" time="0.0267649">
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; muestra título, sección, ID y enlace en elementos separados" time="0.0126078">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; no convierte javascript:alert(1) en enlace" time="0.0006203">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; no convierte data:text/html,test en enlace" time="0.0004091">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; no convierte https://user:password@example.com en enlace" time="0.0004593">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; no convierte https:// en enlace" time="0.0004803">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; no convierte /ruta-local en enlace" time="0.0003318">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; escapa contenido recibido como texto" time="0.0005166">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; no inventa fuentes para identificadores desconocidos" time="0.0019804">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; conserva abstención y mensaje en la vista y el informe" time="0.0035704">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; rechaza abstención con hallazgos" time="0.0007679">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; deduplica fuentes idénticas y rechaza metadatos contradictorios" time="0.0007672">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; no atribuye al primer archivo una fuente recibida solo en otro informe ZIP" time="0.0008051">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; informa abstención parcial en ZIP, incluso si el resto no tiene hallazgos" time="0.001294">
+        </testcase>
+        <testcase classname="tests/sources.test.tsx" name="Fuentes y abstención &gt; oculta fuentes anteriores mientras está cargando" time="0.0005393">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/static-integration.test.tsx" timestamp="2026-11-06T23:14:30.403Z" hostname="RoseWhite-Codeverse" tests="7" failures="0" errors="0" skipped="0" time="0.0212809">
+        <testcase classname="tests/static-integration.test.tsx" name="Contrato estático Ruff/Bandit y degradación honesta &gt; acepta una respuesta parcial y conserva procedencia separada" time="0.0032665">
+        </testcase>
+        <testcase classname="tests/static-integration.test.tsx" name="Contrato estático Ruff/Bandit y degradación honesta &gt; conserva compatibilidad de informes sin análisis estático" time="0.0002745">
+        </testcase>
+        <testcase classname="tests/static-integration.test.tsx" name="Contrato estático Ruff/Bandit y degradación honesta &gt; rechaza datos inválidos y rutas de otro archivo" time="0.0008153">
+        </testcase>
+        <testcase classname="tests/static-integration.test.tsx" name="Contrato estático Ruff/Bandit y degradación honesta &gt; agrega informes ZIP sin perder el archivo de cada regla" time="0.0007845">
+        </testcase>
+        <testcase classname="tests/static-integration.test.tsx" name="Contrato estático Ruff/Bandit y degradación honesta &gt; exporta JSON con los motores separados de las citas IA" time="0.0009446">
+        </testcase>
+        <testcase classname="tests/static-integration.test.tsx" name="Contrato estático Ruff/Bandit y degradación honesta &gt; la interfaz nunca presenta el análisis parcial como libre de problemas" time="0.0115579">
+        </testcase>
+        <testcase classname="tests/static-integration.test.tsx" name="Contrato estático Ruff/Bandit y degradación honesta &gt; rechaza enlaces peligrosos aunque el backend entregue una referencia" time="0.0021188">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/traceability.test.tsx" timestamp="2026-11-06T23:14:30.404Z" hostname="RoseWhite-Codeverse" tests="6" failures="0" errors="0" skipped="0" time="0.0179096">
+        <testcase classname="tests/traceability.test.tsx" name="Trazabilidad de la revisión &gt; vincula el ejemplo SQL con la línea 6 y una referencia explícitamente simulada" time="0.0125376">
+        </testcase>
+        <testcase classname="tests/traceability.test.tsx" name="Trazabilidad de la revisión &gt; cambia la relación cuando se selecciona otro hallazgo" time="0.0011704">
+        </testcase>
+        <testcase classname="tests/traceability.test.tsx" name="Trazabilidad de la revisión &gt; no conserva relaciones anteriores mientras carga" time="0.0007533">
+        </testcase>
+        <testcase classname="tests/traceability.test.tsx" name="Trazabilidad de la revisión &gt; distingue abstención de un análisis sin hallazgos" time="0.0007624">
+        </testcase>
+        <testcase classname="tests/traceability.test.tsx" name="Trazabilidad de la revisión &gt; no atribuye referencias de ejemplo a código que no coincide con las reglas" time="0.0002032">
+        </testcase>
+        <testcase classname="tests/traceability.test.tsx" name="Trazabilidad de la revisión &gt; mantiene un estado inicial sin inventar trazabilidad" time="0.0002409">
+        </testcase>
+    </testsuite>
+</testsuites>
