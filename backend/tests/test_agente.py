@@ -22,24 +22,30 @@ def informe_ficticio(codigo):
 
 
 def test_limite_pasos():
-    with pytest.raises(ValidationError): entrada(pasos=4)
-    with pytest.raises(ValidationError): entrada(pasos=0)
+    with pytest.raises(ValidationError):
+        entrada(pasos=4)
+    with pytest.raises(ValidationError):
+        entrada(pasos=0)
 
 
 def test_limite_caracteres():
-    with pytest.raises(ValidationError): entrada(codigo="a" * 12001)
+    with pytest.raises(ValidationError):
+        entrada(codigo="a" * 12001)
 
 
 def test_rechaza_traversal():
-    with pytest.raises(ValidationError): SolicitudAgente(archivo="../secretos.py", codigo="print(1)")
+    with pytest.raises(ValidationError):
+        SolicitudAgente(archivo="../secretos.py", codigo="print(1)")
 
 
 def test_rechaza_campos_adicionales():
-    with pytest.raises(ValidationError): SolicitudAgente(archivo="ejemplo.py", codigo="x=1", comando="rm")
+    with pytest.raises(ValidationError):
+        SolicitudAgente(archivo="ejemplo.py", codigo="x=1", comando="rm")
 
 
 def test_lista_cerrada_tools():
-    with pytest.raises(ValidationError): DecisionAgente(herramienta="borrar_archivos", motivo="ilegítimo")
+    with pytest.raises(ValidationError):
+        DecisionAgente(herramienta="borrar_archivos", motivo="ilegítimo")
 
 
 def test_detecta_eval_en_linea_correcta():
@@ -102,7 +108,8 @@ def test_inspeccion_local_no_depende_de_ia():
 
 
 def test_inspeccion_local_rechaza_byte_nulo():
-    with pytest.raises(ValueError): inspeccion_local(entrada(codigo="print(1)\x00"))
+    with pytest.raises(ValueError):
+        inspeccion_local(entrada(codigo="print(1)\x00"))
 
 
 app = FastAPI()

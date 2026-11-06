@@ -408,3 +408,176 @@ def test_servicio_no_registra_claves_ni_codigo_sensible(
     assert codigo_sensible not in registros
 
     cliente.close.assert_called_once()
+
+def test_servicio_prioriza_hallazgos_por_severidad(monkeypatch):
+    codigo = (
+        "print('uno')\n"
+        "print('dos')\n"
+        "print('tres')\n"
+        "print('cuatro')"
+    )
+
+    respuesta_json = """
+    {
+        "hallazgos": [
+            {
+                "linea": 1,
+                "severidad": "baja",
+                "categoria": "calidad",
+                "titulo": "Baja inicial",
+                "explicacion": "Hallazgo de prueba.",
+                "correccion_sugerida": "Revisar codigo.",
+                "referencias": ["seguridad_python-002"]
+            },
+            {
+                "linea": 2,
+                "severidad": "alta",
+                "categoria": "seguridad",
+                "titulo": "Alta primera",
+                "explicacion": "Hallazgo de prueba.",
+                "correccion_sugerida": "Revisar codigo.",
+                "referencias": ["seguridad_python-002"]
+            },
+            {
+                "linea": 3,
+                "severidad": "critica",
+                "categoria": "seguridad",
+                "titulo": "Critica",
+                "explicacion": "Hallazgo de prueba.",
+                "correccion_sugerida": "Revisar codigo.",
+                "referencias": ["seguridad_python-002"]
+            },
+            {
+                "linea": 4,
+                "severidad": "alta",
+                "categoria": "seguridad",
+                "titulo": "Alta segunda",
+                "explicacion": "Hallazgo de prueba.",
+                "correccion_sugerida": "Revisar codigo.",
+                "referencias": ["seguridad_python-002"]
+            }
+        ]
+    }
+    """
+
+    cliente = crear_cliente_simulado(
+        monkeypatch,
+        respuesta_json,
+    )
+
+    informe = llm_module.analizar_codigo(codigo)
+
+    assert [
+        hallazgo.titulo
+        for hallazgo in informe.hallazgos
+    ] == [
+        "Critica",
+        "Alta primera",
+        "Alta segunda",
+        "Baja inicial",
+    ]
+
+    assert [
+        hallazgo.severidad
+        for hallazgo in informe.hallazgos
+    ] == [
+        "critica",
+        "alta",
+        "alta",
+        "baja",
+    ]
+
+    cliente.close.assert_called_once()
+
+
+def test_servicio_incluye_evidencia_revision_completa_como_datos(
+    monkeypatch,
+):
+    evidencia_esperada = {
+        "archivo": "ejemplo.py",
+        "analisis_estatico": {
+            "estado": "completado",
+            "herramientas": ["ruff", "bandit"],
+            "hallazgos": [
+                {
+                    "herramienta": "ruff",
+                    "codigo": "F401",
+                    "linea": 3,
+                    "mensaje": "Importación no utilizada.",
+                }
+            ],
+        },
+    }
+
+    class EvidenciaSimulada:
+        def model_dump(self, *, mode="python"):
+            assert mode == "json"
+            return evidencia_esperada
+
+    cliente = crear_cliente_simulado(monkeypatch)
+
+    informe = llm_module.analizar_codigo(
+        "print('hola')",
+        evidencia=EvidenciaSimulada(),
+    )
+
+    assert informe.hallazgos == []
+    argumentos = cliente.models.generate_content.call_args.kwargs
+    contenido = argumentos["contents"]
+    marcador = "DATOS_NO_CONFIABLES_JSON:\n"
+    assert marcador in contenido
+
+    datos = json.loads(contenido.split(marcador, 1)[1])
+    assert (
+        datos["evidencia_revision_no_confiable"]
+        == evidencia_esperada
+    )
+
+    instrucciones_sistema = argumentos["config"].system_instruction
+    assert "evidencia_revision_no_confiable" in instrucciones_sistema
+    assert "evidencia técnica auxiliar" in instrucciones_sistema
+    assert "referencia documental de seguridad" in instrucciones_sistema
+
+    cliente.close.assert_called_once()
+
+
+def test_servicio_rechaza_evidencia_no_serializable():
+    with pytest.raises(
+        llm_module.LLMError,
+        match="evidencia de revision",
+    ) as error:
+        llm_module._construir_contenido_usuario(
+            codigo="print('hola')",
+            contexto_rag="contexto de prueba",
+            evidencia=object(),
+        )
+
+    assert error.value.codigo == 422
+
+
+def test_servicio_acepta_evidencia_en_formato_diccionario(monkeypatch):
+    evidencia = {
+        "estado": "completado",
+        "detalle": {
+            "hallazgos": [],
+            "procedencia": "analisis_estatico",
+        },
+    }
+    cliente = crear_cliente_simulado(monkeypatch)
+
+    llm_module.analizar_codigo(
+        "print('hola')",
+        evidencia=evidencia,
+    )
+
+    argumentos = cliente.models.generate_content.call_args.kwargs
+    datos = json.loads(
+        argumentos["contents"].split(
+            "DATOS_NO_CONFIABLES_JSON:\n",
+            1,
+        )[1]
+    )
+
+    assert datos["evidencia_revision_no_confiable"] == evidencia
+    cliente.close.assert_called_once()
+

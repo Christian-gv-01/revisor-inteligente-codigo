@@ -1,0 +1,21 @@
+﻿id,nombre,estado_ejecucion,duracion_ms,error,precision_at_k,recall_at_k,mrr_at_k,tp,fp,fn,abstenido
+P01,SQL concatenado,ok,18007.52,,0.6666666666666666,1.0,1.0,1,0,0,False
+P02,SQL interpolado,ok,22936.35,,0.6666666666666666,1.0,1.0,1,0,0,False
+P03,SQL con formato,ok,11981.55,,0.6666666666666666,1.0,1.0,1,0,0,False
+P04,Identificador SQL externo,ok,16901.7,,0.6666666666666666,1.0,1.0,1,0,0,False
+P05,SQL parametrizado,ok,32962.65,,0.6666666666666666,1.0,1.0,0,0,0,False
+P06,Tabla permitida,ok,19388.03,,0.6666666666666666,1.0,1.0,0,0,0,False
+P07,os.system externo,ok,22995.17,,0.6666666666666666,1.0,1.0,1,0,0,False
+P08,subprocess shell,ok,47018.87,,0.3333333333333333,0.5,1.0,1,0,0,False
+P09,os.popen externo,ok,24781.0,,0.6666666666666666,1.0,1.0,1,0,0,False
+P10,Comando interpolado,ok,23357.16,,0.6666666666666666,1.0,1.0,1,0,0,False
+P11,Argumentos constantes,ok,12792.23,,0.3333333333333333,0.5,1.0,0,0,0,False
+P12,Comandos permitidos,ok,30835.68,,0.3333333333333333,0.5,1.0,0,0,0,False
+P13,eval externo,ok,19233.76,,0.3333333333333333,1.0,1.0,1,0,0,False
+P14,exec externo,ok,37074.06,,0.0,0.0,0.0,1,0,0,False
+P15,eval en función,ok,26612.55,,0.3333333333333333,1.0,1.0,1,0,0,False
+P16,eval tras strip,ok,20754.21,,0.3333333333333333,1.0,1.0,1,0,0,False
+P17,Conversión numérica,ok,18875.67,,0.3333333333333333,1.0,0.5,0,0,0,False
+P18,Operaciones fijas,ok,21223.69,,0.0,0.0,0.0,0,0,0,False
+P19,Fuera de cobertura: estadística,ok,645.24,,,,,0,0,0,True
+P20,Fuera de cobertura: geometría,ok,625.66,,,,,0,0,0,True

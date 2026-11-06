@@ -1,7 +1,8 @@
-﻿import os
-from pathlib import Path
+﻿from pathlib import Path
 
 import chromadb
+
+from app.config import obtener_distancia_rag
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -12,17 +13,9 @@ COLLECTION_NAMES = (
     "contexto_proyecto",
 )
 
-# Umbral maximo de distancia permitido.
-# Puede configurarse mediante RAG_MAX_DISTANCE.
-try:
-    MAX_DISTANCE = float(
-        os.getenv("RAG_MAX_DISTANCE", "0.75")
-    )
-except (TypeError, ValueError):
-    MAX_DISTANCE = 0.75
-
-# La distancia coseno de ChromaDB se limita a [0, 2].
-MAX_DISTANCE = max(0.0, min(MAX_DISTANCE, 2.0))
+# Umbral maximo de distancia permitido, centralizado en app.config.
+# La configuracion valida el valor y lo limita al intervalo [0, 2].
+MAX_DISTANCE = obtener_distancia_rag()
 
 
 class RAGNoDisponibleError(RuntimeError):

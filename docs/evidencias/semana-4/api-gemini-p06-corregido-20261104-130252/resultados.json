@@ -1,0 +1,111 @@
+{
+  "fecha_utc": "2026-11-04T18:02:53.033752+00:00",
+  "python": "3.13.2",
+  "commit_base": "563cc380ec7d5179ee646f5e7839321859377851",
+  "cambios_locales": true,
+  "dependencias": {
+    "chromadb": "1.5.9",
+    "google-genai": "2.31.0",
+    "fastapi": "0.156.1",
+    "pydantic": "2.14.1"
+  },
+  "dataset_sha256": "6f26d8b020a6fa51b7a04eb80f9e46051ed9a5366608506663fc1b854fa96b25",
+  "runner_sha256": "c4e5d46a488eb4009f14e4e1cba6f8e69cb335e111abaf9d55c3c0798b113400",
+  "knowledge_sha256": "b106e021a4de2135e52c299cf0ae9141c90eb0177120ddcad3fc8a9fdb0d555f",
+  "llm_sha256": "3e5ce45bfcadfb95f95ce6c905ec10f761e54651cc1fed8167453e66d5acc83f",
+  "rag_sha256": "199ced47208d4b94d16e0bdc216e71a709435ed98c652a1057f03ac663e013a8",
+  "modo": "api",
+  "k": 3,
+  "casos": [
+    {
+      "id": "P06",
+      "nombre": "Tabla permitida",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_06.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.15600401163101196
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5526244640350342
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.714211642742157
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 20520.48
+    }
+  ],
+  "configuracion": {
+    "base_url": "http://127.0.0.1:8000",
+    "timeout": 90.0,
+    "aviso": "La configuración y revisión del servidor deben registrarse por separado."
+  },
+  "resumen": {
+    "total": 1,
+    "completados": 1,
+    "errores": 0,
+    "tasa_completitud": 1.0,
+    "latencia_media_ms": 20520.48,
+    "latencia_p95_ms": 20520.48,
+    "precision_at_k": 0.6666666666666666,
+    "recall_at_k": 1.0,
+    "mrr_at_k": 1.0,
+    "hit_at_k": 1.0,
+    "sin_fuentes_fuera_cobertura": null,
+    "casos_con_referencias_esperadas_evaluados": 1,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "hallazgos": 0,
+    "hallazgos_con_citas_resueltas": 0,
+    "referencias": 0,
+    "referencias_resueltas": 0,
+    "lineas_fuera_rango": 0,
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "cobertura_citas": null,
+    "validez_referencias": null,
+    "tasa_abstencion": 0,
+    "exactitud_casos_validos": 1,
+    "aciertos_sobre_total": 1.0
+  }
+}

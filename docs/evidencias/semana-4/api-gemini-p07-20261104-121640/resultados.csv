@@ -1,0 +1,2 @@
+﻿id,nombre,estado_ejecucion,duracion_ms,error,precision_at_k,recall_at_k,mrr_at_k,tp,fp,fn,abstenido
+P07,os.system externo,ok,35110.02,,0.6666666666666666,1.0,1.0,1,0,0,False

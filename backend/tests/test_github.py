@@ -4,7 +4,6 @@ Guardar como backend/tests/test_github.py. No consume GitHub ni Gemini.
 """
 
 import base64
-import json
 from types import SimpleNamespace
 
 import httpx

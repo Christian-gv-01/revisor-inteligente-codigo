@@ -40,9 +40,134 @@
     $('code').addEventListener('input',sync);$('filename').addEventListener('input',sync);document.querySelectorAll('[data-example]').forEach(b=>b.addEventListener('click',()=>sample(b.dataset.example)));sample('eval');
     function renderFacts(parent,result){if(!result||typeof result!=='object')return;const row=e('div','facts');for(const [key,val] of Object.entries(result)){if(Array.isArray(val)){if(val.length===0)row.append(e('span','fact',key+': ninguno'));else val.forEach(it=>{const t=typeof it==='object'&&it!==null?Object.entries(it).map(([k,v])=>k+' '+v).join(' · '):String(it);row.append(e('span','fact hot',t))})}else if(typeof val!=='object')row.append(e('span','fact',key.replaceAll('_',' ')+': '+String(val)))}parent.append(row)}
     function link(url){try{const u=new URL(url);return u.protocol==='https:'?u.href:null}catch{return null}}
+
+    function renderStaticEvidence(root, data) {
+      // Evidencia estática independiente del informe contextual RAG.
+      const staticResult = data?.analisis_estatico;
+
+      root.append(
+        e('div', 'section-title', 'Evidencia estática · Ruff + Bandit')
+      );
+
+      root.append(
+        e(
+          'div',
+          'msg',
+          'Ruff + Bandit aportan resultados de análisis estático independientes. No constituyen citas RAG ni sustituyen la revisión humana.'
+        )
+      );
+
+      if (!staticResult || typeof staticResult !== 'object') {
+        root.append(
+          e(
+            'div',
+            'msg',
+            'El backend no incluyó el campo analisis_estatico en esta respuesta.'
+          )
+        );
+        return;
+      }
+
+      const tools = Array.isArray(staticResult.herramientas)
+        ? staticResult.herramientas
+        : [];
+      const findings = Array.isArray(staticResult.hallazgos)
+        ? staticResult.hallazgos
+        : [];
+
+      const stats = e('div', 'results-stat');
+      for (const [value, label] of [
+        [staticResult.estado || 'desconocido', 'Estado estático'],
+        [findings.length, 'Hallazgos estáticos'],
+        [tools.length, 'Herramientas']
+      ]) {
+        const card = e('div', 'mini');
+        card.append(
+          e('strong', '', value),
+          e('span', '', label)
+        );
+        stats.append(card);
+      }
+      root.append(stats);
+
+      if (tools.length) {
+        root.append(e('div', 'section-title', 'Estado de las herramientas'));
+        for (const tool of tools) {
+          const row = e('div', 'step');
+          const heading = e('header');
+          heading.append(
+            e('b', '', tool.herramienta || 'Herramienta'),
+            e('small', '', tool.estado || 'sin estado')
+          );
+          row.append(heading);
+          row.append(
+            e(
+              'p',
+              '',
+              `Hallazgos reportados: ${tool.hallazgos ?? 0}`
+            )
+          );
+          root.append(row);
+        }
+      }
+
+      root.append(e('div', 'section-title', 'Hallazgos de análisis estático'));
+
+      if (!findings.length) {
+        root.append(
+          e(
+            'div',
+            'msg',
+            'No se reportaron hallazgos estáticos. Esto no certifica que el código sea seguro.'
+          )
+        );
+        return;
+      }
+
+      const allowedSeverities = new Set([
+        'critica', 'alta', 'media', 'baja'
+      ]);
+
+      for (const finding of findings) {
+        const severity = String(finding.severidad || 'baja').toLowerCase();
+        const safeSeverity = allowedSeverities.has(severity)
+          ? severity
+          : 'baja';
+        const card = e('article', 'finding ' + safeSeverity);
+
+        card.append(
+          e(
+            'small',
+            '',
+            `${String(finding.herramienta || '').toUpperCase()} · ${finding.regla || ''} · LÍNEA ${finding.linea ?? '—'} · ${severity.toUpperCase()}`
+          ),
+          e('div', '', finding.titulo || 'Hallazgo estático'),
+          e(
+            'p',
+            '',
+            finding.descripcion || 'Sin descripción disponible.'
+          )
+        );
+
+        if (finding.confianza) {
+          card.append(
+            e('small', '', 'Confianza: ' + finding.confianza)
+          );
+        }
+
+        if (finding.referencia) {
+          card.append(
+            e('div', 'reference', finding.referencia)
+          );
+        }
+
+        root.append(card);
+      }
+    }
+
     function render(data,elapsed){last=data;const root=$('output');root.replaceChildren();root.classList.remove('hidden');$('reportMeta').textContent=data.modo==='gemini_real'?'GEMINI REAL · RAG':'INSPECCIÓN ESTÁTICA · SIN IA';const row=e('div','statusrow');row.append(e('span','status-pill'+(data.modo==='inspeccion_local'?' warning':''),data.modo==='gemini_real'?'● AUDITORÍA CON IA FINALIZADA':'○ INSPECCIÓN LOCAL FINALIZADA'));row.append(e('span','tiny',elapsed.toFixed(1)+' s · '+data.archivo));root.append(row);
       const steps=Array.isArray(data.pasos)?data.pasos:[], report=data.informe||{},findings=Array.isArray(report.hallazgos)?report.hallazgos:[];const indicators=steps.reduce((n,p)=>n+(Array.isArray(p.resultado?.indicadores)?p.resultado.indicadores.length:0),0);const stats=e('div','results-stat');for(const [value,label] of [[steps.length,'Herramientas'],[indicators,'Indicadores AST'],[findings.length,'Hallazgos RAG']]){const card=e('div','mini');card.append(e('strong','',value),e('span','',label));stats.append(card)}root.append(stats);
-      root.append(e('div','section-title','Registro de ejecución · evidencias verificables'));const tl=e('div','timeline');for(const p of steps){const s=e('article','step'),h=e('header');h.append(e('b','',p.herramienta.replaceAll('_',' ')),e('small','',`PASO ${p.numero}`));s.append(h,e('p','',p.motivo||'Herramienta autorizada'));renderFacts(s,p.resultado);tl.append(s)}root.append(tl);
+      root.append(e('div','section-title','Registro de ejecución · evidencias verificables'));const tl=e('div','timeline');for(const p of steps){const s=e('article','step'),h=e('header');h.append(e('b','',p.herramienta.replaceAll('_',' ')),e('small','',`PASO ${p.numero}`));s.append(h,e('p','',p.motivo||'Herramienta autorizada'));renderFacts(s,p.resultado);tl.append(s)}root.append(tl);renderStaticEvidence(root,data);
       root.append(e('div','section-title',data.modo==='gemini_real'?'Dictamen Gemini + RAG':'Resultado local · solo indicadores'));if(data.modo==='inspeccion_local'){root.append(e('div','msg','Este modo NO consultó Gemini ni ChromaDB y NO emite un veredicto. Los indicadores muestran únicamente patrones AST observados.'))}else if(report.estado==='abstenido'){root.append(e('div','msg','ABSTENCIÓN FUNDAMENTADA: '+(report.mensaje||'No hay evidencia documental suficiente.')))}else if(!findings.length){root.append(e('div','msg','El analizador no generó hallazgos en esta solicitud. Esto no certifica que el código sea seguro.'))}
       for(const f of findings){const card=e('article','finding '+(f.severidad||''));card.append(e('small','',`${String(f.severidad||'').toUpperCase()} · LÍNEA ${f.linea} · ${f.categoria||''}`),e('div','',f.titulo||'Hallazgo'),e('p','',f.explicacion||''));const suggestion=e('div','fact','Corrección: '+(f.correccion_sugerida||''));card.append(suggestion);const allowed=new Set(Array.isArray(f.referencias)?f.referencias:[]);for(const src of (report.fuentes||[]).filter(s=>allowed.has(s.id))){const rr=e('div','reference');rr.append(e('div','',src.fuente||src.documento||src.id));rr.append(e('div','tiny',`${src.seccion||''} · ${src.id||''}`));const url=link(src.url);if(url){const a=e('a','', 'Consultar fuente externa');a.href=url;a.target='_blank';a.rel='noopener noreferrer';rr.append(a)}card.append(rr)}root.append(card)}
       const act=e('div','bottom-actions'),copy=e('button','copy','Copiar JSON de evidencia');copy.onclick=()=>{if(navigator.clipboard?.writeText){navigator.clipboard.writeText(JSON.stringify(last,null,2)).then(()=>{copy.textContent='Copiado ✓'}).catch(()=>{copy.textContent='No se pudo copiar'})}else{copy.textContent='Portapapeles no disponible'}};act.append(copy);root.append(act);

@@ -1,0 +1,9 @@
+{
+  "archivo": "usuarios.py",
+  "codigo_original": "import sqlite3\n\nconexion = sqlite3.connect(\"usuarios.db\")\ncursor = conexion.cursor()\nnombre = input(\"Nombre de usuario: \")\nconsulta = \"SELECT * FROM usuarios WHERE nombre = '\" + nombre + \"'\"\ncursor.execute(consulta)\n\nprint(cursor.fetchall())",
+  "sha256_original": "dce6a1429c08c8e5edbb3054793a31c641fbcba89eacc13fa49911f13dff0495",
+  "objetivo": {
+    "linea": 6,
+    "descripcion": "Parametrizar consulta"
+  }
+}

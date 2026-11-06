@@ -1,0 +1,123 @@
+{
+  "fecha_utc": "2026-11-04T17:16:41.345883+00:00",
+  "python": "3.13.2",
+  "commit_base": "563cc380ec7d5179ee646f5e7839321859377851",
+  "cambios_locales": true,
+  "dependencias": {
+    "chromadb": "1.5.9",
+    "google-genai": "2.31.0",
+    "fastapi": "0.156.1",
+    "pydantic": "2.14.1"
+  },
+  "dataset_sha256": "769ccbe11e10e71ac82e2b338c30e8dfa514077a117e98bd3f779fb54952598a",
+  "runner_sha256": "c4e5d46a488eb4009f14e4e1cba6f8e69cb335e111abaf9d55c3c0798b113400",
+  "knowledge_sha256": "b106e021a4de2135e52c299cf0ae9141c90eb0177120ddcad3fc8a9fdb0d555f",
+  "llm_sha256": "1568a3540e5040c4dfe05151281d40146751075e0220aae7fef584637bded29c",
+  "rag_sha256": "199ced47208d4b94d16e0bdc216e71a709435ed98c652a1057f03ac663e013a8",
+  "modo": "api",
+  "k": 3,
+  "casos": [
+    {
+      "id": "P07",
+      "nombre": "os.system externo",
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "respuesta": {
+        "archivo": "caso_07.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "critica",
+            "categoria": "Inyección de comandos",
+            "titulo": "Inyección de comandos del sistema mediante os.system",
+            "explicacion": "El código concatena directamente la entrada del usuario ('host') en un comando del sistema ejecutado a través de 'os.system'. Esto permite que un atacante introduzca caracteres de control o comandos adicionales para ser ejecutados en el sistema operativo con los privilegios de la aplicación.",
+            "correccion_sugerida": "Utilizar el módulo 'subprocess' con una lista de argumentos y shell=False, evitando la concatenación directa de entradas no confiables.",
+            "referencias": [
+              "seguridad_python-003"
+            ]
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.40543854236602783
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5658223628997803
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.570195198059082
+          }
+        ],
+        "mensaje": null
+      },
+      "duracion_ms": 35110.02
+    }
+  ],
+  "configuracion": {
+    "base_url": "http://127.0.0.1:8000",
+    "timeout": 90.0,
+    "aviso": "La configuración y revisión del servidor deben registrarse por separado."
+  },
+  "resumen": {
+    "total": 1,
+    "completados": 1,
+    "errores": 0,
+    "tasa_completitud": 1.0,
+    "latencia_media_ms": 35110.02,
+    "latencia_p95_ms": 35110.02,
+    "precision_at_k": 0.6666666666666666,
+    "recall_at_k": 1.0,
+    "mrr_at_k": 1.0,
+    "hit_at_k": 1.0,
+    "sin_fuentes_fuera_cobertura": null,
+    "casos_con_referencias_esperadas_evaluados": 1,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "hallazgos": 1,
+    "hallazgos_con_citas_resueltas": 1,
+    "referencias": 1,
+    "referencias_resueltas": 1,
+    "lineas_fuera_rango": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "cobertura_citas": 1.0,
+    "validez_referencias": 1.0,
+    "tasa_abstencion": 0,
+    "exactitud_casos_validos": 1,
+    "aciertos_sobre_total": 1.0
+  }
+}
