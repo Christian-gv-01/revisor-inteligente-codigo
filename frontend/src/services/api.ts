@@ -1,7 +1,6 @@
+import { parseAgentTrace } from "./agentTrace";
 
 import type {
-  AgentTool,
-  AgentTrace,
   AnalysisInput,
   AnalysisResult,
   AnalysisStatus,
@@ -763,44 +762,11 @@ export async function analyzeCode(
 
 
 
-const AGENT_TOOLS: AgentTool[] = ["inspeccionar_estructura", "detectar_llamadas_sensibles", "revisar_consultas_sql"];
-
 export function parseAgentResponse(value: unknown, input: AnalysisInput): AnalysisResult {
   const invalid = () => invalidResponse("La respuesta del agente no cumple el contrato.");
-  if (!record(value) || value.archivo !== input.archivo || !record(value.informe) ||
-      !["gemini_real", "degradado"].includes(value.modo as string) ||
-      !Number.isInteger(value.max_pasos) || (value.max_pasos as number) < 1 || (value.max_pasos as number) > 3 ||
-      !Array.isArray(value.pasos) || value.pasos.length < 1 || value.pasos.length > (value.max_pasos as number) ||
-      !Array.isArray(value.decisiones) || value.decisiones.length > 2 ||
-      ![null, "planificacion", "informe"].includes(value.fase_error as null | string) ||
-      (value.modo === "degradado" && value.informe.estado !== "parcial") ||
-      (value.modo === "gemini_real" && value.fase_error !== null)) throw invalid();
-  const total = input.codigo.split(/\r?\n/).length;
-  const pasos: AgentTrace["pasos"] = value.pasos.map((step: unknown, index: number) => {
-    if (!record(step) || step.numero !== index + 1 || !AGENT_TOOLS.includes(step.herramienta as AgentTool) ||
-        typeof step.motivo !== "string" || step.motivo.length > 500 ||
-        !["automatico", "gemini", "local"].includes(step.origen as string) || !record(step.resultado) ||
-        typeof step.resultado.sintaxis_valida !== "boolean") throw invalid();
-    const items = step.resultado.indicadores ?? [];
-    if (!Array.isArray(items) || items.length > 20) throw invalid();
-    const indicadores = items.map((item: unknown) => {
-      if (!record(item) || !Number.isInteger(item.linea) || (item.linea as number) < 1 || (item.linea as number) > total) throw invalid();
-      const detalle = item.llamada ?? item.patron;
-      if (typeof detalle !== "string" || !detalle || detalle.length > 160) throw invalid();
-      return { linea: item.linea as number, detalle };
-    });
-    return { numero: step.numero as number, herramienta: step.herramienta as AgentTool, motivo: step.motivo,
-      origen: step.origen as "automatico" | "gemini" | "local", sintaxis_valida: step.resultado.sintaxis_valida, indicadores };
-  });
-  if (new Set(pasos.map(p => p.herramienta)).size !== pasos.length) throw invalid();
-  const decisiones: AgentTrace["decisiones"] = value.decisiones.map((d: unknown, index: number) => {
-    if (!record(d) || d.numero !== index + 1 || ![...AGENT_TOOLS, "finalizar"].includes(d.herramienta as string) ||
-        typeof d.motivo !== "string" || !d.motivo || d.motivo.length > 240 ||
-        !["ejecutada", "finalizar", "repetida"].includes(d.estado as string) ||
-        (d.estado === "ejecutada" && !pasos.some(p => p.herramienta === d.herramienta && p.origen === "gemini"))) throw invalid();
-    return { numero: d.numero as number, herramienta: d.herramienta as AgentTool | "finalizar", motivo: d.motivo,
-      estado: d.estado as "ejecutada" | "finalizar" | "repetida" };
-  });
+  let trace;
+  try { trace = parseAgentTrace(value, input); } catch { throw invalid(); }
+  if (!record(value) || !record(value.informe)) throw invalid();
   const result = parseResponse({ ...value.informe, analisis_estatico: value.analisis_estatico }, input);
   const ids = new Set(result.fuentes?.map(f => f.id));
   for (const finding of result.hallazgos) {
@@ -809,8 +775,7 @@ export function parseAgentResponse(value: unknown, input: AnalysisInput): Analys
     if (!fragmento?.trim() || fragmento.includes("\n") || fragmento.includes("\r") ||
         !input.codigo.split(/\r?\n/)[finding.linea - 1]?.includes(fragmento)) throw invalid();
   }
-  result.traza_agente = { archivo: input.archivo, modo: value.modo as AgentTrace["modo"], pasos, decisiones,
-    max_pasos: value.max_pasos as number, fase_error: value.fase_error as AgentTrace["fase_error"] };
+  result.traza_agente = trace;
   return result;
 }
 
@@ -822,7 +787,7 @@ export async function analyzeWithAgent(input: AnalysisInput, signal?: AbortSigna
   try {
     const response = await fetch(`${base}/api/v1/agente/analizar`, {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ archivo: input.archivo, codigo: input.codigo, max_pasos: 3 }),
+      body: JSON.stringify({ archivo: input.archivo, codigo: input.codigo, max_pasos: 3, version_herramientas: "2" }),
       signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
     });
     if (!response.ok) throw new AnalysisError([400, 413, 422].includes(response.status) ? "entrada" : "servidor", `El agente no pudo completar la revisión (HTTP ${response.status}).`);

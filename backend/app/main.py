@@ -5,6 +5,7 @@ from app.config import settings
 
 from app.services.rate_limit import ENDPOINT_WEIGHTS, LimitadorPonderado
 from app.services.http_security import ControlConcurrencia, identidad_cliente
+from app.services.presupuesto import presupuesto_solicitud
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -20,6 +21,9 @@ async def ciclo_vida(_app):
         while True:
             try:
                 await run_in_threadpool(limpiar_caducadas)
+                if settings.bandera("PROJECT_BUDGET_ENABLED"):
+                    from app.services.proyectos import limpiar
+                    await run_in_threadpool(limpiar)
             except Exception as exc:
                 logging.getLogger(__name__).warning("correction_cleanup_failed tipo=%s", type(exc).__name__)
             await asyncio.sleep(60)
@@ -42,7 +46,7 @@ from app.models.analisis import (
     SolicitudGitHub,
 )
 
-from app.services.github_repos import obtener_archivos_python_github
+from app.services.github_repos import obtener_archivos_python_github, validar_url_github
 from app.services.files import leer_python_seguro
 from app.services.llm import analizar_codigo, LLMError
 from app.services.zip_files import leer_zip_seguro
@@ -102,11 +106,17 @@ async def proteger_analisis(request: Request, call_next):
     es_costosa = (
         request.method == "POST"
         and (request.url.path in ENDPOINT_WEIGHTS or
-             (request.url.path.startswith("/api/v1/correcciones/") and request.url.path.endswith("/decision")))
+             (request.url.path.startswith(("/api/v1/correcciones/", "/api/v1/proyectos/")) and request.url.path.endswith("/decision")))
     )
     if not es_costosa:
         return await call_next(request)
 
+    ruta_presupuesto = "/api/v1/archivos/zip" if request.url.path.startswith("/api/v1/proyectos/") else request.url.path
+    with presupuesto_solicitud(*settings.limites_solicitud(ruta_presupuesto)):
+        return await _proteger_con_limites(request, call_next)
+
+
+async def _proteger_con_limites(request: Request, call_next):
     if settings.bandera("RATE_LIMIT_ENABLED"):
         # No habilitar sin garantizar que no existen rutas privadas/directas
         # hacia este servicio que puedan falsificar X-Real-IP.
@@ -117,7 +127,7 @@ async def proteger_analisis(request: Request, call_next):
             request, confiar_railway_publico=confiar_proxy_publico
         )
         resultado = limitador_peticiones.comprobar(
-            identidad, ENDPOINT_WEIGHTS.get(request.url.path, 1)
+            identidad, ENDPOINT_WEIGHTS.get(request.url.path, 5 if request.url.path.startswith("/api/v1/proyectos/") else 1)
         )
         if not resultado.permitido:
             return JSONResponse(
@@ -179,15 +189,13 @@ def construir_respuesta(
     Conserva el estado de abstención, el motivo y las fuentes.
     """
 
-    motivo = informe.motivo_abstencion
-
     return RespuestaAnalisis(
         archivo=archivo,
-        estado="abstenido" if motivo else "analizado",
+        estado=informe.estado_validado,
         hallazgos=informe.hallazgos,
         fuentes=informe.fuentes,
         analisis_estatico=analisis_estatico,
-        mensaje=motivo,
+        mensaje=informe.mensaje_validado,
     )
 
 
@@ -298,6 +306,8 @@ async def analizar_zip(
 
     try:
         archivos = await leer_zip_seguro(archivo)
+        if settings.bandera("PROJECT_BUDGET_ENABLED"):
+            raise HTTPException(428, "Revisa y aprueba el presupuesto en /api/v1/proyectos/previsualizar/zip.")
 
         # Limitar el consumo del proveedor de IA.
         if len(archivos) > 5:
@@ -316,12 +326,13 @@ async def analizar_zip(
             informes.append(resultado)
             # Evitar repetir la misma espera de Gemini por cada archivo ZIP
             # después de comprobar que el proveedor falla en esta petición.
-            if resultado.estado == "parcial":
+            # La omisión de citas conserva fuentes; no indica caída de Gemini.
+            if resultado.estado == "parcial" and not resultado.fuentes:
                 proveedor_no_disponible = True
 
         return RespuestaAnalisisZIP(
             archivo_zip=archivo.filename or "proyecto.zip",
-            estado="parcial" if proveedor_no_disponible else "analizado",
+            estado="parcial" if any(r.estado == "parcial" for r in informes) else "analizado",
             total_archivos=len(informes),
             informes=informes,
         )
@@ -354,6 +365,9 @@ async def analizar_repositorio_github(
     """
 
     try:
+        if settings.bandera("PROJECT_BUDGET_ENABLED"):
+            validar_url_github(solicitud.url)
+            raise HTTPException(428, "Revisa y aprueba el presupuesto en /api/v1/proyectos/previsualizar/github.")
         archivos = await run_in_threadpool(
             obtener_archivos_python_github,
             solicitud.url,
@@ -367,12 +381,12 @@ async def analizar_repositorio_github(
                 codigo, nombre, omitir_ia=proveedor_no_disponible
             )
             informes.append(resultado)
-            if resultado.estado == "parcial":
+            if resultado.estado == "parcial" and not resultado.fuentes:
                 proveedor_no_disponible = True
 
         return RespuestaAnalisisRepositorio(
             repositorio=solicitud.url,
-            estado="parcial" if proveedor_no_disponible else "analizado",
+            estado="parcial" if any(r.estado == "parcial" for r in informes) else "analizado",
             total_archivos=len(informes),
             informes=informes,
         )
@@ -389,6 +403,8 @@ from app.routes.agente import router as agente_router
 app.include_router(agente_router)
 from app.routes.correcciones import router as correcciones_router
 app.include_router(correcciones_router)
+from app.routes.proyectos import router as proyectos_router
+app.include_router(proyectos_router)
 
 
 # En producción, servir el frontend compilado desde el mismo origen.

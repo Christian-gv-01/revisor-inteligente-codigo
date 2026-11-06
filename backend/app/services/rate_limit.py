@@ -19,6 +19,8 @@ ENDPOINT_WEIGHTS: dict[str, int] = {
     "/api/v1/estatico/analizar": 1,
     "/api/v1/archivos": 1,
     "/api/v1/archivos/zip": 5,
+    "/api/v1/proyectos/previsualizar/zip": 3,
+    "/api/v1/proyectos/previsualizar/github": 3,
     "/api/v1/repositorios/github": 5,
     "/api/v1/agente/previsualizar": 1,
     "/api/v1/agente/analizar": 3,

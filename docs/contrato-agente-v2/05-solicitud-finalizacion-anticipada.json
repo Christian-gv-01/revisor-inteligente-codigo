@@ -1,0 +1,6 @@
+{
+  "archivo": "ejemplo.py",
+  "codigo": "print('hola')\n",
+  "max_pasos": 3,
+  "version_herramientas": "2"
+}

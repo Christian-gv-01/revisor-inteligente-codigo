@@ -4,6 +4,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.services.static_analysis import ResultadoEstatico
+from app.services.herramientas_contextuales import ResultadoContexto, ResultadoReferencia
 
 
 class DatoEvidencia(BaseModel):
@@ -35,12 +36,24 @@ class EvidenciaRevision(DatoEvidencia):
     estado_estatico: Literal["completo", "parcial", "no_disponible"]
     reglas: list[ReglaEvidencia] = Field(max_length=40)
     total_reglas: int = Field(ge=0, le=400)
+    contextos_ampliados: list[ResultadoContexto] = Field(default_factory=list, max_length=2,
+        exclude_if=lambda v: not v)
+    referencias_buscadas: list[ResultadoReferencia] = Field(default_factory=list, max_length=2,
+        exclude_if=lambda v: not v)
 
 
 def construir_evidencia(archivo: str, pasos: list[dict], estatico: ResultadoEstatico) -> EvidenciaRevision:
     inspecciones = []
+    contextos = []
+    referencias = []
     for paso in pasos[:3]:
         resultado = paso["resultado"]
+        if paso["herramienta"] == "ampliar_contexto":
+            contextos.append(ResultadoContexto.model_validate(resultado))
+            continue
+        if paso["herramienta"] == "buscar_referencia":
+            referencias.append(ResultadoReferencia.model_validate(resultado))
+            continue
         inspecciones.append(InspeccionEvidencia(
             herramienta=paso["herramienta"], origen=paso["origen"],
             sintaxis_valida=bool(resultado.get("sintaxis_valida")),
@@ -55,6 +68,7 @@ def construir_evidencia(archivo: str, pasos: list[dict], estatico: ResultadoEsta
         total_reglas=len(reglas), reglas=[ReglaEvidencia(
             herramienta=h.herramienta, regla=h.regla, linea=h.linea, severidad=h.severidad,
         ) for h in reglas[:40]],
+        contextos_ampliados=contextos, referencias_buscadas=referencias,
     )
 
 

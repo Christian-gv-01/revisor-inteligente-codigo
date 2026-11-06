@@ -16,8 +16,12 @@ def informe(caso, estado="analizado", hallazgos=None):
 
 def agente(caso, estado="analizado", modo="gemini_real"):
     return {"archivo": caso["archivo"], "modo": modo, "informe": informe(caso, estado),
-            "pasos": [{"numero": 1, "herramienta": "inspeccionar_estructura"}],
-            "decisiones": [{"estado": "finalizar", "herramienta": "finalizar"}]}
+            "version_herramientas": "2", "max_pasos": 3,
+            "fase_error": "informe" if modo == "degradado" else None,
+            "terminacion": "finalizacion_anticipada",
+            "pasos": [{"numero": 1, "herramienta": "inspeccionar_estructura", "origen": "automatico",
+                       "motivo": "Inspección controlada", "resultado": {"sintaxis_valida": True}}],
+            "decisiones": [{"numero": 1, "estado": "finalizar", "herramienta": "finalizar", "motivo": "Pasar a síntesis"}]}
 
 
 def hallazgo_sql():
@@ -51,6 +55,7 @@ def test_transporte_recibe_mismo_codigo_cuarenta_veces_sin_calidad_inventada():
         assert payload["codigo"] == caso["codigo"]
         es_agente = "/agente/" in req.url.path
         assert payload.get("max_pasos") == (3 if es_agente else None)
+        assert payload.get("version_herramientas") == ("2" if es_agente else None)
         recibidos.append((caso["id"], es_agente))
         # Ningún positivo es detectado por este stub: el evaluador NO debe
         # confundir que HTTP funcione con veinte casos correctos.

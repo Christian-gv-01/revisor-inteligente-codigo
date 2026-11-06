@@ -8,6 +8,7 @@ from urllib.parse import quote, urlsplit
 
 import httpx
 from fastapi import HTTPException
+from app.services.presupuesto import comprobar_plazo, tiempo_disponible, PlazoAgotado
 
 MAX_ARCHIVOS = 5
 MAX_CARACTERES = 12_000
@@ -50,6 +51,8 @@ def validar_url_github(url: str) -> tuple[str, str]:
 
 def _leer_json(client: httpx.Client, ruta: str, limite: int = MAX_RESPUESTA_BYTES) -> dict:
     try:
+        restante = tiempo_disponible(10.0)
+        client.timeout = httpx.Timeout(restante, connect=min(5.0, restante))
         with client.stream("GET", ruta) as response:
             estado = response.status_code
             if estado == 404:
@@ -61,10 +64,12 @@ def _leer_json(client: httpx.Client, ruta: str, limite: int = MAX_RESPUESTA_BYTE
 
             datos = bytearray()
             for bloque in response.iter_bytes():
+                comprobar_plazo()
                 if len(datos) + len(bloque) > limite:
                     raise HTTPException(413, "La respuesta de GitHub supera el límite permitido.")
                 datos.extend(bloque)
-    except httpx.TimeoutException as error:
+            comprobar_plazo()
+    except (httpx.TimeoutException, PlazoAgotado) as error:
         raise HTTPException(504, "Se agotó el tiempo de espera de GitHub.") from error
     except httpx.RequestError as error:
         raise HTTPException(502, "No se pudo contactar a GitHub.") from error

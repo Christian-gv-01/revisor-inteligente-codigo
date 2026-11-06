@@ -20,6 +20,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.config import settings
+from app.services.presupuesto import tiempo_disponible, PlazoAgotado
 
 MAX_CHARS = settings.MAX_CODIGO
 MAX_STDOUT = settings.MAX_SALIDA_HERRAMIENTAS
@@ -92,6 +93,8 @@ def _ejecutar(comando: list[str], *, entrada: str | None = None, cwd: str) -> tu
         )
     except FileNotFoundError:
         return "no_disponible", None
+    except PlazoAgotado:
+        return "timeout", None
     except (OSError, ValueError):
         return "error", None
 
@@ -108,6 +111,7 @@ def _capturar_acotado(
         if entrada is not None:
             datos_entrada.write(entrada.encode("utf-8"))
             datos_entrada.seek(0)
+        plazo = tiempo_disponible(TOOL_TIMEOUT)
         proceso = subprocess.Popen(
             comando, stdin=datos_entrada if entrada is not None else subprocess.DEVNULL,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=0,
@@ -147,7 +151,7 @@ def _capturar_acotado(
             threading.Thread(target=leer, args=(tuberia, salida), daemon=True)
             for tuberia, salida in zip((proceso.stdout, proceso.stderr), salidas)
         ]
-        limite = time.monotonic() + TOOL_TIMEOUT
+        limite = time.monotonic() + plazo
         timeout = False
         try:
             for lector in lectores:

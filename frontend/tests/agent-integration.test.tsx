@@ -52,5 +52,5 @@ it("el servicio usa el endpoint del agente también para un archivo Python", asy
   vi.stubGlobal("fetch", fetcher);
   await analyzeWithAgent({ ...input, tipo: "python", fichero: new File([input.codigo], input.archivo) });
   expect(fetcher.mock.calls[0][0]).toContain("/api/v1/agente/analizar");
-  expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({ archivo: input.archivo, codigo: input.codigo, max_pasos: 3 });
+  expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({ archivo: input.archivo, codigo: input.codigo, max_pasos: 3, version_herramientas: "2" });
 });

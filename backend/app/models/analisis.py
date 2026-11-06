@@ -52,11 +52,11 @@ class InformeModelo(BaseModel):
 
     @property
     def estado_validado(self) -> str:
-        return "abstenido" if self._motivo_abstencion else "parcial" if self._revision_parcial else "analizado"
+        return "abstenido" if self.motivo_abstencion else "parcial" if self._revision_parcial else "analizado"
 
     @property
     def mensaje_validado(self) -> str | None:
-        return self._motivo_abstencion or self._revision_parcial
+        return self.motivo_abstencion or self._revision_parcial
 
     @property
     def fuentes(self) -> list[dict]:
@@ -64,6 +64,10 @@ class InformeModelo(BaseModel):
 
     @property
     def motivo_abstencion(self) -> str | None:
+        if self.estado == "abstenido":
+            return self._motivo_abstencion or (self.mensaje or "").strip() or (
+                "El modelo se abstuvo de emitir un informe concluyente."
+            )
         return self._motivo_abstencion
 
 

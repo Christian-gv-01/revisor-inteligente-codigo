@@ -1,5 +1,7 @@
 # Documentación de CODEGUARD
 
+Candidato conjunto PR43/44: [compatibilidad y evidencias](evidencias/semana-4/integracion-agente-presupuesto-20261106/README.md).
+
 Nueva asignación del 6 de noviembre: [Frontend y documentación del producto](21-frontend-producto.md),
 [contrato propuesto de confirmación](20-contrato-confirmacion-humana.md) y
 [borrador de presentación de doce minutos](presentacion/README.md).
@@ -37,6 +39,9 @@ Responsable de esta edición: Ronald Yépez, QA, seguridad y documentación.
 
 ## Evidencia y revisiones especializadas
 
+- [Abstención explícita y conservación parcial](26-abstencion-parcial.md).
+- [Reintentos del proveedor y presupuesto compartido](reintentos-presupuesto.md).
+- [Contrato optativo v2 del agente y ejemplos JSON](contrato-agente-v2/README.md).
 - [Semana 1: registro de originales faltantes](evidencias/semana-1/README.md).
 - [Semana 4: evidencias versionadas](evidencias/semana-4/README.md).
 - [Revisión PR #19](14-revision-qa-pr19.md) y

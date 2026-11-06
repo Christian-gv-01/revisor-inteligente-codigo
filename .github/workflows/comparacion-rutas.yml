@@ -5,6 +5,10 @@ on:
     paths:
       - "eval/comparar_rutas.py"
       - "eval/test_comparar_rutas.py"
+      - "eval/contrato_agente_evaluacion.py"
+      - "eval/test_contrato_agente_evaluacion.py"
+      - "eval/run_eval.py"
+      - "docs/contrato-agente-v2/**"
       - ".github/workflows/comparacion-rutas.yml"
   workflow_dispatch:
 
@@ -26,4 +30,4 @@ jobs:
       - name: Validar dataset y plan sin red
         run: python eval/comparar_rutas.py --validar
       - name: Probar métricas, errores y transporte controlado
-        run: python -m pytest eval/test_comparar_rutas.py -q
+        run: python -m pytest eval/test_comparar_rutas.py eval/test_contrato_agente_evaluacion.py -q

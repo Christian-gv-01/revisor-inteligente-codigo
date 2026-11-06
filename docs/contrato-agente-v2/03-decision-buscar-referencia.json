@@ -1,0 +1,7 @@
+{
+  "herramienta": "buscar_referencia",
+  "motivo": "Recuperar respaldo documental para SQL.",
+  "argumentos": {
+    "categoria": "inyeccion_sql"
+  }
+}

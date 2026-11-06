@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { ProjectBudgetReview } from "../components/ProjectBudgetReview";
+import { projectBudgetEnabled, previewProject, approveProject, rejectProject } from "../services/projectBudget";
+import type { ProjectBudget } from "../services/projectBudget";
 import { PrivacyNotice } from "../components/PrivacyNotice";
 import { CodeEditor } from "../components/CodeEditor";
 import { CodeInput } from "../components/CodeInput";
@@ -43,6 +46,8 @@ export function HomePage() {
     "idle" | "reading" | "loading" | "done" | "cancelled"
   >("idle");
   const [error, setError] = useState<AnalysisError | null>(null);
+  const [budget, setBudget] = useState<ProjectBudget | null>(null);
+  const [consuming, setConsuming] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const request = useRef<AbortController | null>(null);
   const busy = status === "loading" || status === "reading";
@@ -55,6 +60,8 @@ export function HomePage() {
   const markers = result?.hallazgos ?? [];
   useEffect(() => () => request.current?.abort(), []);
   function clearResult() {
+    if (budget) void rejectProject(budget, new AbortController().signal).catch(() => {});
+    setBudget(null);
     setResult(null);
     setSelected(null);
     setActiveFile("");
@@ -144,6 +151,13 @@ export function HomePage() {
     try {
       validateInput(input);
       setStatus("loading");
+      if (mode === "api" && project && projectBudgetEnabled()) {
+        const proposal = await previewProject(input, controller.signal);
+        if (controller.signal.aborted) return;
+        setBudget(proposal);
+        setStatus("idle");
+        return;
+      }
       const response =
         mode === "demo"
           ? await analyzeDemo(input, scenario, controller.signal)
@@ -166,6 +180,49 @@ export function HomePage() {
               "Ocurrió un error inesperado. Inténtalo de nuevo.",
             ),
       );
+      setStatus("idle");
+    }
+  }
+  async function approveBudget() {
+    if (!budget || busy) return;
+    const proposal = budget;
+    const controller = new AbortController();
+    request.current = controller;
+    setConsuming(true);
+    setStatus("loading");
+    setError(null);
+    const start = performance.now();
+    try {
+      const response = await approveProject(proposal, input, controller.signal);
+      if (controller.signal.aborted) return;
+      setBudget(null);
+      setResult(response);
+      setSelected(response.hallazgos[0] ?? null);
+      setActiveFile(response.archivos[0]?.nombre ?? "");
+      setElapsed((performance.now() - start) / 1000);
+      setStatus("done");
+    } catch (err) {
+      if (controller.signal.aborted) return;
+      setBudget(null);
+      setError(err instanceof AnalysisError ? err : new AnalysisError("servidor", "No se pudo completar el análisis aprobado. Revisa el estado antes de iniciar otro."));
+      setStatus("idle");
+    } finally {
+      setConsuming(false);
+    }
+  }
+  async function rejectBudget() {
+    if (!budget || busy) return;
+    const controller = new AbortController();
+    request.current = controller;
+    setStatus("loading");
+    try {
+      await rejectProject(budget, controller.signal);
+      if (controller.signal.aborted) return;
+      setBudget(null);
+      setStatus("idle");
+    } catch (err) {
+      if (controller.signal.aborted) return;
+      setError(err instanceof AnalysisError ? err : new AnalysisError("servidor", "No se pudo confirmar el rechazo. No se envió una aprobación."));
       setStatus("idle");
     }
   }
@@ -349,6 +406,8 @@ export function HomePage() {
                   </div>
                 </div>
               )}
+              {budget && <ProjectBudgetReview key={budget.presupuesto_id} proposal={budget} disabled={busy}
+                onApprove={() => void approveBudget()} onReject={() => void rejectBudget()} />}
               <div className="analyze-actions">
                 <span
                   className="analysis-status"
@@ -368,7 +427,7 @@ export function HomePage() {
                       Completado en {elapsed.toFixed(1)} s
                     </>
                   ) : status === "cancelled" ? (
-                    "Análisis cancelado"
+                    "Solicitud interrumpida"
                   ) : (
                     <>
                       <Icon name="shield" size={16} />
@@ -383,10 +442,14 @@ export function HomePage() {
                     className="secondary-button"
                     onClick={() => {
                       request.current?.abort();
+                      if (consuming) {
+                        setBudget(null);
+                        setError(new AnalysisError("pendiente", "Dejaste de esperar. El servidor puede continuar dentro del presupuesto aprobado; esto no revoca el consumo."));
+                      }
                       setStatus("cancelled");
                     }}
                   >
-                    Cancelar
+                    {consuming ? "Dejar de esperar" : "Cancelar"}
                   </button>
                 ) : (
                   <button
@@ -394,7 +457,7 @@ export function HomePage() {
                     disabled={busy}
                     onClick={() => void analyze()}
                   >
-                    {mode === "demo" ? "Probar análisis" : "Analizar código"}
+                    {mode === "demo" ? "Probar análisis" : project && projectBudgetEnabled() ? "Revisar presupuesto" : "Analizar código"}
                     <Icon name="arrow" size={18} />
                   </button>
                 )}

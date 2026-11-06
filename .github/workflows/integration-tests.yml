@@ -49,6 +49,14 @@ jobs:
         run: |
           node frontend/tests/correction-browser.mjs tmp/http-demo
           python eval/run_integration.py --static-analysis --correction-browser --output tmp/http-navegador
+      - name: Presupuesto de proyectos contra backend real (proveedor simulado)
+        env:
+          PLAYWRIGHT_MODULE_PATH: ${{ runner.temp }}/codeguard-browser/node_modules/playwright/index.mjs
+        run: python qa/run_project_budget_browser.py --output tmp/http-presupuesto
+      - name: Agente v2 contra backend real (proveedor simulado)
+        env:
+          PLAYWRIGHT_MODULE_PATH: ${{ runner.temp }}/codeguard-browser/node_modules/playwright/index.mjs
+        run: python qa/run_agent_v2_browser.py --output tmp/http-agente-v2
       - uses: actions/upload-artifact@v4
         if: always()
         with:
