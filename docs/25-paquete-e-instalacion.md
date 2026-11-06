@@ -1,9 +1,11 @@
 # Paquete candidato e instalación pendiente
 
 El PR 37 ya se integró en `2888dea8740e2ef0331e2edafeeff2d9a0bfccb8`.
-La revisión de esta entrega localizó un PowerPoint de doce minutos bajo
-`docs/presentacion/`, sin PDF ni ZIP versionados. El guion conserva frases de antes
-de integrar el agente y las correcciones: requiere actualización por su responsable.
+La revisión inicial localizó un PowerPoint de doce minutos bajo `docs/presentacion/`,
+todavía sin PDF y con frases anteriores a la integración. La actualización de Ronald
+incorpora los resultados del PR 37 al [PowerPoint y guion](presentacion/README.md),
+y añade el [PDF de doce minutos](presentacion/CODEGUARD-12-minutos.pdf).
+El paquete debe regenerarse desde un commit que incluya esta actualización.
 
 ## Paquete reproducible
 
@@ -24,9 +26,10 @@ verifican los bytes de todas las entradas, CRC y tamaño inferior o igual a
 20.000.000 bytes. El reporte externo incluye el hash del ZIP.
 
 El workflow de paquete crea el artefacto `CODEGUARD-Semana4-candidato`, disponible
-para descargar en su corrida de Actions. Es un candidato para revisión: la
-ausencia de PDF queda explícita. No se debe presentar como entrega completa hasta
-incorporar el PDF acordado y resolver los demás puntos del cierre documental.
+para descargar en su corrida de Actions. Es un candidato para revisión: el manifiesto
+indica si el commit empaquetado incluye el PDF. El ZIP anterior no lo contiene.
+La presencia del PDF no resuelve los demás puntos del cierre documental ni acredita
+la instalación humana cronometrada.
 Las pruebas de empaquetado no certifican ausencia de secretos; el escaneo
 Gitleaks del repositorio constituye una verificación independiente.
 
