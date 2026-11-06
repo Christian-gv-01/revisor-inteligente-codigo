@@ -1,0 +1,1980 @@
+{
+  "fecha_utc": "2026-11-06T19:47:41.274708+00:00",
+  "python": "3.12.14",
+  "commit_base": null,
+  "cambios_locales": null,
+  "dependencias": {
+    "chromadb": "1.5.9",
+    "google-genai": "2.31.0",
+    "fastapi": "0.156.1",
+    "pydantic": "2.14.1"
+  },
+  "dataset_sha256": "9908373c5650a9fb87992a50d56a05636c0dc2d615a25c0189c02b31e85d85ac",
+  "runner_sha256": "2384c8e149f9eabc39bbbe5f2980b62d50deaba1d3841625f581f8456edb34f1",
+  "knowledge_sha256": "7e16eaee4982b0a43126250e7b377e555bac71f0f6a7b7f1b3e7d3ae43b7d7c3",
+  "llm_sha256": "efbb406a5c902ec6066c0bcba2e00c7b61aeffe63d0ad27bbb263186984f2b48",
+  "rag_sha256": "221de9ff6b12573699f7c8bd96efe25bcb37573077bc746348b76abcefba01e5",
+  "modo": "api",
+  "k": 3,
+  "casos": [
+    {
+      "id": "P01",
+      "nombre": "SQL concatenado",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_01.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "Inyeccion SQL",
+            "titulo": "Construccion insegura de consulta SQL mediante concatenacion",
+            "explicacion": "La consulta SQL se construye concatenando directamente una variable controlada por el usuario (nombre), lo que permite alterar la sintaxis y ejecutar comandos SQL no previstos mediante una inyeccion SQL.",
+            "correccion_sugerida": "Utilizar consultas parametrizadas o sentencias preparadas proporcionadas por el controlador de base de datos para separar la estructura de la consulta de los valores proporcionados por el usuario.",
+            "referencias": [
+              "seguridad_python-002"
+            ],
+            "fragmento_codigo": "consulta = \"SELECT * FROM usuarios WHERE nombre = '\" + nombre + \"'\"",
+            "linea_reportada_modelo": 2
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_01.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "media",
+              "titulo": "Bandit B608: hardcoded_sql_expressions",
+              "descripcion": "Possible SQL injection vector through string-based query construction.",
+              "confianza": "baja",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+            },
+            {
+              "herramienta": "ruff",
+              "regla": "F821",
+              "tipo": "calidad",
+              "linea": 3,
+              "columna": 1,
+              "severidad": "baja",
+              "titulo": "Ruff F821",
+              "descripcion": "Undefined name `cursor`",
+              "confianza": null,
+              "referencia": null
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 1
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 6585.75
+    },
+    {
+      "id": "P02",
+      "nombre": "SQL interpolado",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_02.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "Inyeccion SQL",
+            "titulo": "Construccion insegura de consulta SQL mediante f-string",
+            "explicacion": "El codigo construye una instruccion SQL utilizando una f-string para insertar directamente datos proporcionados por el usuario ('nombre'). Esto permite que un atacante manipule la sintaxis de la consulta y ejecute comandos SQL arbitrarios (Inyeccion SQL).",
+            "correccion_sugerida": "Utilizar consultas parametrizadas o sentencias preparadas provistas por el controlador de base de datos, separando la estructura de la consulta de los valores proporcionados por el usuario, por ejemplo: cursor.execute(\"SELECT * FROM usuarios WHERE nombre = %s\", (nombre,))",
+            "referencias": [
+              "seguridad_python-002",
+              "seguridad_python-004"
+            ],
+            "fragmento_codigo": "cursor.execute(f\"SELECT * FROM usuarios WHERE nombre = '{nombre}'\")",
+            "linea_reportada_modelo": 2
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_02.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "media",
+              "titulo": "Bandit B608: hardcoded_sql_expressions",
+              "descripcion": "Possible SQL injection vector through string-based query construction.",
+              "confianza": "media",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+            },
+            {
+              "herramienta": "ruff",
+              "regla": "F821",
+              "tipo": "calidad",
+              "linea": 2,
+              "columna": 1,
+              "severidad": "baja",
+              "titulo": "Ruff F821",
+              "descripcion": "Undefined name `cursor`",
+              "confianza": null,
+              "referencia": null
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 1
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 2,
+        "referencias_resueltas": 2,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 6377.48
+    },
+    {
+      "id": "P03",
+      "nombre": "SQL con formato",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_03.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "Inyeccion SQL",
+            "titulo": "Construccion insegura de consulta SQL mediante concatenacion",
+            "explicacion": "La consulta SQL se construye utilizando el metodo format para insertar una variable de entrada directamente en la cadena de la sentencia. Esto permite que un usuario malintencionado altere la estructura de la consulta SQL.",
+            "correccion_sugerida": "Utilizar consultas parametrizadas o sentencias preparadas proporcionadas por el controlador de base de datos para separar la estructura de la consulta de sus valores.",
+            "referencias": [
+              "seguridad_python-002",
+              "seguridad_python-004"
+            ],
+            "fragmento_codigo": "consulta = \"SELECT * FROM usuarios WHERE nombre = '{}'\".format(nombre)",
+            "linea_reportada_modelo": 2
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_03.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "media",
+              "titulo": "Bandit B608: hardcoded_sql_expressions",
+              "descripcion": "Possible SQL injection vector through string-based query construction.",
+              "confianza": "baja",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+            },
+            {
+              "herramienta": "ruff",
+              "regla": "F821",
+              "tipo": "calidad",
+              "linea": 3,
+              "columna": 1,
+              "severidad": "baja",
+              "titulo": "Ruff F821",
+              "descripcion": "Undefined name `cursor`",
+              "confianza": null,
+              "referencia": null
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 1
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 2,
+        "referencias_resueltas": 2,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 5168.51
+    },
+    {
+      "id": "P04",
+      "nombre": "Identificador SQL externo",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_04.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "Inyeccion SQL",
+            "titulo": "Construccion insegura de consulta SQL mediante concatenacion",
+            "explicacion": "La consulta SQL se construye concatenando directamente una entrada de usuario sin validar ni parametrizar, lo que permite alterar la estructura de la consulta y ejecutar comandos SQL arbitrarios.",
+            "correccion_sugerida": "Utilizar una lista blanca estricta de nombres de tablas permitidos antes de ejecutar la consulta, en lugar de concatenar directamente la entrada proporcionada por el usuario.",
+            "referencias": [
+              "seguridad_python-002"
+            ],
+            "fragmento_codigo": "cursor.execute(\"SELECT * FROM \" + tabla)",
+            "linea_reportada_modelo": 2
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_04.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "media",
+              "titulo": "Bandit B608: hardcoded_sql_expressions",
+              "descripcion": "Possible SQL injection vector through string-based query construction.",
+              "confianza": "media",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+            },
+            {
+              "herramienta": "ruff",
+              "regla": "F821",
+              "tipo": "calidad",
+              "linea": 2,
+              "columna": 1,
+              "severidad": "baja",
+              "titulo": "Ruff F821",
+              "descripcion": "Undefined name `cursor`",
+              "confianza": null,
+              "referencia": null
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 1
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 6091.18
+    },
+    {
+      "id": "P05",
+      "nombre": "SQL parametrizado",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_05.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_05.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "ruff",
+              "regla": "F821",
+              "tipo": "calidad",
+              "linea": 2,
+              "columna": 1,
+              "severidad": "baja",
+              "titulo": "Ruff F821",
+              "descripcion": "Undefined name `cursor`",
+              "confianza": null,
+              "referencia": null
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 1
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 0
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 6747.14
+    },
+    {
+      "id": "P06",
+      "nombre": "Tabla permitida",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_06.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-002",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 2: Prevenir inyeccion SQL",
+            "fuente": "OWASP SQL Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.1560038924217224
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.552624523639679
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7142115831375122
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_06.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B608",
+              "tipo": "seguridad",
+              "linea": 4,
+              "columna": null,
+              "severidad": "media",
+              "titulo": "Bandit B608: hardcoded_sql_expressions",
+              "descripcion": "Possible SQL injection vector through string-based query construction.",
+              "confianza": "media",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b608_hardcoded_sql_expressions.html"
+            },
+            {
+              "herramienta": "ruff",
+              "regla": "F821",
+              "tipo": "calidad",
+              "linea": 4,
+              "columna": 5,
+              "severidad": "baja",
+              "titulo": "Ruff F821",
+              "descripcion": "Undefined name `cursor`",
+              "confianza": null,
+              "referencia": null
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 1
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 5093.97
+    },
+    {
+      "id": "P07",
+      "nombre": "os.system externo",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_07.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "critica",
+            "categoria": "Inyección de comandos",
+            "titulo": "Uso inseguro de os.system con entrada no confiable",
+            "explicacion": "La función os.system concatena directamente una entrada controlada por el usuario (host) en un comando del sistema, lo que permite la ejecución arbitraria de comandos si el usuario introduce caracteres especiales.",
+            "correccion_sugerida": "Utilizar la librería subprocess con una lista de argumentos y shell=False, o validar y sanitizar estrictamente la entrada del usuario antes de utilizarla.",
+            "referencias": [
+              "seguridad_python-003"
+            ],
+            "fragmento_codigo": "os.system(\"ping \" + host)",
+            "linea_reportada_modelo": 3
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.40543854236602783
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5658223032951355
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5701951384544373
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_07.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B605",
+              "tipo": "seguridad",
+              "linea": 3,
+              "columna": null,
+              "severidad": "alta",
+              "titulo": "Bandit B605: start_process_with_a_shell",
+              "descripcion": "Starting a process with a shell, possible injection detected, security issue.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b605_start_process_with_a_shell.html"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 5365.49
+    },
+    {
+      "id": "P08",
+      "nombre": "subprocess shell",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_08.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "critica",
+            "categoria": "Inyección de comandos",
+            "titulo": "Ejecución insegura de comandos del sistema con shell=True",
+            "explicacion": "El uso de subprocess.run con shell=True y un argumento obtenido directamente de la entrada del usuario mediante input() permite la ejecución arbitraria de comandos en el sistema operativo.",
+            "correccion_sugerida": "Evitar el uso de shell=True y pasar los comandos y sus argumentos como una lista de cadenas de texto utilizando shell=False.",
+            "referencias": [
+              "seguridad_python-003"
+            ],
+            "fragmento_codigo": "subprocess.run(comando, shell=True)",
+            "linea_reportada_modelo": 3
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.393011212348938
+          },
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.5724987983703613
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.6543362140655518
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_08.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B404",
+              "tipo": "seguridad",
+              "linea": 1,
+              "columna": null,
+              "severidad": "baja",
+              "titulo": "Bandit B404: blacklist",
+              "descripcion": "Consider possible security implications associated with the subprocess module.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b404-import-subprocess"
+            },
+            {
+              "herramienta": "bandit",
+              "regla": "B602",
+              "tipo": "seguridad",
+              "linea": 3,
+              "columna": null,
+              "severidad": "alta",
+              "titulo": "Bandit B602: subprocess_popen_with_shell_equals_true",
+              "descripcion": "subprocess call with shell=True identified, security issue.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b602_subprocess_popen_with_shell_equals_true.html"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 2
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 7553.93
+    },
+    {
+      "id": "P09",
+      "nombre": "os.popen externo",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_09.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "critica",
+            "categoria": "Inyeccion de comandos del sistema",
+            "titulo": "Uso inseguro de os.popen con concatenacion de entradas de usuario",
+            "explicacion": "El codigo concatena directamente una entrada controlada por el usuario (nombre) en un comando del sistema ejecutado mediante os.popen(), lo que permite la ejecucion de comandos arbitrarios en el sistema operativo.",
+            "correccion_sugerida": "Evitar el uso de os.popen con concatenacion de cadenas. Utilizar el modulo subprocess con una lista de argumentos y shell=False, o validar y sanitizar estrictamente la entrada.",
+            "referencias": [
+              "seguridad_python-003"
+            ],
+            "fragmento_codigo": "resultado = os.popen(\"echo \" + nombre).read()",
+            "linea_reportada_modelo": 3
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.41078758239746094
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.580498218536377
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.5894253849983215
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_09.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B605",
+              "tipo": "seguridad",
+              "linea": 3,
+              "columna": null,
+              "severidad": "alta",
+              "titulo": "Bandit B605: start_process_with_a_shell",
+              "descripcion": "Starting a process with a shell, possible injection detected, security issue.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b605_start_process_with_a_shell.html"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 4432.89
+    },
+    {
+      "id": "P10",
+      "nombre": "Comando interpolado",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_10.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 3,
+            "severidad": "critica",
+            "categoria": "Inyección de Comandos",
+            "titulo": "Inyección de comandos del sistema mediante subprocess con shell=True",
+            "explicacion": "La aplicación utiliza la función input() para obtener datos no confiables y los concatena directamente dentro de una cadena de comandos ejecutada mediante subprocess.check_output con shell=True. Esto permite a un atacante inyectar comandos arbitrarios del sistema operativo.",
+            "correccion_sugerida": "Evitar el uso de shell=True y pasar los argumentos como una lista de elementos utilizando APIs seguras, o realizar una validación estricta de la entrada contra una lista blanca permitida.",
+            "referencias": [
+              "seguridad_python-003"
+            ],
+            "fragmento_codigo": "subprocess.check_output(f\"cat {ruta}\", shell=True)",
+            "linea_reportada_modelo": 3
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.39260947704315186
+          },
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.6564950942993164
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.6767148971557617
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_10.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B404",
+              "tipo": "seguridad",
+              "linea": 1,
+              "columna": null,
+              "severidad": "baja",
+              "titulo": "Bandit B404: blacklist",
+              "descripcion": "Consider possible security implications associated with the subprocess module.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b404-import-subprocess"
+            },
+            {
+              "herramienta": "bandit",
+              "regla": "B602",
+              "tipo": "seguridad",
+              "linea": 3,
+              "columna": null,
+              "severidad": "alta",
+              "titulo": "Bandit B602: subprocess_popen_with_shell_equals_true",
+              "descripcion": "subprocess call with shell=True identified, security issue.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b602_subprocess_popen_with_shell_equals_true.html"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 2
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 6847.16
+    },
+    {
+      "id": "P11",
+      "nombre": "Argumentos constantes",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_11.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.393011212348938
+          },
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.5724987983703613
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.6543362140655518
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_11.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B404",
+              "tipo": "seguridad",
+              "linea": 1,
+              "columna": null,
+              "severidad": "baja",
+              "titulo": "Bandit B404: blacklist",
+              "descripcion": "Consider possible security implications associated with the subprocess module.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b404-import-subprocess"
+            },
+            {
+              "herramienta": "bandit",
+              "regla": "B603",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "baja",
+              "titulo": "Bandit B603: subprocess_without_shell_equals_true",
+              "descripcion": "subprocess call - check for execution of untrusted input.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b603_subprocess_without_shell_equals_true.html"
+            },
+            {
+              "herramienta": "bandit",
+              "regla": "B607",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "baja",
+              "titulo": "Bandit B607: start_process_with_partial_path",
+              "descripcion": "Starting a process with a partial executable path",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b607_start_process_with_partial_path.html"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 3
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 8107.56
+    },
+    {
+      "id": "P12",
+      "nombre": "Comandos permitidos",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_12.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.393011212348938
+          },
+          {
+            "id": "seguridad_python-006",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 6: Prevenir Path Traversal y acceso inseguro a archivos",
+            "fuente": "MITRE CWE-22",
+            "url": "https://cwe.mitre.org/data/definitions/22.html",
+            "distancia": 0.5724987983703613
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.6543362140655518
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_12.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B404",
+              "tipo": "seguridad",
+              "linea": 1,
+              "columna": null,
+              "severidad": "baja",
+              "titulo": "Bandit B404: blacklist",
+              "descripcion": "Consider possible security implications associated with the subprocess module.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_imports.html#b404-import-subprocess"
+            },
+            {
+              "herramienta": "bandit",
+              "regla": "B603",
+              "tipo": "seguridad",
+              "linea": 5,
+              "columna": null,
+              "severidad": "baja",
+              "titulo": "Bandit B603: subprocess_without_shell_equals_true",
+              "descripcion": "subprocess call - check for execution of untrusted input.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b603_subprocess_without_shell_equals_true.html"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 2
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 4139.34
+    },
+    {
+      "id": "P13",
+      "nombre": "eval externo",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_13.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "Inyección de código / Uso de eval",
+            "titulo": "Uso inseguro de la función eval con entradas controladas por el usuario",
+            "explicacion": "La función eval ejecuta código arbitrario a partir de la entrada proporcionada por el usuario (input), lo que puede permitir la ejecución de comandos no previstos o maliciosos en el sistema.",
+            "correccion_sugerida": "Evitar el uso de eval con entradas externas. En su lugar, utilizar alternativas seguras como ast.literal_eval si solo se requiere evaluar literales, o implementar un analizador sintáctico seguro para expresiones matemáticas.",
+            "referencias": [
+              "seguridad_python-001"
+            ],
+            "fragmento_codigo": "resultado = eval(entrada)",
+            "linea_reportada_modelo": 2
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.3863523006439209
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45747995376586914
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5011967420578003
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_13.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B307",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "media",
+              "titulo": "Bandit B307: blacklist",
+              "descripcion": "Use of possibly insecure function - consider using safer ast.literal_eval.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b307-eval"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 8403.85
+    },
+    {
+      "id": "P14",
+      "nombre": "exec externo",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_14.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "Ejecución de código arbitrario",
+            "titulo": "Uso inseguro de la función exec() con entrada de usuario",
+            "explicacion": "El código utiliza la función exec() para evaluar y ejecutar directamente una entrada proporcionada por el usuario sin ningún tipo de validación o sanitización. Esto permite la ejecución de código arbitrario con los privilegios de la aplicación.",
+            "correccion_sugerida": "Evitar por completo el uso de exec() para procesar datos controlados por el usuario. Si se requiere evaluar expresiones de forma segura, utilizar alternativas restringidas o parsers dedicados.",
+            "referencias": [
+              "seguridad_python-004"
+            ],
+            "fragmento_codigo": "exec(entrada)",
+            "linea_reportada_modelo": 2
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.43273812532424927
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.48014217615127563
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.4896758198738098
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_14.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B102",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "media",
+              "titulo": "Bandit B102: exec_used",
+              "descripcion": "Use of exec detected.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/plugins/b102_exec_used.html"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "mrr_at_k": 0.0,
+        "hit_at_k": 0.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 6778.51
+    },
+    {
+      "id": "P15",
+      "nombre": "eval en función",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_15.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "Ejecucion de codigo arbitrario",
+            "titulo": "Uso inseguro de la funcion eval con entrada de usuario",
+            "explicacion": "La funcion eval evalua cadenas de texto como codigo Python. Como recibe directamente la entrada del usuario obtenida mediante input(), permite la ejecucion de codigo arbitrario en el sistema.",
+            "correccion_sugerida": "Evitar el uso de eval para procesar entradas externas. Si se requiere evaluar expresiones matematicas simples de forma segura, utilizar bibliotecas especializadas o analizadores sintacticos seguros que no ejecuten codigo arbitrario.",
+            "referencias": [
+              "seguridad_python-001"
+            ],
+            "fragmento_codigo": "    return eval(expresion)",
+            "linea_reportada_modelo": 2
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.3863523006439209
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45747995376586914
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5011967420578003
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_15.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B307",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "media",
+              "titulo": "Bandit B307: blacklist",
+              "descripcion": "Use of possibly insecure function - consider using safer ast.literal_eval.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b307-eval"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 5819.69
+    },
+    {
+      "id": "P16",
+      "nombre": "eval tras strip",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_16.py",
+        "estado": "analizado",
+        "hallazgos": [
+          {
+            "linea": 2,
+            "severidad": "critica",
+            "categoria": "Ejecucion de codigo arbitrario",
+            "titulo": "Uso inseguro de eval con entradas no confiables",
+            "explicacion": "La funcion eval ejecuta datos provistos directamente por el usuario a traves de la funcion input, lo que permite la ejecucion de codigo arbitrario en el sistema.",
+            "correccion_sugerida": "Evitar el uso de eval. Utilizar alternativas seguras como ast.literal_eval para evaluar literales seguros o implementar un analizador sintactico controlado.",
+            "referencias": [
+              "seguridad_python-001"
+            ],
+            "fragmento_codigo": "resultado = eval(entrada)",
+            "linea_reportada_modelo": 2
+          }
+        ],
+        "fuentes": [
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.3863523006439209
+          },
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.45747995376586914
+          },
+          {
+            "id": "seguridad_python-005",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 5: Prevenir exposicion de credenciales y secretos",
+            "fuente": "MITRE CWE-798",
+            "url": "https://cwe.mitre.org/data/definitions/798.html",
+            "distancia": 0.5011967420578003
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_16.py",
+          "estado": "completo",
+          "hallazgos": [
+            {
+              "herramienta": "bandit",
+              "regla": "B307",
+              "tipo": "seguridad",
+              "linea": 2,
+              "columna": null,
+              "severidad": "media",
+              "titulo": "Bandit B307: blacklist",
+              "descripcion": "Use of possibly insecure function - consider using safer ast.literal_eval.",
+              "confianza": "alta",
+              "referencia": "https://bandit.readthedocs.io/en/1.8.6/blacklists/blacklist_calls.html#b307-eval"
+            }
+          ],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 1
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 1.0,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 1,
+        "hallazgos_con_citas_resueltas": 1,
+        "referencias": 1,
+        "referencias_resueltas": 1,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 6297.67
+    },
+    {
+      "id": "P17",
+      "nombre": "Conversión numérica",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_17.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-004",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 4: Prevencion general de inyecciones",
+            "fuente": "OWASP Injection Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html",
+            "distancia": 0.7221401929855347
+          },
+          {
+            "id": "seguridad_python-001",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 1: Evitar eval con entradas no confiables",
+            "fuente": "MITRE CWE-94",
+            "url": "https://cwe.mitre.org/data/definitions/94.html",
+            "distancia": 0.7248492240905762
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_17.py",
+          "estado": "completo",
+          "hallazgos": [],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 0
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "mrr_at_k": 0.5,
+        "hit_at_k": 1.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 5317.91
+    },
+    {
+      "id": "P18",
+      "nombre": "Operaciones fijas",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_18.py",
+        "estado": "analizado",
+        "hallazgos": [],
+        "fuentes": [
+          {
+            "id": "seguridad_python-003",
+            "documento": "seguridad_python.md",
+            "seccion": "Regla 3: Prevenir inyeccion de comandos del sistema",
+            "fuente": "OWASP OS Command Injection Defense Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html",
+            "distancia": 0.7198848724365234
+          }
+        ],
+        "analisis_estatico": {
+          "archivo": "caso_18.py",
+          "estado": "completo",
+          "hallazgos": [],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 0
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": null
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "mrr_at_k": 0.0,
+        "hit_at_k": 0.0,
+        "sin_fuentes_fuera_cobertura": null,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": false,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 5991.94
+    },
+    {
+      "id": "P19",
+      "nombre": "Fuera de cobertura: estadística",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_19.py",
+        "estado": "abstenido",
+        "hallazgos": [],
+        "fuentes": [],
+        "analisis_estatico": {
+          "archivo": "caso_19.py",
+          "estado": "completo",
+          "hallazgos": [],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 0
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": "No se encontraron fuentes documentales de seguridad suficientemente relevantes para fundamentar el analisis. No se generan hallazgos sin respaldo documental. Añade documentacion pertinente o vuelve a intentarlo con un fragmento mas especifico."
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": null,
+        "recall_at_k": null,
+        "mrr_at_k": null,
+        "hit_at_k": null,
+        "sin_fuentes_fuera_cobertura": 1.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": true,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 4549.18
+    },
+    {
+      "id": "P20",
+      "nombre": "Fuera de cobertura: geometría",
+      "http_status": 200,
+      "respuesta": {
+        "archivo": "caso_20.py",
+        "estado": "abstenido",
+        "hallazgos": [],
+        "fuentes": [],
+        "analisis_estatico": {
+          "archivo": "caso_20.py",
+          "estado": "completo",
+          "hallazgos": [],
+          "herramientas": [
+            {
+              "herramienta": "ruff",
+              "estado": "ok",
+              "hallazgos": 0
+            },
+            {
+              "herramienta": "bandit",
+              "estado": "ok",
+              "hallazgos": 0
+            }
+          ],
+          "mensaje": null
+        },
+        "mensaje": "No se encontraron fuentes documentales de seguridad suficientemente relevantes para fundamentar el analisis. No se generan hallazgos sin respaldo documental. Añade documentacion pertinente o vuelve a intentarlo con un fragmento mas especifico."
+      },
+      "estado_ejecucion": "ok",
+      "metricas": {
+        "precision_at_k": null,
+        "recall_at_k": null,
+        "mrr_at_k": null,
+        "hit_at_k": null,
+        "sin_fuentes_fuera_cobertura": 1.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "abstenido": true,
+        "acierto_caso": true,
+        "hallazgos": 0,
+        "hallazgos_con_citas_resueltas": 0,
+        "referencias": 0,
+        "referencias_resueltas": 0,
+        "lineas_fuera_rango": 0
+      },
+      "duracion_ms": 3630.45
+    }
+  ],
+  "commit_servidor_verificado": "caecd719a92fa40c060f24051b765e77721ee19b",
+  "configuracion": {
+    "base_url": "https://revisor-inteligente-codigo-production.up.railway.app",
+    "proveedor": "real, mediante servidor desplegado",
+    "timeout_cliente_segundos": 100,
+    "modelo_y_parametros_efectivos": "no expuestos por API",
+    "endpoint": "/api/v1/analizar",
+    "agente_evaluado": false
+  },
+  "politica": "20 solicitudes, sin reintentos del evaluador; código sintético tratado como texto",
+  "precondiciones": {
+    "fecha_utc": "2026-11-06T19:47:47.561245+00:00",
+    "health_status": 200,
+    "health": {
+      "status": "ok",
+      "service": "revisor-inteligente-codigo",
+      "version": "0.1.0"
+    },
+    "openapi_status": 200,
+    "esquema_sha256": "30c3ad69ef5340cc01ab43172e846093d5a039c4f06fd6dc4d4a732e5fd57f8d",
+    "correcciones_disponibles": true
+  },
+  "openapi_estable_al_final": true,
+  "resumen": {
+    "total": 20,
+    "completados": 20,
+    "errores": 0,
+    "tasa_completitud": 1.0,
+    "latencia_media_ms": 5964.9800000000005,
+    "latencia_p95_ms": 8107.56,
+    "precision_at_k": 0.4629629629629629,
+    "recall_at_k": 0.8055555555555556,
+    "mrr_at_k": 0.8611111111111112,
+    "hit_at_k": 0.8888888888888888,
+    "sin_fuentes_fuera_cobertura": 1.0,
+    "casos_con_referencias_esperadas_evaluados": 18,
+    "tp": 12,
+    "fp": 0,
+    "fn": 0,
+    "hallazgos": 12,
+    "hallazgos_con_citas_resueltas": 12,
+    "referencias": 14,
+    "referencias_resueltas": 14,
+    "lineas_fuera_rango": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "cobertura_citas": 1.0,
+    "validez_referencias": 1.0,
+    "tasa_abstencion": 0.1,
+    "exactitud_casos_validos": 1,
+    "aciertos_sobre_total": 1.0,
+    "respuestas_parciales": 0,
+    "nota": "Errores incluye respuestas parciales; métricas de calidad solo sobre informes completos. No equivale a evaluar el planificador del agente."
+  }
+}

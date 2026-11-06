@@ -1,0 +1,54 @@
+{
+  "fecha_utc": "2026-11-06T19:56:06.303Z",
+  "commit": "caecd719a92fa40c060f24051b765e77721ee19b",
+  "deployment_id": "5fe3f82b-9fd5-43d0-85fd-55c3d63395e3",
+  "url": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "verificacion": "Detalles de Railway: Active, Deployment successful y enlace al commit exacto",
+  "arranque": [
+    {
+      "hora": "2026-11-06T14:44:53-05:00",
+      "mensaje": "CODEGUARD: proceso iniciado sin privilegios (UID 10001)."
+    },
+    {
+      "hora": "2026-11-06T14:44:54-05:00",
+      "mensaje": "CODEGUARD: índice documental persistente recuperado."
+    },
+    {
+      "hora": "2026-11-06T14:44:56-05:00",
+      "mensaje": "Application startup complete; Uvicorn en 0.0.0.0:8080"
+    }
+  ],
+  "limites": "No se modificó Railway ni se inició manualmente un despliegue. Recuperación del índice observada en este arranque; no certifica integridad total ni reemplaza el log ausente del 5 de noviembre.",
+  "ci_main": [
+    {
+      "id": 42281896506,
+      "resultado": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42281896506"
+    },
+    {
+      "id": 42281896638,
+      "resultado": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42281896638"
+    },
+    {
+      "id": 42281896601,
+      "resultado": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42281896601"
+    },
+    {
+      "id": 42281896494,
+      "resultado": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42281896494"
+    },
+    {
+      "id": 42281896483,
+      "resultado": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42281896483"
+    },
+    {
+      "id": 42281896479,
+      "resultado": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42281896479"
+    }
+  ]
+}
