@@ -1,0 +1,29 @@
+name: CODEGUARD evaluador de rutas
+
+on:
+  pull_request:
+    paths:
+      - "eval/comparar_rutas.py"
+      - "eval/test_comparar_rutas.py"
+      - ".github/workflows/comparacion-rutas.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evaluador:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install httpx==0.28.1 pytest
+      - name: Validar dataset y plan sin red
+        run: python eval/comparar_rutas.py --validar
+      - name: Probar métricas, errores y transporte controlado
+        run: python -m pytest eval/test_comparar_rutas.py -q
