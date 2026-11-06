@@ -1,14 +1,15 @@
-# Guion y notas — borrador de 12 minutos
+# Guion de sustentación actualizado con PR #37
 
-Fecha: 6 de noviembre de 2026. Tiempos de ensayo propuestos, no medidos. El contrato de aprobación real sigue pendiente de acuerdo con Christian.
+Duración planificada: 720 segundos (12 minutos), sin preguntas. No es un ensayo cronometrado.
+Versión evaluada: `caecd719a92fa40c060f24051b765e77721ee19b`. Evidencia del 6 de noviembre de 2026.
 
 ## 1. CODEGUARD
 
 Tiempo: 30 segundos.
 
-Presentación de doce minutos. Presentar el proyecto y al equipo: Ronald Yépez, Andy y Christian Gamboa. Aclarar que este archivo es un borrador para revisión conjunta. Ronald asume en esta asignación Frontend y documentación del producto. No asignar a Andy una nueva responsabilidad que todavía no se haya confirmado.
+Presentamos CODEGUARD, un revisor asistido de código Python. Esta exposición recorre el problema, la arquitectura, la revisión humana y los resultados documentados. Ronald explica su aporte de frontend y documentación. La integración corresponde al PR 36, commit caecd71. Los resultados reales proceden del PR 37 y de la corrida del 6 de noviembre de 2026. No atribuir a Ronald la ejecución de las pruebas realizadas por Christian. El equipo debe confirmar el reparto final de expositores.
 
-Fuentes: docs/01-propuesta.md; docs/21-frontend-producto.md
+Fuentes: https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/36; https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/37
 
 ## 2. Una revisión útil necesita evidencia
 
@@ -22,9 +23,9 @@ Fuentes: docs/01-propuesta.md
 
 Tiempo: 60 segundos.
 
-Recorrer las capas: entrada validada, herramientas, recuperación documental, síntesis y presentación. Código pegado y .py utilizan el agente integrado en la base revisada. ZIP y GitHub conservan análisis directo por archivo. El frontend y la API se sirven desde el mismo dominio en producción. Gemini es externo, ChromaDB contiene el índice curado y Ruff/Bandit analizan sin ejecutar el programa. La modificación actual es local; no se afirma que esté desplegada.
+La entrada se valida antes del análisis. Ruff, Bandit y AST aportan evidencia estática, y RAG recupera documentos para la síntesis y sus citas. Código pegado y archivos .py usan el agente integrado. ZIP y GitHub conservan el flujo directo por archivo. FastAPI y React comparten dominio en Railway. El PR 36 integró frontend y backend en caecd71. El PR 37 verificó ese commit desplegado y la recuperación del índice. La disponibilidad de endpoints no implica que la opción de correcciones esté habilitada en la interfaz pública.
 
-Fuentes: docs/03-arquitectura.md; docs/17-agente-integrado.md
+Fuentes: docs/03-arquitectura.md; docs/17-agente-integrado.md; docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/
 
 ## 4. Cada resultado conserva su origen
 
@@ -38,63 +39,62 @@ Fuentes: frontend/src/components/FindingsPanel.tsx; frontend/src/components/Agen
 
 Tiempo: 70 segundos.
 
-Explicar la diferencia entre preparar una propuesta como texto y generar el archivo descargable. La casilla empieza desmarcada y el botón de confirmación es independiente. La aplicación no ejecuta código ni escribe sobre el archivo original. El contenido descargado tiene que coincidir con el previsualizado. Si el usuario cancela, cambia de entrada o llega una respuesta anterior, no se utiliza esa aprobación. Mostrar explícitamente que la demostración es local y no una respuesta real de Gemini.
+El contrato v1 ya está integrado. La previsualización permite comparar original y propuesta antes de tomar una decisión. La casilla comienza desmarcada y aprobar únicamente autoriza descargar la copia revisada. Sesión, identificador, hashes y caducidad vinculan la decisión a una propuesta concreta. El frontend verifica que la respuesta coincida con el contenido mostrado. Cancelar o cambiar la entrada invalida el consentimiento y descarta respuestas tardías. No se ejecuta el código ni se sobrescriben originales. El PR 37 registra además aprobación, idempotencia, rechazo y conflictos mediante HTTP con propuestas reales. La caducidad y el flujo visual corresponden a CI controlado con Gemini simulado.
 
-Fuentes: docs/20-contrato-confirmacion-humana.md; frontend/src/components/CorrectionPreview.tsx
+Fuentes: docs/23-integracion-confirmacion-qa.md; docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/
 
 ## 6. Demostración del flujo de corrección
 
 Tiempo: 70 segundos.
 
-Reservar setenta segundos para interactuar. Analizar el ejemplo SQL inicial, seleccionar el hallazgo y abrir la propuesta. Mostrar el original junto a la consulta parametrizada. Antes de marcar la casilla, el botón de descarga debe estar deshabilitado. Cancelar y verificar que no se descargó nada. Reabrir: el consentimiento no debe conservarse. Marcar la casilla y confirmar. Mostrar el nombre usuarios.corregido.py y explicar que no se ejecuta el archivo. Si falla la demo, utilizar las capturas locales identificadas como simuladas.
+Esta demostración didáctica usa el ejemplo SQL fijo en modo Demo y no constituye una respuesta nueva de Gemini. En setenta segundos: analizar el ejemplo, abrir la propuesta y comparar ambos textos. Mostrar que no se puede descargar sin consentimiento. Cancelar, reabrir y comprobar que la casilla vuelve a estar desmarcada. Autorizar y descargar una copia con otro nombre, sin ejecutar el archivo. El mismo flujo cuenta por separado con siete escenarios de navegador contra FastAPI y SQLite reales, con Gemini simulado. Si no se dispone del entorno local durante la exposición, describir los pasos con las capturas de respaldo y conservar esa etiqueta de simulación.
 
-Fuentes: frontend/src/services/correctionDemo.ts; docs/evidencias/semana-4/frontend-producto-20261106/
+Fuentes: frontend/src/services/correctionDemo.ts; docs/23-integracion-confirmacion-qa.md; https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/36
 
 ## 7. El informe comunica sus límites
 
 Tiempo: 60 segundos.
 
-La prioridad visible de esta rama es un orden de revisión derivado de la severidad actual: crítica, alta, media y baja. No representa una nueva estimación de impacto de negocio. Christian comunicó priorización determinista en su rama; antes de integrar se debe alinear su contrato y evitar duplicar reglas. La señal parcial aparece incluso cuando algunos hallazgos son válidos o el backend no incluye mensaje. Un resultado parcial no debe interpretarse como aprobación de seguridad.
+La priorización integrada ordena primero por severidad y después por categoría normalizada: seguridad, desconocida y calidad. Mantiene el orden estable en los empates. El frontend conserva ese orden y muestra bandas de revisión derivadas de severidad. Esta política no recalcula de forma independiente la severidad asignada por Gemini ni prueba explotabilidad. El estado parcial indica que el informe está incompleto aunque conserve resultados útiles. Las fuentes del informe y la traza del agente permiten revisar el origen de los datos. No deben sumarse alertas estáticas y generativas como si fueran riesgos necesariamente distintos.
 
-Fuentes: frontend/src/components/FindingsPanel.tsx; frontend/src/components/StaticFindingsPanel.tsx
+Fuentes: docs/23-integracion-confirmacion-qa.md; backend/app/config/priorizacion.py; frontend/src/components/FindingsPanel.tsx
 
-## 8. Qué prueban los resultados disponibles
+## 8. Resultados con Gemini real
 
 Tiempo: 60 segundos.
 
-Mantener las fechas y entornos separados. Las 91 pruebas son de esta edición frontend antes de la integración real de correcciones. Los 26 escenarios públicos pertenecen a la evidencia previa del 5 de noviembre. No sumarlos ni usarlos para acreditar el contrato nuevo en Railway. Mostrar cancelación, consentimiento y verificación del contenido como propiedades verificadas localmente. La compilación mantiene una advertencia conocida de tamaño del paquete. Actualizar esta diapositiva si cambia la validación final.
+El PR 37 conserva una corrida real del endpoint de análisis sobre veinte casos congelados. Completaron los veinte informes, sin respuestas parciales ni errores, y coincidieron con las etiquetas de referencia. Se registraron doce verdaderos positivos, cero falsos positivos y cero falsos negativos. Las catorce referencias devueltas resolvieron dentro de las fuentes. La latencia media fue 5964,98 milisegundos y el percentil 95, 8107,56 milisegundos, redondeados aquí a segundos. El evaluador empareja categoría o título y una línea admisible. Estos resultados no garantizan corrección semántica de todas las explicaciones ni generalización a otros repositorios. Esta evaluación corresponde al flujo directo, no a una evaluación amplia del planificador del agente.
 
-Fuentes: docs/21-frontend-producto.md; docs/evidencias/semana-4/produccion-integrada-20261105/pruebas-publicas.json
+Fuentes: docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/; https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/37
 
 ## 9. Conocimiento curado y cobertura limitada
 
 Tiempo: 60 segundos.
 
-Distinguir documentos originales descargados de resúmenes realmente ingeridos. El inventario conserva URLs, fechas y hashes; ChromaDB no contiene automáticamente cada página completa. Las reglas cubren ejecución dinámica, SQL, comandos, inyección general, secretos y rutas. Este corpus no respalda todos los patrones que detecta Bandit. Las métricas históricas de recuperación no prueban por sí mismas precisión de hallazgos generativos.
+El inventario conserva ocho originales oficiales de MITRE y OWASP con URLs y hashes. El corpus ingerido comprende seis reglas curadas y no todas las páginas completas. La recuperación local del PR 37 recorrió veinte casos, de los cuales dieciocho tenían referencias esperadas. Para estos se obtuvo Recall@3 de 0,8056 y Precision@3 de 0,4630. Los dos casos fuera de cobertura no devolvieron fuentes. Estas métricas documentales usan un denominador distinto del recall de hallazgos. No se suman ni se intercambian. Su entorno es local, sin Gemini, y su latencia no representa Railway. Las condiciones no permiten atribuir una mejora causal frente a Semana 3.
 
-Fuentes: docs/04-fuentes.md; data/raw/fuentes.json; knowledge/seguridad_python.md
+Fuentes: docs/04-fuentes.md; docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/
 
-## 10. Un cambio local no altera producción
+## 10. Integración y verificación del despliegue
 
 Tiempo: 60 segundos.
 
-Explicar la advertencia del equipo: Railway puede estar conectado a main mediante configuración externa. Los workflows revisados no contienen despliegue, pero eso no certifica la configuración de la plataforma. Se conserva la rama solo localmente, sin cambiar backend, Docker o variables de Railway. Antes de cualquier publicación hay que revisar la política real de despliegue con Christian. No prometer que cualquier rama remota sea inocua por el solo hecho de no llamarse main.
+El PR 36 conserva 286 pruebas backend y diez QA, 296 en total. Las pruebas específicas ya están incluidas y no se suman otra vez. El frontend registra 91 unitarias, lint y build correctos. La integración HTTP con estático aprobó 24 de 24; sin estático, diecinueve y cinco no aplicables. El navegador registra siete casos con backend real y Gemini simulado, además de ocho escenarios demo separados. El PR 37 documenta seis workflows aprobados en main sobre caecd71, incluido Docker, y el commit activo en Railway. En ese despliegue aprobó la matriz pública de 26 escenarios y el smoke HTTP de nueve aserciones del agente y las correcciones. P26 solo evalúa AST local. La prueba real de correcciones es HTTP: no demuestra que el control visual esté habilitado públicamente.
 
-Fuentes: docs/21-frontend-producto.md; .github/workflows/
+Fuentes: https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/36; docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/; https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/37
 
 ## 11. Documentación que permite revisar el producto
 
 Tiempo: 70 segundos.
 
-Ronald explica su responsabilidad actual de Frontend y documentación del producto. La documentación previa de QA se conserva con su autoría y fecha; cambiar de rol no reescribe la historia. Las ocho historias específicas cubren previsualización, consentimiento, cancelación, invalidación de propuesta, prioridad, estado parcial, citas y traza. Los documentos distinguen implementación local, contrato propuesto e integración pendiente. No se inventaron entrevistas ni actas para cubrir requisitos históricos.
+Mi aporte como Ronald es conectar el comportamiento visible con requisitos verificables y documentar el producto. Las ocho historias cubren previsualización, consentimiento, cancelación, invalidación, prioridad, estado parcial, citas y proceso del agente. La arquitectura y el inventario describen lo implementado. El PR 37 añade trazabilidad entre observaciones, cambios, pruebas y límites. La integración está completada y ya no debe describirse como futura. Las evidencias históricas se conservan con su fecha. La documentación distingue pruebas simuladas, backend real con proveedor simulado y pruebas HTTP con Gemini real. No se inventan entrevistas o actas faltantes.
 
-Fuentes: docs/21-frontend-producto.md; docs/02-requisitos.md; docs/11-aportes-ia.md
+Fuentes: docs/21-frontend-producto.md; docs/02-requisitos.md; docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/
 
-## 12. El siguiente cierre es la integración acordada
+## 12. Resultados y límites del producto
 
 Tiempo: 50 segundos.
 
-Cerrar recordando el alcance: la interfaz local y los documentos están preparados, pero no se afirma integración real de endpoints que aún no existen. Confirmar los campos con Christian, probarlos sobre backend local o entorno candidato autorizado y luego coordinar publicación. La aplicación ayuda a revisar, no garantiza ausencia de vulnerabilidades. Reservar la última frase para una demostración de la copia aprobada o para abrir las preguntas del jurado.
+CODEGUARD integra interfaz, agente, análisis estático, recuperación documental y confirmación humana. La evidencia corresponde a una versión identificada y separa simulación de uso real de Gemini. La aplicación ayuda a revisar y no garantiza ausencia de vulnerabilidades. La aprobación de una copia tampoco garantiza la calidad semántica de la corrección. Quedan revisión semántica más amplia, evaluación del agente y aceptación del equipo. La activación del control de correcciones en la interfaz pública requiere una decisión independiente. La instalación limpia cronometrada y el levantamiento auténtico son pendientes académicos distintos. Cerrar en doce minutos y dejar las preguntas fuera de este tiempo.
 
-Fuentes: docs/20-contrato-confirmacion-humana.md; docs/21-frontend-producto.md
-
+Fuentes: docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/
