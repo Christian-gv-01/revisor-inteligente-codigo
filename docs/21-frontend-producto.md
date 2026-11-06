@@ -1,8 +1,9 @@
 # 21. Frontend y documentación del producto — nueva asignación
 
 Fecha: 6 de noviembre de 2026. Responsable: Ronald Yépez, Compañero 2.
-Rama **local**: `feature/entrega4-frontend-producto`, derivada del cierre documental
-`578adee` y del producto `65675e2`. No se publicó ni se conectó a Railway.
+Rama: `feature/entrega4-frontend-producto`, derivada del cierre documental
+`578adee` y del producto `65675e2`. Preparada para PR en borrador según la autorización
+del líder. Ver [entrega para integración](22-entrega-frontend-integracion.md).
 
 ## Alcance realizado del lado frontend
 
@@ -78,12 +79,11 @@ pendiente de acuerdo e integración, no como funcionalidad desplegada.
 
 Se revisaron los workflows de GitHub disponibles: contienen pruebas, no pasos
 de despliegue. Esto no verifica las conexiones automáticas configuradas en Railway.
-Por la advertencia del equipo, esta rama permanece local: sin push, PR nuevo,
-merge a `main`, cambios de Docker/Backend o variables del hosting.
-
-Antes de publicar, Christian debe confirmar qué ramas y eventos utiliza Railway,
-incluidos despliegues de PR si estuvieran configurados. Las pruebas nuevas deben
-ejecutarse primero sobre un backend local/candidato acordado.
+El líder informó que verificó pipeline y despliegue y autorizó subir ramas separadas
+y abrir PR en borrador hacia `main`. Se conserva esta rama propia, opción permitida
+en su mensaje. No se autoriza fusionar, hacer push a `main` ni desplegar manualmente.
+No se cambian Docker, Backend ni variables del hosting. La prueba conjunta se hará
+en una rama de integración separada con el backend candidato.
 
 ## Integración pendiente, por responsable
 

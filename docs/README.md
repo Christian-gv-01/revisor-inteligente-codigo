@@ -31,6 +31,10 @@ Responsable de esta edición: Ronald Yépez, QA, seguridad y documentación.
 | [Despliegue](despliegue.md) | Docker, variables, Railway y persistencia |
 | [Guion QA](guion-qa.md) | Explicación del aporte de Ronald y preguntas de sustentación |
 
+## Entrega para la prueba conjunta
+
+- [Rama frontend, comandos, variables y casos de integración](22-entrega-frontend-integracion.md).
+
 ## Evidencia y revisiones especializadas
 
 - [Semana 1: registro de originales faltantes](evidencias/semana-1/README.md).
