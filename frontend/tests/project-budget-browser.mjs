@@ -75,6 +75,8 @@ try {
   const expiry = page.waitForResponse(r => r.url().includes(expired.presupuesto_id));
   await approve().click(); assert.equal((await expiry).status(), 410);
   await page.getByRole('alert').filter({ hasText: 'caducó' }).waitFor();
+  await page.getByRole('alert').getByText('Solicitud no completada', { exact: true }).waitFor();
+  assert.equal(await page.getByRole('alert').getByText('Integración pendiente', { exact: true }).count(), 0);
   assert.equal(await calls(), afterApproval);
   cases.push({ caso: 'Caducidad del servidor 410 sin consumo adicional', aprobado: true });
   await page.getByRole('button', { name: 'Proyecto .zip', exact: true }).click();
