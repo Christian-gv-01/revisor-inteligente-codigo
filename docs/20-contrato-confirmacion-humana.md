@@ -140,3 +140,15 @@ estructura técnica definitiva y probar ambos lados localmente antes de habilita
 la conexión. Posteriormente, el líder autorizó subir la rama y abrir un PR en
 borrador; no autorizó fusionar ni desplegar. Véase la
 [entrega para integración](22-entrega-frontend-integracion.md).
+
+<!-- BEGIN BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
+## Estado de implementación — actualización del 6 de noviembre de 2026
+
+Este documento conserva el contrato funcional acordado para la coordinación backend/frontend. La confirmación humana ya no debe describirse como una funcionalidad meramente propuesta: **está implementada en la candidata backend y cuenta con pruebas de regresión locales**.
+
+El flujo permite crear una previsualización y decidir aprobar o rechazar la propuesta. La decisión está vinculada a la sesión y a los hashes del código original y del propuesto. Se aplican caducidad y límites; el rechazo elimina el contenido propuesto. La aprobación devuelve el contenido exacto que se previsualizó para que el usuario pueda descargarlo como copia.
+
+La aprobación no ejecuta el código ni sobrescribe el archivo original. Las pruebas cubren aislamiento entre sesiones, cookies, caché, caducidad, límites, concurrencia, errores sin filtración de código y cierre del cliente del proveedor generativo.
+
+**Evidencia:** `backend/tests/test_correcciones_integracion.py`, 12/12 pruebas aprobadas en la ejecución local registrada. La prueba del generador utiliza un doble de prueba; no representa una llamada real a Gemini.
+<!-- END BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->

@@ -45,3 +45,17 @@ envío de código al proveedor.
 - Instalación en diez minutos y comparación generativa equivalente sin evidencia final.
 
 La aceptación final de riesgos y la autorización de entrega corresponden al equipo.
+
+<!-- BEGIN BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
+## Cierre de decisiones de backend — 6 de noviembre de 2026
+
+### Priorización de hallazgos
+
+**Estado: implementada.** La priorización de hallazgos se realiza mediante reglas explícitas y deterministas en el backend. No se limita a ordenar por la severidad que haya asignado Gemini. La política y sus umbrales deben mantenerse en el código de configuración/priorización y cubrirse con pruebas de regresión.
+
+### Configuración
+
+**Estado: centralizada.** Los parámetros y umbrales de la aplicación se gestionan desde `backend/app/config/`. Los valores operativos se pueden sobrescribir mediante variables de entorno. Las credenciales y claves de proveedor no se incorporan como valores predeterminados en el código: se leen desde el entorno.
+
+La suite `tests/test_config.py` valida 11 escenarios de configuración. El resultado registrado es 11/11 aprobados.
+<!-- END BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->

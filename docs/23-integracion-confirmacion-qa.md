@@ -138,3 +138,26 @@ ni se declara listo a partir de estas pruebas simuladas.
 - FastAPI, SQLite, AST, Ruff/Bandit y recuperación local se usan realmente en las pruebas HTTP; Gemini y GitHub externo están simulados.
 - La comprobación de navegador con backend real se ejecuta en CI; su resultado y el smoke Docker deben comprobarse en el commit publicado.
 - No se han fusionado cambios en main ni desplegado esta candidata. La evaluación de calidad con Gemini real sigue pendiente.
+
+<!-- BEGIN BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
+## Cierre de implementación backend — 6 de noviembre de 2026
+
+La asignación backend está **completada en la candidata**:
+
+- Priorización de hallazgos mediante reglas explícitas y deterministas; no depende solo de la severidad asignada por Gemini.
+- Parámetros y umbrales centralizados en `backend/app/config/`; credenciales leídas desde variables de entorno.
+- Confirmación humana implementada: previsualización, aprobar/rechazar, aislamiento por sesión, hashes, caducidad y límites.
+- La aprobación entrega el contenido exacto previsualizado; no ejecuta código ni sobrescribe el original.
+- Ruff y Bandit integrados en el análisis estático y en la evidencia técnica.
+- Documentación de reglas, límites, contrato y pruebas actualizada.
+
+### Validación local registrada
+
+- Suite backend/QA documentada: 296 pruebas aprobadas.
+- Configuración: 11/11 aprobadas.
+- Regresiones de confirmación humana: 12/12 aprobadas.
+
+Las pruebas específicas son evidencia complementaria y no deben sumarse al total global sin comprobar que no están ya incluidas.
+
+**Estado de publicación:** este documento acredita implementación y validación local. La fusión en `main`, la aprobación de PR y el despliegue deben verificarse por separado; no se declaran completados sin esa evidencia.
+<!-- END BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->

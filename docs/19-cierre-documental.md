@@ -68,3 +68,28 @@ Se completó la estructura técnica que puede sustentarse con código y evidenci
 existentes. **No se declara cumplimiento académico total:** faltan respaldos
 originales, validaciones y entregables grupales identificados arriba. Esta
 distinción permite entregar un informe verificable sin inventar resultados.
+
+<!-- BEGIN BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
+## Cierre de la asignación backend — 6 de noviembre de 2026
+
+**Estado de la asignación técnica: COMPLETADA en la candidata backend y validada localmente.**
+
+| Actividad asignada | Estado |
+|---|---|
+| Implementar `priorizar_hallazgos` con reglas explícitas, deterministas y pruebas | **Completada.** La priorización no depende exclusivamente de la severidad asignada por Gemini. |
+| Centralizar parámetros y umbrales en `config/`, manteniendo claves en variables de entorno | **Completada.** La configuración se centraliza en `backend/app/config/`; las credenciales se obtienen del entorno. |
+| Preparar backend de confirmación humana y coordinar el contrato con frontend | **Completada en la candidata backend.** Se implementaron previsualización y decisión de aprobar/rechazar con aislamiento por sesión, validación de hashes, caducidad y límites. |
+| Documentar reglas, límites y pruebas | **Completada.** Se actualizan los documentos técnicos, de integración y de QA. |
+| Integrar Ruff/Bandit y su evidencia en el informe | **Completada.** El análisis estático y su evidencia forman parte del backend y de la documentación. |
+
+### Evidencia de pruebas
+
+- Suite backend/QA registrada en la documentación: 296 pruebas aprobadas.
+- Configuración: 11/11 pruebas aprobadas.
+- Confirmación humana: 12/12 pruebas de regresión aprobadas.
+- Las ejecuciones específicas no se suman otra vez al total global si ya están incluidas en él.
+
+### Límite del cierre
+
+Este cierre declara completada la asignación de implementación y validación local. No declara por sí mismo que la rama esté fusionada en `main`, que exista una aprobación de PR o que el sistema esté desplegado. Esos estados requieren evidencia independiente de GitHub/CI y del entorno de despliegue.
+<!-- END BACKEND ASSIGNMENT CLOSEOUT 2026-11-06 -->
