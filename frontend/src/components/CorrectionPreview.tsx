@@ -83,6 +83,7 @@ export function CorrectionPreview({ archivo, codigo, finding, demo, partial, cli
   return <section className="correction-preview" aria-labelledby="correction-preview-title">
     <h3 id="correction-preview-title">Previsualizar una corrección</h3>
     <p>{demo ? "Demostración local del flujo de aprobación." : "Revisa una propuesta antes de autorizar la descarga."} Se genera una copia con otro nombre; no se ejecuta código ni se modifica el archivo original.</p>
+    {!demo && <p>La propuesta se conserva temporalmente mientras decides y caduca a los cinco minutos. La revisión humana sigue siendo necesaria antes de usar la copia.</p>}
     <p><strong>Hallazgo seleccionado:</strong> {finding.titulo} · {archivo}:{finding.linea}</p>
     {partial && <p className="correction-warning">El análisis es parcial. Aprobar una copia no completa la revisión ni garantiza seguridad.</p>}
     {!client && <p role="status">No hay una corrección descargable disponible para este resultado.</p>}
@@ -102,3 +103,4 @@ export function CorrectionPreview({ archivo, codigo, finding, demo, partial, cli
     {error && <p role="alert">{error}</p>}
   </section>;
 }
+

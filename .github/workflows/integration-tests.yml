@@ -39,9 +39,22 @@ jobs:
         run: python eval/run_integration.py --static-analysis --output tmp/http-estatico
       - name: Compatibilidad sin analisis estatico
         run: python eval/run_integration.py --output tmp/http-sin-estatico
+      - name: Instalar navegador de QA aislado
+        run: |
+          npm install --prefix "$RUNNER_TEMP/codeguard-browser" --no-save --no-audit --no-fund playwright@1.58.2
+          node "$RUNNER_TEMP/codeguard-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Interfaz contra backend real de correcciones (Gemini simulado)
+        env:
+          PLAYWRIGHT_MODULE_PATH: ${{ runner.temp }}/codeguard-browser/node_modules/playwright/index.mjs
+        run: |
+          node frontend/tests/correction-browser.mjs tmp/http-demo
+          python eval/run_integration.py --static-analysis --correction-browser --output tmp/http-navegador
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: integracion-http
-          path: tmp/http-*/
+          path: |
+            tmp/http-*/*.json
+            tmp/http-*/*.txt
+            tmp/http-*/*.png
 

@@ -2,3 +2,6 @@
 # de 24 bytes (deberia tener 32). Clasificacion en docs/18-ci-main-docker.md.
 # Se ignora solo este hallazgo de este commit inmutable, no el archivo ni JWT.
 288616b3fe1be68a52f1971b8713e87c0a1cba80:eval/preguntas_referencia_final.json:jwt:336
+# Hash LLM documentado bajo el rótulo API en la comparación histórica. Se
+# contrastó con llm_sha256 de la corrida API del 4 de noviembre; no es una clave.
+11dd2f80e1ba377cf317961e1cc518a78db777d9:docs/07-evaluacion.md:generic-api-key:232

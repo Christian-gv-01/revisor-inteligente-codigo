@@ -1,5 +1,9 @@
 # CODEGUARD — Revisor Inteligente de Código Seguro
 
+> Candidata conjunta de QA: consultar [integración de confirmación](docs/23-integracion-confirmacion-qa.md).
+> Incluye backend real de propuestas; su activación en producción continúa pendiente.
+
+
 > Rama de Frontend y documentación, 6 de noviembre: incluye previsualización,
 > confirmación y cancelación de una copia en demo. La API real de correcciones está
 > deshabilitada hasta acordar el [contrato con Backend](docs/20-contrato-confirmacion-humana.md).
@@ -239,4 +243,5 @@ inferirlo de que los comandos estén documentados.
 - [Decisiones](docs/09-decisiones.md)
 - [Aportes y uso de IA](docs/11-aportes-ia.md)
 - [Evidencias de semana 4](docs/evidencias/semana-4/README.md)
+
 

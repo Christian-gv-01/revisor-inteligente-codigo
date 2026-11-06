@@ -44,6 +44,23 @@ class FixtureClient:
         FixtureClient.calls += 1
         from httpx import TimeoutException
 
+        if contents.startswith('{'):
+            datos = json.loads(contents)
+            if 'codigo_original_no_confiable' in datos:
+                codigo = datos['codigo_original_no_confiable']
+                if 'INTEGRACION_ERROR' in codigo:
+                    raise TimeoutException('Timeout controlado de corrección')
+                lineas = []
+                for linea in codigo.splitlines():
+                    if 'consulta =' in linea and 'SELECT' in linea:
+                        linea = 'consulta = "SELECT * FROM usuarios WHERE nombre = ?"'
+                    elif 'cursor.execute(consulta)' in linea:
+                        linea = 'cursor.execute(consulta, (nombre,))'
+                    elif 'cursor.execute(' in linea and 'SELECT' in linea:
+                        linea = 'cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre,))'
+                    lineas.append(linea)
+                return SimpleNamespace(text='\n'.join(lineas), usage_metadata=None)
+
         if "DATOS_NO_CONFIABLES_JSON:\n" not in contents:
             return SimpleNamespace(text=json.dumps({"herramienta": "finalizar", "motivo": "Inspección inicial suficiente para el caso controlado"}), usage_metadata=None)
         payload = json.loads(contents.split("DATOS_NO_CONFIABLES_JSON:\n", 1)[1])
@@ -70,6 +87,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--static-analysis", action="store_true", help="Activa Ruff/Bandit reales y verifica degradación parcial")
+    parser.add_argument("--correction-browser", action="store_true", help="Comprueba interfaz contra FastAPI local con proveedor simulado")
     args = parser.parse_args(argv)
     folder = args.output or ROOT / "docs/evidencias/semana-3" / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ") + "-integracion")
     if folder.exists():
@@ -99,11 +117,23 @@ def main(argv=None):
             sys.path.insert(0, str(ROOT / "backend"))
             from app.main import app
             import app.services.llm as llm
+            from app.services import correcciones
+            import sqlite3
+            stack.enter_context(patch.object(correcciones, 'DB_PATH', folder / 'propuestas-fixture.sqlite3'))
+            stack.enter_context(patch.dict(os.environ, {'CORRECTIONS_COOKIE_SECURE':'0'}))
             import uvicorn
             from integration_github_fixture import install_github_fixture
             install_github_fixture(stack, SQL_CODE)
             report["github"] = "API externa simulada; lector, validación y rutas reales"
             report["analisis_estatico"] = "Ruff/Bandit reales" if args.static_analysis else "desactivado"
+
+            # Control exclusivo de este servidor fixture en loopback. El módulo
+            # eval/ no se incluye en la imagen ni se importa en producción.
+            @app.post('/__integration__/correcciones/{propuesta_id}/caducar')
+            async def caducar_fixture(propuesta_id: str):
+                with sqlite3.connect(correcciones.DB_PATH) as c:
+                    c.execute('UPDATE propuestas_correccion SET caduca_en=? WHERE id_hash=?', (time.time() - 1, correcciones._id_hash(propuesta_id)))
+                return {'fixture': True}
 
             # Se parchea solo el cliente externo; la consulta RAG, las validaciones,
             # las rutas y la serialización de FastAPI siguen siendo las reales.
@@ -162,7 +192,7 @@ def main(argv=None):
                     env.pop(key, None)
                 env.update(INTEGRATION_API_BASE_URL=base, INTEGRATION_ZIP_PATH=str(archive), PYTHONIOENCODING="utf-8")
                 env.update(INTEGRATION_PARTIAL_ZIP_PATH=str(partial_archive), INTEGRATION_STATIC_ANALYSIS="1" if args.static_analysis else "0")
-                command = [node, str(vitest), "run", "tests/integration-http.test.tsx", "--reporter=json", f"--outputFile={folder / 'vitest-integracion.json'}"]
+                command = [node, str(vitest), "run", "tests/integration-http.test.tsx", "tests/corrections-http.test.ts", "--reporter=json", f"--outputFile={folder / 'vitest-integracion.json'}"]
                 completed = subprocess.run(command, cwd=ROOT / "frontend", env=env, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=90)
                 (folder / "frontend-http.txt").write_text(completed.stdout + completed.stderr, encoding="utf-8")
                 if (folder / "vitest-integracion.json").is_file():
@@ -170,6 +200,13 @@ def main(argv=None):
                     report["pruebas_frontend_http"] = {key: results.get(key) for key in ("numTotalTests", "numPassedTests", "numFailedTests", "numPendingTests", "success")}
                 if completed.returncode:
                     raise RuntimeError("Falló al menos una prueba HTTP; consultar frontend-http.txt")
+                if args.correction_browser:
+                    env.update(CODEGUARD_DEV_API_TARGET=base, VITE_CORRECTIONS_API_ENABLED='1')
+                    env.pop('VITE_API_BASE_URL', None)
+                    navegador = subprocess.run([node, str(ROOT / 'frontend/tests/corrections-real-browser.mjs'), str(folder)], cwd=ROOT, env=env, capture_output=True, text=True, timeout=120)
+                    (folder / 'navegador-http.txt').write_text(navegador.stdout + navegador.stderr, encoding='utf-8')
+                    if navegador.returncode:
+                        raise RuntimeError('Falló navegador contra backend real; consultar navegador-http.txt')
             report["estado"] = "aprobado"
             report["respuestas_controladas_proveedor"] = FixtureClient.calls
     except Exception as error:

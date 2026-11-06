@@ -13,6 +13,8 @@ from google.genai import errors, types
 from pydantic import ValidationError
 
 from app.models.analisis import InformeModelo
+from app.config import settings
+from app.services.priorizacion import priorizar_hallazgos
 from app.services.evidencia import EvidenciaRevision, consultas_por_evidencia
 
 
@@ -193,7 +195,7 @@ def _recuperar_contexto_rag(
 
         fragmentos = rag_module.buscar_fragmentos(
             consulta_rag,
-            limite=3,
+            limite=settings.RAG_LIMITE,
         )
 
     except Exception as error:
@@ -339,17 +341,17 @@ def _recuperar_contexto_agente(codigo: str, evidencia: EvidenciaRevision) -> tup
     try:
         # `area` filtra la colección de contexto del proyecto en el contrato RAG.
         # Recuperar sin ese filtro y conservar solo fuentes de seguridad abajo.
-        lotes = [rag_module.buscar_fragmentos(q, limite=2) for q in consultas]
-        lotes.append(rag_module.buscar_fragmentos(_construir_consulta_rag(codigo), limite=3))
+        lotes = [rag_module.buscar_fragmentos(q, limite=settings.AGENTE_RAG_POR_CATEGORIA) for q in consultas]
+        lotes.append(rag_module.buscar_fragmentos(_construir_consulta_rag(codigo), limite=settings.RAG_LIMITE))
     except Exception as error:
         logger.warning("rag_agente_no_disponible error_type=%s", type(error).__name__)
         raise LLMError("El servicio de recuperación documental no está disponible.", 503) from error
     elegidos = {}
-    for indice in range(3):
+    for indice in range(max(settings.AGENTE_RAG_POR_CATEGORIA, settings.RAG_LIMITE)):
         for lote in lotes:
             if indice < len(lote):
                 fuente = lote[indice]
-                if _es_fuente_seguridad(fuente) and fuente.get("id") not in elegidos and len(elegidos) < 6:
+                if _es_fuente_seguridad(fuente) and fuente.get("id") not in elegidos and len(elegidos) < settings.AGENTE_RAG_MAX_FUENTES:
                     elegidos[fuente["id"]] = fuente
     return _formatear_fragmentos(list(elegidos.values()))
 
@@ -482,10 +484,10 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
     """
 
     # PASO A: Comprobar la configuracion del proveedor de IA.
-    api_key = os.getenv("GEMINI_API_KEY")
-    modelo = os.getenv("GEMINI_MODEL") or "gemini-3.5-flash-lite"
-    timeout = int(os.getenv("LLM_TIMEOUT_SECONDS", "60"))
-    max_tokens = int(os.getenv("LLM_MAX_OUTPUT_TOKENS", "2048"))
+    api_key = settings.obtener_clave_gemini()
+    modelo = settings.obtener_modelo_gemini()
+    timeout = settings.obtener_timeout_llm()
+    max_tokens = settings.obtener_max_tokens_llm()
 
     if not api_key:
         raise LLMError(
@@ -662,6 +664,7 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
 
         if evidencia is not None:
             informe = _validar_informe_agente(informe, codigo, fuentes)
+            informe.hallazgos = priorizar_hallazgos(informe.hallazgos)
             uso = respuesta.usage_metadata
             logger.info(
                 "llm_agent_success model=%s duration_ms=%d input_tokens=%s output_tokens=%s rag_sources=%d estado=%s",
@@ -730,6 +733,7 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
         # PASO K: Conservar las fuentes reales recuperadas.
         informe._fuentes = fuentes
         informe._motivo_abstencion = None
+        informe.hallazgos = priorizar_hallazgos(informe.hallazgos)
 
         # PASO L: Registrar metricas sin exponer codigo ni claves.
         uso = respuesta.usage_metadata

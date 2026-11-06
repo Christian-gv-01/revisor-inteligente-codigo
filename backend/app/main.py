@@ -1,12 +1,35 @@
 ﻿
 from fastapi import FastAPI, HTTPException, File, Request, UploadFile
 import os
+from app.config import settings
 
 from app.services.rate_limit import ENDPOINT_WEIGHTS, LimitadorPonderado
 from app.services.http_security import ControlConcurrencia, identidad_cliente
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+import asyncio
+import logging
+from contextlib import asynccontextmanager, suppress
+
+
+@asynccontextmanager
+async def ciclo_vida(_app):
+    async def purgar():
+        from app.services.correcciones import limpiar_caducadas
+        while True:
+            try:
+                await run_in_threadpool(limpiar_caducadas)
+            except Exception as exc:
+                logging.getLogger(__name__).warning("correction_cleanup_failed tipo=%s", type(exc).__name__)
+            await asyncio.sleep(60)
+    tarea = asyncio.create_task(purgar())
+    try:
+        yield
+    finally:
+        tarea.cancel()
+        with suppress(asyncio.CancelledError):
+            await tarea
 
 
 
@@ -31,6 +54,7 @@ from app.services.static_analysis import (
 
 
 app = FastAPI(
+    lifespan=ciclo_vida,
     title="Revisor Inteligente de Código Seguro",
     description="API para el análisis inteligente de código Python",
     version="0.1.0",
@@ -66,33 +90,34 @@ async def manejar_error_validacion(
 # Dos barreras complementarias: presupuesto por minuto y concurrencia.
 # Ambas son por proceso; en varias réplicas se necesita un almacén compartido.
 limitador_peticiones = LimitadorPonderado(
-    ventana=60,
-    limite_global=30,
-    limite_cliente=10,
+    ventana=settings.VENTANA_PETICIONES,
+    limite_global=settings.PRESUPUESTO_GLOBAL,
+    limite_cliente=settings.PRESUPUESTO_CLIENTE,
 )
-control_concurrencia = ControlConcurrencia(max_activas=2)
+control_concurrencia = ControlConcurrencia(max_activas=settings.MAX_CONCURRENCIA)
 
 
 @app.middleware("http")
 async def proteger_analisis(request: Request, call_next):
     es_costosa = (
         request.method == "POST"
-        and request.url.path in ENDPOINT_WEIGHTS
+        and (request.url.path in ENDPOINT_WEIGHTS or
+             (request.url.path.startswith("/api/v1/correcciones/") and request.url.path.endswith("/decision")))
     )
     if not es_costosa:
         return await call_next(request)
 
-    if os.getenv("RATE_LIMIT_ENABLED", "0") == "1":
+    if settings.bandera("RATE_LIMIT_ENABLED"):
         # No habilitar sin garantizar que no existen rutas privadas/directas
         # hacia este servicio que puedan falsificar X-Real-IP.
         confiar_proxy_publico = (
-            os.getenv("TRUST_RAILWAY_REAL_IP", "0") == "1"
+            settings.bandera("TRUST_RAILWAY_REAL_IP")
         )
         identidad = identidad_cliente(
             request, confiar_railway_publico=confiar_proxy_publico
         )
         resultado = limitador_peticiones.comprobar(
-            identidad, ENDPOINT_WEIGHTS[request.url.path]
+            identidad, ENDPOINT_WEIGHTS.get(request.url.path, 1)
         )
         if not resultado.permitido:
             return JSONResponse(
@@ -104,7 +129,7 @@ async def proteger_analisis(request: Request, call_next):
                 },
             )
 
-    if os.getenv("CONCURRENCY_LIMIT_ENABLED", "0") != "1":
+    if not settings.bandera("CONCURRENCY_LIMIT_ENABLED"):
         return await call_next(request)
 
     if not control_concurrencia.adquirir():
@@ -123,7 +148,7 @@ async def proteger_analisis(request: Request, call_next):
 async def _analisis_estatico_si_habilitado(
     codigo: str, archivo: str
 ) -> ResultadoEstatico | None:
-    if os.getenv("STATIC_ANALYSIS_ENABLED", "0") != "1":
+    if not settings.analisis_estatico_habilitado():
         return None
     try:
         return await run_in_threadpool(analizar_estatico, codigo, archivo)
@@ -362,6 +387,8 @@ async def analizar_repositorio_github(
 # CODEGUARD AGENT LAB: rutas independientes
 from app.routes.agente import router as agente_router
 app.include_router(agente_router)
+from app.routes.correcciones import router as correcciones_router
+app.include_router(correcciones_router)
 
 
 # En producción, servir el frontend compilado desde el mismo origen.
@@ -370,7 +397,7 @@ import os
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 
-if os.getenv("SERVE_FRONTEND", "0") == "1":
+if settings.bandera("SERVE_FRONTEND"):
     dist = Path(__file__).resolve().parents[2] / "frontend" / "dist"
     if not (dist / "index.html").is_file():
         raise RuntimeError("SERVE_FRONTEND=1 requiere frontend/dist/index.html")
