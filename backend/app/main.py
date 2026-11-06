@@ -179,15 +179,13 @@ def construir_respuesta(
     Conserva el estado de abstención, el motivo y las fuentes.
     """
 
-    motivo = informe.motivo_abstencion
-
     return RespuestaAnalisis(
         archivo=archivo,
-        estado="abstenido" if motivo else "analizado",
+        estado=informe.estado_validado,
         hallazgos=informe.hallazgos,
         fuentes=informe.fuentes,
         analisis_estatico=analisis_estatico,
-        mensaje=motivo,
+        mensaje=informe.mensaje_validado,
     )
 
 
@@ -316,12 +314,13 @@ async def analizar_zip(
             informes.append(resultado)
             # Evitar repetir la misma espera de Gemini por cada archivo ZIP
             # después de comprobar que el proveedor falla en esta petición.
-            if resultado.estado == "parcial":
+            # La omisión de citas conserva fuentes; no indica caída de Gemini.
+            if resultado.estado == "parcial" and not resultado.fuentes:
                 proveedor_no_disponible = True
 
         return RespuestaAnalisisZIP(
             archivo_zip=archivo.filename or "proyecto.zip",
-            estado="parcial" if proveedor_no_disponible else "analizado",
+            estado="parcial" if any(r.estado == "parcial" for r in informes) else "analizado",
             total_archivos=len(informes),
             informes=informes,
         )
@@ -367,12 +366,12 @@ async def analizar_repositorio_github(
                 codigo, nombre, omitir_ia=proveedor_no_disponible
             )
             informes.append(resultado)
-            if resultado.estado == "parcial":
+            if resultado.estado == "parcial" and not resultado.fuentes:
                 proveedor_no_disponible = True
 
         return RespuestaAnalisisRepositorio(
             repositorio=solicitud.url,
-            estado="parcial" if proveedor_no_disponible else "analizado",
+            estado="parcial" if any(r.estado == "parcial" for r in informes) else "analizado",
             total_archivos=len(informes),
             informes=informes,
         )

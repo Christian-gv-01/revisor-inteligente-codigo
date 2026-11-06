@@ -37,6 +37,7 @@ Responsable de esta edición: Ronald Yépez, QA, seguridad y documentación.
 
 ## Evidencia y revisiones especializadas
 
+- [Abstención explícita y conservación parcial](26-abstencion-parcial.md).
 - [Semana 1: registro de originales faltantes](evidencias/semana-1/README.md).
 - [Semana 4: evidencias versionadas](evidencias/semana-4/README.md).
 - [Revisión PR #19](14-revision-qa-pr19.md) y
