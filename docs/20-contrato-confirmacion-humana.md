@@ -1,9 +1,14 @@
 # 20. Contrato propuesto de corrección con confirmación humana
 
 Fecha: 6 de noviembre de 2026. Autor del lado frontend: Ronald Yépez.
-Contraparte Backend: Christian Gamboa. **Estado: propuesta v1 para acuerdo; no
-es un contrato ya implementado o aceptado por Backend.** El frontend tiene un
-adaptador y una demostración local; la conexión real está deshabilitada por defecto.
+Contraparte Backend: Christian Gamboa. **Estado: condiciones funcionales aceptadas
+por Christian en el mensaje compartido el 6 de noviembre; campos y endpoints v1
+entregados para su revisión e implementación.** Todavía no se acredita un backend
+de correcciones implementado. El frontend tiene un adaptador y una demostración
+local; la conexión real está deshabilitada por defecto.
+
+Ejemplos completos, con hashes calculados y respuestas verificadas contra los
+validadores del frontend: [paquete de integración v1](contrato-confirmacion-v1/README.md).
 
 ## Respuesta para coordinar con Christian
 
@@ -128,5 +133,8 @@ acuerdo y pruebas locales se habilitaría con `1` al compilar. No se activó en 
 no se modificó Backend y no se publicó esta rama. La demostración usa únicamente
 el ejemplo SQL inicial y no atribuye su propuesta fija a Gemini.
 
-Este documento responde a las cuatro preguntas de Christian. Falta su confirmación
-o ajuste del contrato; no se registra una aprobación que no haya ocurrido.
+Christian aceptó que la aprobación esté vinculada a una propuesta revisable,
+autorice solo una copia y permita rechazar sin ejecutar ni sobrescribir originales.
+Solicitó estos campos y ejemplos para implementar Backend. Falta confirmar la
+estructura técnica definitiva y probar ambos lados localmente antes de habilitar
+la conexión. Este acuerdo funcional no autoriza publicar o desplegar la rama.
