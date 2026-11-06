@@ -1,0 +1,50 @@
+name: CODEGUARD imagen Docker
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "Dockerfile"
+      - ".dockerignore"
+      - "docker/**"
+      - "backend/requirements.txt"
+      - "scripts/ingest.py"
+      - "knowledge/**"
+      - ".github/workflows/docker-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Construir imagen sin secretos reales
+        run: docker build --tag codeguard:ci .
+      - name: Arrancar sin red con datos vacios y comprobar puerto, salud y UID
+        shell: bash
+        run: |
+          set -euo pipefail
+          trap 'docker logs codeguard-ci; docker rm -f codeguard-ci' EXIT
+          docker run --detach --name codeguard-ci --network none \
+            --tmpfs /data:rw,nosuid,nodev,size=256m \
+            --env GEMINI_API_KEY=fixture-local-sin-credencial-real \
+            --env PORT=8093 codeguard:ci
+          ready=0
+          for attempt in $(seq 1 45); do
+            if docker exec --user codeguard codeguard-ci python -c \
+              "import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:8093/health',timeout=2); assert r.status==200"; then
+              ready=1
+              break
+            fi
+            sleep 2
+          done
+          test "$ready" = 1
+          docker exec --user codeguard codeguard-ci python -c \
+            "from pathlib import Path; s=Path('/proc/1/status').read_text(); uid=next(l for l in s.splitlines() if l.startswith('Uid:')); assert all(int(v)==10001 for v in uid.split()[1:]); assert Path('/opt/codeguard/.cache/chroma/onnx_models/all-MiniLM-L6-v2/onnx/model.onnx').is_file(); print('PID 1 sin privilegios; modelo en imagen; salud en PORT=8093 sin red.')"

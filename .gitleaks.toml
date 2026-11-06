@@ -1,0 +1,15 @@
+title = "CODEGUARD: reglas por defecto y excepcion de procedencia verificada"
+
+[extend]
+useDefault = true
+
+# Este valor es el SHA-256 publicado del archivo api.ts, no una credencial.
+# Excepcion limitada a esa linea exacta de esa evidencia; no se excluyen
+# carpetas de pruebas, documentos completos, commits ni reglas de deteccion.
+[[allowlists]]
+description = "SHA-256 de api.ts en evidencia de integracion del 5 de noviembre"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^docs/evidencias/semana-4/agente-integrado-20261105/validacion\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"frontend/src/services/api\.ts": "caf1e2d70583d3302e248f2567cd5051df0e7dcb82634dd72fdb9107fadeed42",?\s*$''']

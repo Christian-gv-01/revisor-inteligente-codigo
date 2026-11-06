@@ -1,12 +1,15 @@
 name: CODEGUARD captura estatica multiplataforma
 
 on:
+  push:
+    branches: [main]
   pull_request:
     paths:
       - "backend/app/services/static_analysis.py"
       - "backend/tests/test_static_analysis.py"
       - "backend/tests/test_static_output_limits.py"
       - ".github/workflows/static-output-tests.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -29,3 +32,4 @@ jobs:
       - name: Probar captura y herramientas reales
         working-directory: backend
         run: python -m pytest tests/test_static_analysis.py tests/test_static_output_limits.py -q
+

@@ -16,18 +16,25 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     STATIC_ANALYSIS_ENABLED=1 \
     TRUST_RAILWAY_REAL_IP=0 \
     CHROMA_PATH=/data/chroma \
-    HOME=/data \
+    HOME=/opt/codeguard \
     XDG_CACHE_HOME=/data/.cache
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libgomp1 gosu \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --system --gid 10001 codeguard \
-    && useradd --system --uid 10001 --gid codeguard --home-dir /data codeguard
+    && useradd --system --uid 10001 --gid codeguard --home-dir /opt/codeguard codeguard
 
 WORKDIR /app
 COPY backend/requirements.txt /app/backend/requirements.txt
 RUN python -m pip install --no-cache-dir -r /app/backend/requirements.txt
+
+# ChromaDB 1.5.9 guarda MiniLM ONNX bajo Path.home()/.cache/chroma.
+# El HOME del usuario coincide con esta ruta, también después de gosu.
+# Descargar y verificar una inferencia durante el build, fuera del volumen /data.
+RUN mkdir -p /opt/codeguard \
+    && python -c "from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2; vectors = ONNXMiniLM_L6_V2()(['seguridad Python']); assert len(vectors[0]) == 384" \
+    && chmod -R a+rX /opt/codeguard
 
 COPY backend/app /app/backend/app
 COPY knowledge /app/knowledge
@@ -47,3 +54,4 @@ HEALTHCHECK --interval=30s --timeout=8s --start-period=180s --retries=3 \
     CMD python -c "import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:'+os.getenv('PORT','8000')+'/health',timeout=5).read()" || exit 1
 
 ENTRYPOINT ["/app/entrypoint.sh"]
+
