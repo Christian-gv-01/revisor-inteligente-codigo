@@ -19,12 +19,15 @@ class ConsumoAgotado(Exception):
 
 
 class Presupuesto:
-    def __init__(self, segundos: float, llamadas: int):
+    def __init__(self, segundos: float, llamadas: int, *, padre=None):
+        self.padre = padre
         self.limite = monotonic() + segundos
+        if padre is not None:
+            self.limite = min(self.limite, padre.limite)
         self.max_llamadas = llamadas
         self.llamadas = 0
-        self._lock = Lock()
-        self.consumo = ConsumoIA()
+        self._lock = padre._lock if padre is not None else Lock()
+        self.consumo = padre.consumo if padre is not None else ConsumoIA()
 
     def restante(self) -> float:
         restante = self.limite - monotonic()
@@ -34,11 +37,18 @@ class Presupuesto:
 
     def reservar_intento(self) -> float:
         with self._lock:
-            restante = self.restante()
-            if self.llamadas >= self.max_llamadas:
-                raise ConsumoAgotado("Se agotó el presupuesto de llamadas de la solicitud.")
-            self.llamadas += 1
-            return restante
+            cadena, restantes = [], []
+            actual = self
+            while actual is not None:
+                restantes.append(actual.restante())
+                if actual.llamadas >= actual.max_llamadas:
+                    raise ConsumoAgotado("Se agotó el presupuesto de llamadas de la solicitud.")
+                cadena.append(actual)
+                actual = actual.padre
+            # Reservar todos los límites atómicamente; un hijo no reinicia el padre.
+            for actual in cadena:
+                actual.llamadas += 1
+            return min(restantes)
 
 
 _actual: ContextVar[Presupuesto | None] = ContextVar("presupuesto_codeguard", default=None)
@@ -46,7 +56,7 @@ _actual: ContextVar[Presupuesto | None] = ContextVar("presupuesto_codeguard", de
 
 @contextmanager
 def presupuesto_solicitud(segundos: float, llamadas: int):
-    token = _actual.set(Presupuesto(segundos, llamadas))
+    token = _actual.set(Presupuesto(segundos, llamadas, padre=_actual.get()))
     try:
         yield _actual.get()
     finally:

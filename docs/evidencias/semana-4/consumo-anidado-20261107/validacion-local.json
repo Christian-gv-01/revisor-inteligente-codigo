@@ -1,0 +1,26 @@
+{
+  "base": "c522c24f0efcfa7ee4e7411a66fcaa1a612dd740",
+  "regresiones_antes": {
+    "fallos": 5,
+    "aprobadas": 0
+  },
+  "regresiones_despues": {
+    "aprobadas": 6
+  },
+  "suite": {
+    "backend": 589,
+    "qa_evaluadores": 80,
+    "total": 669,
+    "duracion_s": 11.36
+  },
+  "proveedor": "SDK simulado; sockets y DNS externos bloqueados en suite",
+  "hallazgo_publico": {
+    "ruta": "/api/v1/proyectos/{id}/decision",
+    "decision": "aprobar",
+    "http": 200,
+    "estado_resultado": "analizado",
+    "intentos_cabecera": 0,
+    "tokens_totales_cabecera": 0,
+    "interpretacion": "Cero no demostraba ausencia de consumo: el middleware publicaba el presupuesto exterior sin los contadores del interior."
+  }
+}
