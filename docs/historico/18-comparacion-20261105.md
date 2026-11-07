@@ -18,12 +18,12 @@ una nueva ejecución ni completa por sí solo la comparación generativa final.
 | Pruebas del producto | 58 frontend en la integración posterior; conteos iniciales preservados en informe de Semana 3 | Evidencia PR #31: 250 backend/QA y 76 frontend | El aumento de pruebas no es una medida de precisión de IA |
 | Producción | No es el objetivo de la corrida local de recuperación | 26/26 escenarios públicos y continuidad de tres citas entre dos consultas | Falta log independiente del reinicio; no verifica toda la última integración |
 
-Fuentes: [informe de Semana 3](07-evaluacion.md),
-[recuperación de 20 casos](evidencias/semana-3/rag-20-casos/resumen.md),
-[integración de Semana 3](evidencias/semana-3/integracion-http/README.md),
-[validación PR #31](evidencias/semana-4/agente-integrado-20261105/validacion.json),
-[contrato integrado](17-agente-integrado.md) y
-[cierre público y reinicio](12-cierre-qa-entrega4.md).
+Fuentes: [informe de Semana 3](../07-evaluacion.md),
+[recuperación de 20 casos](../evidencias/semana-3/rag-20-casos/resumen.md),
+[integración de Semana 3](../evidencias/semana-3/integracion-http/README.md),
+[validación PR #31](../evidencias/semana-4/agente-integrado-20261105/validacion.json),
+[contrato integrado](../17-agente-integrado.md) y
+[cierre público y reinicio](../12-cierre-qa-entrega4.md).
 
 Las cifras comunicadas por chat para otras corridas no reemplazan estos archivos.
 Si el equipo aporta otro resultado, debe incorporarse con dataset, configuración
@@ -31,12 +31,12 @@ y fecha antes de compararlo.
 
 ## Otras evaluaciones de Semana 4
 
-El [A/B del planificador](evidencias/semana-4/agente-ab-20261105T190848Z/resumen.md)
+El [A/B del planificador](../evidencias/semana-4/agente-ab-20261105T190848Z/resumen.md)
 registra seis casos sintéticos, doce solicitudes y cinco pares completos; no hubo
 cambios de herramienta en esos cinco pares. Evalúa una decisión, no la calidad
 del informe final ni el recall de vulnerabilidades.
 
-La [muestra de comparación](evidencias/semana-4/comparacion-muestra-20261105/resultados.json)
+La [muestra de comparación](../evidencias/semana-4/comparacion-muestra-20261105/resultados.json)
 motivó integrar evidencia estática/AST en la síntesis. Sus conteos estáticos y
 contextuales corresponden a capas distintas, no a riesgos independientes que
 deban sumarse. Las regresiones controladas del PR #31 comprueban el cambio de
@@ -55,7 +55,7 @@ contrato y ubicación, sin demostrar una mejora general de Gemini.
 5. Guardar respuestas permitidas y resumen sin secretos. Indicar variabilidad,
    número de repeticiones y limitaciones; no escoger solo respuestas favorables.
 
-El [evaluador existente](../eval/README.md) soporta el flujo directo. No afirmar que
+El [evaluador existente](../../eval/README.md) soporta el flujo directo. No afirmar que
 evalúa el nuevo agente sin adaptar/verificar su ruta y contrato. No se ejecutaron
 nuevas llamadas de pago para redactar esta comparación.
 

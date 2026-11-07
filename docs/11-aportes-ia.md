@@ -1,5 +1,26 @@
 # 11. Aportes del equipo y declaración de uso de IA
 
+## Cierre documental — 7 de noviembre de 2026
+
+Ronald confirmó el nombre completo de **Klever Andres Alban Cruz (Andy)**.
+Los integrantes son Ronald Yépez, Klever Andres Alban Cruz y Christian Gamboa.
+Esta confirmación no reasigna identidades Git ni sustituye aceptaciones académicas.
+
+En el cierre, Ronald entrega **frontend y documentación del producto**: revisión
+del consentimiento y presupuesto, trazabilidad, documento principal del agente,
+verificación de requisitos/fuentes y preparación de presentación. Los PR #46,
+#50 y #51 conservan sus cambios y pruebas. Los aportes iniciales de QA se mantienen
+identificados abajo. La implementación de severidad derivada, YAML y herencia
+corresponde al trabajo de Backend comunicado en PR #55; no se atribuye a Ronald.
+Christian coordina la integración, la evaluación real, Railway y el paquete final.
+
+La base técnica de cierre es `b6ce96c926631ea913f467be291228f705b8b5c6`.
+Su CI tiene ocho verificaciones aprobadas. La evaluación real no demostró una
+mejora de precisión del agente; se conserva esa conclusión y sus límites.
+El cierre técnico no acredita por sí solo ensayo, instalación por otro integrante
+ni registro de entrega. La correspondencia de cuentas históricas y cualquier
+aceptación exigida por el docente debe conservar su evidencia real.
+
 ## Nueva asignación — 6 de noviembre de 2026
 
 Ronald confirmó que en esta etapa asume **Compañero 2: Frontend y documentación
@@ -8,24 +29,24 @@ prioridad y estado parcial, ocho historias específicas, contrato propuesto con
 Christian y borrador de presentación de doce minutos. Ver
 [21-frontend-producto.md](21-frontend-producto.md).
 
-Christian conserva la responsabilidad de los endpoints del backend. No se
+En esa asignación, Christian conservaba la responsabilidad de los endpoints del backend. No se
 reinterpreta como trabajo de Ronald la implementación de esos endpoints ni las
-199 pruebas comunicadas por Christian. La asignación actual de Andy no se ha
-confirmado; la tabla siguiente conserva los roles informados el 5 de noviembre.
+199 pruebas comunicadas por Christian. La tabla siguiente conserva los roles
+informados el 5 de noviembre, anteriores al reparto de cierre.
 
-## Integrantes y responsabilidades confirmadas
+## Responsabilidades históricas confirmadas el 5 de noviembre
 
 Información proporcionada por Ronald el 5 de noviembre de 2026. La tabla distingue
-responsabilidad actual de autoría histórica y no sustituye la aprobación final de
+responsabilidad de esa fecha y autoría histórica, y no sustituye la aprobación final de
 cada integrante.
 
 | Integrante | Rol confirmado | Entregables asociados |
 |---|---|---|
 | Ronald Yépez | QA, seguridad y documentación | Matriz pública, revisión de errores/entradas, auditoría, trazabilidad y consolidación documental |
-| Andy | Frontend y evaluación | Interfaz, visualización y exportación, dataset, métricas, comparación final y presentación |
+| Klever Andres Alban Cruz (Andy) | Frontend y evaluación, en la asignación del 5 de noviembre | Interfaz, visualización y exportación, dataset, métricas, comparación final y presentación |
 | Christian Gamboa | Backend, IA, agente y despliegue | API, proveedor, RAG/agente, analizadores estáticos, Docker, Railway y volumen |
 
-Se conserva «Andy» tal como fue confirmado; su apellido no fue aportado. Ronald
+El nombre completo de Andy se confirmó el 7 de noviembre. Ronald
 confirmó para este trabajo la cuenta `0123445-20Alexis`. No se asignan otras cuentas
 a personas por inferencia ni se cambia el autor registrado de commits previos.
 
@@ -39,7 +60,7 @@ La siguiente relación se basa en el historial Git y debe ser validada por el eq
 | `Andyjr98` | QA, seguridad de entradas, RAG, filtros, abstención, regresiones y documentación de decisiones. |
 | `olmesaguilar` | Frontend, diseño, trazabilidad de fuentes, evaluación RAG e integración HTTP, según el historial. |
 
-Las identidades Git describen autoría registrada; no acreditan por sí solas el nombre ni el rol actual de la persona. La correspondencia de las cuentas históricas con integrantes debe confirmarla el equipo. El responsable de Frontend y Evaluación comunicó sus avances por separado. El usuario de esta entrega confirmó la cuenta `0123445-20Alexis` y asume el rol de Compañero 3, QA, seguridad y documentación; esta confirmación no cambia la autoría histórica de los commits.
+Las identidades Git describen autoría registrada; no acreditan por sí solas el nombre ni el rol actual de la persona. La correspondencia de las cuentas históricas con integrantes debe confirmarla el equipo. El responsable de Frontend y Evaluación comunicó sus avances por separado. Ronald confirmó la cuenta `0123445-20Alexis` y su rol inicial de Compañero 3, QA, seguridad y documentación; desde el 6 de noviembre asume frontend y documentación. Esto no cambia la autoría histórica de los commits.
 
 ## Aporte del rol QA, seguridad y documentación — Entrega 4
 

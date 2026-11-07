@@ -1,6 +1,11 @@
 # Presentación vigente
 
-Usar **CODEGUARD-validacion-final-20261107.pptx** y el PDF con el mismo nombre.
+Usar [CODEGUARD-validacion-final-equipo-20261107.pptx](CODEGUARD-validacion-final-equipo-20261107.pptx)
+y [su PDF](CODEGUARD-validacion-final-equipo-20261107.pdf): incorporan el nombre
+completo de Klever Andres Alban Cruz confirmado por Ronald. Las otras once
+diapositivas y los resultados conservan el contenido final entregado por Christian.
+Los originales **CODEGUARD-validacion-final-20261107.pptx/pdf** permanecen intactos
+y corresponden al ZIP técnico de `b6ce96c`.
 Doce diapositivas editables y guion de 720 segundos planificados. El ensayo real
 y el reparto aún requieren a los integrantes. Los archivos anteriores se conservan
 como histórico; el ZIP debe generarse desde el commit que incorpore esta versión.
