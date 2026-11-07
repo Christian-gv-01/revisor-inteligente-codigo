@@ -58,3 +58,13 @@ def test_seleccion_solo_ejecuta_los_casos_solicitados():
     assert rutas == ["/health"]
     assert [resultado.id for resultado in resultados] == ["P01"]
     assert resultados[0].aprobado
+
+
+def test_matriz_publica_rechaza_cinco_pasos_y_no_el_maximo_actual_de_cuatro():
+    import json
+    def responder(request):
+        assert json.loads(request.content)["max_pasos"] == 5
+        return httpx.Response(422, json={"detail": []})
+    with runner.ClienteQA(base_url="http://127.0.0.1", transport=httpx.MockTransport(responder)) as cliente:
+        resultados = runner.casos(cliente, {"P25"})
+    assert len(resultados) == 1 and resultados[0].aprobado

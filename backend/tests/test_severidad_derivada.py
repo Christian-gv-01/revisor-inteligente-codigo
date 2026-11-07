@@ -232,6 +232,17 @@ def test_sin_contexto_no_se_crean_vinculos():
     assert evidencia.vinculos_reglas_contexto == []
 
 
+@pytest.mark.parametrize("severidad,confianza,esperada", [
+    ("critica", "alta", "critica"), ("critica", "media", "critica"), ("critica", "baja", "critica"),
+    ("alta", "alta", "critica"), ("alta", "media", "alta"), ("alta", "baja", "alta"),
+    ("media", "alta", "media"), ("media", "media", "media"), ("media", "baja", "media"),
+    ("baja", "alta", "baja"), ("baja", "media", "baja"), ("baja", "baja", "baja"),
+])
+def test_matriz_bandit_completa_coincide_con_politica_aprobada(severidad, confianza, esperada):
+    # Cobertura aportada por Andy en cf82e84; conserva la política del PR55.
+    assert derivar_severidad("bandit", severidad, confianza) == esperada
+
+
 def test_vinculo_conserva_severidad_original_y_derivada():
     contexto = crear_contexto_prueba(10, 10, 10)
 

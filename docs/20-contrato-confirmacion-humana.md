@@ -119,7 +119,7 @@ sustentada, Backend debe rechazar la creación; no devolver prosa como archivo P
 | Descargar copia solo tras respuesta válida | Identificadores no predecibles, TTL, límites y acceso a propuestas |
 | Descartar respuestas tardías y consentimientos anteriores | Resolver aprobar/rechazar de forma consistente e idempotente |
 | Renderizar código como texto y conservar fuentes/traza del análisis | No registrar código/secretos en errores ni logs |
-| Mantener adaptador real apagado hasta acuerdo | Implementar endpoints y pruebas sin alterar el análisis existente |
+| Activar adaptador real tras integración y pruebas | Implementar endpoints y pruebas sin alterar el análisis existente |
 
 Si no hay autenticación, el backend debe definir cómo protege el acceso a las
 propuestas; un ID público enumerado o un hash de contenido no autentican al usuario.
@@ -128,15 +128,14 @@ que no debe escribir archivos ni ejecutar acciones durante la previsualización.
 
 ## Habilitación y estado
 
-`VITE_CORRECTIONS_API_ENABLED` está ausente/desactivada por defecto. Solo tras
-acuerdo y pruebas locales se habilitaría con `1` al compilar. No se activó en Railway,
-no se modificó Backend. La demostración usa únicamente
-el ejemplo SQL inicial y no atribuye su propuesta fija a Gemini.
+El contrato está implementado e integrado desde PR #36; sus rutas, sesiones,
+hashes, caducidad, idempotencia y conflictos tienen pruebas. No sigue pendiente
+de acuerdo técnico. Los ejemplos anteriores conservan su carácter ilustrativo,
+no son propuestas activas del servidor.
 
-Christian aceptó que la aprobación esté vinculada a una propuesta revisable,
-autorice solo una copia y permita rechazar sin ejecutar ni sobrescribir originales.
-Solicitó estos campos y ejemplos para implementar Backend. Falta confirmar la
-estructura técnica definitiva y probar ambos lados localmente antes de habilitar
-la conexión. Posteriormente, el líder autorizó subir la rama y abrir un PR en
-borrador; no autorizó fusionar ni desplegar. Véase la
-[entrega para integración](22-entrega-frontend-integracion.md).
+`VITE_CORRECTIONS_API_ENABLED=1` habilita la interfaz al compilar. El candidato
+de cierre lo incorpora como argumento de build Docker, manteniendo la aprobación
+explícita de descarga. Un cambio en variables de ejecución no cambia JavaScript
+ya compilado. Comprobar la URL y el SHA del despliegue antes de afirmar visibilidad
+pública. No se ejecuta código ni se sobrescriben originales. Véase
+[23-integracion-confirmacion-qa.md](23-integracion-confirmacion-qa.md).

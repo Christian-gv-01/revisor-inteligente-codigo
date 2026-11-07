@@ -1,0 +1,19 @@
+{
+  "fecha": "2026-11-07",
+  "revision": "8e66b2cc3f10b67589edd3714de17dcc8246d729",
+  "deployment_id": "2b348847-69df-4d6a-ba5b-8b5e8651234c",
+  "metodo": "Lectura UI Railway Deployments y Details; enlace exacto al commit y estado Active/Deployment successful. No atestacion via health.",
+  "logs_observados": [
+    "2026-11-07 15:05:39 GMT-5: proceso sin privilegios UID 10001",
+    "2026-11-07 15:05:39 GMT-5: montaje de volumen vol_qx4jz28od9dzy6ii",
+    "2026-11-07 15:05:41 GMT-5: indice documental persistente recuperado",
+    "2026-11-07 15:05:42 GMT-5: Uvicorn 0.0.0.0:8080"
+  ],
+  "alcance": "Verifica recuperacion del volumen en ese despliegue; no backup restaurado ni hash del corpus/index activo.",
+  "flags_publicos_observados": {
+    "presupuesto_visible": false,
+    "acceso_agent_lab": true,
+    "lab_max_pasos": 4
+  },
+  "consola_operador": "La consola web mostro Disconnected; no se ejecuto el A/B de una decision ni se leyo el indice por esa via."
+}

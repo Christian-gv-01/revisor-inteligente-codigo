@@ -48,5 +48,6 @@ jobs:
             sleep 2
           done
           test "$ready" = 1
+          docker exec --user codeguard codeguard-ci python /app/scripts/verificar_imagen_cierre.py
           docker exec --user codeguard codeguard-ci python -c \
             "from pathlib import Path; s=Path('/proc/1/status').read_text(); uid=next(l for l in s.splitlines() if l.startswith('Uid:')); assert all(int(v)==10001 for v in uid.split()[1:]); assert Path('/opt/codeguard/.cache/chroma/onnx_models/all-MiniLM-L6-v2/onnx/model.onnx').is_file(); db=Path('/data/correcciones.sqlite3'); assert db.is_file() and db.stat().st_uid==10001; print('PID 1 sin privilegios; modelo en imagen; SQLite escribible en volumen; salud en PORT=8093 sin red.')"

@@ -1,0 +1,59 @@
+{
+  "base_main": "8e66b2cc3f10b67589edd3714de17dcc8246d729",
+  "fecha": "2026-11-07",
+  "python": {
+    "backend": 583,
+    "qa_evaluadores": 80,
+    "total": 663,
+    "estado": "aprobado",
+    "duracion_s": 11.06,
+    "proveedor_ia": "simulado",
+    "red_externa": "bloqueada mediante sockets/DNS en runner local; solo loopback"
+  },
+  "frontend": {
+    "aprobadas": 146,
+    "omitidas_http": 24,
+    "lint": "correcto",
+    "build": "correcto; advertencia de bundle grande preexistente",
+    "VITE_PROJECT_BUDGET_ENABLED": "1",
+    "VITE_CORRECTIONS_API_ENABLED": "1"
+  },
+  "http": {
+    "con_estatico": {
+      "aprobadas": 24,
+      "omitidas": 0
+    },
+    "sin_estatico": {
+      "aprobadas": 19,
+      "omitidas": 5
+    },
+    "proveedores": "Gemini/GitHub simulados; ChromaDB y Ruff/Bandit reales; red limitada a loopback"
+  },
+  "smoke_presupuesto": {
+    "local": "aprobado con FastAPI/SQLite reales, tasa/concurrencia activas, previsualizar y rechazar sin llamadas",
+    "Docker": "pendiente CI; entorno local sin motor Docker"
+  },
+  "presentacion": {
+    "diapositivas": 12,
+    "PPTX": "Artifact Tool; importacion y geometria verificadas",
+    "PDF": "LibreOffice; 12 paginas renderizadas e inspeccionadas",
+    "limite": "doce minutos planificados, sin ensayo humano"
+  },
+  "regresion_cobertura": {
+    "antes": "3 fallos y 1 aprobada tras validar fixture",
+    "despues": "4 aprobadas; incluidas en total"
+  },
+  "contribucion_companero": "cf82e84: UTF-8 y doce combinaciones de severidad, incorporadas sin alterar politica",
+  "archivos_codigo_sha256": {
+    "Dockerfile": "8191670ab078eab6f0c77e085a116dac846c8c9af136c80b0f70d2dcc48dec7a",
+    "compose.yaml": "c8d7dd805391ee840e9b2f11b342f655a54e8975ddca4bcdf0c55f649940acc5",
+    "backend/app/services/llm.py": "4521d444ad91c4175cee010348c3b6383e1a5f641626a032f38fe006293be942",
+    "backend/tests/test_agente_herramientas_v2.py": "625011d66ce0d8baa8af42c0f0bcb2b9dd7edc403d3811578010a0d901c3e85d",
+    "backend/tests/test_contrato_herencia_frontend.py": "f584cae84829cd3a79f870a59b0e10544e5e260e7eac141c477d3687ecdcd894",
+    "backend/tests/test_severidad_derivada.py": "c9fe21475f33cfd9339861f3fb1aff70a03de697fffb77d962a069c28e5276cd",
+    "backend/tests/test_cobertura_busqueda_agente.py": "311654e1ea0ac7858238ede107c42a2991073c4a97031d64c95893328ab8ae3d",
+    "qa/test_herramientas_qa.py": "d8e6a37c30aba36715afef1106382b93bbcd21ffcafb760730ab9cfb2dad3adb",
+    "scripts/pruebas_produccion.py": "462d9796de0d95e0a974fa8e3f4f9a93db449dc2d2a9918b0c1a5553dc7df99b",
+    "scripts/verificar_imagen_cierre.py": "92bee052117483c1b00aa6219135381f37cca444c99cdd454acc98c25013955e"
+  }
+}

@@ -1,5 +1,11 @@
 # 19. Cierre documental — Entrega 4
 
+> Registro histórico del 5 de noviembre. Para el estado vigente del 7 de noviembre
+> consultar [37-cierre-verificado.md](37-cierre-verificado.md), con la comparación
+> real, herramientas v2, herencia, documentación y pendientes humanos. Las filas
+> siguientes conservan el diagnóstico de su fecha; no deben interpretarse como
+> comprobaciones repetidas hoy.
+
 Fecha: 5 de noviembre de 2026, America/Bogota. Responsable: Ronald Yépez.
 Base revisada: `65675e27fd996a7e71a926336dba6dffb5e539e2`.
 Esta edición añade documentación y materia prima; no ejecuta una nueva evaluación

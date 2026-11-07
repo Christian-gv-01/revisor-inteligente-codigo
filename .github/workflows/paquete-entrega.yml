@@ -1,11 +1,17 @@
 name: CODEGUARD paquete candidato
 
 on:
+  push:
+    branches: [main]
   pull_request:
     paths:
       - "scripts/empaquetar_entrega.py"
       - "qa/test_empaquetado.py"
       - ".github/workflows/paquete-entrega.yml"
+      - "docs/**"
+      - "README.md"
+      - "Dockerfile"
+      - "compose.yaml"
   workflow_dispatch:
 
 permissions:

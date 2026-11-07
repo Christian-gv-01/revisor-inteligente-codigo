@@ -4,12 +4,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VITE_PROJECT_BUDGET_ENABLED: ${VITE_PROJECT_BUDGET_ENABLED:-1}
+        VITE_CORRECTIONS_API_ENABLED: ${VITE_CORRECTIONS_API_ENABLED:-1}
     env_file:
       - .env
     environment:
       CHROMA_PATH: /data/chroma
       SERVE_FRONTEND: "1"
       PORT: "8000"
+      PROJECT_BUDGET_ENABLED: ${PROJECT_BUDGET_ENABLED:-1}
     ports:
       - "127.0.0.1:8080:8000"
     volumes:

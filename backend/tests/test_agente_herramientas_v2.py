@@ -159,7 +159,8 @@ def test_fuentes_buscadas_son_citables_en_sintesis_real(servicios, monkeypatch, 
     datos_enviados = json.loads(enviado)
     assert FUENTE["texto"] in datos_enviados["contexto_rag_no_confiable"]
     assert datos_enviados["evidencia_herramientas_no_confiable"]["referencias_buscadas"]
-    servicios.assert_called_once()
+    # Búsqueda elegida y recuperación base del código: ambas se conservan.
+    assert servicios.call_count == 2
 
 
 def test_contrato_v1_no_habilita_herramientas_nuevas(servicios):

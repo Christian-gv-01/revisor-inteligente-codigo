@@ -1,28 +1,18 @@
 # Documentación de CODEGUARD
 
-Candidato de cierre: [corrección e integración de herencia](36-correccion-herencia-integrada.md) y
-[política de severidad](35-severidad-derivada-herencia.md). Las métricas finales con Gemini siguen pendientes.
+Estado vigente: [37. Cierre verificado](37-cierre-verificado.md), con trazabilidad
+frente a la revisión docente de `605d142`, funcionalidades integradas y límites.
 
-Candidato sobre `4f41ebf` (PR #52): [validación de integración](34-cierre-frontend-post52.md),
-[acceso al agente del PR #50](evidencias/semana-4/acceso-agente-20261107/README.md) y
-[evidencia pública histórica del PR #49](32-validacion-publica-post-pr48.md).
+- [Agente supervisado: documento principal](08-agente.md). El documento 17 remite aquí.
+- [Comparación real de rutas y semanas](18-comparacion-semanas-3-4.md), incluyendo resultados desfavorables.
+- [Severidad derivada e herencia verificable](35-severidad-derivada-herencia.md).
+- [Corrección integrada PR #55](36-correccion-herencia-integrada.md).
+- [Presentación y PDF](presentacion/README.md), con tiempo planificado y fuentes.
+- [Instalación desde checkout limpio](30-instalacion-checkout-limpio.md) y [ensayo humano pendiente](presentacion/ensayo-cronometrado.md).
 
-Documento principal vigente del [agente supervisado](08-agente.md) y
-[cierre documental y presupuesto del 7 de noviembre](evidencias/semana-4/cierre-agente-presupuesto-20261107/README.md),
-sobre PR #48 (`467d00e`). El documento 17 conserva un enlace al principal.
-
-Sincronización con `384ffaf`: [instalación desde checkout limpio](30-instalacion-checkout-limpio.md)
-y [ensayo pendiente de indicaciones del ingeniero](presentacion/ensayo-cronometrado.md).
-
-Referencia integrada PR #45, `9c97ca1`: [revisión frontend y trazabilidad](29-revision-frontend-agente-presupuesto.md).
-Se conservan las [evidencias del candidato PR43/44](evidencias/semana-4/integracion-agente-presupuesto-20261106/README.md) con su commit original.
-
-Nueva asignación del 6 de noviembre: [Frontend y documentación del producto](21-frontend-producto.md),
-[contrato propuesto de confirmación](20-contrato-confirmacion-humana.md) y
-[borrador de presentación de doce minutos](presentacion/README.md).
-
-Consolidación del 5 de noviembre de 2026 sobre `main` en `65675e2`.
-Responsable de esta edición: Ronald Yépez, QA, seguridad y documentación.
+Los registros por PR conservan sus revisiones originales; un resultado antiguo
+no certifica la versión pública actual. No sumar pruebas de suites incluidas
+ni presentar mocks como precisión de Gemini.
 
 ## Lectura principal
 
