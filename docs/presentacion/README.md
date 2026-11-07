@@ -1,66 +1,31 @@
-# Presentación vigente
+# Sustentación vigente: diez diapositivas y doce minutos
 
-Usar [CODEGUARD-validacion-final-equipo-20261107.pptx](CODEGUARD-validacion-final-equipo-20261107.pptx)
-y [su PDF](CODEGUARD-validacion-final-equipo-20261107.pdf): incorporan el nombre
-completo de Klever Andres Alban Cruz confirmado por Ronald. Las otras once
-diapositivas y los resultados conservan el contenido final entregado por Christian.
-Los originales **CODEGUARD-validacion-final-20261107.pptx/pdf** permanecen intactos
-y corresponden al ZIP técnico de `b6ce96c`.
-Doce diapositivas editables y guion de 720 segundos planificados. El ensayo real
-y el reparto aún requieren a los integrantes. Los archivos anteriores se conservan
-como histórico; el ZIP debe generarse desde el commit que incorpore esta versión.
+Usar únicamente **CODEGUARD-UNIANDES-SEMINARIO_FINAL.pptx** y su PDF con el mismo nombre.
+Proceden del archivo adjuntado por Christian el 7 de noviembre de 2026. Se mantiene
+su diseño y se ajusta la arquitectura a Directa predeterminada / Agente opcional.
+La diapositiva de demostración indica seleccionar explícitamente Agente.
 
-Incluye los cuarenta análisis c522c24, sus parciales, comparación histórica,
-A/B del planificador, verificación del índice y confirmaciones públicas.
-Las pruebas simuladas de software se distinguen de Gemini real. No afirma
-mejora de precisión ni tokens totales conocidos donde faltan metadatos.
+| Intervalo planificado | Responsable | Contenido | Diapositivas |
+|---|---|---|---|
+| 0:00-1:00 | Christian | Problema y público objetivo | 1 |
+| 1:00-5:00 | Christian | Demostración del producto | 2-4 |
+| 5:00-7:00 | Ronald | Arquitectura y agente | 5-6 |
+| 7:00-9:00 | Klever / Andy | Pruebas, pipeline y evaluación | 7-8 |
+| 9:00-10:00 | Ronald | Seguridad | 9 |
+| 10:00-12:00 | Klever / Andy | Limitaciones y próximos pasos | 10 |
 
-## Registro anterior
+Totales acordados: Christian 300 s, Ronald 180 s, Klever 240 s; total 720 s.
+Son tiempos planificados: no acreditan un ensayo medido. Christian confirmó que
+hubo sustentación y ensayo, pero aún no aportó la duración cronometrada ni las
+observaciones verbales del ingeniero. El [registro](ensayo-cronometrado.md) distingue
+esa declaración de la evidencia pendiente.
 
-# Sustentación: cierre técnico y comparación real
+El [guion](guion-12-minutos.md) usa estos diez temas y los resultados reales
+c522c24: 17/20 y 14/20 completos; F1 1,0 solo en los trece pares completos comunes.
+No se afirma mayor precisión del agente ni se reutilizan los tiempos de esa corrida
+como una predicción de la demostración.
 
-Preparación actualizada el 7 de noviembre de 2026. Doce diapositivas, 720 segundos
-planificados. La comparación real corresponde a Railway `8e66b2c` y conserva el
-resultado desfavorable del agente; no se afirma mejora de precisión.
-
-- [Presentación editable actualizada](CODEGUARD-cierre-verificado-20261107.pptx).
-- [PDF actualizado](CODEGUARD-cierre-verificado-20261107.pdf).
-- [Guion con fuentes](guion-12-minutos.md).
-- [Tabla de comparación real](../evidencias/semana-4/comparacion-real-8e66b2c-20261107/comparacion.md).
-- [Cierre y pendientes verificables](../37-cierre-verificado.md).
-- [Hoja de ensayo humano](ensayo-cronometrado.md).
-
-Se conservan los PPTX/PDF anteriores con sus nombres y revisión. Usar el archivo
-actualizado y revisar las notas antes del ensayo. La política de severidad puede
-elevar el resultado, conservando siempre los valores originales y las reglas.
-
-| Diapositiva | Contenido | Segundos |
-|---|---|---:|
-| 1 | Proyecto y versión | 30 |
-| 2 | Problema y valor esperado | 60 |
-| 3 | Arquitectura y modalidades | 60 |
-| 4 | Agente v2 y límites | 70 |
-| 5 | Copia corregida y aprobación | 70 |
-| 6 | Presupuesto antes de analizar | 70 |
-| 7 | Severidad verificable | 60 |
-| 8 | Comparación real directa/agente | 60 |
-| 9 | Fuentes y recuperación histórica | 60 |
-| 10 | Pruebas de software | 60 |
-| 11 | Trazabilidad documental | 70 |
-| 12 | Conclusión y límites | 50 |
-| **Total planificado** | | **720** |
-
-Las cifras de IA y las pruebas simuladas tienen denominadores distintos. El
-agente completó 20/20, pero tuvo F1 0,762 frente a 0,957 de la ruta directa,
-mayor latencia y consumo. Diez finalizaciones tempranas no acreditan ahorro
-causal. Las referencias resuelven, pero P06 muestra que pueden acompañar un
-falso positivo. El índice activo no tuvo huella verificada.
-
-El candidato corrige una pérdida de fuentes y activa confirmaciones en Docker;
-no atribuirle cifras de la revisión anterior. Validar su despliegue y, si se
-incorpora el cambio funcional, medir de nuevo sin borrar la corrida previa.
-
-La exportación técnica y el tiempo planificado no sustituyen el ensayo del
- equipo, la instalación independiente ni la aprobación académica. La revisión
-anterior de Ronald se conserva en el histórico. El ZIP se genera desde el Git
-exacto que incorpora esta presentación y sus resultados.
+Los PDF/PPTX anteriores se conservan en [histórico](../historico/presentaciones/),
+fuera de esta carpeta. Generar el ZIP desde el commit final que incorpora este
+material. El manifiesto dentro del ZIP identifica ese SHA; no usar el paquete
+anterior de b6ce96c ni afirmar que ya se envió al portal.

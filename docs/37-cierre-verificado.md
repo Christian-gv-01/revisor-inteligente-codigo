@@ -1,3 +1,9 @@
+> Cierre posterior a la revisión docente del 7 de noviembre: ADR E4-13 fija
+> Directa predeterminada y Agente opcional para código/.py. P25 rechaza cinco pasos
+> (máximo cuatro). La presentación vigente tiene diez diapositivas y reparto
+> Christian 5 min / Ronald 3 min / Klever 4 min, planificado. Consultar
+> [evidencias de cierre](evidencias/semana-4/revision7-cierre-20261107/README.md).
+
 # 37. Cierre verificado frente a la ficha docente
 
 Fecha: 7 de noviembre de 2026. La ficha del portal revisó `605d142`, 6 de noviembre

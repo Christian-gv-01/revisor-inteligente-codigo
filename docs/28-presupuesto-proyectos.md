@@ -1,3 +1,8 @@
+> Estado actual: Docker habilita conjuntamente el presupuesto y la interfaz.
+> Su activación pública se comprobó en c522c24 y el contador se corrigió en
+> 0a6707b. Los valores de cero mencionados en el candidato histórico no describen
+> el Dockerfile vigente. Evidencias: [cierre](37-cierre-verificado.md).
+
 # Presupuesto y aprobación de análisis ZIP/GitHub (candidato v1)
 
 Estado: integrado mediante PR #45 en `9c97ca1c8797bad5bdfdf227dba119b7839d32c7`,
@@ -65,7 +70,7 @@ Concurrencia y limitador ponderado global siguen siendo por proceso; SQLite prot
 
 ## Activación coordinada
 
-Predeterminados: `PROJECT_BUDGET_ENABLED=0`, `VITE_PROJECT_BUDGET_ENABLED=0`. En integración activar ambos a `1`, reiniciar backend y reconstruir frontend. Vite lee variables al arrancar/build: cambiarlas después no modifica el bundle. El Dockerfile actual no activa el flag en su fase de compilación; la activación pública necesita configurar y revisar ese build explícitamente, además del runtime.
+Predeterminados: `PROJECT_BUDGET_ENABLED=0`, `VITE_PROJECT_BUDGET_ENABLED=0`. En integración activar ambos a `1`, reiniciar backend y reconstruir frontend. Vite lee variables al arrancar/build: cambiarlas después no modifica el bundle. El Dockerfile vigente compila ambos flags VITE en 1 y activa el presupuesto del backend; los valores por defecto de configuración local pueden ser distintos. Revisar ambos lados antes de cambiar el despliegue.
 
 Backend activo: proyectos válidos enviados a rutas anteriores reciben 428 antes de Gemini. Frontend activo/backend apagado: recibe 404 y no elude la aprobación usando una ruta anterior. No activar un solo lado. Demo conserva simulación local.
 

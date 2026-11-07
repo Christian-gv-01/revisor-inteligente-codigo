@@ -1,3 +1,7 @@
+> Actualización de producto del 7 de noviembre: Directa es la ruta inicial en API
+> para código/.py; Agente se elige explícitamente. ZIP/GitHub siguen directos.
+> Decisión y evidencia: [ADR E4-13](docs/09-decisiones.md).
+
 # CODEGUARD · Revisor inteligente de código seguro
 
 CODEGUARD revisa Python como texto, sin importarlo ni ejecutarlo. Integra React,
@@ -23,7 +27,8 @@ proveedor. Los resultados históricos conservan su fecha y revisión en
 
 ## Funciones y límites
 
-- Código y `.py`: agente v2, estático y AST obligatorios; decisiones tipadas de
+- Código y `.py`: Directa predeterminada y Agente v2 opcional. Al elegir Agente,
+  estático y AST obligatorios; decisiones tipadas de
   ampliar contexto ±6 líneas, buscar referencias por categoría y finalizar.
   Máximo cuatro pasos; el revisor principal solicita tres y el evaluador cuatro.
 - ZIP/GitHub: hasta cinco Python y 12.000 caracteres combinados; ZIP hasta 5 MB.

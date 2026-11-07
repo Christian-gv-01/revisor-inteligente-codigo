@@ -74,3 +74,14 @@ Se completó la estructura técnica que puede sustentarse con código y evidenci
 existentes. **No se declara cumplimiento académico total:** faltan respaldos
 originales, validaciones y entregables grupales identificados arriba. Esta
 distinción permite entregar un informe verificable sin inventar resultados.
+
+## Actualización de D08 y cierre del 7 de noviembre
+
+La fila D08 anterior corresponde al 5 de noviembre y se conserva como histórico.
+Christian confirmó posteriormente que hubo sustentación y ensayo, y entregó el
+reparto de diez diapositivas. Se registra en
+[la evidencia actual](evidencias/semana-4/revision7-cierre-20261107/sustentacion-ensayo.json).
+No aportó aún comentarios verbales concretos del ingeniero ni tiempo medido:
+no se convierten los doce minutos planificados en una medición. D05, la
+instalación por otro integrante, y las aceptaciones de D07 siguen requiriendo
+su propia evidencia humana.

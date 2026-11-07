@@ -1,3 +1,7 @@
+> Actualización de producto del 7 de noviembre: Directa es la ruta inicial en API
+> para código/.py; Agente se elige explícitamente. ZIP/GitHub siguen directos.
+> Decisión y evidencia: [ADR E4-13](09-decisiones.md).
+
 # 08. Agente supervisado CODEGUARD
 
 Documento principal vigente. Ronald Yépez, 7 de noviembre de 2026, sobre

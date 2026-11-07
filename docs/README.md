@@ -1,3 +1,7 @@
+El cierre vigente tras la revisión del 7 de noviembre se registra en
+[evidencias de revisión 7](evidencias/semana-4/revision7-cierre-20261107/README.md):
+Directa inicial / Agente opcional y presentación única de diez diapositivas.
+
 # Documentación de CODEGUARD
 
 [Cierre de la entrega documental de Ronald](entrega-ronald-20261107.md): nombres

@@ -1,3 +1,7 @@
+> Actualización de producto del 7 de noviembre: Directa es la ruta inicial en API
+> para código/.py; Agente se elige explícitamente. ZIP/GitHub siguen directos.
+> Decisión y evidencia: [ADR E4-13](09-decisiones.md).
+
 # 03. Arquitectura vigente de CODEGUARD
 
 Actualización del 7 de noviembre de 2026. Frontend y backend comparten los
@@ -124,7 +128,7 @@ hayan ejecutado. Las trazas identifican decisiones realmente realizadas.
 
 | Modalidad | Flujo actual | Respaldo y citas |
 |---|---|---|
-| Código / `.py` desde React en API | Agente integrado | Estático obligatorio, AST y síntesis con hasta seis fuentes |
+| Código / `.py` desde React en API | Directa inicial; Agente al seleccionarlo | Estático obligatorio, AST y síntesis con hasta seis fuentes |
 | `/analizar` y `/archivos` directos | Compatibilidad del análisis directo | Estático según `STATIC_ANALYSIS_ENABLED`; límite tres para recuperación de seguridad |
 | ZIP / GitHub | Directo por archivo | Citas aisladas por informe; límites de entrada y corte del proveedor tras fallo parcial |
 | `/estatico/analizar` | Ruff/Bandit sin Gemini | Reglas y documentación de cada herramienta, sin citas RAG inventadas |

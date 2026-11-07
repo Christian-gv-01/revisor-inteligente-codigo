@@ -1,6 +1,12 @@
 # 08. Plan y resultados de pruebas — Entrega 4
 
-> Resultado público posterior a la integración: **26/26 aprobadas** y análisis con tres fuentes. Ver [15-verificacion-publica-integrada.md](15-verificacion-publica-integrada.md). La continuidad de citas tras el reinicio posterior y el log de recuperación del índice se documentan en [el cierre consolidado](12-cierre-qa-entrega4.md); no constituyen una auditoría completa del volumen.
+> Actualización del cierre del 7 de noviembre: P25 rechaza cinco pasos porque el máximo es cuatro.
+> La [matriz pública vigente](evidencias/semana-4/revision7-cierre-20261107/matriz-publica-3214960.json)
+> registra una ejecución nueva, sin Gemini, antes del cambio de ruta de la interfaz.
+> Las pruebas de proveedor y generación real se enlazan desde [docs/37](37-cierre-verificado.md).
+> Los conteos que siguen conservan sus revisiones históricas.
+
+> Resultado público histórico posterior a la integración: **26/26 aprobadas** y análisis con tres fuentes. Ver [15-verificacion-publica-integrada.md](15-verificacion-publica-integrada.md). La continuidad de citas tras el reinicio posterior y el log de recuperación del índice se documentan en [el cierre consolidado](12-cierre-qa-entrega4.md); no constituyen una auditoría completa del volumen.
 
 ## Alcance
 
@@ -42,7 +48,7 @@ El ejecutor `scripts/pruebas_produccion.py` contiene 26 escenarios y genera JSON
 | P22 | GitHub | Ruta adicional | 400 |
 | P23 | GitHub | Loopback | 400 |
 | P24 | Agente | Nombre traversal | 422 |
-| P25 | Agente | Más de tres pasos | 422 |
+| P25 | Agente | Cinco pasos; máximo permitido cuatro | 422 |
 | P26 | Prompt injection | Código malicioso en AST local | 200, solo lectura |
 
 ### Ejecución local

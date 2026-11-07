@@ -39,6 +39,7 @@ const agentLabUrl = `${(import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, 
 export function HomePage() {
   const [input, setInput] = useState<AnalysisInput>(initial);
   const [mode, setMode] = useState<Mode>("demo");
+  const [reviewRoute, setReviewRoute] = useState<"directa" | "agente">("directa");
   const [scenario, setScenario] = useState<Scenario>("hallazgos");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [selected, setSelected] = useState<Finding | null>(null);
@@ -162,7 +163,7 @@ export function HomePage() {
       const response =
         mode === "demo"
           ? await analyzeDemo(input, scenario, controller.signal)
-          : project
+          : project || reviewRoute === "directa"
              ? await analyzeCode(input, controller.signal)
              : await analyzeWithAgent(input, controller.signal);
       if (controller.signal.aborted) return;
@@ -264,16 +265,26 @@ export function HomePage() {
       <main id="workspace">
         <section className={`mode-banner ${mode}`} aria-label="Configuración de análisis">
           <Icon name="info" size={17} />
-          <p>{mode === "demo" ? "Datos de ejemplo · Simulación local sin IA. Las referencias son ilustrativas." : project ? "Revisión de proyecto: análisis por archivo con fuentes y herramientas estáticas." : "Revisión con agente: inspecciones, herramientas y fuentes en un mismo informe. El código se analiza sin ejecutarlo."}</p>
+          <p>{mode === "demo" ? "Datos de ejemplo · Simulación local sin IA. Las referencias son ilustrativas." : project ? "Revisión de proyecto: análisis por archivo con fuentes y herramientas estáticas." : reviewRoute === "agente" ? "Revisión con agente: inspecciones, herramientas y fuentes en un mismo informe. El código se analiza sin ejecutarlo." : "Revisión directa: fuentes y herramientas estáticas en un informe. El código se analiza sin ejecutarlo."}</p>
           <div className="mode-switch" role="group" aria-label="Modo de análisis">
             <button disabled={busy} aria-pressed={mode === "demo"} onClick={() => { clearResult(); setMode("demo"); }}>Demo</button>
             <button disabled={busy} aria-pressed={mode === "api"} onClick={() => { clearResult(); setMode("api"); }}>API real</button>
           </div>
         </section>
+        {mode === "api" && !project && <section className="review-route" aria-label="Ruta de revisión">
+          <div>
+            <h2>Elige cómo revisar</h2>
+            <p>Directa entrega el informe sin planificar herramientas. Agente añade decisiones trazables y puede requerir más tiempo y llamadas.</p>
+          </div>
+          <div className="mode-switch" role="group" aria-label="Seleccionar ruta de revisión">
+            <button disabled={busy} aria-pressed={reviewRoute === "directa"} onClick={() => { clearResult(); setReviewRoute("directa"); }}>Directa</button>
+            <button disabled={busy} aria-pressed={reviewRoute === "agente"} onClick={() => { clearResult(); setReviewRoute("agente"); }}>Agente</button>
+          </div>
+        </section>}
         <section className="agent-access" aria-labelledby="agent-access-title">
           <div>
             <h2 id="agent-access-title">Agente de revisión</h2>
-            <p>Selecciona «API real» y analiza código o un archivo .py para ver aquí las herramientas, decisiones y fuentes del agente. ZIP y GitHub usan revisión por archivo.</p>
+            <p>Selecciona «API real» y la ruta «Agente» para ver sus herramientas, decisiones y fuentes al analizar código o un archivo .py. La ruta inicial es Directa. ZIP y GitHub usan revisión por archivo.</p>
           </div>
           <a href={agentLabUrl} target="_blank" rel="noopener noreferrer">
             Abrir laboratorio del agente <span>(nueva pestaña)</span>

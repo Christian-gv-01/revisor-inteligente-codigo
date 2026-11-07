@@ -4,7 +4,7 @@ El PR 37 ya se integró en `2888dea8740e2ef0331e2edafeeff2d9a0bfccb8`.
 La revisión inicial localizó un PowerPoint de doce minutos bajo `docs/presentacion/`,
 todavía sin PDF y con frases anteriores a la integración. La actualización de Ronald
 incorpora los resultados del PR 37 al [PowerPoint y guion](presentacion/README.md),
-y añade el [PDF de doce minutos](presentacion/CODEGUARD-12-minutos.pdf).
+y añade el [PDF de doce minutos](historico/presentaciones/CODEGUARD-12-minutos.pdf).
 El paquete debe regenerarse desde un commit que incluya esta actualización.
 
 ## Paquete reproducible

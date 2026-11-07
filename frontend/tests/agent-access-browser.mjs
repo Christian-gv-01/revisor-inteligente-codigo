@@ -54,6 +54,7 @@ try {
   cases.push('Laboratorio ejecuta inspección AST contra FastAPI real, sin Gemini');
   await lab.close();
   await page.getByRole('button', { name: 'API real', exact: true }).click();
+  await page.getByRole('button', { name: 'Agente', exact: true }).click();
   await page.getByRole('button', { name: 'Archivo .py', exact: true }).click();
   await page.locator('input[type=file]').setInputFiles({ name: request.archivo, mimeType: 'text/x-python', buffer: Buffer.from(request.codigo) });
   await page.getByRole('button', { name: 'Analizar código', exact: true }).click();

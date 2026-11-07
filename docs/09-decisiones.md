@@ -48,3 +48,30 @@ nunca la reduce. ID y línea no demuestran por sí solos pertinencia semántica.
 - Consultar la comparación real y su alcance en [docs/18](18-comparacion-semanas-3-4.md).
 
 La aceptación final de riesgos y la autorización de entrega corresponden al equipo.
+
+## E4-13: Directa predeterminada y Agente opcional
+
+Decisión de producto aprobada por Christian el 7 de noviembre de 2026, al responder
+la revisión docente del mismo día. En modo API, código pegado y .py comienzan en
+Directa. Agente queda como opción visible para revisar planificación y trazabilidad.
+Cambiar de ruta limpia el resultado y la propuesta visibles y no inicia análisis.
+ZIP/GitHub conservan su flujo directo y el presupuesto previo obligatorio.
+
+Motivo: la corrida exploratoria c522c24 completó 17/20 informes directos frente a
+14/20 del agente, con medias globales 10,34/22,62 s e intentos SDK 21/71. No se
+demostró mejora de precisión; el F1 1,0 de trece pares completos no se extiende
+a los veinte. Los tokens totales permanecen desconocidos y la huella del índice
+se observó durante y al final, no antes. La decisión responde al resultado
+observado, sin afirmar superioridad universal ni repetir llamadas para elegir
+una corrida favorable. El planificador y los contratos no cambian.
+
+Alternativa descartada como predeterminada: mantener el agente obligatorio solo
+para destacar sus herramientas académicas. Se conserva el acceso explícito para
+ese propósito y se informa que puede requerir más llamadas y tiempo.
+
+Validación: selección inicial Directa para texto y .py, endpoints reales del
+backend con SDK simulado, ninguna planificación automática, selección explícita
+de Agente y regresiones de su traza, presupuesto y correcciones. Evidencias en
+[revisión 7](evidencias/semana-4/revision7-cierre-20261107/). Se mantienen los JSON
+reales de c522c24; el selector no modifica sus métricas ni acredita una nueva
+evaluación generativa.

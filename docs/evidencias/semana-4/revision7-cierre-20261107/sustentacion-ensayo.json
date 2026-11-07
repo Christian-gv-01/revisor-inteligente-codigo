@@ -1,0 +1,69 @@
+{
+  "fecha_registro": "2026-11-07",
+  "fuente": "Mensajes de Christian en esta conversación",
+  "actividad_reportada": {
+    "sustentacion": "realizada según confirmación de Christian",
+    "ensayo": "realizado según confirmación de Christian"
+  },
+  "observaciones_orales_docente": null,
+  "duracion_ensayo_medida_segundos": null,
+  "fecha_hora_actividad": null,
+  "reparto_acordado": [
+    {
+      "inicio_s": 0,
+      "fin_s": 60,
+      "responsable": "Christian",
+      "diapositivas": [
+        1
+      ]
+    },
+    {
+      "inicio_s": 60,
+      "fin_s": 300,
+      "responsable": "Christian",
+      "diapositivas": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "inicio_s": 300,
+      "fin_s": 420,
+      "responsable": "Ronald",
+      "diapositivas": [
+        5,
+        6
+      ]
+    },
+    {
+      "inicio_s": 420,
+      "fin_s": 540,
+      "responsable": "Klever / Andy",
+      "diapositivas": [
+        7,
+        8
+      ]
+    },
+    {
+      "inicio_s": 540,
+      "fin_s": 600,
+      "responsable": "Ronald",
+      "diapositivas": [
+        9
+      ]
+    },
+    {
+      "inicio_s": 600,
+      "fin_s": 720,
+      "responsable": "Klever / Andy",
+      "diapositivas": [
+        10
+      ]
+    }
+  ],
+  "total_planificado_segundos": 720,
+  "medicion_acreditada": false,
+  "estado": "declaración de realización y reparto registrados; faltan medición y observaciones concretas",
+  "observacion": "No convertir los doce minutos planificados en tiempo medido."
+}
