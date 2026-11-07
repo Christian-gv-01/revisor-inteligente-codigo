@@ -1,5 +1,9 @@
 # Documentación de CODEGUARD
 
+Documento principal vigente del [agente supervisado](08-agente.md) y
+[cierre documental y presupuesto del 7 de noviembre](evidencias/semana-4/cierre-agente-presupuesto-20261107/README.md),
+sobre PR #48 (`467d00e`). El documento 17 conserva un enlace al principal.
+
 Sincronización con `384ffaf`: [instalación desde checkout limpio](30-instalacion-checkout-limpio.md)
 y [ensayo pendiente de indicaciones del ingeniero](presentacion/ensayo-cronometrado.md).
 
