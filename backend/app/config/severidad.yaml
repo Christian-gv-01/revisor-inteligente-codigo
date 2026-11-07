@@ -1,0 +1,12 @@
+version: 1
+# Clasificación operativa: no estima probabilidad ni explotabilidad.
+bandit:
+  critica: {alta: critica, media: critica, baja: critica, desconocida: critica}
+  alta: {alta: critica, media: alta, baja: alta, desconocida: alta}
+  media: {alta: media, media: media, baja: media, desconocida: media}
+  baja: {alta: baja, media: baja, baja: baja, desconocida: baja}
+ruff:
+  critica: critica
+  alta: alta
+  media: media
+  baja: baja

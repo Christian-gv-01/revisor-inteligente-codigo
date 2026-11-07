@@ -83,6 +83,13 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
           return (
             <article key={finding.id} className={`finding finding-${finding.severidad} ${selectedId === finding.id ? "selected" : ""}`}>
               <p className="finding-priority">Prioridad de revisión {REVIEW_PRIORITY[finding.severidad]} · {SEVERITY_LABELS[finding.severidad]}</p>
+              {!!finding.herencia_severidad?.length && <div className="analysis-notice">
+                <strong>Severidad calculada por política</strong>
+                <p>Modelo: {finding.severidad_original_modelo} · Resultado: {finding.severidad}. Requiere revisión humana.</p>
+                <ul>{finding.herencia_severidad.map(rule => <li key={rule.id}>
+                  {rule.herramienta} {rule.regla} · línea {rule.linea} · severidad original {rule.severidad_original} · confianza {rule.confianza ?? "no disponible"} · derivada {rule.severidad_derivada}
+                </li>)}</ul>
+              </div>}
               <div className="finding-heading"><span className="finding-category">{finding.categoria}</span><span className={`severity severity-${finding.severidad}`}>{SEVERITY_LABELS[finding.severidad]}</span><button className="finding-title" onClick={() => onSelect(finding)}>{finding.titulo}<Icon name="arrow" size={17} /></button><button className="location-link" onClick={() => onSelect(finding)}><Icon name="file" size={14} />{finding.archivo}<span>· Línea {finding.linea}</span></button></div>
               {line !== undefined && <pre className="finding-code-line"><span>{finding.linea}</span><code>{line}</code></pre>}
               <div className="explanation"><h3><Icon name="info" size={18} />Por qué es un riesgo</h3><p>{finding.explicacion}</p></div>

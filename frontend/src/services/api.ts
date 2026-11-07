@@ -1,4 +1,5 @@
 import { parseAgentTrace } from "./agentTrace";
+import { parseSeverityEvidence } from "./severityEvidence";
 
 import type {
   AnalysisInput,
@@ -318,6 +319,9 @@ function parseFindings(
       referencias = entry.referencias;
     }
 
+    let severityEvidence;
+    try { severityEvidence = parseSeverityEvidence(entry); }
+    catch { throw invalidResponse("La herencia de severidad no cumple el contrato."); }
     return {
       id:
         typeof entry.id === "string" && entry.id.trim()
@@ -333,6 +337,7 @@ function parseFindings(
       ...(referencias !== undefined ? { referencias } : {}),
       ...(typeof entry.fragmento_codigo === "string" ? { fragmento_codigo: entry.fragmento_codigo } : {}),
       ...(typeof entry.linea_reportada_modelo === "number" ? { linea_reportada_modelo: entry.linea_reportada_modelo } : {}),
+      ...severityEvidence,
     };
   });
 }

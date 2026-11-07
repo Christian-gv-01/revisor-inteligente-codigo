@@ -1,0 +1,141 @@
+{
+  "proveedores": "todos simulados",
+  "entrada": {
+    "archivo": "muestra.py",
+    "codigo": "import subprocess\nsubprocess.run(input(), shell=True)\n"
+  },
+  "respuesta": {
+    "archivo": "muestra.py",
+    "modo": "gemini_real",
+    "pasos": [
+      {
+        "numero": 1,
+        "herramienta": "inspeccionar_estructura",
+        "motivo": "Inspección de sintaxis, estructura y evidencia previa de Ruff/Bandit.",
+        "resultado": {
+          "sintaxis_valida": true,
+          "total_lineas": 2,
+          "funciones": 0,
+          "clases": 0,
+          "importaciones": 1,
+          "evidencia_ruff_bandit": {
+            "estado": "completo",
+            "herramientas": [
+              {
+                "herramienta": "ruff",
+                "estado": "ok",
+                "hallazgos": 0
+              },
+              {
+                "herramienta": "bandit",
+                "estado": "ok",
+                "hallazgos": 1
+              }
+            ],
+            "total_hallazgos": 1,
+            "reglas": [
+              {
+                "herramienta": "bandit",
+                "regla": "B602",
+                "tipo": "seguridad",
+                "linea": 2,
+                "severidad": "alta"
+              }
+            ]
+          }
+        },
+        "origen": "automatico"
+      }
+    ],
+    "max_pasos": 4,
+    "informe": {
+      "archivo": "muestra.py",
+      "estado": "analizado",
+      "hallazgos": [
+        {
+          "linea": 2,
+          "severidad": "critica",
+          "categoria": "Inyección comandos",
+          "titulo": "Hallazgo sintético",
+          "explicacion": "Prueba de trazabilidad, no evaluación real",
+          "correccion_sugerida": "Revisar",
+          "referencias": [
+            "seguridad_python-fixture"
+          ],
+          "fragmento_codigo": "subprocess.run(input(), shell=True)",
+          "reglas_evidencia": [
+            "estatica-5e2b59fc0ef4d3e8792e47f1a76b08dfbc0ef536b4bfa75aeb17c1a6e6634a53"
+          ],
+          "severidad_original_modelo": "baja",
+          "herencia_severidad": [
+            {
+              "id": "estatica-5e2b59fc0ef4d3e8792e47f1a76b08dfbc0ef536b4bfa75aeb17c1a6e6634a53",
+              "herramienta": "bandit",
+              "regla": "B602",
+              "linea": 2,
+              "columna": 1,
+              "severidad_original": "alta",
+              "confianza": "alta",
+              "severidad_derivada": "critica"
+            }
+          ]
+        }
+      ],
+      "fuentes": [
+        {
+          "id": "seguridad_python-fixture",
+          "documento": "fixture",
+          "seccion": "fixture",
+          "fuente": "fixture",
+          "url": "https://cwe.mitre.org/data/definitions/78.html",
+          "distancia": 0.1
+        }
+      ],
+      "mensaje": null
+    },
+    "decisiones": [
+      {
+        "herramienta": "finalizar",
+        "motivo": "Evidencia suficiente para el fixture",
+        "numero": 1,
+        "estado": "finalizar"
+      }
+    ],
+    "fase_error": null,
+    "version_herramientas": "2",
+    "terminacion": "finalizacion_anticipada",
+    "analisis_estatico": {
+      "archivo": "muestra.py",
+      "estado": "completo",
+      "hallazgos": [
+        {
+          "herramienta": "bandit",
+          "regla": "B602",
+          "tipo": "seguridad",
+          "linea": 2,
+          "columna": 1,
+          "severidad": "alta",
+          "titulo": "Fixture estático",
+          "descripcion": "Simulado",
+          "confianza": "alta",
+          "referencia": null
+        }
+      ],
+      "herramientas": [
+        {
+          "herramienta": "ruff",
+          "estado": "ok",
+          "hallazgos": 0
+        },
+        {
+          "herramienta": "bandit",
+          "estado": "ok",
+          "hallazgos": 1
+        }
+      ],
+      "mensaje": null
+    },
+    "requiere_confirmacion_humana": false,
+    "politica": "Solo lectura; sin ejecución de código ni cambios de archivos"
+  }
+}

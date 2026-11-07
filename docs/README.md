@@ -1,5 +1,8 @@
 # Documentación de CODEGUARD
 
+Candidato de cierre: [corrección e integración de herencia](36-correccion-herencia-integrada.md) y
+[política de severidad](35-severidad-derivada-herencia.md). Las métricas finales con Gemini siguen pendientes.
+
 Candidato sobre `4f41ebf` (PR #52): [validación de integración](34-cierre-frontend-post52.md),
 [acceso al agente del PR #50](evidencias/semana-4/acceso-agente-20261107/README.md) y
 [evidencia pública histórica del PR #49](32-validacion-publica-post-pr48.md).

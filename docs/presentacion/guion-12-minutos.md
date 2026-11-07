@@ -98,4 +98,4 @@ La comparación final todavía debe incorporarse. La plantilla de resultados ide
 
 Fuentes: docs/presentacion/comparacion-final-pendiente.md; eval/README.md
 
-Nota de integración posterior al PR #52: el guion refleja el nuevo límite; el PPTX/PDF entregado permanece como preparación y requiere regeneración coordinada al cerrar la comparación real. La severidad derivada y su herencia siguen pendientes de backend.
+Nota de integración posterior al PR #52: el guion refleja el nuevo límite; el PPTX/PDF entregado permanece como preparación y requiere regeneración coordinada al cerrar la comparación real. El candidato posterior del PR #54 incorpora severidad derivada y herencia verificable; mostrar el original del modelo y las reglas aplicadas, sin afirmar explotabilidad ni mejora de precisión.

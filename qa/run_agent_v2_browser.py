@@ -41,7 +41,7 @@ def main():
                 data = json.loads(contents[len(marker):])
                 code = data["codigo_no_confiable"]
                 previous = data["resultados_previos_no_confiables"]
-                if "V2_EARLY" in code:
+                if any(marker in code for marker in ("V2_EARLY", "V2_INHERIT", "V2_NEIGHBOR")):
                     tool, arguments = "finalizar", {}
                 elif "V2_ERROR" in code:
                     tool, arguments = "ampliar_contexto", {"linea": 999}
@@ -60,6 +60,15 @@ def main():
             code = payload["codigo_python_no_confiable"]
             evidence = payload["evidencia_herramientas_no_confiable"]
             Client.syntheses += 1
+            if "V2_INHERIT" in code or "V2_NEIGHBOR" in code:
+                rule = next(r for r in evidence["reglas"] if r["regla"] == "B602")
+                line = 4 if "V2_NEIGHBOR" in code else 2
+                return SimpleNamespace(text=json.dumps({"hallazgos": [{
+                    "linea": line, "severidad": "baja", "categoria": "Inyección comandos",
+                    "titulo": "Herencia controlada del fixture", "explicacion": "Solo prueba de contrato",
+                    "correccion_sugerida": "Revisar manualmente", "referencias": ["seguridad_python-003"],
+                    "fragmento_codigo": code.splitlines()[line - 1].strip(), "reglas_evidencia": [rule["id"]],
+                }]}), usage_metadata=SimpleNamespace(prompt_token_count=10, candidates_token_count=2, total_token_count=12))
             if "V2_FULL" in code or "V2_FOUR" in code:
                 assert evidence["contextos_ampliados"][0]["linea_objetivo"] == 2
                 assert evidence["referencias_buscadas"][0]["fragmentos"]

@@ -53,11 +53,11 @@ try {
   await lab.close();
   assert.equal(await page.getByLabel('Nombre del archivo', { exact: true }).inputValue(), 'conservado.py');
   cases.push({ caso: 'Acceso por proxy Vite sin autoanálisis; AST local real conserva el editor y no consume IA', aprobado: true });
-  const run = async marker => {
+  const run = async (marker, suppliedCode) => {
     await page.goto(origin);
     await page.getByRole('button', { name: 'API real', exact: true }).click();
     await page.getByRole('button', { name: 'Archivo .py', exact: true }).click();
-    const code = `nombre=input()\ncursor.execute("SELECT * FROM usuarios WHERE nombre = '" + nombre + "'")\n# ${marker}\n`;
+    const code = suppliedCode ?? `nombre=input()\ncursor.execute("SELECT * FROM usuarios WHERE nombre = '" + nombre + "'")\n# ${marker}\n`;
     await page.locator('input[type=file]').setInputFiles({ name: 'muestra.py', mimeType: 'text/x-python', buffer: Buffer.from(code) });
     const response = page.waitForResponse(r => r.url().endsWith('/agente/analizar') && r.request().method() === 'POST');
     await page.getByRole('button', { name: 'Analizar código', exact: true }).click();
@@ -99,6 +99,27 @@ try {
   await page.locator('.agent-trace').getByText('No completada', { exact: false }).waitFor();
   assert.equal(await page.locator('.agent-context').count(), 0);
   cases.push({ caso: 'Error contextual conserva decisión y respaldo local, sin resultado inventado', aprobado: true });
+  const commandCode = marker => `import subprocess\nsubprocess.run(input(), shell=True)\n# ${marker}\ndato = input()\n`;
+  const inherited = await run('V2_INHERIT', commandCode('V2_INHERIT'));
+  const finding = inherited.informe.hallazgos[0];
+  assert.equal(finding.severidad, 'critica'); assert.equal(finding.severidad_original_modelo, 'baja');
+  assert.equal(finding.herencia_severidad[0].regla, 'B602');
+  assert.equal(inherited.analisis_estatico.hallazgos.find(h => h.regla === 'B602').severidad, 'alta');
+  await page.getByText('Severidad calculada por política', { exact: true }).waitFor();
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Exportar JSON', exact: true }).first().click();
+  const download = await downloadPromise;
+  await download.saveAs(`${folder}/herencia-exportada.json`);
+  const report = JSON.parse(await fs.readFile(`${folder}/herencia-exportada.json`, 'utf8'));
+  assert.deepEqual(report.hallazgos[0].herencia_severidad, finding.herencia_severidad);
+  assert.equal(report.hallazgos[0].severidad_original_modelo, 'baja');
+  cases.push({ caso: 'Bandit real y modelo simulado: herencia visible y exportada, originales conservados', aprobado: true });
+  const neighbor = await run('V2_NEIGHBOR', commandCode('V2_NEIGHBOR'));
+  assert.equal(neighbor.informe.estado, 'parcial');
+  assert.equal(neighbor.informe.hallazgos[0].severidad, 'baja');
+  assert(!neighbor.informe.hallazgos[0].herencia_severidad?.length);
+  assert.equal(await page.getByText('Severidad calculada por política', { exact: true }).count(), 0);
+  cases.push({ caso: 'Regla en otra línea no eleva el hallazgo ni fabrica auditoría', aprobado: true });
   // El proxy /agente pertenece al PR #50. Este candidato independiente
   // comprueba el laboratorio servido por la API, además del React vía Vite.
   await page.goto(`${api}/agente/demo`);
