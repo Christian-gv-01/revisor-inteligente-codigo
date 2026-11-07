@@ -61,7 +61,7 @@ No inferir tokens ahorrados ni mejor precisión a partir de elegir otra herramie
 - Integración HTTP con FastAPI, ChromaDB y analizadores reales: 24/24 con estático y 19/19 aplicables sin él, con cinco omitidas por configuración. Gemini y GitHub simulados.
 - Lint y compilación frontend correctos. Persiste la advertencia previa de bundle mayor de 500 kB.
 - Regresión JavaScript del laboratorio aprobada.
-- Se añadió al recorrido de navegador el caso de cuatro pasos, propagación a síntesis y agregado de uso SDK sintético. No hay Chromium instalado en este entorno local; su ejecución queda a la verificación CI, sin atribuirle un resultado local.
+- Se añadió al recorrido de navegador el caso de cuatro pasos, propagación a síntesis y agregado de uso SDK sintético. El laboratorio se abre en la API loopback; el proxy Vite `/agente` pertenece al PR #50, todavía independiente. No hay Chromium instalado en este entorno local; su ejecución queda a la verificación CI, sin atribuirle un resultado local.
 
 ## Coordinación y pendientes
 

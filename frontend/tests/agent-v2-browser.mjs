@@ -73,7 +73,9 @@ try {
   await page.locator('.agent-trace').getByText('No completada', { exact: false }).waitFor();
   assert.equal(await page.locator('.agent-context').count(), 0);
   cases.push({ caso: 'Error contextual conserva decisión y respaldo local, sin resultado inventado', aprobado: true });
-  await page.goto(`${origin}/agente/demo`);
+  // El proxy /agente pertenece al PR #50. Este candidato independiente
+  // comprueba el laboratorio servido por la API, además del React vía Vite.
+  await page.goto(`${api}/agente/demo`);
   await page.locator('#filename').fill('cuatro.py');
   await page.locator('#code').fill('nombre=input()\ncursor.execute("SELECT * FROM usuarios WHERE nombre = " + nombre)\n# V2_FOUR\n');
   await page.locator('#steps').selectOption('4');
