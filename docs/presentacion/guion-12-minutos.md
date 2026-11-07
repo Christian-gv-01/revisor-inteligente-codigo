@@ -4,6 +4,10 @@ Preparación del 7 de noviembre de 2026. Doce diapositivas, 720 segundos
 planificados, sin acreditar ensayo ni reparto. Las dos corridas reales usan `8e66b2c` y `c522c24`.
 El ajuste de consumo posterior está en PR #57 y no cambia los prompts del análisis.
 
+Integrantes confirmados: Ronald Yépez, Klever Andres Alban Cruz (Andy) y Christian
+Gamboa. La base técnica final es `b6ce96c`; las métricas siguientes conservan sus
+commits de evaluación. El nombre completo se incorpora sin cambiar resultados.
+
 ## 1. CODEGUARD — 30 segundos
 
 CODEGUARD es un revisor asistido de Python. Combina herramientas estáticas,

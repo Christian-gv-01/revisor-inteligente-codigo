@@ -1,5 +1,8 @@
 # Documentación de CODEGUARD
 
+[Cierre de la entrega documental de Ronald](entrega-ronald-20261107.md): nombres
+confirmados, paquete verificado de `b6ce96c` y alcance de las actividades humanas.
+
 Estado vigente: [37. Cierre verificado](37-cierre-verificado.md), con trazabilidad
 frente a la revisión docente de `605d142`, funcionalidades integradas y límites.
 

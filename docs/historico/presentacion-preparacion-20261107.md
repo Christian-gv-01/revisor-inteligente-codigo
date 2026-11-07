@@ -5,14 +5,14 @@ Preparación vigente: 7 de noviembre de 2026, base integrada
 veinte casos sigue pendiente de las evidencias de Christian. No se afirma mejora
 de precisión del agente.
 
-- [Presentación editable preparada para el cierre](CODEGUARD-cierre-20261107.pptx).
-- [PDF de esta preparación](CODEGUARD-cierre-20261107.pdf).
-- [Guion y fuentes](guion-12-minutos.md).
-- [Plantilla y criterios para incorporar la comparación final](comparacion-final-pendiente.md).
+- [Presentación editable preparada para el cierre](../presentacion/CODEGUARD-cierre-20261107.pptx).
+- [PDF de esta preparación](../presentacion/CODEGUARD-cierre-20261107.pdf).
+- [Guion y fuentes](../presentacion/guion-12-minutos.md).
+- [Plantilla y criterios para incorporar la comparación final](../presentacion/comparacion-final-pendiente.md).
 - [Trazabilidad frontend](../29-revision-frontend-agente-presupuesto.md).
 
-Se conservan como históricos el [PPTX del 6 de noviembre](CODEGUARD-borrador-12-minutos.pptx)
-y su [PDF](CODEGUARD-12-minutos.pdf). No contienen la política de prioridad ni las
+Se conservan como históricos el [PPTX del 6 de noviembre](../presentacion/CODEGUARD-borrador-12-minutos.pptx)
+y su [PDF](../presentacion/CODEGUARD-12-minutos.pdf). No contienen la política de prioridad ni las
 comprobaciones nuevas de esta preparación. Usar la versión vigente al ensayar.
 
 | Diapositiva | Contenido | Segundos |
@@ -34,7 +34,7 @@ comprobaciones nuevas de esta preparación. Usar la versión vigente al ensayar.
 Doce minutos planificados, sin preguntas; no es un ensayo cronometrado. Ronald
 indicó que el reparto depende de las instrucciones del ingeniero para el 7 de
 noviembre. No se asignan expositores todavía. Se preparó una
-[hoja de coordinación y medición](ensayo-cronometrado.md), pendiente de completar
+[hoja de coordinación y medición](../presentacion/ensayo-cronometrado.md), pendiente de completar
 con datos reales. Las notas contienen fuentes y límites de cada afirmación.
 
 ## Separación de resultados
