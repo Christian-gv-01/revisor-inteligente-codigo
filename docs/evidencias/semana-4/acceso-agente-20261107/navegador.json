@@ -1,0 +1,16 @@
+{
+  "resultado": "aprobado",
+  "casos": [
+    "Enlace abre el laboratorio real mediante proxy, conserva editor y no inicia análisis",
+    "Laboratorio ejecuta inspección AST contra FastAPI real, sin Gemini",
+    "Revisor envía solicitud v2 y muestra traza del contrato simulado",
+    "Acceso visible en móvil de 390 px sin desbordamiento horizontal"
+  ],
+  "errores_javascript": [],
+  "peticiones_post": [
+    "/api/v1/agente/previsualizar",
+    "/api/v1/agente/analizar"
+  ],
+  "gemini_real": false,
+  "alcance": "Laboratorio y AST reales; respuesta del análisis principal simulada con fixture publicado"
+}

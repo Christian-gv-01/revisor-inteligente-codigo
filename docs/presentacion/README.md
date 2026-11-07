@@ -1,13 +1,19 @@
 # Sustentación de doce minutos: agente v2 y presupuesto
 
-Referencia común: `9c97ca1c8797bad5bdfdf227dba119b7839d32c7` (PR #45).
-Actualización de Ronald, 6 de noviembre de 2026. La comparación real final de
-veinte casos aún debe incorporarse con las evidencias de Christian.
+Preparación vigente: 7 de noviembre de 2026, base integrada
+`467d00e0d56a98cd758f382a5c713737eb490845` (PR #48). La comparación real final de
+veinte casos sigue pendiente de las evidencias de Christian. No se afirma mejora
+de precisión del agente.
 
-- [Presentación editable](CODEGUARD-borrador-12-minutos.pptx), con el nombre existente.
-- [PDF para exposición](CODEGUARD-12-minutos.pdf).
+- [Presentación editable preparada para el cierre](CODEGUARD-cierre-20261107.pptx).
+- [PDF de esta preparación](CODEGUARD-cierre-20261107.pdf).
 - [Guion y fuentes](guion-12-minutos.md).
+- [Plantilla y criterios para incorporar la comparación final](comparacion-final-pendiente.md).
 - [Trazabilidad frontend](../29-revision-frontend-agente-presupuesto.md).
+
+Se conservan como históricos el [PPTX del 6 de noviembre](CODEGUARD-borrador-12-minutos.pptx)
+y su [PDF](CODEGUARD-12-minutos.pdf). No contienen la política de prioridad ni las
+comprobaciones nuevas de esta preparación. Usar la versión vigente al ensayar.
 
 | Diapositiva | Contenido | Segundos |
 |---|---|---:|
@@ -22,7 +28,7 @@ veinte casos aún debe incorporarse con las evidencias de Christian.
 | 9 | Fuentes y recuperación histórica | 60 |
 | 10 | Revisión frontend y pruebas controladas | 60 |
 | 11 | Trazabilidad y documentación | 70 |
-| 12 | Responsabilidades y evaluación final pendiente | 50 |
+| 12 | Comparación final pendiente y condiciones comunes | 50 |
 | **Total** | | **720** |
 
 Doce minutos planificados, sin preguntas; no es un ensayo cronometrado. Ronald
@@ -45,12 +51,18 @@ generalización ni despliegue de la revisión nueva.
 
 El presupuesto sigue apagado por defecto. Aprobar presupuesto autoriza analizar
 una instantánea; aprobar una corrección autoriza descargar una copia. La política
-severidad × confianza corresponde a Backend y no se declara terminada.
+severidad × confianza está integrada en PR #48 y se explica sin atribuir a Gemini
+la confianza de Bandit ni afirmar una mejora en la evaluación final.
 
 ## Publicación y paquete
 
-Esta edición continúa el PR #39, recuperado en la rama actual antes de actualizar
-el contenido. Revisar los PR conjuntamente para evitar duplicar versiones.
+La versión histórica proviene del PR #39 y de la revisión incorporada por PR #46.
+Esta preparación se entrega en `docs/cierre-agente-presupuesto-ronald`, separada
+del acceso del PR #50. El README identifica qué archivos corresponden a cada fecha.
 Christian debe regenerar el ZIP desde el commit de entrega acordado que incluya
 estos archivos y, posteriormente, los resultados finales. No alterar manualmente
 el manifiesto del ZIP anterior. Esta preparación no activa flags ni despliega.
+
+## Actualización pendiente tras PR #52
+
+Este candidato incorpora v2 de hasta cuatro pasos, ventana ±6 y contadores del SDK. El PPTX/PDF del 7 de noviembre se preserva tal como lo entregó Ronald; deberá regenerarse con estos límites y los resultados reales finales. La prioridad de ordenación está integrada, pero la severidad derivada crítica y su herencia siguen pendientes de backend. No declarar cerrada esa observación docente ni presentar este PDF como versión final.

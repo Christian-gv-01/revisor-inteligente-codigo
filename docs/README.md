@@ -1,5 +1,13 @@
 # Documentación de CODEGUARD
 
+Candidato sobre `4f41ebf` (PR #52): [validación de integración](34-cierre-frontend-post52.md),
+[acceso al agente del PR #50](evidencias/semana-4/acceso-agente-20261107/README.md) y
+[evidencia pública histórica del PR #49](32-validacion-publica-post-pr48.md).
+
+Documento principal vigente del [agente supervisado](08-agente.md) y
+[cierre documental y presupuesto del 7 de noviembre](evidencias/semana-4/cierre-agente-presupuesto-20261107/README.md),
+sobre PR #48 (`467d00e`). El documento 17 conserva un enlace al principal.
+
 Sincronización con `384ffaf`: [instalación desde checkout limpio](30-instalacion-checkout-limpio.md)
 y [ensayo pendiente de indicaciones del ingeniero](presentacion/ensayo-cronometrado.md).
 
@@ -30,7 +38,8 @@ Responsable de esta edición: Ronald Yépez, QA, seguridad y documentación.
 | [10. Análisis estático](10-analisis-estatico.md) | Ruff/Bandit, límites, contrato y estados |
 | [11. Aportes e IA](11-aportes-ia.md) | Responsables confirmados, autoría y herramientas |
 | [12. Cierre QA](12-cierre-qa-entrega4.md) | Integración, producción, reinicio y riesgos pendientes |
-| [17. Agente integrado](17-agente-integrado.md) | Evidencia tipada, síntesis y trazas en React |
+| [08. Agente](08-agente.md) | Documento principal: herramientas, límites, evidencia y evaluación |
+| [17. Referencia histórica](17-agente-integrado.md) | Remite al documento principal 08 |
 | [18. Comparación](18-comparacion-semanas-3-4.md) | Diferencias de configuración y resultados comparables |
 | [19. Cierre documental](19-cierre-documental.md) | Cumplimiento documental y pendientes reales por responsable |
 | [Datos e IA](tratamiento-datos.md) | Qué se procesa, destinatarios y limitaciones |

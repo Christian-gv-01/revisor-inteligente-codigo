@@ -52,6 +52,14 @@ main { max-width: 1800px; margin: auto; padding: 16px 22px 0; }
 .mode-switch button { color: #476080; background: none; padding: 5px 12px; font-size: 11px; border-radius: 3px; }
 .mode-switch button[aria-pressed="true"] { color: #fff; background: #155a70; }
 .workspace-grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+.agent-access { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 14px 16px; margin-bottom: 16px; background: #fcfdff; border: 1px solid var(--border); border-radius: 7px; }
+.agent-access > div { flex: 1 1 320px; }
+.agent-access h2 { font-size: 15px; margin-bottom: 6px; }
+.agent-access p { font-size: 12px; line-height: 1.6; color: #506987; }
+.agent-access > a { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 10px 12px; border: 1px solid #95c9ca; border-radius: 5px; background: #e5f8f5; color: #006469; font-size: 12px; font-weight: 600; }
+.agent-access > a:hover { background: #d5f1ec; }
+.agent-access > a span { font-weight: 400; }
+.agent-access .agent-access-note { flex-basis: 100%; font-size: 11px; }
 .panel { background: #fcfdff; border: 1px solid var(--border); border-radius: 9px; box-shadow: 0 3px 12px #20365b04; min-width: 0; overflow: hidden; }
 .panel-heading { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 15px 17px; border-bottom: 1px solid #e0eaf5; background: linear-gradient(100deg, #f8fbff, #ffffff); }
 .panel-heading > div { display: flex; align-items: center; gap: 10px; min-width: 0; color: #18375e; }

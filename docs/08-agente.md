@@ -1,105 +1,229 @@
-# 08 — Agente supervisado CODEGUARD (Agent Mission Control)
+# 08. Agente supervisado CODEGUARD
 
-> Evolución posterior: PR #31 integra el agente en React para código/`.py` y
-> entrega evidencia estática/AST tipada a la síntesis. El contrato vigente y las
-> pruebas están en [17-agente-integrado.md](17-agente-integrado.md). Este registro
-> conserva el diseño inicial de Agent Lab; ZIP/GitHub mantienen el flujo directo.
+Documento principal vigente. Ronald Yépez, 7 de noviembre de 2026, sobre
+`467d00e0d56a98cd758f382a5c713737eb490845` (PR #48). Consolida el diseño inicial
+y la integración antes descrita en el documento 17. Los [contratos v2](contrato-agente-v2/README.md)
+detallan esquemas y ejemplos. Actualización de integración sobre `4f41ebf` (PR #52): cuatro pasos v2 y contadores de uso. La referencia del código no acredita la versión activa en Railway.
 
-## Propósito
+## Propósito y recorrido del producto
 
-Ampliar el revisor de seguridad con una **capa de orquestación limitada** y una trazabilidad observable de herramientas. El objetivo es demostrar un agente que observa la estructura del código, escoge herramientas autorizadas y entrega al usuario los resultados **sin ejecutar código no confiable**.
+El agente coordina inspecciones limitadas de Python, reúne evidencia estática y
+documental y produce un informe revisable. Ayuda a localizar riesgos y explicar
+recomendaciones. No ejecuta el programa recibido, modifica repositorios ni
+certifica que el código sea seguro.
 
-## Arquitectura y decisiones
+En React, **API real** y el botón de análisis para código pegado o `.py` solicitan
+`POST /api/v1/agente/analizar` con `version_herramientas: "2"`. El usuario ve
+hallazgos, observaciones Ruff/Bandit y **Proceso de revisión del agente**.
+El JSON conserva estado, fuentes y traza. Esta aparece al terminar la petición;
+la animación de espera no representa decisiones transmitidas en vivo.
 
-1. `POST /api/v1/agente/analizar` valida la entrada por `SolicitudAgente` (Pydantic).
-2. `inspeccionar_estructura` ejecuta siempre una inspección AST inicial.
-3. **Gemini** selecciona una herramienta adicional de la lista cerrada o finaliza. Su decisión se valida por `DecisionAgente`; recibe resultados reales de herramientas previas para planear la siguiente acción.
-4. Cada herramienta es determinista y sin efectos secundarios: `inspeccionar_estructura`, `detectar_llamadas_sensibles`, `revisar_consultas_sql`.
-5. El orquestador limita el flujo a **máximo 3 pasos**, corta decisiones repetidas y prohíbe comandos arbitrarios.
-6. Al terminar, el informe definitivo viene del analizador `analizar_codigo` existente, que usa Gemini y fuentes RAG verificables. **Las observaciones AST son indicadores auxiliares; no equivalen automáticamente a hallazgos confirmados**.
-7. `GET /agente/demo` muestra el trazado público de las herramientas, el dictamen y las fuentes documentales.
+ZIP/GitHub mantienen revisión directa por archivo, con presupuesto previo cuando
+la función está habilitada. No tienen el bucle v2 de un único archivo. Demo de React
+usa ejemplos simulados. El laboratorio `/agente/demo` es una pantalla independiente
+con modos Gemini y AST local; no debe confundirse con Demo de React. Su acceso
+visible se incorpora a este candidato desde el [PR #50](https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/50).
+No hace falta incrustarlo para conectar el agente al análisis principal.
 
-El modo local `POST /api/v1/agente/previsualizar` ejecuta únicamente las herramientas AST y devuelve una abstención explicando que no hubo IA. Sirve como demostración segura si el proveedor externo no está disponible, pero **no debe presentarse como un análisis con Gemini**.
+## Herramientas y controles obligatorios
 
-## Contrato Pydantic y límites
+Ruff y Bandit se ejecutan una vez antes del bucle; Gemini no puede omitirlos. Sus
+observaciones permanecen en `analisis_estatico`, separadas de `informe.hallazgos`
+y fuentes RAG. No se suman ambas capas como vulnerabilidades diferentes ni se
+inventan referencias MITRE/OWASP para alertas estáticas.
 
-`SolicitudAgente`: `archivo` .py válido sin ruta, `codigo` de 1 a 12000 caracteres, `max_pasos` entre 1 y 3. También se rechaza texto vacío o binario con NUL.
+| Acción | Entrada y resultado | Alcance |
+|---|---|---|
+| `inspeccionar_estructura` | Código; sintaxis, líneas y cantidades de elementos AST | Paso inicial automático obligatorio |
+| `detectar_llamadas_sensibles` | Código; hasta 20 indicadores de llamadas como `eval`, `exec`, `os` y `subprocess` | Heurística AST sin ejecutar las llamadas |
+| `revisar_consultas_sql` | Código; hasta 20 indicadores de SQL dinámico en `execute`/`executemany` | Heurística con posibles falsos positivos y omisiones |
+| `ampliar_contexto` | Línea existente; hasta 13 líneas, radio 6 y hasta 500 caracteres por línea | Solo v2; conserva números y marca truncamiento |
+| `buscar_referencia` | Categoría permitida; hasta 2 fragmentos de 2.000 caracteres y metadatos | Solo v2; consulta el índice local, no navega a URLs |
+| `finalizar` | Sin argumentos; pasa a síntesis | Decisión de control, no herramienta ejecutada |
 
-`DecisionAgente`: tipo literal de herramienta y motivo breve (texto descriptivo publicable, no cadena de razonamiento oculta).
+Categorías: `ejecucion_codigo`, `inyeccion_sql`, `inyeccion_comandos`, `inyeccion`,
+`credenciales`, `rutas` y `deserializacion`. Cada una tiene una consulta fija. El esquema rechaza
+argumentos ajenos a la herramienta, propiedades extra, líneas inválidas y
+categorías no permitidas. No hay shell, consultas libres ni herramientas de
+escritura. Ruff/Bandit son procesos autorizados de análisis; no ejecutan el
+código del usuario como programa. Ruff selecciona deliberadamente `E4,E7,E9,F`; no representa todas sus reglas disponibles.
 
-`RespuestaAgente`: archivo, modo real o local, pasos detallados, límite, informe estructurado, política de seguridad y campo de confirmación humana. 
+## Bucle de decisión y límites
 
-## Degradación controlada cuando falla Gemini (Semana 4)
+1. Pydantic valida nombre `.py` sin rutas, texto de 1 a 12.000 caracteres y
+   `max_pasos` de 1 a 4 para v2 (v1 y valor predeterminado conservan 3). Se rechazan código vacío y bytes NUL.
+2. Ruff/Bandit producen evidencia y se ejecuta `inspeccionar_estructura` como paso 1.
+3. Gemini recibe el código como datos no confiables y los resultados observados.
+   Selecciona una herramienta autorizada con argumentos tipados o `finalizar`.
+4. Backend valida y ejecuta la decisión. Su resultado alimenta la decisión
+   siguiente. Repetir herramienta y argumentos detiene el bucle; argumentos
+   diferentes consumen otro paso dentro del mismo límite.
+5. Al finalizar, la síntesis Gemini + RAG recibe la evidencia efectivamente reunida.
+   Las citas y ubicaciones se validan antes de publicarse.
 
-- El modo normal devuelve `modo=gemini_real` únicamente cuando el planificador y el informe contextual Gemini + RAG terminan correctamente.
-- Cuando Gemini devuelve un error del proveedor HTTP **502, 503 o 504**, el endpoint `/api/v1/agente/analizar` conserva los pasos ya ejecutados y, si es necesario, completa las inspecciones AST locales restantes, respeta `max_pasos` y entrega HTTP 200 **con `modo=degradado`, `informe.estado=parcial`**, sin hallazgos de IA ni fuentes RAG inventadas.
-- Este modo degradado **no equivale a un dictamen de seguridad**: los indicadores AST pueden ser incompletos o imprecisos. La interfaz debe informar de ello y no presentar la ejecución como «auditoría con IA finalizada».
-- Otros errores (por ejemplo un 429 de la capa HTTP) conservan su estado original, en vez de ocultarse bajo un resultado parcial.
-- Los errores del planificador se diferencian: 408/504 → 504; saturación 429/500/502/503 → 503; respuesta inválida o decisión no autorizada → 502. Los detalles internos, la clave API y los mensajes crudos del proveedor **no** se muestran al usuario.
-- Se conserva una lista cerrada de herramientas de solo lectura y un máximo de tres pasos. No se ejecuta, importa o modifica el código de entrada.
+En v2 hay hasta cuatro pasos totales, incluida la inspección inicial, hasta tres
+decisiones y una síntesis. React conserva su petición explícita de tres pasos;
+el laboratorio permite cuatro y el evaluador final los solicita por defecto. `max_pasos=1` evita decisiones adicionales, pero mantiene síntesis y
+controles estáticos. La solicitud admite como máximo nueve intentos al proveedor,
+incluidos reintentos, y un plazo cooperativo de hasta 150 segundos, reducible por
+configuración. No es una promesa de latencia ni cancelación forzosa de tareas
+locales. El frontend espera hasta 180 segundos; dejar de esperar no revoca lo iniciado.
 
-**Limitación:** el fallback se realiza después de que fallen las consultas a Gemini; por lo tanto puede haber latencia adicional. No se ha demostrado un 503 real en Railway con fallback hasta ejecutar una prueba de aceptación en producción. Las pruebas de regresión simulan al proveedor y verifican el contrato seguro.
+La configuración centralizada está en [settings.py](../backend/app/config/settings.py).
+Omitir `version_herramientas` conserva v1; React solicita explícitamente v2. El
+contrato v2 permite el cuarto paso sin habilitar escritura ni aumentar el plazo o los nueve intentos.
 
-## Trazabilidad del planificador y recuperación de evidencia (Semana 4)
+## Evidencia, fuentes y trazabilidad
 
-El agente conserva **acciones observables**, sin revelar pensamientos internos del modelo. La respuesta de `POST /api/v1/agente/analizar` añade campos compatibles con los existentes:
+El planificador recibe un resumen de hasta 20 reglas estáticas. La evidencia de
+síntesis admite hasta 40 reglas priorizadas por severidad y tres inspecciones con
+hasta 20 indicadores cada una, además de los contextos y referencias v2. La
+respuesta conserva la lista estática completa y sus estados. Resumen y respuesta
+completa tienen límites diferentes.
 
-- `decisiones[]`: número, herramienta elegida, motivo público breve y estado de la decisión (`ejecutada`, `finalizar`, `repetida`). Solo incluye decisiones realmente devueltas y validadas del planificador. Si `max_pasos=1`, no se llama al planificador y la lista permanece vacía.
-- `pasos[].origen`: `automatico` para la inspección inicial obligatoria, `gemini` si la herramienta fue seleccionada por el modelo, `local` si se ejecutó como respaldo determinista.
-- `fase_error`: `planificacion`, `informe` o `null`, útil para distinguir dónde ocurrió un fallo.
+Las referencias recuperadas por la herramienta v2 se reutilizan como contexto y
+lista permitida de citas. Si no se recuperó ninguna, se conserva la recuperación
+por categorías derivadas de evidencia. Se limita a seis fuentes únicas de seguridad;
+los documentos de contexto del proyecto no se convierten en fuentes oficiales.
+El [inventario](04-fuentes.md) contiene ocho originales y seis reglas curadas.
 
-**Cambio respecto al respaldo anterior:** si el proveedor falla después de seleccionar herramientas, el backend conserva los pasos y decisiones reales. Puede completar las herramientas AST restantes de forma local **sin repetir herramientas**, y marca `modo=degradado` y `informe.estado=parcial`. Los pasos de respaldo no se atribuyen al modelo.
+Cada hallazgo contextual aceptado cita IDs recuperados y un fragmento literal de
+una sola línea. La línea declarada solo se ajusta si el fragmento tiene ubicación
+única, conservando `linea_reportada_modelo`. Un fragmento ambiguo o cita inválida
+descarta ese hallazgo. Si quedan hallazgos válidos, se conservan con estado parcial;
+si todos se rechazan, el sistema se abstiene. Resolver un ID y encontrar un
+fragmento no prueba pertinencia semántica ni explotabilidad.
 
-### Ejemplo ilustrativo de degradación después de planificar
+La traza publica acciones observables, no razonamiento interno:
 
-```json
-{
-  "modo": "degradado",
-  "fase_error": "informe",
-  "decisiones": [
-    {"numero": 1, "herramienta": "detectar_llamadas_sensibles", "motivo": "Inspeccionar eval", "estado": "ejecutada"},
-    {"numero": 2, "herramienta": "finalizar", "motivo": "Inspección suficiente", "estado": "finalizar"}
-  ],
-  "pasos": [
-    {"numero": 1, "herramienta": "inspeccionar_estructura", "origen": "automatico", "motivo": "Inspección inicial", "resultado": {"sintaxis_valida": true}},
-    {"numero": 2, "herramienta": "detectar_llamadas_sensibles", "origen": "gemini", "motivo": "Inspeccionar eval", "resultado": {"sintaxis_valida": true, "indicadores": [{"linea": 3, "llamada": "eval"}]}},
-    {"numero": 3, "herramienta": "revisar_consultas_sql", "origen": "local", "motivo": "Respaldo determinista", "resultado": {"sintaxis_valida": true, "indicadores": []}}
-  ],
-  "informe": {
-    "archivo": "ejemplo.py", "estado": "parcial", "hallazgos": [], "fuentes": [],
-    "mensaje": "No hay dictamen de IA ni referencias RAG."
-  }
-}
+- `pasos`: herramienta, resultado, motivo público, origen `automatico`, `gemini`
+  o `local`, y argumentos cuando corresponde en v2.
+- `decisiones`: `ejecutada`, `finalizar`, `repetida` o `error`; un error no se muestra
+  como resultado exitoso.
+- `terminacion`: `finalizacion_anticipada`, `max_pasos` o `herramienta_repetida`.
+- `fase_error`: `planificacion`, `herramienta`, `informe` o `null`.
+
+La prioridad conserva la severidad original. La política integrada del PR #48 usa
+pesos 8/4/2/1 y factores Bandit 1,0/0,8/0,6, con severidad dominante, desempate por
+categoría y orden estable. Sin confianza reconocida no hay puntuación. La confianza
+de Bandit no se atribuye a Gemini ni representa una probabilidad calibrada.
+Véase la [política estática](10-analisis-estatico.md) y su
+[validación conjunta](31-validacion-conjunta-pr46-pr47.md).
+
+Esta política ordena hallazgos, pero todavía no implementa la severidad derivada
+solicitada por el docente (alta × confianza alta → crítica) ni su herencia a los
+hallazgos contextuales mediante reglas vinculadas. Ese ajuste sigue pendiente
+del compañero de backend; no se declara resuelto por la integración del PR #48.
+
+## Respaldo, abstención y errores
+
+`POST /api/v1/agente/previsualizar` ejecuta AST sin Gemini, con
+`modo: "inspeccion_local"` e informe abstenido. Es distinto de previsualizar una
+corrección o un presupuesto.
+
+La ruta de análisis devuelve `modo: "gemini_real"` si planificación y síntesis
+terminan sin error de proveedor, aunque el informe puede ser parcial o abstenido
+por validación. Ese nombre de modo en un fixture no acredita una llamada real.
+Ante errores controlados 502/503/504 conserva pasos, decisiones y evidencia
+estática y responde HTTP 200, `modo: "degradado"`, estado parcial. Puede completar
+AST local sin atribuirlo al modelo. Otros estados, como un 429 de la protección
+HTTP, no se convierten automáticamente en éxito.
+
+Se distinguen fallos de planificación, herramienta y síntesis. No se devuelven
+claves ni mensajes crudos del proveedor. El respaldo puede agregar latencia y
+no equivale a un dictamen completo. Ruff/Bandit tienen sus propios estados de
+error o timeout, que la interfaz conserva.
+
+## Confirmación humana: dos autorizaciones diferentes
+
+El bucle es de solo lectura. `requiere_confirmacion_humana` en su respuesta no
+sustituye los protocolos de propuestas y decisiones:
+
+| Flujo | Antes de decidir | Aprobar | Rechazar o caducar |
+|---|---|---|---|
+| Presupuesto ZIP/GitHub | Archivos, análisis previstos, máximo de intentos incluidos reintentos, modelo, plazo cooperativo y vencimiento | Autoriza analizar la instantánea vinculada a sesión, ID y hash | No autoriza consumo de Gemini; servidor rechaza propuestas vencidas |
+| Copia corregida | Código original y propuesta, con consentimiento inicialmente desmarcado | Autoriza descargar una copia del contenido revisado | Cancela o impide utilizar la propuesta; no genera una copia aprobada |
+
+El presupuesto no estima dinero ni tokens. Preparar GitHub sí descarga contenidos,
+pero no consulta Gemini. El plazo cooperativo mostrado es un límite operativo,
+no una predicción de duración. Previsualizar una corrección puede involucrar al
+proveedor para generar la propuesta: aprobar autoriza la descarga, no afirma
+que no hubo consumo previo.
+
+Presupuesto usa `/api/v1/proyectos/previsualizar/zip`,
+`/api/v1/proyectos/previsualizar/github` y `/api/v1/proyectos/{id}/decision`.
+Correcciones usa `/api/v1/correcciones/previsualizar` y
+`/api/v1/correcciones/{id}/decision`. Ambos validan sesión y estado propios.
+No se ejecuta código ni se sobrescriben originales. Caducidad, idempotencia y
+conflictos se detallan en [presupuesto](28-presupuesto-proyectos.md) y
+[confirmación de correcciones](23-integracion-confirmacion-qa.md).
+
+El presupuesto permanece desactivado por defecto. Esta revisión no cambia flags
+del proyecto ni producción. La prueba de interfaz usa el fixture local existente,
+con configuración temporal en el proceso de pruebas y proveedores simulados.
+No constituye activación del servicio publicado.
+
+## Evaluación y evidencia verificable
+
+| Registro | Qué acredita | Qué no acredita |
+|---|---|---|
+| [Revisión frontend v2 del 6 de noviembre](29-revision-frontend-agente-presupuesto.md) | Recorrido, traza, exportación y presupuesto en casos controlados | Precisión de Gemini o despliegue actual |
+| [Validación integrada PR #48](31-validacion-conjunta-pr46-pr47.md) | Compatibilidad y prioridad sobre su candidato | Comparación real final |
+| [Cierre documental y presupuesto del 7 de noviembre](evidencias/semana-4/cierre-agente-presupuesto-20261107/README.md) | Aprobación/rechazo/caducidad en interfaz y concordancia documental | Consumo real ni activación pública del presupuesto |
+| [Evaluación histórica PR #37](24-validacion-real-postmerge.md) | Corrida real del flujo directo en `caecd71` | Ventaja del agente v2 respecto al flujo directo |
+| [Comparador de rutas](../eval/README.md) | Método sobre los mismos veinte casos, conservando errores/parciales | Resultados por la mera existencia del evaluador |
+
+Christian coordina la comparación final con Gemini real. Hasta revisar sus
+resultados no se afirma que el agente mejore precisión, recall o latencia.
+Identificar commit, dataset/hash, corpus, modelo, configuración, rutas, reintentos,
+errores y denominadores. Recuperación documental y detección son métricas
+diferentes. Las pruebas específicas están incluidas en los totales, no se suman nuevamente.
+
+## Consumo y evaluación del agente v2 actualizado
+
+El PR #52 añade `X-Codeguard-Consumo-IA`, con intentos SDK, respuestas y tokens de
+entrada/salida/total reportados por el proveedor. Los valores ausentes quedan
+`null`; un intento sin respuesta impide conocer el total de tokens. Si no hubo
+llamadas al SDK, los contadores son cero. No contiene prompts, código o claves y
+no equivale a una factura. El evaluador conserva cobertura y sumas parciales
+explícitas, incluso en HTTP de error. No deduce ahorro de la cantidad de pasos.
+
+La comparación final solicita cuatro pasos por defecto y el A/B de seis casos
+solicita herramientas v2. Ese A/B mide solo la primera decisión por condición,
+incluidos sus argumentos y finalización inicial; no certifica la calidad del
+informe completo. Las trazas de cuatro pasos y hasta tres resultados
+contextuales llegan a la síntesis. Véase el [protocolo](27-protocolo-comparacion-rutas.md)
+y el [detalle de consumo](33-agente-cuatro-pasos-consumo.md).
+
+## Riesgos y limitaciones
+
+- Prompt injection: código y documentos son datos no confiables; decisiones y
+  herramientas se validan. Esto reduce superficie, no demuestra resistencia absoluta.
+- Falsos positivos, omisiones y citas débiles: requieren revisión humana. Ninguna
+  de las capas garantiza seguridad.
+- Datos sensibles: el modo real envía código al proveedor. No cargar secretos ni
+  repositorios privados. SQLite almacena contenido temporal de propuestas; purgarlo
+  no garantiza borrado en respaldos del volumen.
+- Coste y latencia: el límite de pasos no equivale al número de intentos. Cancelar
+  la espera no revoca llamadas iniciadas.
+- Cobertura y autonomía: solo Python y proyectos pequeños; sin memoria persistente
+  de decisiones, ejecución del código, escritura autónoma ni streaming.
+- Operación: concurrencia por proceso y almacenamiento compartido requieren
+  revisión antes de múltiples réplicas. Una fusión no certifica despliegue.
+
+## Código y reproducción
+
+Fuentes: [orquestador](../backend/app/services/agente.py),
+[rutas](../backend/app/routes/agente.py), [evidencia](../backend/app/services/evidencia.py),
+[síntesis](../backend/app/services/llm.py), [interfaz](../frontend/src/pages/HomePage.tsx)
+y [panel de traza](../frontend/src/components/AgentTracePanel.tsx).
+
+```powershell
+python -m pytest backend/tests/test_agente.py backend/tests/test_agente_integrado.py backend/tests/test_agente_herramientas_v2.py backend/tests/test_contrato_agente_v2.py -q
+python qa/run_project_budget_browser.py --output tmp/presupuesto-validacion-nueva
 ```
 
-El fragmento es un ejemplo de contrato, **no una evidencia de producción**. El informe puede incluir otros campos habituales del esquema vigente.
-
-### Límites y privacidad
-
-Las trazas no almacenan ni exponen claves, errores crudos del proveedor ni razonamiento interno. Los motivos públicos proceden de la decisión validada y son texto no confiable mostrado sin interpretarlo como HTML. No hay memoria persistente de decisiones entre solicitudes. Una inspección AST local no demuestra que el código sea seguro.
-
-## Integración Ruff + Bandit como contexto del agente (Semana 4)
-
-El modo avanzado del agente incorpora una **inspección estática obligatoria** mediante los analizadores existentes de CODEGUARD antes de solicitar decisiones a Gemini:
-
-1. Ejecuta Ruff (calidad) y Bandit (seguridad) sobre el código recibido con las mismas garantías de aislamiento y límites del motor estático.
-2. Publica el informe de ambos motores en `RespuestaAgente.analisis_estatico`, **separado** de `informe.hallazgos` y `informe.fuentes` (que pertenecen al dictamen Gemini + RAG).
-3. Entrega al planificador únicamente `pasos[0].resultado.evidencia_ruff_bandit`: estado de las herramientas, número de observaciones y un máximo de 20 reglas con herramienta, identificador, tipo, línea y severidad. **No incluye texto fuente, explicaciones ni rutas confidenciales** en este resumen; el código analizado continúa sujeto a los límites y políticas de CODEGUARD.
-4. Gemini decide únicamente qué inspección AST adicional ejecutar o cuándo finalizar; **no puede desactivar Ruff ni Bandit**, eliminar sus alertas ni fabricar citas documentales.
-5. Si Gemini falla durante planificación o informe, el informe de Ruff/Bandit previamente producido se conserva, junto con los pasos y decisiones ya registrados; el modo sigue siendo `degradado` y el dictamen RAG sigue siendo parcial.
-
-**Limitaciones:** se ejecutan dos procesos de análisis estático además de las llamadas habituales a Gemini; esto puede aumentar la latencia. Si Ruff o Bandit no están disponibles, el campo `analisis_estatico.estado` será `parcial` o `no_disponible` y la interfaz debe comunicarlo sin presentar la revisión como completa. Una alerta estática no es automáticamente una vulnerabilidad confirmada y la ausencia de alertas no garantiza seguridad.
-
-Los campos nuevos se incorporan manteniendo compatibles las respuestas previas, incluido `requiere_confirmacion_humana`. El endpoint de demostración conserva un modo de inspección AST sin IA. La validación comparativa contra casos vulnerables y limpios continúa siendo necesaria; incorporar alertas como contexto **no implica una mejora de precisión o recall demostrada**.
-
-## Confirmación humana
-
-No se permite modificar, ejecutar o borrar código, por lo que **no hay decisiones destructivas que autorizar**. Toda corrección sugerida debe ser evaluada y aplicada por un humano. Si se añaden herramientas que cambien archivos, requerirán consentimiento explícito antes de ejecutarse.
-
-## Pruebas
-
-`backend/tests/test_agente.py` cubre validaciones, seguridad, límites, heurísticas AST, elección de herramientas, interrupción, y endpoints HTTP con mocks. Ejecutar en la versión integrada y registrar el conteo exacto de pruebas. No se documentan como resultados reales las comprobaciones no ejecutadas.
-
-## Limitaciones
-
-No hay memoria persistente, ejecución autónoma, modificaciones del repositorio ni streaming real de decisiones. La traza se muestra **al finalizar** cada solicitud; la animación de espera no representa actividad intermedia verificada. Las herramientas AST no son exhaustivas y pueden generar indicadores falsos o no detectar riesgos. Ante fallos transitorios de Gemini, la ruta del agente informa explícitamente un resultado **degradado y parcial**, sin atribuir la inspección AST a Gemini. El análisis no implica seguridad garantizada.
+El segundo comando requiere RAG local preparado y Playwright. Inicia servidores
+de prueba en loopback y sustituye Gemini/GitHub; no apuntarlo a producción.
+En `frontend/`: `npm test`, `npm run lint`, `npm run build`. Registrar resultado
+y commit sin trasladar conteos históricos a una ejecución nueva.
