@@ -182,3 +182,19 @@ def test_dry_run_no_hace_ninguna_llamada_real(monkeypatch, capsys):
     out = capsys.readouterr().out
     assert "ninguna solicitud" in out
     assert "Máximo de solicitudes: 12" in out
+
+
+def test_seis_pares_v2_miden_argumentos_y_no_atribuyen_uso_a_un_stub():
+    casos = modulo.cargar_casos(modulo.CASOS_DEFECTO)
+    vistas = []
+    def decidir(codigo, pasos, *, version_herramientas):
+        vistas.append(version_herramientas)
+        return DecisionAgente(herramienta="ampliar_contexto", motivo="No publicar motivo",
+            argumentos={"linea": 2 if "evidencia_ruff_bandit" in pasos[0].resultado else 1})
+    filas, excluidos = modulo.ejecutar_pares(casos, version_herramientas="2",
+        planificador=decidir, analizador_estatico=estatico_completo)
+    s = modulo.resumen_estudio(filas, excluidos)
+    assert vistas == ["2"] * 12
+    assert s["pares_completos"] == s["pares_con_cambio"] == 6
+    assert all(f["consumo_ia"]["intentos"] == 0 for f in filas)
+    assert all("No publicar motivo" not in json.dumps(f) for f in filas)

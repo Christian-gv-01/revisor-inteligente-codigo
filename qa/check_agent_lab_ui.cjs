@@ -103,6 +103,7 @@ async function main() {
   assert.equal(calls.length, 1);
   assert.equal(calls[0].url, "/api/v1/agente/previsualizar");
   assert.equal(JSON.parse(calls[0].options.body).max_pasos, 3);
+  assert.equal(JSON.parse(calls[0].options.body).version_herramientas, "2");
   assert.match(JSON.parse(calls[0].options.body).codigo, /eval\(/);
 
   // Trace rendering must not throw when Gemini planned steps then failed.

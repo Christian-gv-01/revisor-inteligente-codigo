@@ -42,7 +42,7 @@ no cuerpos de nuevos endpoints ni acciones que el navegador deba ejecutar.
 - `ampliar_contexto`: `{"linea":2}`. Entero estricto, 1..12000 y existente en el
   código recibido. Se rechazan booleanos, floats, cadenas y propiedades extra.
   Devuelve `linea_objetivo`, `linea_inicio`, `linea_fin` y hasta siete `lineas`:
-  `numero`, `texto` (hasta500 caracteres) y `truncada`. Ventana fija de radio3;
+  `numero`, `texto` (hasta500 caracteres) y `truncada`. Ventana fija de radio6;
   nunca importa, ejecuta ni modifica el código.
 - `buscar_referencia`: `{"categoria":"inyeccion_sql"}`. Lista cerrada:
   `ejecucion_codigo`, `inyeccion_sql`, `inyeccion_comandos`, `inyeccion`,
@@ -103,3 +103,12 @@ La [revisión frontend y trazabilidad](../29-revision-frontend-agente-presupuest
 describe el recorrido integrado. La comparación real, la regla severidad × confianza
 y la versión activa en Railway requieren evidencias independientes. Los ejemplos
 de esta carpeta siguen siendo sintéticos, no resultados de la comparación final.
+
+
+## Ampliación de límites y medición (revisión posterior al PR #48)
+
+El contrato v2 admite `max_pasos: 4`: una inspección inicial y hasta tres decisiones. El valor por defecto sigue siendo 3 y v1 conserva su máximo de 3. La cuarta herramienta también llega a la evidencia de síntesis. `ampliar_contexto` devuelve hasta trece líneas (±6), con el mismo límite de 500 caracteres por línea. React acepta además ventanas literales antiguas de ±3 para compatibilidad. La lista cerrada de categorías incorpora `deserializacion`; no garantiza que el índice disponga de una fuente pertinente.
+
+El laboratorio solicita v2 y permite cuatro pasos. El revisor React conserva su petición explícita de tres pasos; su parser admite respuestas v2 de cuatro. El evaluador final solicita cuatro por defecto y permite `--max-pasos-agente 3` para comparaciones declaradas con ese límite.
+
+Las respuestas HTTP de las rutas protegidas incluyen `X-Codeguard-Consumo-IA`: JSON numérico con intentos de transporte, respuestas y tokens reportados por el SDK. No cambia el cuerpo JSON. Los contadores desconocidos quedan en `null`; no son una factura y no permiten afirmar ahorro por sí solos. Ver [detalle de medición](../33-agente-cuatro-pasos-consumo.md).

@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.services.static_analysis import ResultadoEstatico
 from app.services.herramientas_contextuales import ResultadoContexto, ResultadoReferencia
+from app.config import settings
 
 
 class DatoEvidencia(BaseModel):
@@ -36,9 +37,9 @@ class EvidenciaRevision(DatoEvidencia):
     estado_estatico: Literal["completo", "parcial", "no_disponible"]
     reglas: list[ReglaEvidencia] = Field(max_length=40)
     total_reglas: int = Field(ge=0, le=400)
-    contextos_ampliados: list[ResultadoContexto] = Field(default_factory=list, max_length=2,
+    contextos_ampliados: list[ResultadoContexto] = Field(default_factory=list, max_length=3,
         exclude_if=lambda v: not v)
-    referencias_buscadas: list[ResultadoReferencia] = Field(default_factory=list, max_length=2,
+    referencias_buscadas: list[ResultadoReferencia] = Field(default_factory=list, max_length=3,
         exclude_if=lambda v: not v)
 
 
@@ -46,7 +47,7 @@ def construir_evidencia(archivo: str, pasos: list[dict], estatico: ResultadoEsta
     inspecciones = []
     contextos = []
     referencias = []
-    for paso in pasos[:3]:
+    for paso in pasos[:settings.MAX_PASOS_AGENTE]:
         resultado = paso["resultado"]
         if paso["herramienta"] == "ampliar_contexto":
             contextos.append(ResultadoContexto.model_validate(resultado))

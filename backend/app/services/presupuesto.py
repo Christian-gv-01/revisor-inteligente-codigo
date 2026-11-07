@@ -7,6 +7,7 @@ from threading import Lock
 from time import monotonic, sleep, time
 
 from app.config import settings
+from app.services.consumo import ConsumoIA
 
 
 class PlazoAgotado(TimeoutError):
@@ -23,6 +24,7 @@ class Presupuesto:
         self.max_llamadas = llamadas
         self.llamadas = 0
         self._lock = Lock()
+        self.consumo = ConsumoIA()
 
     def restante(self) -> float:
         restante = self.limite - monotonic()
@@ -98,7 +100,9 @@ def generar_con_presupuesto(cliente, *, model, contents, config, timeout_ms: int
             retry_options=types.HttpRetryOptions(attempts=1))
         configuracion = config.model_copy(update={"http_options": opciones})
         try:
+            actual.consumo.iniciar_intento()
             resultado = cliente.models.generate_content(model=model, contents=contents, config=configuracion)
+            actual.consumo.registrar_respuesta(resultado)
             actual.restante()
             return resultado
         except errors.APIError as error:

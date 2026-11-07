@@ -45,7 +45,7 @@ def test_rechaza_argumentos_y_categorias_abiertos(herramientas):
             clase.model_validate(datos)
 
 
-@pytest.mark.parametrize("objetivo,inicio,fin", [(1, 1, 4), (5, 2, 8), (9, 6, 9)])
+@pytest.mark.parametrize("objetivo,inicio,fin", [(1, 1, 7), (5, 1, 9), (9, 3, 9)])
 def test_contexto_es_ventana_literal_con_numeracion(herramientas, objetivo, inicio, fin):
     resultado = herramientas.ampliar_contexto("\n".join(f"línea {n}" for n in range(1, 10)), {"linea": objetivo})
     assert (resultado.linea_objetivo, resultado.linea_inicio, resultado.linea_fin) == (objetivo, inicio, fin)
@@ -202,8 +202,8 @@ def test_busqueda_preserva_clasificacion_seguridad_sin_prefijo_id_y_sin_fetch(he
     (3, 3, 2, [3]),
     (2, 1, 3, [1, 3]),
     (2, 1, 3, [3, 2, 1]),
-    (1, 1, 5, [1, 2, 3, 4, 5]),
-    (5, 1, 5, [1, 2, 3, 4, 5]),
+    (1, 1, 8, list(range(1, 9))),
+    (8, 1, 8, list(range(1, 9))),
 ])
 def test_resultado_contexto_exige_ventana_consistente(herramientas, objetivo, inicio, fin, numeros):
     with pytest.raises(ValidationError):

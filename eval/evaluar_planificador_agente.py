@@ -38,6 +38,9 @@ from app.services.agente import (  # noqa: E402
     resumen_estatico_planificador,
 )
 from app.services.llm import LLMError  # noqa: E402
+from app.services.presupuesto import presupuesto_solicitud  # noqa: E402
+from app.config import settings  # noqa: E402
+from consumo_evaluacion import resumen_consumo  # noqa: E402
 from app.services.static_analysis import ResultadoEstatico, analizar_estatico  # noqa: E402
 
 CASOS_DEFECTO = ROOT / "eval" / "casos_planificador_agente.json"
@@ -48,7 +51,7 @@ MAX_CONSULTAS = 60
 CONDICIONES = ("sin_contexto", "con_contexto")
 CAMPOS_CSV = [
     "caso_id", "categoria", "repeticion", "orden", "condicion", "estado",
-    "herramienta", "codigo_error", "latencia_ms", "sha256_codigo",
+    "herramienta", "argumentos", "codigo_error", "latencia_ms", "sha256_codigo", "consumo_ia",
 ]
 
 
@@ -90,6 +93,7 @@ def ejecutar_pares(
     casos: list[dict],
     *,
     repeticiones: int = 1,
+    version_herramientas: str = "1",
     pausa: float = 0,
     planificador: Callable = planificar_gemini,
     analizador_estatico: Callable = analizar_estatico,
@@ -100,6 +104,8 @@ def ejecutar_pares(
 
     Los fallos de proveedor se conservan como fallos, nunca como una decisión.
     """
+    if version_herramientas not in {"1", "2"}:
+        raise ValueError("Versión del planificador no admitida.")
     if not 1 <= repeticiones <= MAX_REPETICIONES:
         raise ValueError("Las repeticiones deben estar entre 1 y 3.")
     if not 0 <= pausa <= 30:
@@ -168,9 +174,13 @@ def ejecutar_pares(
                     "sha256_codigo": sha256(caso["codigo"].encode()).hexdigest()[:16],
                 }
                 inicio = reloj()
+                consumo = None
                 try:
-                    decision = planificador(caso["codigo"], [paso])
+                    with presupuesto_solicitud(*settings.limites_solicitud("/api/v1/agente/analizar")) as consumo:
+                        decision = (planificador(caso["codigo"], [paso], version_herramientas="2")
+                                    if version_herramientas == "2" else planificador(caso["codigo"], [paso]))
                     fila["herramienta"] = decision.herramienta
+                    fila["argumentos"] = decision.argumentos.model_dump()
                 except LLMError as error:
                     fila["estado"] = "error_proveedor"
                     fila["codigo_error"] = error.codigo
@@ -180,6 +190,7 @@ def ejecutar_pares(
                     fila["codigo_error"] = type(error).__name__
                 finally:
                     fila["latencia_ms"] = round((reloj() - inicio) * 1000, 2)
+                    fila["consumo_ia"] = consumo.consumo.publico() if consumo is not None else None
                 resultados.append(fila)
                 if pausa and orden_total < len(casos) * 2 * repeticiones:
                     dormir(pausa)
@@ -207,7 +218,9 @@ def resumen_estudio(resultados: list[dict], exclusiones: list[dict]) -> dict:
             "repeticion": repeticion,
             "sin_contexto": a["herramienta"],
             "con_contexto": b["herramienta"],
-            "cambio": a["herramienta"] != b["herramienta"],
+            "argumentos_sin_contexto": a.get("argumentos", {}),
+            "argumentos_con_contexto": b.get("argumentos", {}),
+            "cambio": (a["herramienta"], a.get("argumentos", {})) != (b["herramienta"], b.get("argumentos", {})),
         })
     cambios = sum(item["cambio"] for item in evaluados)
     condiciones = {}
@@ -227,6 +240,9 @@ def resumen_estudio(resultados: list[dict], exclusiones: list[dict]) -> dict:
                 statistics.mean(f["latencia_ms"] for f in validas), 2,
             ) if validas else None,
             "distribucion_decisiones": decisiones,
+            "consumo_ia": resumen_consumo(filas),
+            "finalizaciones_en_primera_decision": sum(f["herramienta"] == "finalizar" for f in validas),
+            "tasa_finalizacion_inicial_sobre_total": sum(f["herramienta"] == "finalizar" for f in validas) / len(filas) if filas else None,
         }
     return {
         "total_solicitudes": len(resultados),
@@ -265,18 +281,20 @@ def guardar(
     with archivo_csv.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=CAMPOS_CSV)
         writer.writeheader()
-        writer.writerows(resultados)
+        writer.writerows({k: json.dumps(v, ensure_ascii=False) if isinstance(v, dict) else v
+                          for k, v in fila.items()} for fila in resultados)
     with archivo_md.open("w", encoding="utf-8") as f:
         f.write("# Evaluación A/B del planificador de CODEGUARD\n\n")
         f.write(f"Modelo: `{metadatos['modelo']}`. Casos sintéticos: {metadatos['casos']}.\n\n")
         f.write(f"Solicitudes: {resumen['total_solicitudes']} · Pares completos: {resumen['pares_completos']} · Pares no comparables: {resumen['pares_no_comparables']}.\n\n")
         f.write(f"Cambios observados: {resumen['pares_con_cambio']} · Tasa de cambio: {resumen['tasa_cambio_de_decision']}.\n\n")
-        f.write("| Caso | Repetición | Sin contexto | Con contexto | Cambio |\n")
-        f.write("|---|---:|---|---|---|\n")
+        f.write("| Caso | Repetición | Sin contexto | Argumentos A | Con contexto | Argumentos B | Cambio |\n")
+        f.write("|---|---:|---|---|---|---|---|\n")
         for p in resumen["pares"]:
             f.write(
                 f"| {p['caso_id']} | {p['repeticion']} | "
-                f"{p['sin_contexto']} | {p['con_contexto']} | "
+                f"{p['sin_contexto']} | {json.dumps(p['argumentos_sin_contexto'], ensure_ascii=False)} | "
+                f"{p['con_contexto']} | {json.dumps(p['argumentos_con_contexto'], ensure_ascii=False)} | "
                 f"{'Sí' if p['cambio'] else 'No'} |\n"
             )
         f.write("\n**Limitación:** " + resumen["advertencia"] + "\n")
@@ -287,6 +305,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--casos", type=Path, default=CASOS_DEFECTO)
     parser.add_argument("--repeticiones", type=int, default=1)
+    parser.add_argument("--version-herramientas", choices=("1", "2"), default="2")
     parser.add_argument("--pausa", type=float, default=0.75)
     parser.add_argument("--ejecutar", action="store_true",
                         help="Autoriza explícitamente las llamadas reales a Gemini.")
@@ -307,9 +326,12 @@ def main() -> int:
         print("Para ejecutar el A/B: agregue --ejecutar. Se requieren Ruff, Bandit y GEMINI_API_KEY.")
         return 0
 
+    if args.salida is not None and args.salida.exists():
+        parser.error("La salida existe; conservar las corridas anteriores.")
+
     marca = datetime.now(timezone.utc)
     resultados, excluidos = ejecutar_pares(
-        casos, repeticiones=args.repeticiones, pausa=args.pausa,
+        casos, repeticiones=args.repeticiones, pausa=args.pausa, version_herramientas=args.version_herramientas,
     )
     resumen = resumen_estudio(resultados, excluidos)
     salida = args.salida or (
@@ -320,6 +342,9 @@ def main() -> int:
         "modelo": os.getenv("GEMINI_MODEL") or "gemini-3.5-flash-lite",
         "casos": len(casos),
         "repeticiones": args.repeticiones,
+        "version_herramientas": args.version_herramientas,
+        "dataset_sha256": sha256(args.casos.read_bytes()).hexdigest(),
+        "evaluador_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
         "diseño": "Pares AB/BA contrabalanceados; primera decisión únicamente.",
         "codigo_fuente_almacenado": False,
         "proveedor_simulado": False,

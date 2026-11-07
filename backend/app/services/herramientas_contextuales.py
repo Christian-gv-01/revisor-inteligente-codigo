@@ -10,7 +10,7 @@ from app.services import presupuesto
 
 CategoriaReferencia = Literal[
     "ejecucion_codigo", "inyeccion_sql", "inyeccion_comandos", "inyeccion",
-    "credenciales", "rutas",
+    "credenciales", "rutas", "deserializacion",
 ]
 
 CONSULTAS_CATEGORIA: dict[CategoriaReferencia, str] = {
@@ -20,6 +20,7 @@ CONSULTAS_CATEGORIA: dict[CategoriaReferencia, str] = {
     "inyeccion": "Python validación de entradas inyección CWE-74 OWASP",
     "credenciales": "Python credenciales secretos contraseñas incrustadas CWE-798 OWASP",
     "rutas": "Python recorrido de rutas path traversal CWE-22 OWASP",
+    "deserializacion": "Python deserialización insegura pickle yaml load CWE-502 OWASP",
 }
 
 
@@ -53,14 +54,14 @@ class ResultadoContexto(BaseModel):
     linea_objetivo: int = Field(strict=True, ge=1, le=12000)
     linea_inicio: int = Field(strict=True, ge=1, le=12000)
     linea_fin: int = Field(strict=True, ge=1, le=12000)
-    lineas: list[LineaContexto] = Field(min_length=1, max_length=7)
+    lineas: list[LineaContexto] = Field(min_length=1, max_length=13)
 
     @model_validator(mode="after")
     def validar_ventana(self):
         if not self.linea_inicio <= self.linea_objetivo <= self.linea_fin:
             raise ValueError("La ventana debe contener la línea objetivo.")
-        if self.linea_objetivo - self.linea_inicio > 3 or self.linea_fin - self.linea_objetivo > 3:
-            raise ValueError("La ventana no puede superar tres líneas por lado.")
+        if self.linea_objetivo - self.linea_inicio > 6 or self.linea_fin - self.linea_objetivo > 6:
+            raise ValueError("La ventana no puede superar seis líneas por lado.")
         if [linea.numero for linea in self.lineas] != list(range(self.linea_inicio, self.linea_fin + 1)):
             raise ValueError("Las líneas deben coincidir con la ventana y estar ordenadas.")
         return self
@@ -130,8 +131,8 @@ def ampliar_contexto(codigo: str, argumentos: ArgumentosLinea) -> ResultadoConte
     lineas = codigo.splitlines()
     if len(lineas) > 12000 or argumentos.linea > len(lineas):
         raise ValueError("La línea debe existir en código de hasta 12000 líneas.")
-    inicio = max(1, argumentos.linea - 3)
-    fin = min(len(lineas), argumentos.linea + 3)
+    inicio = max(1, argumentos.linea - 6)
+    fin = min(len(lineas), argumentos.linea + 6)
     resultado = ResultadoContexto(
         linea_objetivo=argumentos.linea, linea_inicio=inicio, linea_fin=fin,
         lineas=[

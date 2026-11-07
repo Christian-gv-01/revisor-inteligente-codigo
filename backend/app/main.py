@@ -6,6 +6,8 @@ from app.config import settings
 from app.services.rate_limit import ENDPOINT_WEIGHTS, LimitadorPonderado
 from app.services.http_security import ControlConcurrencia, identidad_cliente
 from app.services.presupuesto import presupuesto_solicitud
+from app.services.consumo import CABECERA_CONSUMO
+import json
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -112,8 +114,10 @@ async def proteger_analisis(request: Request, call_next):
         return await call_next(request)
 
     ruta_presupuesto = "/api/v1/archivos/zip" if request.url.path.startswith("/api/v1/proyectos/") else request.url.path
-    with presupuesto_solicitud(*settings.limites_solicitud(ruta_presupuesto)):
-        return await _proteger_con_limites(request, call_next)
+    with presupuesto_solicitud(*settings.limites_solicitud(ruta_presupuesto)) as presupuesto:
+        respuesta = await _proteger_con_limites(request, call_next)
+        respuesta.headers[CABECERA_CONSUMO] = json.dumps(presupuesto.consumo.publico(), separators=(",", ":"))
+        return respuesta
 
 
 async def _proteger_con_limites(request: Request, call_next):
