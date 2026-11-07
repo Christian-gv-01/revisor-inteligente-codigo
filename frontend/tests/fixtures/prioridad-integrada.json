@@ -1,0 +1,117 @@
+{
+  "tipo": "fixture_sintetico",
+  "ia_externa": false,
+  "analizadores": "salidas simuladas",
+  "api": "FastAPI y normalización reales",
+  "codigo": "import os\neval(input())\n",
+  "respuesta": {
+    "archivo": "prioridad.py",
+    "estado": "parcial",
+    "hallazgos": [],
+    "fuentes": [],
+    "analisis_estatico": {
+      "archivo": "prioridad.py",
+      "estado": "completo",
+      "hallazgos": [
+        {
+          "herramienta": "bandit",
+          "regla": "B003",
+          "tipo": "seguridad",
+          "linea": 2,
+          "columna": null,
+          "severidad": "alta",
+          "titulo": "Bandit B003: fixture_prioridad",
+          "descripcion": "Indicador sintético de orden; no diagnóstico real.",
+          "confianza": "alta",
+          "referencia": "https://bandit.readthedocs.io/"
+        },
+        {
+          "herramienta": "bandit",
+          "regla": "B004",
+          "tipo": "seguridad",
+          "linea": 1,
+          "columna": null,
+          "severidad": "alta",
+          "titulo": "Bandit B004: fixture_prioridad",
+          "descripcion": "Indicador sintético de orden; no diagnóstico real.",
+          "confianza": "alta",
+          "referencia": "https://bandit.readthedocs.io/"
+        },
+        {
+          "herramienta": "bandit",
+          "regla": "B005",
+          "tipo": "seguridad",
+          "linea": 2,
+          "columna": null,
+          "severidad": "alta",
+          "titulo": "Bandit B005: fixture_prioridad",
+          "descripcion": "Indicador sintético de orden; no diagnóstico real.",
+          "confianza": "media",
+          "referencia": "https://bandit.readthedocs.io/"
+        },
+        {
+          "herramienta": "bandit",
+          "regla": "B002",
+          "tipo": "seguridad",
+          "linea": 2,
+          "columna": null,
+          "severidad": "alta",
+          "titulo": "Bandit B002: fixture_prioridad",
+          "descripcion": "Indicador sintético de orden; no diagnóstico real.",
+          "confianza": "baja",
+          "referencia": "https://bandit.readthedocs.io/"
+        },
+        {
+          "herramienta": "bandit",
+          "regla": "B001",
+          "tipo": "seguridad",
+          "linea": 2,
+          "columna": null,
+          "severidad": "alta",
+          "titulo": "Bandit B001: fixture_prioridad",
+          "descripcion": "Indicador sintético de orden; no diagnóstico real.",
+          "confianza": null,
+          "referencia": "https://bandit.readthedocs.io/"
+        },
+        {
+          "herramienta": "bandit",
+          "regla": "B006",
+          "tipo": "seguridad",
+          "linea": 2,
+          "columna": null,
+          "severidad": "media",
+          "titulo": "Bandit B006: fixture_prioridad",
+          "descripcion": "Indicador sintético de orden; no diagnóstico real.",
+          "confianza": "alta",
+          "referencia": "https://bandit.readthedocs.io/"
+        },
+        {
+          "herramienta": "ruff",
+          "regla": "F401",
+          "tipo": "calidad",
+          "linea": 1,
+          "columna": 1,
+          "severidad": "baja",
+          "titulo": "Ruff F401",
+          "descripcion": "Importación sintética sin uso",
+          "confianza": null,
+          "referencia": null
+        }
+      ],
+      "herramientas": [
+        {
+          "herramienta": "ruff",
+          "estado": "ok",
+          "hallazgos": 1
+        },
+        {
+          "herramienta": "bandit",
+          "estado": "ok",
+          "hallazgos": 6
+        }
+      ],
+      "mensaje": null
+    },
+    "mensaje": "Gemini no completó el análisis; solo hay observaciones estáticas. No se realizó una revisión contextual con citas."
+  }
+}
