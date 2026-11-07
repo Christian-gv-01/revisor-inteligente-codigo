@@ -1,5 +1,7 @@
 # Documentación de CODEGUARD
 
+Revisión del 7 de noviembre sobre PR #48, `467d00e`: [acceso al agente desde el frontend](evidencias/semana-4/acceso-agente-20261107/README.md).
+
 Sincronización con `384ffaf`: [instalación desde checkout limpio](30-instalacion-checkout-limpio.md)
 y [ensayo pendiente de indicaciones del ingeniero](presentacion/ensayo-cronometrado.md).
 
