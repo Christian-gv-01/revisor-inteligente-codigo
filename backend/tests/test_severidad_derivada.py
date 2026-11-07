@@ -265,3 +265,27 @@ def test_no_vincula_regla_fuera_de_ventana_contextual():
     )
 
     assert evidencia.vinculos_reglas_contexto == []
+
+@pytest.mark.parametrize(
+    "severidad,confianza,esperada",
+    [
+        ("critica", "alta", "critica"),
+        ("critica", "media", "critica"),
+        ("critica", "baja", "critica"),
+        ("alta", "alta", "critica"),
+        ("alta", "media", "alta"),
+        ("alta", "baja", "alta"),
+        ("media", "alta", "media"),
+        ("media", "media", "media"),
+        ("media", "baja", "media"),
+        ("baja", "alta", "baja"),
+        ("baja", "media", "baja"),
+        ("baja", "baja", "baja"),
+    ],
+)
+def test_matriz_bandit_completa_coincide_con_politica_aprobada(
+    severidad, confianza, esperada
+):
+    assert derivar_severidad(
+        "bandit", severidad, confianza
+    ) == esperada
