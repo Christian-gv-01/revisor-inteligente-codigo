@@ -7,6 +7,8 @@ on:
       - "eval/test_comparar_rutas.py"
       - "eval/contrato_agente_evaluacion.py"
       - "eval/test_contrato_agente_evaluacion.py"
+      - "eval/consumo_evaluacion.py"
+      - "eval/test_consumo_evaluacion.py"
       - "eval/run_eval.py"
       - "docs/contrato-agente-v2/**"
       - ".github/workflows/comparacion-rutas.yml"
@@ -30,4 +32,4 @@ jobs:
       - name: Validar dataset y plan sin red
         run: python eval/comparar_rutas.py --validar
       - name: Probar métricas, errores y transporte controlado
-        run: python -m pytest eval/test_comparar_rutas.py eval/test_contrato_agente_evaluacion.py -q
+        run: python -m pytest eval/test_comparar_rutas.py eval/test_contrato_agente_evaluacion.py eval/test_consumo_evaluacion.py -q
