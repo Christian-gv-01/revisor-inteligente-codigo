@@ -35,6 +35,7 @@ const initial: AnalysisInput = {
   url: "",
   fichero: null,
 };
+const agentLabUrl = `${(import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "")}/agente/demo`;
 export function HomePage() {
   const [input, setInput] = useState<AnalysisInput>(initial);
   const [mode, setMode] = useState<Mode>("demo");
@@ -268,6 +269,16 @@ export function HomePage() {
             <button disabled={busy} aria-pressed={mode === "demo"} onClick={() => { clearResult(); setMode("demo"); }}>Demo</button>
             <button disabled={busy} aria-pressed={mode === "api"} onClick={() => { clearResult(); setMode("api"); }}>API real</button>
           </div>
+        </section>
+        <section className="agent-access" aria-labelledby="agent-access-title">
+          <div>
+            <h2 id="agent-access-title">Agente de revisión</h2>
+            <p>Selecciona «API real» y analiza código o un archivo .py para ver aquí las herramientas, decisiones y fuentes del agente. ZIP y GitHub usan revisión por archivo.</p>
+          </div>
+          <a href={agentLabUrl} target="_blank" rel="noopener noreferrer">
+            Abrir laboratorio del agente <span>(nueva pestaña)</span>
+          </a>
+          <p className="agent-access-note">El laboratorio permite elegir inspección local sin IA o análisis con Gemini. Abrirlo no envía el código de este editor ni inicia un análisis.</p>
         </section>
         {mode === "api" && <PrivacyNotice />}
         <div className="workspace-grid">

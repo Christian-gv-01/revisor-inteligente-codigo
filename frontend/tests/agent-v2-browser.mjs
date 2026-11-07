@@ -13,7 +13,7 @@ const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host
   cwd: path.resolve('frontend'), env: { ...process.env, VITE_PROJECT_BUDGET_ENABLED: '0', VITE_API_BASE_URL: '' }, stdio: 'ignore',
 });
 let browser;
-const cases = [], errors = [], external = [];
+const cases = [], errors = [], external = [], posts = [];
 try {
   for (let n = 0; n < 80; n++) {
     try { if ((await fetch(origin)).ok) break; } catch { /* inicio */ }
@@ -21,12 +21,38 @@ try {
   }
   browser = await chromium.launch({ headless: true, executablePath: process.env.CODEGUARD_BROWSER_PATH });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1080 } });
+  context.on('request', request => { if (request.method() === 'POST') posts.push(new URL(request.url()).pathname); });
   await context.route('**/*', route => {
     if (new URL(route.request().url()).hostname === '127.0.0.1') return route.continue();
     external.push(route.request().url()); return route.abort();
   });
   const page = await context.newPage();
   page.on('pageerror', e => errors.push(e.message));
+  await page.goto(origin);
+  await page.getByLabel('Nombre del archivo', { exact: true }).fill('conservado.py');
+  const beforeAccess = await status(), beforePosts = posts.length;
+  const popup = page.waitForEvent('popup');
+  await page.getByRole('link', { name: 'Abrir laboratorio del agente (nueva pestaña)', exact: true }).click();
+  const lab = await popup;
+  lab.on('pageerror', e => errors.push(e.message));
+  await lab.locator('#run').waitFor();
+  assert.equal(new URL(lab.url()).origin, origin);
+  assert.equal(new URL(lab.url()).pathname, '/agente/demo');
+  assert.equal(posts.length, beforePosts, 'Abrir el laboratorio no inicia ninguna solicitud POST');
+  assert.equal(await page.getByRole('button', { name: 'Demo', exact: true }).getAttribute('aria-pressed'), 'true');
+  await lab.locator('#mode').selectOption('local');
+  await lab.locator('#code').fill('x = 1\nprint(x)\n');
+  const preview = lab.waitForResponse(r => r.url().endsWith('/api/v1/agente/previsualizar'));
+  await lab.locator('#run').click();
+  const local = await preview;
+  assert.equal(local.status(), 200);
+  assert.equal((await local.json()).modo, 'inspeccion_local');
+  const afterAccess = await status();
+  assert.equal(afterAccess.planes, beforeAccess.planes);
+  assert.equal(afterAccess.sintesis, beforeAccess.sintesis);
+  await lab.close();
+  assert.equal(await page.getByLabel('Nombre del archivo', { exact: true }).inputValue(), 'conservado.py');
+  cases.push({ caso: 'Acceso por proxy Vite sin autoanálisis; AST local real conserva el editor y no consume IA', aprobado: true });
   const run = async marker => {
     await page.goto(origin);
     await page.getByRole('button', { name: 'API real', exact: true }).click();

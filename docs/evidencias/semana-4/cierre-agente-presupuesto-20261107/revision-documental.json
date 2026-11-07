@@ -1,0 +1,23 @@
+{
+  "fecha": "2026-11-07",
+  "base": "467d00e0d56a98cd758f382a5c713737eb490845",
+  "historias_totales": 12,
+  "historias_requeridas_completas": [
+    "HU-01",
+    "HU-02",
+    "HU-03",
+    "HU-04",
+    "HU-05",
+    "HU-06",
+    "HU-07",
+    "HU-08"
+  ],
+  "criterios": "Dado/Cuando/Entonces presentes",
+  "fuentes_originales_verificadas": 8,
+  "fragmentos_curados": 6,
+  "requisitos_inventario_y_corpus_sin_cambios": true,
+  "documento17_archivado_sin_cambios_de_texto": true,
+  "sha256_texto17_normalizado_lf": "1ade9957c9889df61bfef5f8e8b84be93d9552ae552e2166d1ee2fa3c8b190d4",
+  "resultado": "aprobado",
+  "alcance": "Concordancia con corpus y manifiesto locales; no se volvieron a consultar las webs oficiales ni se reingirió el índice"
+}

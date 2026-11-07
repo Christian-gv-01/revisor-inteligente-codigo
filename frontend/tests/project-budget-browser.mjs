@@ -33,7 +33,18 @@ try {
     await page.getByRole('button', { name: 'Revisar presupuesto', exact: true }).click();
     const r = await response; assert.equal(r.status(), 200);
     await page.getByRole('heading', { name: 'Revisa el presupuesto del proyecto' }).waitFor();
-    return r.json();
+    const proposal = await r.json();
+    const panel = page.locator('.project-budget');
+    assert.equal(await panel.locator('li').count(), proposal.total_archivos);
+    for (const file of proposal.archivos) {
+      await panel.getByText(`${file.archivo} · ${file.caracteres} caracteres`, { exact: true }).waitFor();
+    }
+    const b = proposal.presupuesto;
+    await panel.getByText(`${b.analisis_previstos} análisis previstos · máximo ${b.max_intentos_proveedor} intentos al proveedor, incluidos reintentos.`, { exact: true }).waitFor();
+    assert((await panel.textContent()).includes(`Plazo cooperativo: ${b.plazo_cooperativo_segundos} s`));
+    assert(!(await consent().isChecked()));
+    assert(await approve().isDisabled());
+    return proposal;
   };
   const approve = () => page.getByRole('button', { name: 'Aprobar presupuesto y analizar', exact: true });
   const consent = () => page.getByRole('checkbox', { name: 'Autorizo analizar esta instantánea dentro del presupuesto indicado.' });
@@ -62,7 +73,7 @@ try {
   assert.equal((await page.request.post(`${origin}/api/v1/proyectos/${p.presupuesto_id}/decision`, { data: body })).status(), 200);
   assert.equal(await calls(), afterApproval);
   cases.push({ caso: 'Repetición HTTP idempotente sin llamadas adicionales', aprobado: true });
-  const modified = await preview('github');
+  await preview('github');
   await consent().check();
   await page.getByLabel('Repositorio público de GitHub').fill('https://github.com/qa-fixture/parcial');
   await page.locator('.project-budget').waitFor({ state: 'detached' });
@@ -88,11 +99,40 @@ try {
   await page.locator('.project-budget').waitFor({ state: 'detached' });
   assert.equal(await calls(), afterApproval + 2);
   cases.push({ caso: 'ZIP de dos archivos: ambas consultas solo después de aprobar', aprobado: true });
+  const afterZip = await calls();
+  // Nueva sesión aislada para respetar el cupo de propuestas de cada sesión.
+  await context.clearCookies();
+  await preview('zip');
+  const zipRejection = page.waitForResponse(r => r.url().includes('/proyectos/') && r.url().endsWith('/decision'));
+  await page.getByRole('button', { name: 'Rechazar presupuesto', exact: true }).click();
+  assert.equal((await zipRejection).status(), 200);
+  await page.locator('.project-budget').waitFor({ state: 'detached' });
+  assert.equal(await calls(), afterZip);
+  cases.push({ caso: 'Rechazo ZIP desde interfaz sin consumo adicional', aprobado: true });
+  const expiredZip = await preview('zip');
+  assert.equal((await fetch(`${api}/__budget_fixture__/${expiredZip.presupuesto_id}/caducar`, { method: 'POST' })).status, 200);
+  await consent().check();
+  const expiredZipResult = page.waitForResponse(r => r.url().includes(expiredZip.presupuesto_id));
+  await approve().click();
+  assert.equal((await expiredZipResult).status(), 410);
+  await page.getByRole('alert').filter({ hasText: 'caducó' }).waitFor();
+  assert.equal(await calls(), afterZip);
+  cases.push({ caso: 'ZIP caducado devuelve 410 desde interfaz sin ejecutar', aprobado: true });
+  await page.screenshot({ path: `${folder}/presupuesto-zip-caducado.png`, fullPage: true });
   // Presupuesto anterior con entrada modificada no se reutiliza.
-  assert.equal((await page.request.post(`${origin}/api/v1/proyectos/${modified.presupuesto_id}/decision`, {
+  const tampered = await preview('zip');
+  assert.equal((await page.request.post(`${origin}/api/v1/proyectos/${tampered.presupuesto_id}/decision`, {
     data: { decision: 'aprobar', confirmar: true, sha256_manifiesto: '0'.repeat(64) },
   })).status(), 409);
+  assert.equal(await calls(), afterZip);
   cases.push({ caso: 'Manifiesto alterado rechazado con 409', aprobado: true });
+  // Reloj del navegador: comprobar también el bloqueo visual al vencer la propuesta.
+  await page.clock.install();
+  await page.clock.fastForward(Math.max(0, Date.parse(tampered.caduca_en) - Date.now()) + 1500);
+  await page.getByRole('alert').filter({ hasText: 'El presupuesto caducó' }).waitFor();
+  assert(await approve().isDisabled()); assert(await consent().isDisabled());
+  assert.equal(await calls(), afterZip);
+  cases.push({ caso: 'Vencimiento visible bloquea consentimiento y aprobación sin ejecutar', aprobado: true });
   console.log(JSON.stringify({ estado: 'aprobado', casos: cases.length }));
 } catch (error) {
   cases.push({ caso: String(error), aprobado: false });
