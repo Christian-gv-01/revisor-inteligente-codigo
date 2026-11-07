@@ -24,12 +24,26 @@ export interface Finding {
   correccion_sugerida: string;
   fragmento_codigo?: string;
   linea_reportada_modelo?: number;
+  reglas_evidencia?: string[];
+  severidad_original_modelo?: Severity;
+  herencia_severidad?: SeverityInheritance[];
 
   // IDs exactos de los fragmentos RAG
   // que respaldan el hallazgo.
   referencias?: string[];
   // Fuentes resueltas dentro del informe del archivo, antes de combinar un ZIP.
   fuentes?: SourceReference[];
+}
+
+export interface SeverityInheritance {
+  id: string;
+  herramienta: "ruff" | "bandit";
+  regla: string;
+  linea: number;
+  columna: number | null;
+  severidad_original: Severity;
+  confianza: "alta" | "media" | "baja" | null;
+  severidad_derivada: Severity;
 }
 
 // =========================================================

@@ -110,10 +110,13 @@ de Bandit no se atribuye a Gemini ni representa una probabilidad calibrada.
 Véase la [política estática](10-analisis-estatico.md) y su
 [validación conjunta](31-validacion-conjunta-pr46-pr47.md).
 
-Esta política ordena hallazgos, pero todavía no implementa la severidad derivada
-solicitada por el docente (alta × confianza alta → crítica) ni su herencia a los
-hallazgos contextuales mediante reglas vinculadas. Ese ajuste sigue pendiente
-del compañero de backend; no se declara resuelto por la integración del PR #48.
+El candidato que incorpora el PR #54 añade la [política de severidad derivada](35-severidad-derivada-herencia.md):
+Bandit alta × confianza alta deriva crítica conservando el original. El hallazgo
+contextual debe citar IDs estáticos ofrecidos y coincidir con su línea validada.
+Compartir ventana no autoriza herencia. Se conserva la severidad del modelo y
+las reglas aplicadas en pantalla y JSON; un vínculo inválido se omite y marca
+la revisión parcial. La matriz está en `backend/app/config/severidad.yaml`.
+Esta implementación no demuestra por sí sola mejor detección ni explotabilidad.
 
 ## Respaldo, abstención y errores
 

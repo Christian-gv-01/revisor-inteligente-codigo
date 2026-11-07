@@ -65,4 +65,4 @@ el manifiesto del ZIP anterior. Esta preparación no activa flags ni despliega.
 
 ## Actualización pendiente tras PR #52
 
-Este candidato incorpora v2 de hasta cuatro pasos, ventana ±6 y contadores del SDK. El PPTX/PDF del 7 de noviembre se preserva tal como lo entregó Ronald; deberá regenerarse con estos límites y los resultados reales finales. La prioridad de ordenación está integrada, pero la severidad derivada crítica y su herencia siguen pendientes de backend. No declarar cerrada esa observación docente ni presentar este PDF como versión final.
+Este candidato incorpora v2 de hasta cuatro pasos, ventana ±6 y contadores del SDK. El PPTX/PDF del 7 de noviembre se preserva tal como lo entregó Ronald; deberá regenerarse con estos límites y los resultados reales finales. La prioridad de ordenación está integrada. El candidato posterior del PR #54 incorpora severidad derivada y herencia verificable; consultar docs/35 y docs/36. Incorporar esta distinción y sus límites al regenerar el PDF, que sigue siendo una preparación y no una versión final.

@@ -1,113 +1,45 @@
-﻿# Severidad derivada y herencia contextual
+# Severidad derivada y herencia contextual verificable
 
-## 1. Objetivo
+## Procedencia
 
-Implementar la política de severidad derivada solicitada por el docente,
-conservando la severidad original, la confianza proporcionada por Bandit
-y la trazabilidad de las reglas vinculadas al contexto.
+Se conserva la entrega del compañero en PR #54, commit `44c8ef0834e4dd2b00210aacb97a5f029ec77aec`, basada en `ba6fa4f`. Esta revisión corrige dos casos reproducidos: elevación de un hallazgo por mera cercanía y pérdida de vínculos al cambiar el orden de ventanas.
 
-## 2. Política de derivación
+## Política operativa
 
-La lógica se centraliza en:
+La matriz completa está en `backend/app/config/severidad.yaml`: cubre las cuatro severidades, tres confianzas y confianza desconocida. Bandit alta × alta deriva crítica; las demás combinaciones conservan la original. Ruff conserva su severidad. No se inventa confianza de IA ni se interpreta como probabilidad o explotabilidad demostrada.
 
-`backend/app/services/severidad.py`
+`ReglaEvidencia` conserva severidad y confianza normalizadas de la herramienta, columna, severidad derivada e identidad `estatica-<SHA256>`. El identificador se calcula sobre la tupla JSON canónica herramienta/regla/línea/columna. No depende de las decisiones del modelo ni del orden de las ventanas. Identidades con metadatos contradictorios no autorizan herencia.
 
-Regla implementada:
+## Vínculo que autoriza la herencia
 
-- Bandit con severidad alta y confianza alta: severidad derivada crítica.
-- Las demás combinaciones conservan la severidad original.
-- No se inventa confianza cuando el analizador no proporciona ese dato.
-- Ruff y el informe de IA no reciben confianza artificial.
+El modelo puede seleccionar IDs ofrecidos en `reglas_evidencia`. El backend exige:
 
-La severidad derivada es una clasificación operativa y no una
-probabilidad calibrada.
+1. ID existente y no ambiguo dentro de las reglas efectivamente ofrecidas.
+2. Coincidencia con la línea del hallazgo, después de validar su fragmento literal y citas RAG.
+3. Severidad derivada calculada por la política del backend, nunca aceptada del modelo.
 
-## 3. Vinculación contextual
+Compartir ventana o categoría no es suficiente. Una regla de línea 10 no eleva un hallazgo de línea 12 aunque ambos aparezcan en la misma ventana. No se infieren asociaciones multilínea o semánticas. La selección explícita tampoco demuestra explotabilidad: sigue requiriendo revisión humana.
 
-La construcción de evidencia se encuentra en:
+La herencia usa las reglas estáticas ofrecidas, no requiere que el planificador haya ampliado el contexto. Por tanto, finalizar temprano no suprime controles deterministas. Los vínculos de ventana se conservan por regla y contexto, con orden estable y límite de cuarenta, únicamente como trazabilidad; no autorizan elevaciones por sí solos.
 
-`backend/app/services/evidencia.py`
+## Conservación y auditoría
 
-Las reglas estáticas pueden vincularse con una inspección cuando
-su línea pertenece a la ventana contextual de esa inspección.
+La severidad efectiva es la mayor entre la original del modelo y las reglas válidas citadas. Nunca se reduce. No se modifica el objeto recibido.
 
-Cada vínculo conserva la línea objetivo y la información de severidad
-y confianza necesaria para aplicar la política.
+La respuesta conserva `severidad_original_modelo`, `reglas_evidencia` y `herencia_severidad`, con ID, herramienta, regla, ubicación, severidad original, confianza y derivada. El esquema generativo no solicita los campos de auditoría; cualquier intento del modelo de proporcionarlos se ignora antes de validar y el servidor los reconstruye.
 
-No se considera que las reglas de herramientas sean citas RAG.
+Los vínculos desconocidos, ambiguos o de otra línea se omiten sin eliminar hallazgos con citas y fragmentos válidos. El informe del agente queda parcial para señalar esa limitación. La ruta directa, sin evidencia de herramientas entregada a síntesis, no hereda ni publica auditoría inventada.
 
-## 4. Herencia de severidad
+React valida la estructura y coherencia de la auditoría, muestra el ajuste y conserva los mismos datos al exportar JSON. No recalcula la matriz de negocio en el navegador ni presenta la clasificación como certeza de vulnerabilidad.
 
-La función:
+## Límites de cobertura
 
-`heredar_severidad_contextual()`
+La selección de evidencia mantiene el máximo de cuarenta reglas ya existente. Una regla no ofrecida no puede autorizar herencia. Los identificadores son trazabilidad, no secretos ni firmas de seguridad. No sustituyen referencias documentales RAG.
 
-aplica la severidad derivada a los hallazgos de Gemini que coinciden
-con la línea objetivo del vínculo contextual.
+El emparejamiento conservador por línea puede omitir herencia en una llamada multilínea. Tampoco prueba que toda regla citada corresponda semánticamente al hallazgo, especialmente si hay varias expresiones en una misma línea; eso pertenece a la revisión humana.
 
-Criterios:
+## Validación y estado
 
-- Se conserva la severidad más alta.
-- Nunca se reduce una severidad existente.
-- Se conservan los hallazgos que no tienen vínculos.
-- No se modifica directamente el objeto original del hallazgo.
+La entrega original registró 554 pruebas backend. La corrección añade regresiones de orden, cercanía, ausencia/ambigüedad de IDs, conservación de originales, auditoría fabricada, SDK simulado, contrato FastAPI y presentación/exportación en React. Los resultados de la combinación y su procedencia están en [36-correccion-herencia-integrada.md](36-correccion-herencia-integrada.md).
 
-La integración se realiza en:
-
-`backend/app/services/llm.py`
-
-La secuencia es:
-
-1. Validar los hallazgos del informe.
-2. Aplicar la herencia contextual.
-3. Priorizar los hallazgos con la severidad resultante.
-
-## 5. Archivos implementados
-
-- `backend/app/services/severidad.py`
-- `backend/app/services/evidencia.py`
-- `backend/app/services/llm.py`
-- `backend/tests/test_severidad_derivada.py`
-- `backend/tests/test_severidad_herencia.py`
-
-## 6. Validación automatizada
-
-Rama de trabajo:
-
-`feature/backend-severidad-derivada-20261107`
-
-Resultados locales registrados:
-
-- Compilación Python correcta.
-- 29 pruebas específicas de severidad y herencia aprobadas.
-- 44 pruebas de regresión aprobadas.
-- 554 pruebas de la suite completa del backend aprobadas.
-- `git diff --check` correcto.
-
-Tiempo registrado de la suite completa: 21.98 segundos.
-
-## 7. Alcance y limitaciones
-
-Estos resultados acreditan la ejecución de las pruebas automatizadas
-locales del backend.
-
-No acreditan por sí solos:
-
-- Una evaluación con Gemini real.
-- Una mejora demostrada de precisión, recall o F1.
-- Una reducción real del consumo de tokens.
-- Un despliegue de esta implementación en producción.
-- La aceptación definitiva del cambio por el equipo.
-
-## 8. Estado de entrega
-
-La implementación y sus pruebas están preparadas en la rama de trabajo.
-
-Quedan pendientes:
-
-- Actualizar la documentación general del agente.
-- Revisar la coherencia de los documentos de coordinación.
-- Revisar la presentación y sus evidencias.
-- Crear el commit.
-- Abrir el Pull Request.
-- Obtener la revisión del equipo.
+No son una evaluación con Gemini real ni demuestran mejora de precisión, recall, F1 o consumo. La comparación final debe ejecutarse después de revisar e integrar este candidato y verificar una única revisión desplegada y su corpus/configuración.

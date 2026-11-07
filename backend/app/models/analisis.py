@@ -11,7 +11,7 @@ class SolicitudAnalisis(BaseModel):
     codigo: str = Field(min_length=1, max_length=12000)
 
 
-class Hallazgo(BaseModel):
+class HallazgoGenerativo(BaseModel):
     linea: int = Field(ge=1)
     severidad: Literal["critica", "alta", "media", "baja"]
     categoria: str
@@ -24,6 +24,30 @@ class Hallazgo(BaseModel):
     referencias: list[str] = Field(default_factory=list)
     fragmento_codigo: str | None = Field(default=None, max_length=500, exclude_if=lambda v: v is None)
     linea_reportada_modelo: int | None = Field(default=None, ge=1, exclude_if=lambda v: v is None)
+    reglas_evidencia: list[str] = Field(default_factory=list, max_length=40, exclude_if=lambda v: not v)
+
+
+class HerenciaSeveridad(BaseModel):
+    id: str
+    herramienta: Literal["ruff", "bandit"]
+    regla: str
+    linea: int = Field(ge=1)
+    columna: int | None = None
+    severidad_original: Literal["critica", "alta", "media", "baja"]
+    confianza: Literal["alta", "media", "baja"] | None = None
+    severidad_derivada: Literal["critica", "alta", "media", "baja"]
+
+
+class Hallazgo(HallazgoGenerativo):
+    # Solo el backend calcula estos campos; no se solicitan al modelo.
+    severidad_original_modelo: Literal["critica", "alta", "media", "baja"] | None = Field(default=None, exclude_if=lambda v: v is None)
+    herencia_severidad: list[HerenciaSeveridad] = Field(default_factory=list, max_length=40, exclude_if=lambda v: not v)
+
+
+class InformeGenerativo(BaseModel):
+    hallazgos: list[HallazgoGenerativo]
+    estado: Literal["analizado", "abstenido"] = "analizado"
+    mensaje: str | None = None
 
 
 class Fuente(BaseModel):

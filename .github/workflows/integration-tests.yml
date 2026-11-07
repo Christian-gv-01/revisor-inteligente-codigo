@@ -16,6 +16,9 @@ permissions:
 
 jobs:
   integration:
+    env:
+      ANONYMIZED_TELEMETRY: "False"
+      OTEL_SDK_DISABLED: "true"
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -65,4 +68,5 @@ jobs:
             tmp/http-*/*.json
             tmp/http-*/*.txt
             tmp/http-*/*.png
+
 

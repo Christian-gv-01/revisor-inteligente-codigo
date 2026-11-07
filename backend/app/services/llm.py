@@ -12,7 +12,7 @@ from google import genai
 from google.genai import errors, types
 from pydantic import ValidationError
 
-from app.models.analisis import InformeModelo
+from app.models.analisis import InformeModelo, InformeGenerativo
 from app.config import settings
 from app.services.priorizacion import priorizar_hallazgos
 from app.services.evidencia import EvidenciaRevision, consultas_por_evidencia
@@ -623,6 +623,8 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
         "Utiliza exclusivamente los identificadores de las "
         "fuentes de seguridad proporcionadas por el sistema.\n"
         "No inventes identificadores, URLs, fuentes ni citas.\n"
+        "El campo reglas_evidencia solo puede contener IDs estáticos ofrecidos por el backend; "
+        "sin esa evidencia devuelve la lista vacía. No son referencias documentales RAG.\n"
         "El contexto interno del proyecto sirve para comprender "
         "la arquitectura, pero no sustituye una referencia "
         "documental de seguridad.\n"
@@ -643,6 +645,9 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
             "de UNA línea del código original, sin numeración añadida. "
             "Usa los números exactos de lineas_codigo_no_confiables. "
             "Si falta documentación para una observación, no inventes respaldo."
+            " En reglas_evidencia cita únicamente los IDs de las reglas estáticas que "
+            "respaldan este hallazgo en la misma línea. La cercanía en una ventana no "
+            "es suficiente; usa [] si no hay una correspondencia verificable."
         )
         if evidencia.contextos_ampliados or evidencia.referencias_buscadas:
             instrucciones += (
@@ -684,7 +689,7 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
                 temperature=0.2,
                 max_output_tokens=max_tokens,
                 response_mime_type="application/json",
-                response_schema=InformeModelo,
+                response_schema=InformeGenerativo,
             ),
         )
 
@@ -694,9 +699,10 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
             )
 
         # PASO H: Validar la respuesta estructurada.
-        informe = InformeModelo.model_validate_json(
-            respuesta.text,
-        )
+        # El esquema generativo no admite auditoría del backend: incluso si el
+        # modelo intenta enviarla fuera del esquema, se ignora antes de validar.
+        generado = InformeGenerativo.model_validate_json(respuesta.text)
+        informe = InformeModelo.model_validate(generado.model_dump())
 
         if informe.motivo_abstencion:
             logger.info("llm_abstention reason=model_abstention")
@@ -716,10 +722,14 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
 
         if evidencia is not None:
             informe = _validar_informe_agente(informe, codigo, fuentes)
+            anteriores = informe.hallazgos
             informe.hallazgos = heredar_severidad_contextual(
                 informe.hallazgos,
-                evidencia.vinculos_reglas_contexto,
+                evidencia.reglas,
             )
+            if any(set(a.reglas_evidencia) != set(b.reglas_evidencia) for a, b in zip(anteriores, informe.hallazgos)):
+                aviso = "Se omitieron vínculos estáticos desconocidos, ambiguos o sin coincidencia de línea."
+                informe._revision_parcial = " ".join(filter(None, [informe._revision_parcial, aviso]))
             informe.hallazgos = priorizar_hallazgos(informe.hallazgos)
             uso = respuesta.usage_metadata
             logger.info(
@@ -732,6 +742,7 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
 
         # PASOS J/K: Validar cada cita sin descartar los otros hallazgos válidos.
         informe = _validar_informe(informe, codigo, fuentes, exigir_anclaje=False)
+        informe.hallazgos = heredar_severidad_contextual(informe.hallazgos, [])
         informe.hallazgos = priorizar_hallazgos(informe.hallazgos)
 
         # PASO L: Registrar metricas sin exponer codigo ni claves.

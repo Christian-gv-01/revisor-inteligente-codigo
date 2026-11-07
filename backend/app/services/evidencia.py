@@ -11,7 +11,7 @@ from app.services.herramientas_contextuales import (
     ResultadoReferencia,
 )
 from app.config import settings
-from app.services.severidad import derivar_severidad
+from app.services.severidad import derivar_severidad, identificar_regla
 
 
 class DatoEvidencia(BaseModel):
@@ -38,9 +38,11 @@ class InspeccionEvidencia(DatoEvidencia):
 
 
 class ReglaEvidencia(DatoEvidencia):
+    id: str = Field(max_length=80)
     herramienta: Literal["ruff", "bandit"]
     regla: str = Field(min_length=1, max_length=40)
     linea: int = Field(ge=1, le=12000)
+    columna: int | None = Field(default=None, ge=1)
 
     # Severidad original informada por la herramienta.
     severidad: Literal["critica", "alta", "media", "baja"]
@@ -62,6 +64,7 @@ class ReglaEvidencia(DatoEvidencia):
             return valores
 
         datos = dict(valores)
+        datos["id"] = identificar_regla(datos.get("herramienta"), datos.get("regla"), datos.get("linea"), datos.get("columna"))
         datos["severidad_derivada"] = derivar_severidad(
             datos.get("herramienta"),
             datos.get("severidad"),
@@ -71,9 +74,10 @@ class ReglaEvidencia(DatoEvidencia):
 
 
 class VinculoReglaContexto(DatoEvidencia):
-    """Asociaci?n verificable entre una regla y un contexto ampliado."""
+    """Asociación verificable entre una regla y un contexto ampliado."""
 
     herramienta: Literal["ruff", "bandit"]
+    id_regla: str = Field(max_length=80)
     regla: str = Field(min_length=1, max_length=40)
 
     linea_regla: int = Field(ge=1, le=12000)
@@ -92,12 +96,12 @@ class VinculoReglaContexto(DatoEvidencia):
     def validar_vinculo(self):
         if not self.linea_inicio <= self.linea_regla <= self.linea_fin:
             raise ValueError(
-                "La l?nea de la regla debe pertenecer a la ventana contextual."
+                "La línea de la regla debe pertenecer a la ventana contextual."
             )
 
         if not self.linea_inicio <= self.linea_objetivo <= self.linea_fin:
             raise ValueError(
-                "La l?nea objetivo debe pertenecer a la ventana contextual."
+                "La línea objetivo debe pertenecer a la ventana contextual."
             )
 
         return self
@@ -149,7 +153,7 @@ def vincular_reglas_contextuales(
     reglas: list[ReglaEvidencia],
     contextos: list[ResultadoContexto],
 ) -> list[VinculoReglaContexto]:
-    """Vincula reglas y contextos mediante coincidencia exacta de l?nea."""
+    """Registra cobertura de ventanas; no autoriza herencia de severidad."""
 
     vinculos = []
     vistos = set()
@@ -160,9 +164,10 @@ def vincular_reglas_contextuales(
                 continue
 
             clave = (
-                regla.herramienta,
-                regla.regla,
-                regla.linea,
+                regla.id,
+                contexto.linea_objetivo,
+                contexto.linea_inicio,
+                contexto.linea_fin,
             )
 
             if clave in vistos:
@@ -172,6 +177,7 @@ def vincular_reglas_contextuales(
 
             vinculos.append(
                 VinculoReglaContexto(
+                    id_regla=regla.id,
                     herramienta=regla.herramienta,
                     regla=regla.regla,
                     linea_regla=regla.linea,
@@ -184,7 +190,7 @@ def vincular_reglas_contextuales(
                 )
             )
 
-    return vinculos[:40]
+    return sorted(vinculos, key=lambda v: (v.id_regla, v.linea_objetivo, v.linea_inicio, v.linea_fin))[:40]
 
 
 def construir_evidencia(
@@ -252,6 +258,7 @@ def construir_evidencia(
             linea=h.linea,
             severidad=h.severidad,
             confianza=h.confianza,
+            columna=h.columna,
         )
         for h in reglas[:40]
     ]
