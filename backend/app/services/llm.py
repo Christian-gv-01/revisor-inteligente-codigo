@@ -16,6 +16,7 @@ from app.models.analisis import InformeModelo
 from app.config import settings
 from app.services.priorizacion import priorizar_hallazgos
 from app.services.evidencia import EvidenciaRevision, consultas_por_evidencia
+from app.services.severidad import heredar_severidad_contextual
 from app.services.presupuesto import generar_con_presupuesto, ConsumoAgotado, comprobar_plazo, PlazoAgotado
 
 
@@ -715,6 +716,10 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
 
         if evidencia is not None:
             informe = _validar_informe_agente(informe, codigo, fuentes)
+            informe.hallazgos = heredar_severidad_contextual(
+                informe.hallazgos,
+                evidencia.vinculos_reglas_contexto,
+            )
             informe.hallazgos = priorizar_hallazgos(informe.hallazgos)
             uso = respuesta.usage_metadata
             logger.info(
