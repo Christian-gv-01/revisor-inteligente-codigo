@@ -43,3 +43,22 @@ El emparejamiento conservador por línea puede omitir herencia en una llamada mu
 La entrega original registró 554 pruebas backend. La corrección añade regresiones de orden, cercanía, ausencia/ambigüedad de IDs, conservación de originales, auditoría fabricada, SDK simulado, contrato FastAPI y presentación/exportación en React. Los resultados de la combinación y su procedencia están en [36-correccion-herencia-integrada.md](36-correccion-herencia-integrada.md).
 
 No son una evaluación con Gemini real ni demuestran mejora de precisión, recall, F1 o consumo. La comparación final debe ejecutarse después de revisar e integrar este candidato y verificar una única revisión desplegada y su corpus/configuración.
+
+## Aportes posteriores y contraste
+
+El compañero publicó cf82e84 (doce combinaciones y UTF-8) y
+113347c6da9c52c614a6212c0ae6b1742141da6e (ampliación documental) en la rama
+del PR #55 después de su fusión. Las pruebas ya se incorporaron mediante PR #56.
+Actualizar esa rama no vuelve a fusionar un PR cerrado. La ampliación se contrastó
+con el código, conservando su explicación de matriz, secuencia y auditoría.
+
+| Entrada | Comportamiento real del servicio |
+|---|---|
+| Bandit, confianza ausente/no reconocida | Columna desconocida del YAML, conserva severidad |
+| Ruff | Matriz YAML sin inventar confianza |
+| Herramienta o severidad no reconocida | ValueError; no hay fallback genérico silencioso |
+| YAML ausente, incompleto o inválido | Error de configuración; no fabrica reglas de respaldo |
+
+La política contiene version, bandit y ruff; desconocida es una columna de cada
+fila Bandit. Los conteos Windows comunicados son históricos de otro entorno,
+no sustituyen los 583 backend comprobados en CI de PR #56 ni una evaluación real.

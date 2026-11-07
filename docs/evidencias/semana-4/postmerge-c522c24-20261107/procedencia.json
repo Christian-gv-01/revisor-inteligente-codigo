@@ -1,0 +1,16 @@
+{
+  "revision": "c522c24f0efcfa7ee4e7411a66fcaa1a612dd740",
+  "deployment": "750ebee5-57bf-4cb2-8b81-ad50c1606ebc",
+  "fecha": "2026-11-07",
+  "verificacion": "Railway Details enlaza commit exacto; deployment visible Online/Deployment successful. Main CI ocho verificaciones success.",
+  "modelo": "gemini-3.5-flash-lite",
+  "parametros_publicos": {
+    "LLM_MAX_OUTPUT_TOKENS": 2048,
+    "LLM_TIMEOUT_SECONDS": 20,
+    "RAG_MAX_DISTANCE": 0.75
+  },
+  "variables_observadas": 9,
+  "secretos_incluidos": false,
+  "interfaz_presupuesto": "En API real y Proyecto .zip se ve Revisar presupuesto",
+  "limite": "La huella del índice se registra por separado: observación durante y después, no inicial. No es auditoría legal."
+}

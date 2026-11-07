@@ -1,0 +1,75 @@
+{
+  "revision": "c522c24f0efcfa7ee4e7411a66fcaa1a612dd740",
+  "fecha_utc": "2026-11-07T21:23:40.468757+00:00",
+  "proveedor": "real a traves de Railway",
+  "casos": [
+    {
+      "caso": "ZIP legado exige consentimiento",
+      "http_status": 428,
+      "aprobado": true
+    },
+    {
+      "caso": "Presupuesto previo para rechazar",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Decision presupuesto rechazar",
+      "http_status": 200,
+      "aprobado": true,
+      "estado_resultado": null,
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 0,
+        "respuestas": 0,
+        "tokens_entrada": 0,
+        "tokens_salida": 0,
+        "tokens_totales": 0,
+        "uso_completo": true
+      }
+    },
+    {
+      "caso": "Presupuesto previo para aprobar",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Decision presupuesto aprobar",
+      "http_status": 200,
+      "aprobado": true,
+      "estado_resultado": "analizado",
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 0,
+        "respuestas": 0,
+        "tokens_entrada": 0,
+        "tokens_salida": 0,
+        "tokens_totales": 0,
+        "uso_completo": true
+      }
+    },
+    {
+      "caso": "Previsualizacion de copia real",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Aprueba solo el contenido revisado",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Aprobacion idempotente",
+      "http_status": 200,
+      "aprobado": true
+    },
+    {
+      "caso": "Decision contraria rechazada",
+      "http_status": 409,
+      "aprobado": true
+    }
+  ],
+  "codigo_ejecutado": false,
+  "original_sobrescrito": false,
+  "cookies_publicadas": false
+}

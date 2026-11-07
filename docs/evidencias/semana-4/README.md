@@ -1,3 +1,10 @@
+## Validación pública final del 7 de noviembre
+
+Consultar [postmerge c522c24](postmerge-c522c24-20261107/README.md): cuarenta análisis
+reales, A/B de doce decisiones, huella del corpus y nueve controles públicos.
+Los resultados parciales y el consumo desconocido se conservan. La corrección
+de presupuestos anidados se registra separadamente en PR #57 y docs/38.
+
 # Evidencias verificables — Semana 4
 
 > Revisión documental `65675e2`: [validación de PR #31](agente-integrado-20261105/validacion.json)

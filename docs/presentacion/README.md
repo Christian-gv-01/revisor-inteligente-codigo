@@ -1,3 +1,17 @@
+# Presentación vigente
+
+Usar **CODEGUARD-validacion-final-20261107.pptx** y el PDF con el mismo nombre.
+Doce diapositivas editables y guion de 720 segundos planificados. El ensayo real
+y el reparto aún requieren a los integrantes. Los archivos anteriores se conservan
+como histórico; el ZIP debe generarse desde el commit que incorpore esta versión.
+
+Incluye los cuarenta análisis c522c24, sus parciales, comparación histórica,
+A/B del planificador, verificación del índice y confirmaciones públicas.
+Las pruebas simuladas de software se distinguen de Gemini real. No afirma
+mejora de precisión ni tokens totales conocidos donde faltan metadatos.
+
+## Registro anterior
+
 # Sustentación: cierre técnico y comparación real
 
 Preparación actualizada el 7 de noviembre de 2026. Doce diapositivas, 720 segundos
