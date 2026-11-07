@@ -1,0 +1,80 @@
+{
+  "fecha_utc": "2026-11-07T05:59:47.389Z",
+  "revision_servidor": "467d00e0d56a98cd758f382a5c713737eb490845",
+  "url_publica": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "railway": {
+    "deployment_id": "3eb5a324-4385-42f7-8324-1e160eb5261e",
+    "estado": "Active",
+    "resultado": "Deployment successful",
+    "url_commit_observada": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/commit/467d00e0d56a98cd758f382a5c713737eb490845",
+    "fuente": "Panel de detalles del despliegue, navegador conectado; consultado antes y después de la matriz. Observación del panel, no atestación criptográfica de /health."
+  },
+  "configuracion_publica_observada": {
+    "GEMINI_MODEL": "gemini-3.5-flash-lite",
+    "LLM_MAX_OUTPUT_TOKENS": 2048,
+    "LLM_TIMEOUT_SECONDS": 20,
+    "RAG_MAX_DISTANCE": 0.75
+  },
+  "configuracion_completa_verificada": false,
+  "indice_chroma_verificado": false,
+  "ci_push": [
+    {
+      "nombre": "CODEGUARD secretos",
+      "evento": "push",
+      "sha": "467d00e0d56a98cd758f382a5c713737eb490845",
+      "estado": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42344205330"
+    },
+    {
+      "nombre": "CODEGUARD frontend",
+      "evento": "push",
+      "sha": "467d00e0d56a98cd758f382a5c713737eb490845",
+      "estado": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42344204967"
+    },
+    {
+      "nombre": "CODEGUARD backend tests",
+      "evento": "push",
+      "sha": "467d00e0d56a98cd758f382a5c713737eb490845",
+      "estado": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42344205028"
+    },
+    {
+      "nombre": "CODEGUARD captura estatica multiplataforma",
+      "evento": "push",
+      "sha": "467d00e0d56a98cd758f382a5c713737eb490845",
+      "estado": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42344205041"
+    },
+    {
+      "nombre": "CODEGUARD imagen Docker",
+      "evento": "push",
+      "sha": "467d00e0d56a98cd758f382a5c713737eb490845",
+      "estado": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42344205214"
+    },
+    {
+      "nombre": "CODEGUARD integracion HTTP",
+      "evento": "push",
+      "sha": "467d00e0d56a98cd758f382a5c713737eb490845",
+      "estado": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42344204945"
+    }
+  ],
+  "alcance": "Matriz pública de validación y AST; sin solicitudes generativas válidas, sin cambios de configuración ni despliegue manual.",
+  "comparacion_real_ejecutada": false,
+  "evaluador_preparacion": {
+    "casos": 20,
+    "solicitudes_previstas": 40,
+    "solicitudes_realizadas": 0,
+    "version_herramientas": "2",
+    "dataset_sha256": "9908373c5650a9fb87992a50d56a05636c0dc2d615a25c0189c02b31e85d85ac",
+    "pruebas_unitarias_aprobadas": 40
+  }
+}

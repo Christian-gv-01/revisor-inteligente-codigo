@@ -1,0 +1,270 @@
+{
+  "fecha_utc": "2026-11-07T05:59:12.785785+00:00",
+  "objetivo": "https://revisor-inteligente-codigo-production.up.railway.app",
+  "total": 26,
+  "aprobados": 26,
+  "fallidos": 0,
+  "resultado": "aprobado",
+  "escenarios": [
+    {
+      "id": "P01",
+      "categoria": "disponibilidad",
+      "escenario": "Endpoint de salud",
+      "esperado": "HTTP 200 y status=ok",
+      "obtenido": "HTTP 200; campo status presente",
+      "aprobado": true,
+      "duracion_ms": 3999.95,
+      "detalle": ""
+    },
+    {
+      "id": "P02",
+      "categoria": "disponibilidad",
+      "escenario": "OpenAPI accesible",
+      "esperado": "HTTP 200 con esquema OpenAPI",
+      "obtenido": "HTTP 200; respuesta JSON",
+      "aprobado": true,
+      "duracion_ms": 109.01,
+      "detalle": ""
+    },
+    {
+      "id": "P03",
+      "categoria": "errores",
+      "escenario": "Ruta inexistente",
+      "esperado": "HTTP 404 controlado",
+      "obtenido": "HTTP 404; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 31.8,
+      "detalle": ""
+    },
+    {
+      "id": "P04",
+      "categoria": "errores",
+      "escenario": "Método no permitido",
+      "esperado": "HTTP 405 controlado",
+      "obtenido": "HTTP 405; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 32.94,
+      "detalle": ""
+    },
+    {
+      "id": "P05",
+      "categoria": "entrada",
+      "escenario": "Solicitud de análisis sin cuerpo",
+      "esperado": "HTTP 422 sin reflejar valores",
+      "obtenido": "HTTP 422; 1 error(es) de validación",
+      "aprobado": true,
+      "duracion_ms": 52.96,
+      "detalle": ""
+    },
+    {
+      "id": "P06",
+      "categoria": "entrada",
+      "escenario": "Código vacío",
+      "esperado": "HTTP 422",
+      "obtenido": "HTTP 422; 1 error(es) de validación",
+      "aprobado": true,
+      "duracion_ms": 54.78,
+      "detalle": ""
+    },
+    {
+      "id": "P07",
+      "categoria": "secretos",
+      "escenario": "Entrada excesiva no se refleja en el 422",
+      "esperado": "HTTP 422 sin el marcador enviado",
+      "obtenido": "HTTP 422; 1 error(es) de validación",
+      "aprobado": true,
+      "duracion_ms": 32.97,
+      "detalle": ""
+    },
+    {
+      "id": "P08",
+      "categoria": "entrada",
+      "escenario": "Extensión de archivo no permitida",
+      "esperado": "HTTP 400",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 77.51,
+      "detalle": ""
+    },
+    {
+      "id": "P09",
+      "categoria": "entrada",
+      "escenario": "Nombre de archivo con traversal",
+      "esperado": "HTTP 400",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 79.65,
+      "detalle": ""
+    },
+    {
+      "id": "P10",
+      "categoria": "entrada",
+      "escenario": "Archivo Python vacío",
+      "esperado": "HTTP 400",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 73.14,
+      "detalle": ""
+    },
+    {
+      "id": "P11",
+      "categoria": "entrada",
+      "escenario": "Archivo Python con byte nulo",
+      "esperado": "HTTP 400",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 86.12,
+      "detalle": ""
+    },
+    {
+      "id": "P12",
+      "categoria": "entrada",
+      "escenario": "Archivo Python sin UTF-8",
+      "esperado": "HTTP 400",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 103.87,
+      "detalle": ""
+    },
+    {
+      "id": "P13",
+      "categoria": "entrada",
+      "escenario": "Código Python superior a 12.000 caracteres",
+      "esperado": "HTTP 413",
+      "obtenido": "HTTP 413; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 57,
+      "detalle": ""
+    },
+    {
+      "id": "P14",
+      "categoria": "zip",
+      "escenario": "ZIP corrupto",
+      "esperado": "HTTP 400",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 64034.69,
+      "detalle": ""
+    },
+    {
+      "id": "P15",
+      "categoria": "zip",
+      "escenario": "ZIP con ruta traversal",
+      "esperado": "HTTP 400",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 78.91,
+      "detalle": ""
+    },
+    {
+      "id": "P16",
+      "categoria": "zip",
+      "escenario": "ZIP con seis archivos Python",
+      "esperado": "HTTP 413",
+      "obtenido": "HTTP 413; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 60198.02,
+      "detalle": ""
+    },
+    {
+      "id": "P17",
+      "categoria": "zip",
+      "escenario": "ZIP sin archivos Python",
+      "esperado": "HTTP 400",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 827.63,
+      "detalle": ""
+    },
+    {
+      "id": "P18",
+      "categoria": "zip",
+      "escenario": "ZIP con Python binario",
+      "esperado": "HTTP 400",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 64238.68,
+      "detalle": ""
+    },
+    {
+      "id": "P19",
+      "categoria": "github",
+      "escenario": "GitHub sin HTTPS",
+      "esperado": "HTTP 400 sin consulta de red",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 37.14,
+      "detalle": ""
+    },
+    {
+      "id": "P20",
+      "categoria": "github",
+      "escenario": "Dominio parecido a GitHub",
+      "esperado": "HTTP 400 sin consulta de red",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 58313.44,
+      "detalle": ""
+    },
+    {
+      "id": "P21",
+      "categoria": "github",
+      "escenario": "GitHub con query",
+      "esperado": "HTTP 400 sin consulta de red",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 2724.72,
+      "detalle": ""
+    },
+    {
+      "id": "P22",
+      "categoria": "github",
+      "escenario": "GitHub con ruta adicional",
+      "esperado": "HTTP 400 sin consulta de red",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 57857.51,
+      "detalle": ""
+    },
+    {
+      "id": "P23",
+      "categoria": "github",
+      "escenario": "GitHub dirigido a loopback",
+      "esperado": "HTTP 400 sin consulta de red",
+      "obtenido": "HTTP 400; mensaje de error presente (contenido omitido)",
+      "aprobado": true,
+      "duracion_ms": 3102.98,
+      "detalle": ""
+    },
+    {
+      "id": "P24",
+      "categoria": "agente",
+      "escenario": "Nombre traversal en Agent Lab",
+      "esperado": "HTTP 422",
+      "obtenido": "HTTP 422; 1 error(es) de validación",
+      "aprobado": true,
+      "duracion_ms": 57556.14,
+      "detalle": ""
+    },
+    {
+      "id": "P25",
+      "categoria": "agente",
+      "escenario": "Cantidad excesiva de pasos",
+      "esperado": "HTTP 422",
+      "obtenido": "HTTP 422; 1 error(es) de validación",
+      "aprobado": true,
+      "duracion_ms": 58.62,
+      "detalle": ""
+    },
+    {
+      "id": "P26",
+      "categoria": "prompt-injection",
+      "escenario": "Inyección en código tratada como texto por AST local",
+      "esperado": "HTTP 200, modo inspeccion_local y política de solo lectura",
+      "obtenido": "HTTP 200; campo modo presente",
+      "aprobado": true,
+      "duracion_ms": 30.5,
+      "detalle": ""
+    }
+  ]
+}
