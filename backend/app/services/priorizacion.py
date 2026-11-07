@@ -5,7 +5,7 @@ import unicodedata
 from collections.abc import Sequence
 
 from app.models.analisis import Hallazgo
-from app.config.priorizacion import ORDEN_SEVERIDAD, CATEGORIAS_SEGURIDAD, CATEGORIAS_CALIDAD
+from app.config.priorizacion import ORDEN_SEVERIDAD, ORDEN_CONFIANZA, CATEGORIAS_SEGURIDAD, CATEGORIAS_CALIDAD
 
 
 # Criterio principal: severidad.
@@ -73,7 +73,7 @@ def priorizar_hallazgos(
     No reduce la severidad de ningún hallazgo.
     """
 
-    def clave(hallazgo: Hallazgo) -> tuple[int, int]:
+    def clave(hallazgo: Hallazgo) -> tuple[int, int, int, int]:
         severidad = getattr(hallazgo, "severidad", None)
 
         try:
@@ -83,8 +83,17 @@ def priorizar_hallazgos(
                 f"Severidad no soportada: {severidad}"
             ) from error
 
+        confianza = getattr(hallazgo, "confianza", None)
+
+        try:
+            orden_confianza = ORDEN_CONFIANZA[confianza]
+        except (KeyError, TypeError):
+            orden_confianza = None
+
         return (
             orden,
+            1 if orden_confianza is None else 0,
+            orden_confianza if orden_confianza is not None else 0,
             prioridad_categoria(hallazgo),
         )
 

@@ -20,6 +20,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.config import settings
+from app.config.priorizacion import ORDEN_SEVERIDAD, ORDEN_CONFIANZA
 from app.services.presupuesto import tiempo_disponible, PlazoAgotado
 
 MAX_CHARS = settings.MAX_CODIGO
@@ -28,6 +29,7 @@ _READ_CHUNK = 64 * 1024
 TOOL_TIMEOUT = settings.TIMEOUT_HERRAMIENTAS
 _SAFE_PART = re.compile(r"^[A-Za-z0-9_.-]{1,120}$", re.ASCII)
 _SEVERIDADES = {"HIGH": "alta", "MEDIUM": "media", "LOW": "baja"}
+_CONFIANZAS_BANDIT = {"HIGH": "alta", "MEDIUM": "media", "LOW": "baja"}
 
 
 class HallazgoEstatico(BaseModel):
@@ -242,7 +244,7 @@ def _bandit(salida: str, total_lineas: int) -> list[HallazgoEstatico]:
         if not regla:
             raise ValueError("Regla Bandit vacía")
         severidad = _SEVERIDADES.get(_texto(item.get("issue_severity")).upper(), "baja")
-        confianza = _SEVERIDADES.get(_texto(item.get("issue_confidence")).upper(), "baja")
+        confianza = _CONFIANZAS_BANDIT.get(_texto(item.get("issue_confidence")).upper())
         encontrado = HallazgoEstatico(
             herramienta="bandit", regla=regla, tipo="seguridad",
             linea=linea, columna=None, severidad=severidad,
@@ -289,7 +291,14 @@ def analizar_estatico(codigo: str, archivo: str = "codigo.py") -> ResultadoEstat
     # Se conserva el origen de cada observación, no se inventan citas RAG.
     # Dos alertas de herramientas distintas NO se fusionan sin una equivalencia
     # normativa verificable entre sus reglas.
-    encontrados.sort(key=lambda a: (a.linea, a.herramienta, a.regla))
+    encontrados.sort(
+        key=lambda a: (
+            ORDEN_SEVERIDAD[a.severidad],
+            a.confianza is None,
+            ORDEN_CONFIANZA.get(a.confianza, 0),
+            0 if a.tipo == "seguridad" else 1,
+        )
+    )
     correctos = sum(e.estado == "ok" for e in estados)
     return ResultadoEstatico(
         archivo=archivo,

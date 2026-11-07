@@ -50,11 +50,11 @@ def test_normaliza_hallazgos_separados(monkeypatch):
     llamadas = simular_ambos(monkeypatch)
     resultado = mod.analizar_estatico("import os\nx = eval(input())\n", "usuarios.py")
     assert resultado.estado == "completo"
-    assert [h.herramienta for h in resultado.hallazgos] == ["ruff", "bandit"]
-    assert resultado.hallazgos[0].tipo == "calidad"
-    assert resultado.hallazgos[1].tipo == "seguridad"
-    assert resultado.hallazgos[1].severidad == "alta"
-    assert resultado.hallazgos[1].confianza == "alta"
+    assert [h.herramienta for h in resultado.hallazgos] == ["bandit", "ruff"]
+    assert resultado.hallazgos[0].tipo == "seguridad"
+    assert resultado.hallazgos[0].severidad == "alta"
+    assert resultado.hallazgos[0].confianza == "alta"
+    assert resultado.hallazgos[1].tipo == "calidad"
     assert [x.hallazgos for x in resultado.herramientas] == [1, 1]
     assert len(llamadas) == 2
 
@@ -200,3 +200,109 @@ def test_bandit_real_detecta_eval_sin_ejecutarlo():
     assert bandit.estado == "ok"
     assert any(h.herramienta == "bandit" and h.regla == "B307" for h in resultado.hallazgos)
 
+
+
+def analizar_bandit_simulado(monkeypatch, item):
+    datos = {"results": [item]}
+
+    def falso_ejecutar(comando, **kw):
+        salida = RUFF if "ruff" in comando else datos
+        return ("ok", json.dumps(salida))
+
+    monkeypatch.setattr(mod, "_ejecutar", falso_ejecutar)
+
+    return mod.analizar_estatico(
+        "print('inicio')\neval(input())\n"
+    )
+
+
+@pytest.mark.parametrize(
+    "confianza, esperada",
+    [
+        ("HIGH", "alta"),
+        ("MEDIUM", "media"),
+        ("LOW", "baja"),
+        ("UNKNOWN", None),
+        ("", None),
+        (None, None),
+    ],
+)
+def test_bandit_mapea_confianza_sin_modificar_severidad(
+    monkeypatch, confianza, esperada
+):
+    item = {
+        **BANDIT["results"][0],
+        "issue_severity": "HIGH",
+        "issue_confidence": confianza,
+    }
+
+    resultado = analizar_bandit_simulado(monkeypatch, item)
+
+    hallazgo = next(
+        h for h in resultado.hallazgos
+        if h.herramienta == "bandit"
+    )
+
+    assert hallazgo.confianza == esperada
+    assert hallazgo.severidad == "alta"
+
+
+def test_bandit_confianza_ausente_permanece_none(monkeypatch):
+    item = dict(BANDIT["results"][0])
+    item.pop("issue_confidence")
+
+    resultado = analizar_bandit_simulado(monkeypatch, item)
+
+    hallazgo = next(
+        h for h in resultado.hallazgos
+        if h.herramienta == "bandit"
+    )
+
+    assert hallazgo.confianza is None
+    assert hallazgo.severidad == "alta"
+import json
+
+import pytest
+
+from app.services import static_analysis as mod
+
+
+def test_orden_real_severidad_confianza_y_estabilidad(monkeypatch):
+    items = [
+        {**mod_item, "test_id": "B001", "issue_severity": "HIGH", "issue_confidence": None}
+        for mod_item in [ {
+            "test_name": "test",
+            "issue_text": "test",
+            "line_number": 2,
+            "more_info": "",
+        }]
+    ]
+
+    items.extend([
+        {**items[0], "test_id": "B002", "issue_confidence": "LOW"},
+        {**items[0], "test_id": "B003", "issue_confidence": "HIGH"},
+        {**items[0], "test_id": "B004", "issue_confidence": "HIGH"},
+        {**items[0], "test_id": "B005", "issue_confidence": "MEDIUM"},
+        {**items[0], "test_id": "B006", "issue_severity": "MEDIUM", "issue_confidence": "HIGH"},
+    ])
+
+    def falso_ejecutar(comando, **kw):
+        if "ruff" in comando:
+            return "ok", "[]"
+        return "ok", json.dumps({"results": items})
+
+    monkeypatch.setattr(mod, "_ejecutar", falso_ejecutar)
+
+    resultado = mod.analizar_estatico(
+        "print('inicio')\neval(input())\n"
+    )
+
+    assert [h.regla for h in resultado.hallazgos] == [
+        "B003", "B004", "B005", "B002", "B001", "B006"
+    ]
+
+    assert [h.severidad for h in resultado.hallazgos] == [
+        "alta", "alta", "alta", "alta", "alta", "media"
+    ]
+
+    assert resultado.hallazgos[4].confianza is None

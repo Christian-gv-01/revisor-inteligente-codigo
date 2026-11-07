@@ -25,3 +25,12 @@ CATEGORIAS_SEGURIDAD = {
 CATEGORIAS_CALIDAD = {
     "calidad",
 }
+
+
+# Orden de confianza informado por Bandit.
+# No representa probabilidades calibradas.
+ORDEN_CONFIANZA = {
+    "alta": 1,
+    "media": 2,
+    "baja": 3,
+}
