@@ -1,0 +1,398 @@
+{
+  "metadatos": {
+    "fecha_utc": "2026-11-07T21:37:40.854589+00:00",
+    "modelo": "gemini-3.5-flash-lite",
+    "casos": 6,
+    "repeticiones": 1,
+    "version_herramientas": "2",
+    "dataset_sha256": "b5d74038241898a76a8834557d305378db8bd8f164ed3997af64b0f05b3222ef",
+    "evaluador_sha256": "5ee4cf7f02cc11a234aa23f2e0072ea9c43c73b756f8d93e900dec1e39755c65",
+    "diseño": "Pares AB/BA contrabalanceados; primera decisión únicamente.",
+    "codigo_fuente_almacenado": false,
+    "proveedor_simulado": false
+  },
+  "resumen": {
+    "total_solicitudes": 12,
+    "casos_excluidos": [],
+    "pares_completos": 5,
+    "pares_no_comparables": 1,
+    "pares_con_cambio": 2,
+    "tasa_cambio_de_decision": 0.4,
+    "condiciones": {
+      "sin_contexto": {
+        "solicitudes": 6,
+        "exitos": 5,
+        "errores": 1,
+        "tasa_exito": 0.8333,
+        "latencia_media_ms_exitos": 11390.74,
+        "distribucion_decisiones": {
+          "detectar_llamadas_sensibles": 3,
+          "revisar_consultas_sql": 2
+        },
+        "consumo_ia": {
+          "solicitudes": 6,
+          "solicitudes_con_telemetria": 6,
+          "fuente": "Contadores SDK declarados por el servidor; no factura ni estimación de costo.",
+          "intentos": 9,
+          "intentos_solicitudes_con_dato": 6,
+          "intentos_suma_solo_conocidos": 9,
+          "tokens_entrada": null,
+          "tokens_entrada_solicitudes_con_dato": 3,
+          "tokens_entrada_suma_solo_conocidos": 1190,
+          "tokens_salida": null,
+          "tokens_salida_solicitudes_con_dato": 3,
+          "tokens_salida_suma_solo_conocidos": 144,
+          "tokens_totales": null,
+          "tokens_totales_solicitudes_con_dato": 3,
+          "tokens_totales_suma_solo_conocidos": 1334
+        },
+        "finalizaciones_en_primera_decision": 0,
+        "tasa_finalizacion_inicial_sobre_total": 0.0
+      },
+      "con_contexto": {
+        "solicitudes": 6,
+        "exitos": 6,
+        "errores": 0,
+        "tasa_exito": 1.0,
+        "latencia_media_ms_exitos": 9193.16,
+        "distribucion_decisiones": {
+          "detectar_llamadas_sensibles": 4,
+          "revisar_consultas_sql": 1,
+          "finalizar": 1
+        },
+        "consumo_ia": {
+          "solicitudes": 6,
+          "solicitudes_con_telemetria": 6,
+          "fuente": "Contadores SDK declarados por el servidor; no factura ni estimación de costo.",
+          "intentos": 8,
+          "intentos_solicitudes_con_dato": 6,
+          "intentos_suma_solo_conocidos": 8,
+          "tokens_entrada": null,
+          "tokens_entrada_solicitudes_con_dato": 4,
+          "tokens_entrada_suma_solo_conocidos": 2034,
+          "tokens_salida": null,
+          "tokens_salida_solicitudes_con_dato": 4,
+          "tokens_salida_suma_solo_conocidos": 181,
+          "tokens_totales": null,
+          "tokens_totales_solicitudes_con_dato": 4,
+          "tokens_totales_suma_solo_conocidos": 2215
+        },
+        "finalizaciones_en_primera_decision": 1,
+        "tasa_finalizacion_inicial_sobre_total": 0.16666666666666666
+      }
+    },
+    "pares": [
+      {
+        "caso_id": "comando_shell",
+        "repeticion": 1,
+        "sin_contexto": "detectar_llamadas_sensibles",
+        "con_contexto": "detectar_llamadas_sensibles",
+        "argumentos_sin_contexto": {},
+        "argumentos_con_contexto": {},
+        "cambio": false
+      },
+      {
+        "caso_id": "eval_entrada",
+        "repeticion": 1,
+        "sin_contexto": "detectar_llamadas_sensibles",
+        "con_contexto": "detectar_llamadas_sensibles",
+        "argumentos_sin_contexto": {},
+        "argumentos_con_contexto": {},
+        "cambio": false
+      },
+      {
+        "caso_id": "funcion_limpia",
+        "repeticion": 1,
+        "sin_contexto": "detectar_llamadas_sensibles",
+        "con_contexto": "finalizar",
+        "argumentos_sin_contexto": {},
+        "argumentos_con_contexto": {},
+        "cambio": true
+      },
+      {
+        "caso_id": "sql_concatenado",
+        "repeticion": 1,
+        "sin_contexto": "revisar_consultas_sql",
+        "con_contexto": "revisar_consultas_sql",
+        "argumentos_sin_contexto": {},
+        "argumentos_con_contexto": {},
+        "cambio": false
+      },
+      {
+        "caso_id": "sql_parametrizado",
+        "repeticion": 1,
+        "sin_contexto": "revisar_consultas_sql",
+        "con_contexto": "detectar_llamadas_sensibles",
+        "argumentos_sin_contexto": {},
+        "argumentos_con_contexto": {},
+        "cambio": true
+      }
+    ],
+    "advertencia": "Un cambio de herramienta NO demuestra mayor precisión ni mejor detección de vulnerabilidades. Se mide una decisión de planificación, sin ejecutar el informe Gemini + RAG. Los errores de proveedor se excluyen de las comparaciones, no son aciertos."
+  },
+  "solicitudes": [
+    {
+      "caso_id": "eval_entrada",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 1,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 8757.78,
+      "sha256_codigo": "519015016078a2fe",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 1,
+        "respuestas": 1,
+        "tokens_entrada": 390,
+        "tokens_salida": 48,
+        "tokens_totales": 438,
+        "uso_completo": true
+      }
+    },
+    {
+      "caso_id": "eval_entrada",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 2,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 8542.86,
+      "sha256_codigo": "519015016078a2fe",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 1,
+        "respuestas": 1,
+        "tokens_entrada": 509,
+        "tokens_salida": 44,
+        "tokens_totales": 553,
+        "uso_completo": true
+      }
+    },
+    {
+      "caso_id": "exec_entrada",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 3,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 5880.81,
+      "sha256_codigo": "da96e6cc8c27a6eb",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 1,
+        "respuestas": 1,
+        "tokens_entrada": 496,
+        "tokens_salida": 44,
+        "tokens_totales": 540,
+        "uso_completo": true
+      }
+    },
+    {
+      "caso_id": "exec_entrada",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 4,
+      "condicion": "sin_contexto",
+      "estado": "error_proveedor",
+      "herramienta": null,
+      "codigo_error": 503,
+      "latencia_ms": 22974.21,
+      "sha256_codigo": "da96e6cc8c27a6eb",
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 2,
+        "respuestas": 0,
+        "tokens_entrada": null,
+        "tokens_salida": null,
+        "tokens_totales": null,
+        "uso_completo": false
+      }
+    },
+    {
+      "caso_id": "sql_concatenado",
+      "categoria": "sql_dinamico",
+      "repeticion": 1,
+      "orden": 5,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "revisar_consultas_sql",
+      "codigo_error": null,
+      "latencia_ms": 10516.23,
+      "sha256_codigo": "45090ad07a4cfe19",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 1,
+        "respuestas": 1,
+        "tokens_entrada": 417,
+        "tokens_salida": 48,
+        "tokens_totales": 465,
+        "uso_completo": true
+      }
+    },
+    {
+      "caso_id": "sql_concatenado",
+      "categoria": "sql_dinamico",
+      "repeticion": 1,
+      "orden": 6,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "revisar_consultas_sql",
+      "codigo_error": null,
+      "latencia_ms": 7755.88,
+      "sha256_codigo": "45090ad07a4cfe19",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 1,
+        "respuestas": 1,
+        "tokens_entrada": 536,
+        "tokens_salida": 48,
+        "tokens_totales": 584,
+        "uso_completo": true
+      }
+    },
+    {
+      "caso_id": "comando_shell",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 7,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 5967.16,
+      "sha256_codigo": "d7e763b1d39a2259",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 2,
+        "respuestas": 1,
+        "tokens_entrada": null,
+        "tokens_salida": null,
+        "tokens_totales": null,
+        "uso_completo": false
+      }
+    },
+    {
+      "caso_id": "comando_shell",
+      "categoria": "llamada_sensible",
+      "repeticion": 1,
+      "orden": 8,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 10205.51,
+      "sha256_codigo": "d7e763b1d39a2259",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 1,
+        "respuestas": 1,
+        "tokens_entrada": 383,
+        "tokens_salida": 48,
+        "tokens_totales": 431,
+        "uso_completo": true
+      }
+    },
+    {
+      "caso_id": "funcion_limpia",
+      "categoria": "control_limpio",
+      "repeticion": 1,
+      "orden": 9,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 15922.31,
+      "sha256_codigo": "6fe59df4f142c8c4",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 2,
+        "respuestas": 1,
+        "tokens_entrada": null,
+        "tokens_salida": null,
+        "tokens_totales": null,
+        "uso_completo": false
+      }
+    },
+    {
+      "caso_id": "funcion_limpia",
+      "categoria": "control_limpio",
+      "repeticion": 1,
+      "orden": 10,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "finalizar",
+      "codigo_error": null,
+      "latencia_ms": 16364.62,
+      "sha256_codigo": "6fe59df4f142c8c4",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 2,
+        "respuestas": 1,
+        "tokens_entrada": null,
+        "tokens_salida": null,
+        "tokens_totales": null,
+        "uso_completo": false
+      }
+    },
+    {
+      "caso_id": "sql_parametrizado",
+      "categoria": "control_limpio",
+      "repeticion": 1,
+      "orden": 11,
+      "condicion": "con_contexto",
+      "estado": "ok",
+      "herramienta": "detectar_llamadas_sensibles",
+      "codigo_error": null,
+      "latencia_ms": 10647.62,
+      "sha256_codigo": "a8f298b214bbd3ff",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 1,
+        "respuestas": 1,
+        "tokens_entrada": 493,
+        "tokens_salida": 45,
+        "tokens_totales": 538,
+        "uso_completo": true
+      }
+    },
+    {
+      "caso_id": "sql_parametrizado",
+      "categoria": "control_limpio",
+      "repeticion": 1,
+      "orden": 12,
+      "condicion": "sin_contexto",
+      "estado": "ok",
+      "herramienta": "revisar_consultas_sql",
+      "codigo_error": null,
+      "latencia_ms": 11551.88,
+      "sha256_codigo": "a8f298b214bbd3ff",
+      "argumentos": {},
+      "consumo_ia": {
+        "version": 1,
+        "intentos": 2,
+        "respuestas": 1,
+        "tokens_entrada": null,
+        "tokens_salida": null,
+        "tokens_totales": null,
+        "uso_completo": false
+      }
+    }
+  ]
+}

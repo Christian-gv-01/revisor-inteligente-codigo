@@ -1,0 +1,36 @@
+{
+  "revision": "0a6707ba294829b9bb4a8e5c30db0b4403faa7bd",
+  "deployment": "46dd6252-fa89-4552-b906-4f9bd1c64f26",
+  "fecha_utc": "2026-11-07T21:47:03.731184+00:00",
+  "proveedor": "Gemini real vía Railway",
+  "aprobacion": {
+    "http": 200,
+    "estado": "finalizado",
+    "estado_resultado": "parcial",
+    "consumo": {
+      "version": 1,
+      "intentos": 2,
+      "respuestas": 0,
+      "tokens_entrada": null,
+      "tokens_salida": null,
+      "tokens_totales": null,
+      "uso_completo": false
+    }
+  },
+  "repeticion": {
+    "http": 200,
+    "respuesta_identica": true,
+    "consumo": {
+      "version": 1,
+      "intentos": 0,
+      "respuestas": 0,
+      "tokens_entrada": 0,
+      "tokens_salida": 0,
+      "tokens_totales": 0,
+      "uso_completo": true
+    }
+  },
+  "codigo_ejecutado": false,
+  "original_sobrescrito": false,
+  "cookies_publicadas": false
+}

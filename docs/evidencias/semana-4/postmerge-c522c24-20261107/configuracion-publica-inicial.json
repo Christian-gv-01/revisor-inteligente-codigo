@@ -1,0 +1,20 @@
+{
+  "modelo": "gemini-3.5-flash-lite",
+  "temperatura_sintesis": 0.2,
+  "max_tokens_sintesis": 2048,
+  "timeout_llm_segundos": 20,
+  "temperatura_planificador": 0,
+  "max_tokens_planificador": 256,
+  "timeout_planificador_ms": 45000,
+  "intentos_llm": 2,
+  "plazo_directo_segundos": 45,
+  "plazo_agente_segundos": 150,
+  "distancia_max_rag": 0.75,
+  "estatico_directa_habilitado": true,
+  "corpus_sha256": null,
+  "prompt_sha256": "860e7f00a2b9b288f229c8e1dba32c4d500b71e9242e328d0e8a0f7efc3014a3",
+  "fuente_verificacion": "Railway deployment 750ebee5-57bf-4cb2-8b81-ad50c1606ebc enlaza c522c24f0efcfa7ee4e7411a66fcaa1a612dd740. En Details se contrastaron nueve variables y los cuatro valores publicos GEMINI_MODEL/LLM_MAX_OUTPUT_TOKENS/LLM_TIMEOUT_SECONDS/RAG_MAX_DISTANCE el 2026-11-07. Resto: codigo y Docker exactos sin overrides. Confirmar Active antes de iniciar. Indice persistente sin huella atestada; manifiesto canonico Git llm/agente/evidencia.",
+  "campos_no_verificados": [
+    "corpus_sha256"
+  ]
+}

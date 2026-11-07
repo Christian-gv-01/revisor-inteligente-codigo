@@ -1,0 +1,29 @@
+{
+  "revision": "c522c24f0efcfa7ee4e7411a66fcaa1a612dd740",
+  "deployment_id": "750ebee5-57bf-4cb2-8b81-ad50c1606ebc",
+  "algoritmo": "SHA256 de JSON canónico UTF8 sort_keys=True separators=(comma,colon), allow_nan=False. Filas por id con documento, metadata y embedding; manifiesto por colección. No se publica contenido privado.",
+  "observaciones": [
+    {
+      "fecha_utc": "2026-11-07T21:26:46.627660+00:00",
+      "momento": "durante la comparación, no antes de la primera solicitud",
+      "seguridad_cantidad": 6,
+      "seguridad_sha256": "30e955e5a61cf54456c1323c4233754d398097332c7d105ae946a4874089a41e",
+      "contexto_proyecto": "ausente",
+      "coincide_fuente": true,
+      "corpus_sha256": "4d49e5efedb5798f3f3d7b1df8b354051c9ec4a46960e2e9a9f689ce86c5b0a4",
+      "fuente_sha256": "c1f414688331f9456d7c9d4bb08972fca14c0c270765a6603851885eb8ce5da3"
+    },
+    {
+      "fecha_utc": "2026-11-07T21:41:51.024894+00:00",
+      "momento": "después de las cuarenta solicitudes y del A/B del planificador",
+      "seguridad_cantidad": 6,
+      "seguridad_sha256": "30e955e5a61cf54456c1323c4233754d398097332c7d105ae946a4874089a41e",
+      "contexto_proyecto": "ausente",
+      "coincide_fuente": true,
+      "corpus_sha256": "4d49e5efedb5798f3f3d7b1df8b354051c9ec4a46960e2e9a9f689ce86c5b0a4",
+      "fuente_sha256": "c1f414688331f9456d7c9d4bb08972fca14c0c270765a6603851885eb8ce5da3"
+    }
+  ],
+  "limitacion": "La configuración inicial conserva corpus_sha256=null y su hash original. La observación posterior no convierte retroactivamente la corrida en totalmente controlada.",
+  "huella_igual_entre_observaciones": true
+}

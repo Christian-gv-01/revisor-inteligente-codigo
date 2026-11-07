@@ -7,9 +7,10 @@ se abstiene; si solo se completa una parte, conserva lo útil y lo comunica.
 
 ## Versión y evidencias
 
-Base integrada: `8e66b2cc3f10b67589edd3714de17dcc8246d729` (PR #55), activa en
-Railway el 7 de noviembre de 2026. La ficha docente recibida revisaba `605d142`,
-del 6 de noviembre: sus observaciones deben contrastarse con cambios posteriores.
+La validación pública del 7 de noviembre de 2026 corresponde a `c522c24`
+(PR #56). El PR #57 incorporó después la conservación del consumo y de los límites
+entre presupuestos anidados, sobre `0a6707b`. Sus evidencias distinguen ambas
+revisiones. La ficha docente recibida revisaba `605d142`, del 6 de noviembre.
 El [cierre actual](docs/37-cierre-verificado.md) relaciona cada requisito y prueba.
 La evaluación generativa y sus límites están en la
 [comparación de rutas y semanas](docs/18-comparacion-semanas-3-4.md).
@@ -84,11 +85,11 @@ Abrir http://127.0.0.1:8080. `docker compose down` conserva el volumen;
 el volumen y pasa a UID 10001 antes de ejecutar Python. `/health` usa `PORT` y no
 llama a Gemini. Guía completa: [docs/despliegue.md](docs/despliegue.md).
 
-Este candidato compila presupuesto y correcciones visibles por defecto en
-Docker. El presupuesto también se activa en el backend Docker: no es posible
+Docker compila presupuesto y correcciones visibles por defecto, comprobados
+en la URL pública sobre c522c24. El presupuesto también se activa en el backend Docker: no es posible
 usar las rutas antiguas para saltarse la aprobación. Las banderas `VITE_*`
-son públicas y se fijan al construir la imagen, no al arrancarla. No acreditar
-activación en la URL pública hasta comprobar el nuevo despliegue.
+son públicas y se fijan al construir la imagen, no al arrancarla. La aprobación de proyectos y la descarga de una copia revisada se verificaron
+mediante HTTP real; los hashes, conflictos y repetición se conservaron.
 
 | Configuración | Propósito |
 |---|---|

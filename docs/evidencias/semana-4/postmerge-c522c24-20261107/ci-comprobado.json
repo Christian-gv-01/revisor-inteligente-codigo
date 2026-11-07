@@ -1,0 +1,102 @@
+{
+  "c522c24": [
+    {
+      "name": "paquete",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42414671261/job/128530047005"
+    },
+    {
+      "name": "image",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42414671233/job/128530046910"
+    },
+    {
+      "name": "integration",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42414671278/job/128530046860"
+    },
+    {
+      "name": "pytest",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42414671213/job/128530046784"
+    },
+    {
+      "name": "capture (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42414671211/job/128530046778"
+    },
+    {
+      "name": "gitleaks",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42414671257/job/128530046751"
+    },
+    {
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42414671220/job/128530046711"
+    },
+    {
+      "name": "capture (windows-latest)",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42414671211/job/128530046501"
+    }
+  ],
+  "0a6707b": [
+    {
+      "name": "integration",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42417149059/job/128537597406"
+    },
+    {
+      "name": "pytest",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42417148979/job/128537597348"
+    },
+    {
+      "name": "gitleaks",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42417149056/job/128537597205"
+    },
+    {
+      "name": "capture (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42417148903/job/128537597079"
+    },
+    {
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42417149006/job/128537597071"
+    },
+    {
+      "name": "paquete",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42417149003/job/128537596794"
+    },
+    {
+      "name": "capture (windows-latest)",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42417148903/job/128537596785"
+    },
+    {
+      "name": "image",
+      "status": "completed",
+      "conclusion": "success",
+      "details_url": "https://github.com/Christian-gv-01/revisor-inteligente-codigo/actions/runs/42417148883/job/128537596711"
+    }
+  ]
+}

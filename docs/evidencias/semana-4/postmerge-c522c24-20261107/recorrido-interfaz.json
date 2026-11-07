@@ -1,0 +1,21 @@
+{
+  "revision": "0a6707ba294829b9bb4a8e5c30db0b4403faa7bd",
+  "fecha": "2026-11-07",
+  "modo": "API real, interfaz pública",
+  "entrada": "SQL concatenado sintético sin secretos",
+  "resultado": "un hallazgo SQL alta con seguridad_python-002; Ruff F821 y Bandit B608; previsualización visible",
+  "agente": {
+    "pasos": 3,
+    "decisiones": 2,
+    "herramientas_elegidas": [
+      "revisar_consultas_sql",
+      "buscar_referencia(inyeccion_sql)"
+    ],
+    "terminacion": "límite de pasos",
+    "sintesis": "completa"
+  },
+  "tiempo_visible_segundos": 38.9,
+  "proveedor_simulado": false,
+  "codigo_ejecutado": false,
+  "limite": "Comprobación adicional fuera de las cuarenta solicitudes de evaluación; no se suma a sus métricas."
+}

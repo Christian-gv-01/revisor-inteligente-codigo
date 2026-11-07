@@ -1,8 +1,8 @@
 # Guion de doce minutos: cierre técnico y resultados reales
 
 Preparación del 7 de noviembre de 2026. Doce diapositivas, 720 segundos
-planificados, sin acreditar ensayo ni reparto. La corrida real usa `8e66b2c`.
-El candidato posterior corrige cobertura y debe validarse por separado.
+planificados, sin acreditar ensayo ni reparto. Las dos corridas reales usan `8e66b2c` y `c522c24`.
+El ajuste de consumo posterior está en PR #57 y no cambia los prompts del análisis.
 
 ## 1. CODEGUARD — 30 segundos
 
@@ -47,7 +47,7 @@ participan en la decisión siguiente y la síntesis. El máximo es cuatro pasos
 totales; la interfaz principal solicita tres y esta evaluación solicitó cuatro.
 No tiene shell ni ejecución libre. La traza diferencia la elección del modelo,
 la inspección automática y el respaldo local. Una herramienta fallida no aparece
-como éxito. De veinte casos reales, diez finalizaron anticipadamente; eso no
+como éxito. De veinte casos reales de c522c24, ocho finalizaron anticipadamente; eso no
 permite calcular ahorro causal sin una comparación equivalente de consumo.
 
 Fuente: docs/08-agente.md, contrato-agente-v2 y resultados de la corrida real.
@@ -61,8 +61,8 @@ sesión, identificador y hashes la vinculan al contenido revisado. Rechazar no
 descarga ni modifica el original. La propuesta caduca y las decisiones repetidas
 o contradictorias se resuelven con reglas de idempotencia y conflicto. No
 presentamos las pruebas con proveedor simulado como calidad de correcciones
-reales. La nueva imagen incorpora la interfaz, cuya visibilidad pública se debe
-comprobar en la revisión desplegada.
+reales. La interfaz pública ya permite este recorrido y la decisión HTTP real conservó
+exactamente el contenido revisado, con repetición idempotente y conflicto opuesto.
 
 Fuente: docs/20-contrato-confirmacion-humana.md y docs/23-integracion-confirmacion-qa.md.
 
@@ -75,7 +75,8 @@ pero no Gemini. Aprobar autoriza solo la instantánea revisada; rechazar no aña
 llamadas generativas. Se admiten cinco Python y doce mil caracteres combinados.
 El plazo cooperativo y el máximo de intentos son límites, no una cotización en
 dólares ni una predicción de duración. Dejar de esperar en el navegador no revoca
-un análisis que ya se aprobó. Backend e interfaz deben habilitarse conjuntamente.
+un análisis que ya se aprobó. Backend e interfaz están habilitados en la versión pública comprobada. El cierre
+expuso un contador perdido entre presupuestos anidados, corregido en PR #57.
 
 Fuente: docs/28-presupuesto-proyectos.md y smoke Docker.
 
@@ -93,32 +94,33 @@ Fuente: docs/35-severidad-derivada-herencia.md.
 
 ## 8. Comparación real — 60 segundos
 
-Ejecutamos los mismos veinte casos por ambas rutas sobre Railway 8e66b2c,
-alternando el orden. Ambas completaron veinte informes. La directa tuvo once
-verdaderos positivos, cero falsos positivos y una omisión; el agente tuvo ocho,
-uno y cuatro. F1 fue 0,957 frente a 0,762. La latencia media fue 4,85 frente a
-9,27 segundos y los tokens reportados 31.116 frente a 100.573. En esta muestra,
-el agente no mejoró calidad, tiempo ni consumo. No ocultamos ese resultado.
-El conjunto es propio, pequeño y con una sola repetición; falta huella del índice
-activo, por lo que se declara esa limitación de control.
+Ejecutamos cuarenta análisis sobre c522c24, con los mismos veinte casos y orden
+alternado. La directa completó 17 de 20 y el agente 14 de 20. Solo trece pares
+completaron ambas rutas: en ese subconjunto F1 fue 1,0 para las dos. Se conservan
+tres y seis parciales. La media global fue 10,34 y 22,62 segundos, con 21 y 71
+intentos SDK. Los tokens totales son desconocidos porque hubo intentos sin respuesta.
+La corrida previa completa se conserva: F1 0,957 y 0,762. El nuevo subconjunto no
+permite afirmar una mejora causal ni generalización. El agente no demostró mayor
+precisión y tuvo menor completitud. Nunca presentamos los parciales como aciertos.
 
-Fuente: docs/evidencias/semana-4/comparacion-real-8e66b2c-20261107/.
+Fuente: docs/evidencias/semana-4/postmerge-c522c24-20261107/ y corrida histórica.
 
 ## 9. Conocimiento y cobertura — 60 segundos
 
-El inventario contiene ocho fuentes originales oficiales y seis reglas curadas.
-La recuperación local histórica pasó de Precision@3 0,5370 a 0,4630 y de Recall@3
-0,9444 a 0,8056 entre semanas. No son métricas del informe generativo y no se
-intercambian sus denominadores. En la comparación actual se detectó además que
-una búsqueda de categoría podía reemplazar fuentes pertinentes de la recuperación
-base. El candidato conserva esas fuentes y añade las elegidas dentro del mismo
-tope. Es una corrección funcional; todavía necesita evaluación desplegada propia.
+El inventario conserva ocho originales oficiales y seis reglas curadas. El índice
+activo coincidió con el fuente y tuvo la misma huella durante y al final de las
+pruebas; faltó la observación inicial, que se declara. La revisión asistida de los
+18 hallazgos completos verificó pertinencia de las citas, sin ejecutar parches ni
+sustituir una revisión humana independiente. El A/B del planificador recorrió seis
+pares sin y con evidencia estática: cinco comparables, uno incompleto por 503 y dos
+cambios de decisión. Demuestra influencia del contexto en esa muestra, no mayor
+precisión. Las métricas documentales históricas se conservan separadas.
 
 Fuente: docs/04-fuentes.md y docs/18-comparacion-semanas-3-4.md.
 
 ## 10. Pruebas de software — 60 segundos
 
-El candidato aprobó 583 pruebas backend, 146 frontend y 80 de QA/evaluadores.
+El cierre con PR #57 aprobó 589 pruebas backend, 146 frontend y 80 de QA/evaluadores.
 Las específicas ya forman parte de esos totales. La integración HTTP completó
 24 de 24 con estático y 19 aplicables sin él; cinco requieren ese componente.
 Las 24 HTTP omitidas en la suite unitaria no se cuentan como aprobadas allí.
@@ -143,12 +145,12 @@ Fuente: docs/37-cierre-verificado.md y scripts/empaquetar_entrega.py.
 
 ## 12. Conclusión — 50 segundos
 
-Demostramos un agente acotado con herramientas y decisiones trazables, pero esta
-corrida obtuvo menor F1 y mayor consumo que la ruta directa. Identificamos y
-corregimos una pérdida de cobertura sin alterar etiquetas ni borrar resultados.
-Corresponde validar el ajuste desplegado y describir sus límites. El ensayo oral,
-la instalación independiente y las aceptaciones son actividades humanas pendientes;
-no se sustituyen por documentos generados. Entregamos evidencia comprobable y
-no una promesa de que más herramientas siempre producen mejor precisión.
+Demostramos un agente acotado con decisiones trazables y confirmaciones públicas.
+El contexto cambió dos de cinco decisiones comparables, pero el agente no demostró
+mayor precisión y consumió más intentos y tiempo. Conservamos las dos corridas y
+sus fallos. El cierre corrigió cobertura y contadores con regresiones reproducibles.
+El ensayo oral, la instalación independiente, las aceptaciones y el envío al portal
+son actividades humanas pendientes. Entregamos resultados verificables y sus límites,
+sin afirmar que una batería de software certifica la seguridad de cualquier programa.
 
 Fuente: docs/37-cierre-verificado.md y revisión asistida de citas.
