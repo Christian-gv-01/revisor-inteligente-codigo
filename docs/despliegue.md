@@ -63,7 +63,7 @@ El puerto 8080 del Compose está restringido a loopback para uso local. **Compos
 - Antes de abrir la URL al público se debe verificar HTTP 429 real, revisar errores seguros, dependencias y protección contra abuso.
 - Revisar el historial Git con un detector de secretos y comprobar que la plataforma no expone el volumen.
 
-## Banderas del candidato de cierre
+## Banderas integradas y verificación pública
 
 Docker compila `VITE_PROJECT_BUDGET_ENABLED=1` y
 `VITE_CORRECTIONS_API_ENABLED=1`, y arranca con `PROJECT_BUDGET_ENABLED=1`.
@@ -78,3 +78,10 @@ consumo. No aprobar un proyecto solo para demostrar que el botón existe. El
 smoke Docker ejecuta previsualización y rechazo en red aislada y comprueba cero
 intentos al proveedor. La aprobación real de análisis consume cuota y debe
 quedar registrada por separado.
+
+La configuración conjunta se verificó públicamente en c522c24. El arreglo de
+consumo 0a6707b quedó activo en el deployment 46dd6252-fa89-4552-b906-4f9bd1c64f26,
+con los ocho checks de main aprobados. La aprobación real posterior registró dos
+intentos fallidos con resultado parcial y repetición sin llamadas nuevas. Esta
+evidencia no es un informe generativo exitoso ni una prueba de alta disponibilidad.
+La comparación de cuarenta análisis conserva su revisión original c522c24.
