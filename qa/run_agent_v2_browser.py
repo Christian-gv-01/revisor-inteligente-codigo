@@ -47,21 +47,29 @@ def main():
                     tool, arguments = "ampliar_contexto", {"linea": 999}
                 elif len(previous) == 1 or "V2_REPEAT" in code:
                     tool, arguments = "ampliar_contexto", {"linea": 2}
+                elif "V2_FOUR" in code and len(previous) == 3:
+                    tool, arguments = "ampliar_contexto", {"linea": 1}
                 else:
                     assert previous[1]["resultado"]["linea_objetivo"] == 2
                     Client.propagation.append("contexto_en_siguiente_decision")
                     tool, arguments = "buscar_referencia", {"categoria": "inyeccion_sql"}
                 return SimpleNamespace(text=json.dumps({"herramienta": tool, "argumentos": arguments,
-                    "motivo": "Acción controlada del proveedor simulado para probar el contrato visual."}), usage_metadata=None)
+                    "motivo": "Acción controlada del proveedor simulado para probar el contrato visual."}),
+                    usage_metadata=SimpleNamespace(prompt_token_count=10, candidates_token_count=2, total_token_count=12))
             payload = json.loads(contents.split("DATOS_NO_CONFIABLES_JSON:\n", 1)[1])
             code = payload["codigo_python_no_confiable"]
             evidence = payload["evidencia_herramientas_no_confiable"]
             Client.syntheses += 1
-            if "V2_FULL" in code:
+            if "V2_FULL" in code or "V2_FOUR" in code:
                 assert evidence["contextos_ampliados"][0]["linea_objetivo"] == 2
                 assert evidence["referencias_buscadas"][0]["fragmentos"]
                 Client.propagation.append("contexto_y_referencias_en_sintesis")
-            return super().generate_content(contents=contents, **kw)
+                if "V2_FOUR" in code:
+                    assert len(evidence["contextos_ampliados"]) == 2
+                    Client.propagation.append("cuarto_paso_en_sintesis")
+            result = super().generate_content(contents=contents, **kw)
+            result.usage_metadata = SimpleNamespace(prompt_token_count=10, candidates_token_count=2, total_token_count=12)
+            return result
 
     with ExitStack() as stack:
         stack.enter_context(patch.dict(os.environ, {

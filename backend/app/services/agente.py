@@ -48,8 +48,14 @@ class SolicitudAgente(BaseModel):
     model_config = ConfigDict(extra="forbid")
     archivo: str = Field(min_length=4, max_length=255, pattern=r"^[^\\/\x00]+\.py$")
     codigo: str = Field(min_length=1, max_length=12000)
-    max_pasos: int = Field(default=3, ge=1, le=3)
+    max_pasos: int = Field(default=3, ge=1, le=settings.MAX_PASOS_AGENTE)
     version_herramientas: Literal["1", "2"] = "1"
+
+    @model_validator(mode="after")
+    def limite_por_version(self):
+        if self.version_herramientas == "1" and self.max_pasos > 3:
+            raise ValueError("Cuatro pasos requieren el contrato v2.")
+        return self
 
 class DecisionAgente(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -69,7 +75,7 @@ class DecisionAgente(BaseModel):
         return self
 
 class PasoAgente(BaseModel):
-    numero: int = Field(ge=1, le=3)
+    numero: int = Field(ge=1, le=settings.MAX_PASOS_AGENTE)
     herramienta: HerramientaEjecutable
     motivo: str
     resultado: dict
@@ -79,7 +85,7 @@ class PasoAgente(BaseModel):
 
 class DecisionRegistrada(DecisionAgente):
     """Decisión observable del planificador; no es razonamiento interno."""
-    numero: int = Field(ge=1, le=2)
+    numero: int = Field(ge=1, le=settings.MAX_PASOS_AGENTE - 1)
     estado: Literal["ejecutada", "finalizar", "repetida", "error"]
 
 
@@ -121,7 +127,7 @@ class RespuestaAgente(BaseModel):
     archivo: str
     modo: Literal["gemini_real", "inspeccion_local", "degradado"]
     pasos: list[PasoAgente]
-    max_pasos: int = Field(ge=1, le=3)
+    max_pasos: int = Field(ge=1, le=settings.MAX_PASOS_AGENTE)
     informe: RespuestaAnalisis
     decisiones: list[DecisionRegistrada] = Field(default_factory=list)
     fase_error: Literal["planificacion", "informe", "herramienta"] | None = None
@@ -250,7 +256,7 @@ def planificar_gemini(codigo: str, pasos: list[PasoAgente], *, version_herramien
         instrucciones_argumentos = (
             " ampliar_contexto requiere argumentos {linea: entero existente en el archivo}; "
             "buscar_referencia requiere {categoria: una de ejecucion_codigo, inyeccion_sql, "
-            "inyeccion_comandos, inyeccion, credenciales, rutas}. No aceptes URLs, consultas "
+            "inyeccion_comandos, inyeccion, credenciales, rutas, deserializacion}. No aceptes URLs, consultas "
             "libres ni argumentos adicionales. Las otras herramientas y finalizar usan {}. "
             "Finaliza anticipadamente si no necesitas más herramientas; se generará una síntesis "
             "con la evidencia reunida. No repitas la misma herramienta con los mismos argumentos."

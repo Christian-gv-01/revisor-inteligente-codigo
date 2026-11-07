@@ -8,7 +8,7 @@ corrida real ni modifica el comportamiento de la aplicación.
 ## Qué se compara
 
 - Los mismos veinte casos y etiquetas de `eval/preguntas_referencia.json`.
-- `/api/v1/analizar` y `/api/v1/agente/analizar`, máximo tres pasos y `version_herramientas: "2"` explícita. No aceptar una respuesta v1 como medición del agente v2.
+- `/api/v1/analizar` y `/api/v1/agente/analizar`, máximo cuatro pasos por defecto (`--max-pasos-agente 3` permite declarar el límite anterior) y `version_herramientas: "2"` explícita. No aceptar una respuesta v1 como medición del agente v2.
 - Veinte solicitudes de análisis por ruta, más tres lecturas de salud/esquema,
   alternadas por caso: diez pares directa/agente y
   diez agente/directa. Cada par conserva exactamente el mismo archivo y código.
@@ -52,9 +52,9 @@ planificador: las rutas difieren en orquestación, evidencia y recuperación.
    un JSON público, sin claves. Si un valor no se verificó, declararlo en
    `campos_no_verificados`; no sustituirlo silenciosamente por un default. Una corrida con campos desconocidos se identifica como exploratoria y no acredita control completo de la configuración.
 4. Acordar una ventana sin cambios de despliegue ni otras corridas simultáneas.
-5. Presupuestar cuarenta solicitudes HTTP. Con el agente actual, hasta ochenta
-   llamadas generativas antes de reintentos internos; esto es una estimación,
-   no un consumo observado ni un límite facturable garantizado. La revisión base limita cada petición directa a tres intentos reales y cada petición de agente a nueve: techo combinado conservador de 240 intentos, sujeto a los límites temporales y configuración efectivos. No confundir 40 peticiones, 80 llamadas lógicas estimadas y 240 intentos máximos con consumo observado; puede haber menos o ninguna llamada por abstención RAG.
+5. Presupuestar cuarenta solicitudes HTTP. Con el agente actual, hasta cien
+   llamadas generativas antes de reintentos internos con cuatro pasos (ochenta con tres); esto es una estimación,
+   no un consumo observado ni un límite facturable garantizado. La revisión base limita cada petición directa a tres intentos reales y cada petición de agente a nueve: techo combinado conservador de 240 intentos, sujeto a los límites temporales y configuración efectivos. No confundir 40 peticiones, 100 llamadas lógicas estimadas y 240 intentos máximos con consumo observado; puede haber menos o ninguna llamada por abstención RAG.
 
 Antes de enviar análisis, el evaluador exige que el esquema anuncie el campo v2 y rechaza el marcador de servidor fixture conocido. Esto comprueba compatibilidad, no demuestra que Gemini sea real: verificar también la procedencia del despliegue.
 
@@ -128,3 +128,11 @@ El evaluador registra su propia huella, la del validador de traza y de las funci
 Los tests y ejemplos son sintéticos: no aportan nuevos resultados de Gemini. No se ha ejecutado la corrida real de cuarenta análisis. La priorización final y el commit activo deben quedar acordados antes de congelarla; revisar el PDF/presentación después de los resultados, sin retocar etiquetas para favorecer al agente.
 
 Validación local de la actualización: 40 pruebas del comparador, 10 del evaluador existente y 14 de QA aprobadas (64 en total). Se regeneraron los ejemplos con FastAPI y el orquestador actuales y se contrastaron respuesta completa, finalización anticipada y error de herramienta parcial; proveedor, RAG y estático simulados, cero llamadas IA externas. OpenAPI del main contrastado anuncia v2. Python/YAML válidos y escaneo local del directorio eval sin secretos. Estas comprobaciones no son resultados de calidad de Gemini ni validación de la versión activa en Railway.
+
+## Contadores de uso y límites actualizados
+
+El cliente captura `X-Codeguard-Consumo-IA` también en respuestas HTTP de error y registra su cobertura. La cabecera contiene exclusivamente contadores numéricos: intentos de transporte y respuestas del SDK, tokens de entrada, salida y totales. Son valores declarados por el servidor a partir del proveedor; no una factura. No se calcula un token faltante por resta ni se trata como cero un metadato ausente. Un intento sin respuesta impide conocer el total de tokens de la solicitud. Un resultado tardío que devuelve uso conserva sus contadores aunque el servidor no acepte su dictamen.
+
+JSON incluye totales únicamente cuando todas las solicitudes tienen el dato, además de sumas parciales explícitas y cobertura. CSV conserva los valores por petición. Una caída de red sin respuesta impide recibir la telemetría. No atribuir ahorro a la finalización temprana sin comparar consumos medidos en casos equivalentes.
+
+Antes de enviar análisis, el evaluador verifica que el esquema admite el máximo de pasos elegido. El máximo es cuatro por defecto para la corrida final; el timeout compartido de 150 segundos y la reserva de nueve intentos del agente no aumentan. La ruta directa conserva sus límites.

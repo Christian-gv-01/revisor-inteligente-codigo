@@ -1,7 +1,7 @@
 import type { AgentArguments, AgentStep, AgentTool, AgentTrace, AnalysisInput, AstAgentTool, ContextResult, ReferenceCategory, ReferenceResult } from "../types/analysis";
 
 const astTools: AstAgentTool[] = ["inspeccionar_estructura", "detectar_llamadas_sensibles", "revisar_consultas_sql"];
-const categories: ReferenceCategory[] = ["ejecucion_codigo", "inyeccion_sql", "inyeccion_comandos", "inyeccion", "credenciales", "rutas"];
+const categories: ReferenceCategory[] = ["ejecucion_codigo", "inyeccion_sql", "inyeccion_comandos", "inyeccion", "credenciales", "rutas", "deserializacion"];
 const tools: AgentTool[] = [...astTools, "ampliar_contexto", "buscar_referencia"];
 function fail(): never { throw new Error("Traza del agente inválida"); }
 function record(v: unknown): v is Record<string, unknown> { return typeof v === "object" && v !== null && !Array.isArray(v); }
@@ -30,9 +30,11 @@ function signature(tool: string, args?: AgentArguments) { return `${tool}:${JSON
 function contextResult(value: unknown, target: number, lines: string[]): ContextResult {
   const r = object(value);
   keys(r, ["linea_objetivo", "linea_inicio", "linea_fin", "lineas"]);
-  const start = Math.max(1, target - 3), end = Math.min(lines.length, target + 3);
+  // Admitir las ventanas literales antiguas (±3) y las nuevas (±6).
+  const radius = r.linea_inicio === Math.max(1, target - 6) && r.linea_fin === Math.min(lines.length, target + 6) ? 6 : 3;
+  const start = Math.max(1, target - radius), end = Math.min(lines.length, target + radius);
   if (target > lines.length || r.linea_objetivo !== target || r.linea_inicio !== start || r.linea_fin !== end ||
-      !Array.isArray(r.lineas) || r.lineas.length !== end - start + 1 || r.lineas.length > 7) fail();
+      !Array.isArray(r.lineas) || r.lineas.length !== end - start + 1 || r.lineas.length > 13) fail();
   const window = r.lineas.map((value: unknown, i: number) => {
     const line = object(value), number = start + i;
     keys(line, ["numero", "texto", "truncada"]);
@@ -75,9 +77,9 @@ function referenceResult(value: unknown, category: ReferenceCategory): Reference
 export function parseAgentTrace(value: unknown, input: AnalysisInput): AgentTrace {
   const v = object(value), v2 = v.version_herramientas === "2";
   if ((v.version_herramientas !== undefined && !v2) || v.archivo !== input.archivo ||
-      !["gemini_real", "degradado"].includes(v.modo as string) || !integer(v.max_pasos, 1, 3) ||
+      !["gemini_real", "degradado"].includes(v.modo as string) || !integer(v.max_pasos, 1, v2 ? 4 : 3) ||
       !Array.isArray(v.pasos) || v.pasos.length < 1 || v.pasos.length > v.max_pasos ||
-      !Array.isArray(v.decisiones) || v.decisiones.length > Math.min(2, v.max_pasos - 1) ||
+      !Array.isArray(v.decisiones) || v.decisiones.length > Math.min(v2 ? 3 : 2, v.max_pasos - 1) ||
       ![null, "planificacion", "informe", ...(v2 ? ["herramienta"] : [])].includes(v.fase_error as string | null) ||
       !record(v.informe) || (v.modo === "degradado" && v.informe.estado !== "parcial") ||
       (v.modo === "gemini_real" && v.fase_error !== null)) fail();

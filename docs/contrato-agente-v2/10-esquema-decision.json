@@ -10,7 +10,8 @@
             "inyeccion_comandos",
             "inyeccion",
             "credenciales",
-            "rutas"
+            "rutas",
+            "deserializacion"
           ],
           "title": "Categoria",
           "type": "string"

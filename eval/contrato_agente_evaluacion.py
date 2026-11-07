@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 VERSION = "2"
 AST = {"inspeccionar_estructura", "detectar_llamadas_sensibles", "revisar_consultas_sql"}
 CONTEXTUALES = {"ampliar_contexto", "buscar_referencia"}
-CATEGORIAS = {"ejecucion_codigo", "inyeccion_sql", "inyeccion_comandos", "inyeccion", "credenciales", "rutas"}
+CATEGORIAS = {"ejecucion_codigo", "inyeccion_sql", "inyeccion_comandos", "inyeccion", "credenciales", "rutas", "deserializacion"}
 TERMINACIONES = {"finalizacion_anticipada", "max_pasos", "herramienta_repetida"}
 
 
@@ -43,7 +43,7 @@ def resultado_contextual(nombre, args, resultado, codigo):
     if nombre == "ampliar_contexto":
         lineas = codigo.splitlines()
         linea = args["linea"]
-        inicio, fin = max(1, linea - 3), min(len(lineas), linea + 3)
+        inicio, fin = max(1, linea - 6), min(len(lineas), linea + 6)
         esperadas = [{"numero": n, "texto": lineas[n - 1][:500], "truncada": len(lineas[n - 1]) > 500}
                      for n in range(inicio, fin + 1)]
         items = resultado.get("lineas")
@@ -76,14 +76,14 @@ def resultado_contextual(nombre, args, resultado, codigo):
                 raise ValueError("Distancia incompatible")
 
 
-def validar_traza(caso, valor):
+def validar_traza(caso, valor, *, max_pasos=3):
     if not isinstance(valor, dict) or valor.get("archivo") != caso["archivo"] or valor.get("version_herramientas") != VERSION:
         raise ValueError("El evaluador requiere agente v2")
     modo, fase = valor.get("modo"), valor.get("fase_error")
     if modo not in {"gemini_real", "degradado"} or fase not in {None, "planificacion", "informe", "herramienta"} or (modo == "gemini_real" and fase is not None):
         raise ValueError("Modo o fase incompatible")
     pasos, decisiones = valor.get("pasos"), valor.get("decisiones")
-    if valor.get("max_pasos") != 3 or type(valor.get("max_pasos")) is not int or not isinstance(pasos, list) or not 1 <= len(pasos) <= 3 or not isinstance(decisiones, list) or len(decisiones) > 2:
+    if valor.get("max_pasos") != max_pasos or type(valor.get("max_pasos")) is not int or not isinstance(pasos, list) or not 1 <= len(pasos) <= max_pasos or not isinstance(decisiones, list) or len(decisiones) > max_pasos - 1:
         raise ValueError("Límites de traza incompatibles")
     ejecutadas = []
     vistos = {firma("inspeccionar_estructura", {})}
@@ -143,7 +143,7 @@ def validar_traza(caso, valor):
     terminacion = valor.get("terminacion")
     if terminacion not in TERMINACIONES | {None}:
         raise ValueError("Terminación incompatible")
-    esperado = "finalizacion_anticipada" if final == "finalizar" else "herramienta_repetida" if final == "repetida" else "max_pasos" if len(pasos) == 3 and modo == "gemini_real" else None
+    esperado = "finalizacion_anticipada" if final == "finalizar" else "herramienta_repetida" if final == "repetida" else "max_pasos" if len(pasos) == max_pasos and modo == "gemini_real" else None
     if (modo == "gemini_real" and (terminacion is None or esperado != terminacion)) or (terminacion == "finalizacion_anticipada" and final != "finalizar") or (terminacion == "herramienta_repetida" and final != "repetida"):
         raise ValueError("Terminación no respaldada por decisiones")
     if fase == "herramienta" and errores != 1:

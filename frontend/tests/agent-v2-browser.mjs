@@ -73,6 +73,24 @@ try {
   await page.locator('.agent-trace').getByText('No completada', { exact: false }).waitFor();
   assert.equal(await page.locator('.agent-context').count(), 0);
   cases.push({ caso: 'Error contextual conserva decisión y respaldo local, sin resultado inventado', aprobado: true });
+  // El proxy /agente pertenece al PR #50. Este candidato independiente
+  // comprueba el laboratorio servido por la API, además del React vía Vite.
+  await page.goto(`${api}/agente/demo`);
+  await page.locator('#filename').fill('cuatro.py');
+  await page.locator('#code').fill('nombre=input()\ncursor.execute("SELECT * FROM usuarios WHERE nombre = " + nombre)\n# V2_FOUR\n');
+  await page.locator('#steps').selectOption('4');
+  const fourthWire = page.waitForResponse(r => r.url().endsWith('/api/v1/agente/analizar'));
+  await page.locator('#run').click();
+  const fourthResponse = await fourthWire;
+  assert.equal(fourthResponse.status(), 200);
+  const fourth = await fourthResponse.json();
+  const usage = JSON.parse((await fourthResponse.allHeaders())['x-codeguard-consumo-ia']);
+  assert.equal(fourth.pasos.length, 4); assert.equal(fourth.decisiones.length, 3);
+  assert.equal(usage.intentos, 4); assert.equal(usage.tokens_totales, 48);
+  assert((await status()).propagacion.includes('cuarto_paso_en_sintesis'));
+  await page.getByText('PASO 4 · ELEGIDO POR GEMINI', { exact: true }).waitFor();
+  await fs.writeFile(`${folder}/V2_FOUR.json`, JSON.stringify({ respuesta: fourth, consumo_simulado: usage }, null, 2));
+  cases.push({ caso: 'Laboratorio v2: cuarto paso llega a síntesis y agrega uso SDK simulado', aprobado: true });
   assert.deepEqual(errors, []); assert.deepEqual(external, []);
   cases.push({ caso: 'Sin errores del navegador ni solicitudes externas', aprobado: true });
   console.log(JSON.stringify({ estado: 'aprobado', casos: cases.length }));

@@ -19,6 +19,7 @@ import httpx
 
 from run_eval import DEFAULT_DATA, analysis_metrics, load_cases, validate_response
 from contrato_agente_evaluacion import VERSION, validar_traza
+from consumo_evaluacion import CABECERA_CONSUMO, leer_consumo, resumen_consumo
 
 RUTAS = {"directa": "/api/v1/analizar", "agente": "/api/v1/agente/analizar"}
 PESOS = {"directa": 1, "agente": 3}
@@ -72,7 +73,7 @@ def validar_config(config):
     return config
 
 
-def comprobar_esquema(esquema):
+def comprobar_esquema(esquema, *, max_pasos=None):
     """Solo compatibilidad del contrato público; no atestación del commit."""
     try:
         paths = esquema["paths"]
@@ -86,6 +87,8 @@ def comprobar_esquema(esquema):
             cuerpo = esquema["components"]["schemas"][referencia.split("/")[-1]]
         if VERSION not in cuerpo["properties"]["version_herramientas"].get("enum", []):
             raise ValueError("El servidor no anuncia soporte de agente v2")
+        if max_pasos is not None and cuerpo["properties"]["max_pasos"].get("maximum", 0) < max_pasos:
+            raise ValueError("El servidor no admite el máximo de pasos solicitado")
     except (KeyError, TypeError, AttributeError) as error:
         raise ValueError("Esquema público incompatible con agente v2") from error
 
@@ -115,11 +118,11 @@ class Presupuesto:
             self.dormir(min(30, max(.01, 61 - (ahora - self.reservas[0][0]))))
 
 
-def interpretar(caso, ruta, valor):
+def interpretar(caso, ruta, valor, *, max_pasos_agente=3):
     informe = valor
     extra = {}
     if ruta == "agente":
-        extra = validar_traza(caso, valor)
+        extra = validar_traza(caso, valor, max_pasos=max_pasos_agente)
         informe = valor.get("informe")
         if valor["modo"] == "degradado" and (not isinstance(informe, dict) or informe.get("estado") != "parcial"):
             raise ValueError("Degradación sin estado parcial")
@@ -136,7 +139,7 @@ def interpretar(caso, ruta, valor):
             "estado_informe": informe["estado"], "metricas_observadas": metricas, **extra}
 
 
-def evaluar(cliente, casos, *, presupuesto=None, checkpoint=None):
+def evaluar(cliente, casos, *, presupuesto=None, checkpoint=None, max_pasos_agente=3):
     filas = []
     for caso, ruta in plan(casos):
         espera = presupuesto.reservar(PESOS[ruta]) if presupuesto else 0
@@ -144,13 +147,16 @@ def evaluar(cliente, casos, *, presupuesto=None, checkpoint=None):
                 "orden_global": len(filas) + 1, "espera_presupuesto_ms": espera}
         carga = {"archivo": caso["archivo"], "codigo": caso["codigo"]}
         if ruta == "agente":
-            carga["max_pasos"] = 3
+            carga["max_pasos"] = max_pasos_agente
             carga["version_herramientas"] = VERSION
         inicio = time.perf_counter()
         try:
             respuesta = cliente.post(RUTAS[ruta], json=carga)
             fila["duracion_http_ms"] = round((time.perf_counter() - inicio) * 1000, 2)
             fila["http_status"] = respuesta.status_code
+            cabecera = respuesta.headers.get(CABECERA_CONSUMO)
+            fila["consumo_ia"] = leer_consumo(cabecera)
+            fila["estado_telemetria"] = "reportada" if fila["consumo_ia"] is not None else "no_disponible" if cabecera is None else "invalida"
             if respuesta.status_code != 200:
                 fila.update(estado_ejecucion="error_http", error=f"HTTP {respuesta.status_code}; cuerpo omitido")
             else:
@@ -160,7 +166,7 @@ def evaluar(cliente, casos, *, presupuesto=None, checkpoint=None):
                     fila.update(estado_ejecucion="error_json", error="Respuesta no JSON")
                 else:
                     try:
-                        fila.update(interpretar(caso, ruta, valor))
+                        fila.update(interpretar(caso, ruta, valor, max_pasos_agente=max_pasos_agente))
                     except (ValueError, KeyError, TypeError):
                         fila.update(estado_ejecucion="error_contrato", error="Respuesta incompatible con el evaluador")
                     # Solo cuerpos HTTP 200 del ejemplo sintético. Los errores del
@@ -202,12 +208,13 @@ def resumen(filas, casos):
         tiempos = sorted(f["duracion_http_ms"] for f in propias)
         aciertos = sum(f["metricas_observadas"]["acierto_caso"] for f in validas)
         rutas[ruta] = {"total": len(propias), "estados": dict(Counter(f["estado_ejecucion"] for f in propias)),
-            "completos": len(validas), "tasa_completitud": cociente(len(validas), len(casos)),
+            "consumo_ia": resumen_consumo(propias), "completos": len(validas), "tasa_completitud": cociente(len(validas), len(casos)),
             "aciertos_completos": aciertos, "aciertos_sobre_total": cociente(aciertos, len(casos)),
             "calidad_solo_completos": calidad(validas), "abstenciones_completas": sum(f["estado_informe"] == "abstenido" for f in validas),
             "latencia_http_media_ms_todos": statistics.mean(tiempos) if tiempos else None,
             "latencia_http_p95_ms_todos": tiempos[math.ceil(.95 * len(tiempos)) - 1] if tiempos else None,
             "finalizaciones_tempranas": sum(f.get("finalizacion_temprana", False) for f in propias) if ruta == "agente" else None,
+            "tasa_finalizacion_temprana_sobre_total": cociente(sum(f.get("finalizacion_temprana", False) for f in propias), len(propias)) if ruta == "agente" else None,
             "terminaciones": dict(Counter(f.get("terminacion") or "no_determinada" for f in propias if "modo" in f)) if ruta == "agente" else None,
             "fases_error": dict(Counter(f["fase_error"] for f in propias if f.get("fase_error"))) if ruta == "agente" else None,
             "decisiones_error": sum(f.get("decisiones_error", 0) for f in propias) if ruta == "agente" else None}
@@ -228,11 +235,11 @@ def resumen(filas, casos):
 def guardar(carpeta, informe):
     (carpeta / "resultados.json").write_text(json.dumps(informe, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     with (carpeta / "resultados.csv").open("w", encoding="utf-8-sig", newline="") as out:
-        claves = ["id", "ruta", "orden_global", "estado_ejecucion", "http_status", "duracion_http_ms", "espera_presupuesto_ms", "tp", "fp", "fn", "finalizacion_temprana", "version_herramientas", "terminacion", "fase_error", "decisiones_error"]
+        claves = ["id", "ruta", "orden_global", "estado_ejecucion", "http_status", "duracion_http_ms", "espera_presupuesto_ms", "tp", "fp", "fn", "finalizacion_temprana", "version_herramientas", "terminacion", "fase_error", "decisiones_error", "tokens_entrada", "tokens_salida", "tokens_totales", "intentos", "estado_telemetria"]
         writer = csv.DictWriter(out, fieldnames=claves)
         writer.writeheader()
         for f in informe["casos"]:
-            combinado = {**f, **f.get("metricas_observadas", {})}
+            combinado = {**f, **f.get("metricas_observadas", {}), **(f.get("consumo_ia") or {})}
             writer.writerow({k: combinado.get(k) for k in claves})
     s = informe["resumen"]
     lineas = ["# Comparación de rutas", "", f"Revisión declarada por el operador: `{informe['revision_servidor_declarada']}`.",
@@ -247,7 +254,7 @@ def guardar(carpeta, informe):
         "", "Configuración pública completa declarada: " + str(informe.get("configuracion_completa_declarada")) + ". Si contiene valores no verificados, la corrida es exploratoria, no una comparación bajo configuración totalmente controlada.",
         "", "Una corrida pequeña no demuestra generalización ni causalidad. Las citas se resuelven por ID; su pertinencia y los parches requieren revisión humana.",
         "La revisión del servidor y su configuración son declaradas por el operador, no atestadas por OpenAPI. Igualdad del esquema no garantiza igualdad de código.",
-        "El consumo de Gemini no está observado por este cliente: una solicitud al agente puede generar varias llamadas y reintentos."]
+        "El uso numérico procede de la cabecera del servidor y de los metadatos del SDK, no de una factura. Si falta algún contador o hay intentos sin respuesta, se conserva null; no inferir ahorro ni tokens desde el número de pasos. Cobertura y sumas parciales están en JSON."]
     (carpeta / "comparacion.md").write_text("\n".join(lineas) + "\n", encoding="utf-8")
 
 
@@ -262,13 +269,14 @@ def main(argv=None):
     p.add_argument("--config-publica", type=Path)
     p.add_argument("--output", type=Path)
     p.add_argument("--timeout", type=float, default=190)
+    p.add_argument("--max-pasos-agente", type=int, choices=(3, 4), default=4)
     p.add_argument("--usar-proxy-entorno", action="store_true")
     args = p.parse_args(argv)
     casos = load_cases(args.dataset)
     huella = hashlib.sha256(args.dataset.read_bytes()).hexdigest()
     if args.validar or not args.ejecutar:
         print(json.dumps({"casos": len(casos), "solicitudes_previstas": len(plan(casos)), "dataset_sha256": huella,
-                          "orden": "alternado por caso; diez pares por cada orden", "llamadas_realizadas": 0, "version_herramientas_agente": VERSION}, ensure_ascii=False, indent=2))
+                          "orden": "alternado por caso; diez pares por cada orden", "llamadas_realizadas": 0, "version_herramientas_agente": VERSION, "max_pasos_agente": args.max_pasos_agente}, ensure_ascii=False, indent=2))
         return 0
     if not args.base_url or not args.output or not args.config_publica or not re.fullmatch(r"[0-9a-f]{40}", args.revision_servidor or ""):
         p.error("Indica URL, salida nueva, configuración pública y SHA completo verificado del servidor.")
@@ -296,10 +304,10 @@ def main(argv=None):
         "metricas_sha256": hashlib.sha256(Path(__file__).with_name("run_eval.py").read_bytes()).hexdigest(),
         "python": platform.python_version(), "httpx": httpx.__version__,
         "version_herramientas_agente": VERSION,
-        "base_url": args.base_url, "timeout_cliente_segundos": args.timeout, "max_pasos_agente": 3,
+        "base_url": args.base_url, "timeout_cliente_segundos": args.timeout, "max_pasos_agente": args.max_pasos_agente,
         "solicitudes_analisis_previstas": 40, "solicitudes_control_previstas": 3,
         "reintentos_evaluador": 0, "llamadas_gemini_observadas": None,
-        "estimacion_maxima_llamadas_generativas_sin_reintentos_servidor": 80,
+        "estimacion_maxima_llamadas_generativas_sin_reintentos_servidor": len(casos) * (1 + args.max_pasos_agente),
         "tope_intentos_proveedor_configuracion_base": {"directa": 3, "agente": 9, "total_cuarenta_solicitudes": 240},
         "aviso_consumo": "Topes verificados en la revisión base; declarar configuración efectiva. No son consumo observado ni una cotización.",
         "proveedor": "servidor HTTP; requiere verificar por separado que no es un fixture", "casos": []}
@@ -307,7 +315,7 @@ def main(argv=None):
         salud, esquema = cliente.get("/health"), cliente.get("/openapi.json")
         if salud.status_code != 200 or esquema.status_code != 200:
             raise RuntimeError("Faltan salud o esquema; no iniciar consumo generativo.")
-        comprobar_esquema(esquema.json())
+        comprobar_esquema(esquema.json(), max_pasos=args.max_pasos_agente)
         if salud.headers.get("X-Integration-Provider") == "stub":
             raise RuntimeError("Servidor marcado como fixture: no registrar como comparación real.")
         informe["esquema_inicial_sha256"] = hashlib.sha256(esquema.content).hexdigest()
@@ -317,7 +325,7 @@ def main(argv=None):
             (args.output / "checkpoint.json").write_text(json.dumps(informe, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             f = filas[-1]
             print(f"{f['id']} {f['ruta']}: {f['estado_ejecucion']}", flush=True)
-        filas = evaluar(cliente, casos, presupuesto=Presupuesto(), checkpoint=checkpoint)
+        filas = evaluar(cliente, casos, presupuesto=Presupuesto(), checkpoint=checkpoint, max_pasos_agente=args.max_pasos_agente)
         try:
             fin = cliente.get("/openapi.json")
             informe["esquema_estable"] = fin.status_code == 200 and hashlib.sha256(fin.content).hexdigest() == informe["esquema_inicial_sha256"]

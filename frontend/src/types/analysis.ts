@@ -117,7 +117,7 @@ export interface AnalysisResult {
 
 export type AstAgentTool = "inspeccionar_estructura" | "detectar_llamadas_sensibles" | "revisar_consultas_sql";
 export type AgentTool = AstAgentTool | "ampliar_contexto" | "buscar_referencia";
-export type ReferenceCategory = "ejecucion_codigo" | "inyeccion_sql" | "inyeccion_comandos" | "inyeccion" | "credenciales" | "rutas";
+export type ReferenceCategory = "ejecucion_codigo" | "inyeccion_sql" | "inyeccion_comandos" | "inyeccion" | "credenciales" | "rutas" | "deserializacion";
 export type AgentArguments = { linea: number } | { categoria: ReferenceCategory } | Record<string, never>;
 export interface ContextResult {
   linea_objetivo: number; linea_inicio: number; linea_fin: number;
