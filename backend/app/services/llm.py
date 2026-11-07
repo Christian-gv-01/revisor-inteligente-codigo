@@ -345,7 +345,16 @@ def _recuperar_contexto_agente(codigo: str, evidencia: EvidenciaRevision) -> tup
             if len(buscadas) < settings.AGENTE_RAG_MAX_FUENTES:
                 buscadas.setdefault(fragmento.id, fragmento.model_dump())
     if buscadas:
-        return _formatear_fragmentos(list(buscadas.values()))
+        # Una elección del planificador añade contexto, pero no elimina la
+        # recuperación basada en el código. Una consulta de categoría puede
+        # devolver fuentes resolubles pero impertinentes para el hallazgo.
+        # Reservar primero las fuentes base y completar sin superar el tope.
+        _, base = _recuperar_contexto_rag(codigo)
+        elegidas = {f["id"]: f for f in base[:settings.RAG_LIMITE]}
+        for identificador, fragmento in buscadas.items():
+            if len(elegidas) < settings.AGENTE_RAG_MAX_FUENTES:
+                elegidas.setdefault(identificador, fragmento)
+        return _formatear_fragmentos(list(elegidas.values()))
 
     consultas = consultas_por_evidencia(evidencia)
     if not consultas:
@@ -826,4 +835,3 @@ def analizar_codigo(codigo: str, *, evidencia: EvidenciaRevision | None = None) 
     finally:
         # Liberar el cliente incluso si ocurre un error.
         client.close()
-

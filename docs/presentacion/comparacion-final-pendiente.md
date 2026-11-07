@@ -1,3 +1,9 @@
+# Plantilla histórica: comparación ya ejecutada sobre 8e66b2c
+
+La tabla de preparación de abajo se conserva como histórico. La corrida real
+y sus límites están en [docs/18](../18-comparacion-semanas-3-4.md). El candidato
+corrige cobertura después de esa medición y requiere validación propia.
+
 # Preparación de la comparación final
 
 Preparación de Ronald, 7 de noviembre de 2026. **No contiene resultados finales.**

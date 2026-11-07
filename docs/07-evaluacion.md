@@ -1,5 +1,10 @@
 # 07. Evaluación — semana 3
 
+> Actualización de consulta, 7 de noviembre: la comparación real de veinte casos
+> por cada ruta está en [docs/18](18-comparacion-semanas-3-4.md). Los errores 503
+> y pendientes que siguen abajo describen exclusivamente la ejecución histórica.
+> No reemplazarla por resultados posteriores ni atribuirle la evaluación de v2.
+
 > Este informe conserva las corridas de Semana 3 y sus limitaciones. El bloqueo
 > local por clave ausente describe esa ejecución, no la disponibilidad actual de
 > Railway. La comparación documental con evidencias posteriores está en

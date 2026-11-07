@@ -55,7 +55,7 @@ se ejecutaron después sobre esos bytes, conservando aparte el fixture añadido.
 | HTTP con estático | 24/24 aprobadas |
 | HTTP sin estático | 19/19 aplicables aprobadas; cinco requieren estático |
 
-Las dos integraciones HTTP emplean FastAPI, RAG/ChromaDB y, cuando corresponde,
+En ambas integraciones se usa el framework HTTP del backend, ChromaDB y, cuando corresponde,
 Ruff/Bandit reales. Gemini y transporte GitHub están simulados; cero llamadas IA
 externas. El fixture específico de prioridad sustituye también los analizadores,
 como indica su propio metadato. No mezclar estas dos clases de comprobación.

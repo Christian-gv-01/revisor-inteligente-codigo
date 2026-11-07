@@ -8,7 +8,7 @@ El Dockerfile genera el frontend React con Node 22 y lo copia a una imagen Pytho
 - Estado: `/health`
 - Agente: `/agente/demo`
 - Índice documental persistente: `CHROMA_PATH=/data/chroma`
-- Volumen único: `/data` (incluye la caché de embeddings).
+- Volumen único: `/data` (índice y SQLite); modelo ONNX precargado fuera del volumen, en `/opt/codeguard/.cache/chroma`.
 - Solo se realiza la ingesta inicial de `seguridad_python` cuando la colección falta o está vacía. El contexto de proyecto es opcional y NO se ingiere automáticamente.
 - Se requiere `GEMINI_API_KEY` como secreto de ejecución, no durante la compilación.
 
@@ -62,3 +62,19 @@ El puerto 8080 del Compose está restringido a loopback para uso local. **Compos
 - Para varias réplicas de aplicación se necesita un almacén de cuotas compartido como Redis, más un límite agregado de concurrencia. Las reservas actuales no representan tokens consumidos y solicitudes rechazadas pueden gastar cupo de tasa, deliberadamente para prevenir abuso.
 - Antes de abrir la URL al público se debe verificar HTTP 429 real, revisar errores seguros, dependencias y protección contra abuso.
 - Revisar el historial Git con un detector de secretos y comprobar que la plataforma no expone el volumen.
+
+## Banderas del candidato de cierre
+
+Docker compila `VITE_PROJECT_BUDGET_ENABLED=1` y
+`VITE_CORRECTIONS_API_ENABLED=1`, y arranca con `PROJECT_BUDGET_ENABLED=1`.
+Compose toma los mismos valores de `.env`; si se desactiva el presupuesto,
+ambos lados deben cambiar conjuntamente. Para revertir la interfaz se necesita
+reconstruir, no basta con reiniciar el contenedor. Estas variables son públicas,
+nunca credenciales.
+
+Al integrar, Railway puede desplegar automáticamente después de CI. Registrar
+el SHA activo, comprobar `/health`, Agent Lab, presupuesto previo y rechazo sin
+consumo. No aprobar un proyecto solo para demostrar que el botón existe. El
+smoke Docker ejecuta previsualización y rechazo en red aislada y comprueba cero
+intentos al proveedor. La aprobación real de análisis consume cuota y debe
+quedar registrada por separado.

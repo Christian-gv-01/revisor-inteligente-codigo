@@ -1,0 +1,20 @@
+{
+  "modelo": "gemini-3.5-flash-lite",
+  "temperatura_sintesis": 0.2,
+  "max_tokens_sintesis": 2048,
+  "timeout_llm_segundos": 20,
+  "temperatura_planificador": 0,
+  "max_tokens_planificador": 256,
+  "timeout_planificador_ms": 45000,
+  "intentos_llm": 2,
+  "plazo_directo_segundos": 45,
+  "plazo_agente_segundos": 150,
+  "distancia_max_rag": 0.75,
+  "estatico_directa_habilitado": true,
+  "corpus_sha256": null,
+  "prompt_sha256": "3fcb43ccc807e63d3e7b85e3163d1b2c5bfa16140ba5fa3c90fd0ebc51ceadc9",
+  "fuente_verificacion": "Railway deployment 2b348847-69df-4d6a-ba5b-8b5e8651234c activo 8e66b2cc3f10b67589edd3714de17dcc8246d729, Details y lista completa de nueve variables, 2026-11-07; valores publicos GEMINI_MODEL/LLM_MAX_OUTPUT_TOKENS/LLM_TIMEOUT_SECONDS/RAG_MAX_DISTANCE leidos. Resto: codigo exacto y Docker de esa revision, sin overrides en variables. El indice persistente se recupero; su contenido no se leyo ni atesto. Huella prompt: manifiesto canonico de tres archivos Git.",
+  "campos_no_verificados": [
+    "corpus_sha256"
+  ]
+}

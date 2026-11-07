@@ -161,8 +161,9 @@ No se ejecuta código ni se sobrescriben originales. Caducidad, idempotencia y
 conflictos se detallan en [presupuesto](28-presupuesto-proyectos.md) y
 [confirmación de correcciones](23-integracion-confirmacion-qa.md).
 
-El presupuesto permanece desactivado por defecto. Esta revisión no cambia flags
-del proyecto ni producción. La prueba de interfaz usa el fixture local existente,
+En la revisión 8e66b2c el presupuesto público seguía desactivado. El candidato
+de cierre lo activa conjuntamente en Docker y requiere verificar el despliegue.
+La prueba de interfaz usa el fixture local existente,
 con configuración temporal en el proceso de pruebas y proveedores simulados.
 No constituye activación del servicio publicado.
 
@@ -230,3 +231,13 @@ El segundo comando requiere RAG local preparado y Playwright. Inicia servidores
 de prueba en loopback y sustituye Gemini/GitHub; no apuntarlo a producción.
 En `frontend/`: `npm test`, `npm run lint`, `npm run build`. Registrar resultado
 y commit sin trasladar conteos históricos a una ejecución nueva.
+
+## Cobertura documental tras la comparación real
+
+La corrida real de 8e66b2c detectó que reutilizar exclusivamente las fuentes de
+`buscar_referencia` podía perder una referencia pertinente que sí recuperaba el
+flujo base del código. El candidato de cierre reserva las fuentes base y añade
+las elegidas por el planificador, deduplicadas y con máximo seis. La herramienta
+sigue influyendo en la síntesis y conserva su traza. No se alteran el dataset ni
+las etiquetas. La corrida anterior se conserva; el ajuste requiere su propia
+evaluación sobre la revisión desplegada.

@@ -1,101 +1,154 @@
-# Guion de doce minutos: cierre documental y presupuesto
+# Guion de doce minutos: cierre técnico y resultados reales
 
-Base: `467d00e0d56a98cd758f382a5c713737eb490845`. Preparación del 7 de noviembre de 2026. Duración planificada: 720 segundos; no es un ensayo cronometrado. Reparto y preguntas sujetos a las indicaciones del ingeniero. Comparación final pendiente.
+Preparación del 7 de noviembre de 2026. Doce diapositivas, 720 segundos
+planificados, sin acreditar ensayo ni reparto. La corrida real usa `8e66b2c`.
+El candidato posterior corrige cobertura y debe validarse por separado.
 
-## 1. CODEGUARD
+## 1. CODEGUARD — 30 segundos
 
-Tiempo: 30 segundos.
+CODEGUARD es un revisor asistido de Python. Combina herramientas estáticas,
+recuperación documental y un agente supervisado. Hoy diferenciamos tres cosas:
+lo implementado y probado, los resultados reales de Gemini y los límites que
+siguen abiertos. No ejecutamos el código recibido ni aplicamos cambios al
+repositorio. La evidencia conserva versión y procedencia.
 
-Presentamos CODEGUARD, revisión asistida de Python con herramientas estáticas, recuperación documental y un agente supervisado. Esta preparación parte de 467d00e, integración del PR 48. Ronald consolidó la documentación y revisó el consentimiento de proyectos. Las métricas históricas conservan su versión. Christian entregará la comparación final de los mismos veinte casos. No afirmamos una mejora de precisión del agente. El reparto y el tiempo real requieren acuerdo y ensayo del equipo.
+Fuente: docs/37-cierre-verificado.md.
 
-Fuentes: docs/08-agente.md; docs/evidencias/semana-4/cierre-agente-presupuesto-20261107/README.md
+## 2. Una revisión útil necesita evidencia — 60 segundos
 
-## 2. Una revisión útil necesita evidencia
+Un desarrollador puede introducir riesgos al concatenar entradas en consultas,
+ejecutar comandos o evaluar texto como código. El producto ayuda a localizar
+el patrón y explicar la recomendación. Mostrar una consulta SQL concatenada y
+la separación entre valores y estructura. El valor esperado es facilitar la
+revisión; todavía no tenemos un estudio con usuarios que mida tiempo ahorrado.
+Un hallazgo no certifica explotabilidad y la ausencia de alertas no demuestra
+que el programa sea seguro. Las recomendaciones necesitan contexto y revisión.
 
-Tiempo: 60 segundos.
+Fuente: docs/01-propuesta.md y docs/02-requisitos.md.
 
-Explicar el problema con una consulta SQL construida por concatenación. El producto ayuda a localizar el patrón y a entender la recomendación. No afirmar que reemplaza una auditoría ni que cualquier alerta sea explotable. El valor esperado es facilitar revisión y trazabilidad; no tenemos una medición con usuarios que cuantifique tiempo ahorrado. Separar valor esperado de resultados medidos.
+## 3. Del código al informe — 60 segundos
 
-Fuentes: docs/01-propuesta.md
+El frontend valida la entrada y utiliza una API del mismo origen. Para código
+pegado y .py solicita agente v2. Ruff/Bandit y AST producen evidencia; el
+planificador elige herramientas permitidas y la síntesis combina código,
+evidencia y documentos recuperados. El backend valida estructura, ubicaciones
+y referencias. ZIP y GitHub conservan el flujo directo por archivo, con un
+presupuesto aprobado antes de la generación. El índice está en ChromaDB y las
+propuestas temporales en SQLite. Las claves solo existen en el backend.
 
-## 3. Del código al informe
+Fuente: docs/03-arquitectura.md y docs/tratamiento-datos.md.
 
-Tiempo: 60 segundos.
+## 4. Recorrido del agente v2 — 70 segundos
 
-La arquitectura integra entrada validada, Ruff/Bandit y AST, recuperación documental y síntesis. Para código pegado y .py el frontend solicita agente v2. Las decisiones pueden ampliar una ventana de código, buscar una referencia por categoría permitida o finalizar. El contrato v2 admite cuatro pasos totales, hasta tres decisiones y una síntesis; el revisor React conserva su petición explícita de tres, con hasta nueve intentos Gemini y plazo cooperativo de 150 segundos. ZIP y GitHub siguen el análisis directo por archivo. Su consentimiento de presupuesto es un recorrido separado y está apagado por defecto. La fusión de PR 48 no acredita la revisión que está activa en Railway.
+El agente siempre realiza la inspección inicial. Después puede detectar
+llamadas sensibles, revisar SQL, ampliar contexto hasta seis líneas por lado,
+buscar referencias por categoría permitida o finalizar. Los resultados
+participan en la decisión siguiente y la síntesis. El máximo es cuatro pasos
+totales; la interfaz principal solicita tres y esta evaluación solicitó cuatro.
+No tiene shell ni ejecución libre. La traza diferencia la elección del modelo,
+la inspección automática y el respaldo local. Una herramienta fallida no aparece
+como éxito. De veinte casos reales, diez finalizaron anticipadamente; eso no
+permite calcular ahorro causal sin una comparación equivalente de consumo.
 
-Fuentes: docs/08-agente.md; docs/contrato-agente-v2/README.md
+Fuente: docs/08-agente.md, contrato-agente-v2 y resultados de la corrida real.
 
-## 4. El recorrido del agente v2
+## 5. La aprobación ocurre después de revisar — 70 segundos
 
-Tiempo: 70 segundos.
+La corrección propuesta se muestra junto al original. Generar la previsualización
+puede consumir Gemini antes de la aprobación. La confirmación autoriza únicamente
+la descarga de esa copia. El usuario debe marcar una autorización explícita;
+sesión, identificador y hashes la vinculan al contenido revisado. Rechazar no
+descarga ni modifica el original. La propuesta caduca y las decisiones repetidas
+o contradictorias se resuelven con reglas de idempotencia y conflicto. No
+presentamos las pruebas con proveedor simulado como calidad de correcciones
+reales. La nueva imagen incorpora la interfaz, cuya visibilidad pública se debe
+comprobar en la revisión desplegada.
 
-En el panel del agente se ve qué herramientas se ejecutaron y de dónde procede la decisión. Ampliar contexto devuelve una ventana acotada del código original. Buscar referencia usa categorías permitidas y el índice local, sin visitar enlaces. Los resultados se propagan a la decisión siguiente y a la síntesis. La interfaz no muestra una decisión fallida como un resultado exitoso y conserva el respaldo local identificado. Finalización anticipada y herramienta repetida explican por qué cesaron las inspecciones, sin prometer cobertura completa. El JSON conserva la traza. El renderizado trata código y documentos como texto y mantiene las URLs documentales sin enlaces activos.
+Fuente: docs/20-contrato-confirmacion-humana.md y docs/23-integracion-confirmacion-qa.md.
 
-Fuentes: docs/29-revision-frontend-agente-presupuesto.md; https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/45; frontend/src/components/AgentTracePanel.tsx; frontend/tests/agent-v2.test.tsx
+## 6. Presupuesto ZIP/GitHub — 70 segundos
 
-## 5. La aprobación ocurre después de revisar
+Esta autorización es distinta de descargar una corrección. Primero se valida
+el proyecto y se muestra la lista de archivos, modelo, análisis previstos,
+intentos máximos, plazo y caducidad. Preparar GitHub sí consulta su API pública,
+pero no Gemini. Aprobar autoriza solo la instantánea revisada; rechazar no añade
+llamadas generativas. Se admiten cinco Python y doce mil caracteres combinados.
+El plazo cooperativo y el máximo de intentos son límites, no una cotización en
+dólares ni una predicción de duración. Dejar de esperar en el navegador no revoca
+un análisis que ya se aprobó. Backend e interfaz deben habilitarse conjuntamente.
 
-Tiempo: 70 segundos.
+Fuente: docs/28-presupuesto-proyectos.md y smoke Docker.
 
-El contrato v1 ya está integrado. La previsualización permite comparar original y propuesta antes de tomar una decisión. La casilla comienza desmarcada y aprobar únicamente autoriza descargar la copia revisada. Sesión, identificador, hashes y caducidad vinculan la decisión a una propuesta concreta. El frontend verifica que la respuesta coincida con el contenido mostrado. Cancelar o cambiar la entrada invalida el consentimiento y descarta respuestas tardías. No se ejecuta el código ni se sobrescriben originales. El PR 37 registra además aprobación, idempotencia, rechazo y conflictos mediante HTTP con propuestas reales. La caducidad y el flujo visual corresponden a CI controlado con Gemini simulado.
+## 7. Severidad verificable — 60 segundos
 
-Fuentes: docs/23-integracion-confirmacion-qa.md; docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/
+Se distingue severidad original, confianza y resultado. La prioridad utiliza
+pesos operativos; no son probabilidades. La política YAML puede derivar crítica
+cuando Bandit informa alta severidad y alta confianza. Para heredar, Gemini
+debe citar una regla ofrecida, no ambigua y en la misma línea validada. El
+backend calcula el resultado y reconstruye la auditoría; el modelo no puede
+inventarla. Nunca se reduce la severidad original. Una ventana cercana no basta.
+La interfaz y el JSON conservan original, reglas y resultado para revisión.
 
-## 6. Presupuesto de análisis ZIP y GitHub
+Fuente: docs/35-severidad-derivada-herencia.md.
 
-Tiempo: 70 segundos.
+## 8. Comparación real — 60 segundos
 
-Este consentimiento autoriza analizar un proyecto, no descargar una corrección. La previsualización guarda contenidos y muestra el presupuesto antes de llamar a Gemini. GitHub sí se consulta para preparar los archivos. La casilla comienza desmarcada y aprobar vincula sesión, identificador y hash a la instantánea. Se admiten hasta cinco Python, doce mil caracteres combinados y ZIP de hasta cinco MB. Hay hasta tres intentos por archivo, máximo quince por proyecto y plazo cooperativo de hasta 150 segundos. Los valores efectivos los devuelve Backend. Rechazar o cambiar la entrada antes de aprobar no autoriza consumo. Después de aprobar, dejar de esperar solo interrumpe el navegador. El modo Demo es una simulación separada. No activar la función en producción durante la exposición. Se verificaron los archivos, análisis previstos, máximo de intentos y plazo cooperativo en ambos tipos de entrada. Ese plazo es un límite, no una predicción de duración. Aprobar permitió llamadas al proveedor simulado; rechazar y caducar no añadieron llamadas. También se comprobó el bloqueo visual por vencimiento. Estas pruebas aisladas no habilitaron el presupuesto publicado.
+Ejecutamos los mismos veinte casos por ambas rutas sobre Railway 8e66b2c,
+alternando el orden. Ambas completaron veinte informes. La directa tuvo once
+verdaderos positivos, cero falsos positivos y una omisión; el agente tuvo ocho,
+uno y cuatro. F1 fue 0,957 frente a 0,762. La latencia media fue 4,85 frente a
+9,27 segundos y los tokens reportados 31.116 frente a 100.573. En esta muestra,
+el agente no mejoró calidad, tiempo ni consumo. No ocultamos ese resultado.
+El conjunto es propio, pequeño y con una sola repetición; falta huella del índice
+activo, por lo que se declara esa limitación de control.
 
-Fuentes: docs/28-presupuesto-proyectos.md; docs/evidencias/semana-4/cierre-agente-presupuesto-20261107/README.md
+Fuente: docs/evidencias/semana-4/comparacion-real-8e66b2c-20261107/.
 
-## 7. El informe comunica sus límites
+## 9. Conocimiento y cobertura — 60 segundos
 
-Tiempo: 60 segundos.
+El inventario contiene ocho fuentes originales oficiales y seis reglas curadas.
+La recuperación local histórica pasó de Precision@3 0,5370 a 0,4630 y de Recall@3
+0,9444 a 0,8056 entre semanas. No son métricas del informe generativo y no se
+intercambian sus denominadores. En la comparación actual se detectó además que
+una búsqueda de categoría podía reemplazar fuentes pertinentes de la recuperación
+base. El candidato conserva esas fuentes y añade las elegidas dentro del mismo
+tope. Es una corrección funcional; todavía necesita evaluación desplegada propia.
 
-La integración del PR 48 incluye pesos de severidad 8, 4, 2 y 1 y factores de confianza de Bandit 1,0, 0,8 y 0,6. Son ponderaciones operativas, no probabilidades. Se conserva la severidad original y su dominancia, con desempates por categoría y orden estable. Si falta confianza reconocida no hay puntuación. El informe de IA no hereda la confianza de Bandit. El frontend conserva el orden y muestra bandas de severidad. Un estado parcial indica que no se completó el análisis, aunque conserve hallazgos útiles. Esta política no demuestra mayor precisión del agente.
+Fuente: docs/04-fuentes.md y docs/18-comparacion-semanas-3-4.md.
 
-Fuentes: docs/10-analisis-estatico.md; docs/31-validacion-conjunta-pr46-pr47.md
+## 10. Pruebas de software — 60 segundos
 
-## 8. Referencia histórica con Gemini real
+El candidato aprobó 583 pruebas backend, 146 frontend y 80 de QA/evaluadores.
+Las específicas ya forman parte de esos totales. La integración HTTP completó
+24 de 24 con estático y 19 aplicables sin él; cinco requieren ese componente.
+Las 24 HTTP omitidas en la suite unitaria no se cuentan como aprobadas allí.
+Estas pruebas usan Gemini y GitHub simulados. Verifican contratos, conservación
+de hallazgos, abstención, sesiones, límites y regresiones; las cifras de precisión
+proceden exclusivamente de la corrida real descrita antes.
 
-Tiempo: 60 segundos.
+Fuente: docs/37-cierre-verificado.md y registros de CI del candidato.
 
-El PR 37 conserva una corrida real del endpoint de análisis sobre veinte casos congelados. Completaron los veinte informes, sin respuestas parciales ni errores, y coincidieron con las etiquetas de referencia. Se registraron doce verdaderos positivos, cero falsos positivos y cero falsos negativos. Las catorce referencias devueltas resolvieron dentro de las fuentes. La latencia media fue 5964,98 milisegundos y el percentil 95, 8107,56 milisegundos, redondeados aquí a segundos. El evaluador empareja categoría o título y una línea admisible. Estos resultados no garantizan corrección semántica de todas las explicaciones ni generalización a otros repositorios. Esta evaluación corresponde al flujo directo, no a una evaluación amplia del planificador del agente. Esta corrida histórica se conserva como referencia de caecd71. No corresponde a 467d00e ni permite afirmar que v2 mejore al flujo directo. Christian coordina la comparación real final de los veinte casos; sus resultados están pendientes de incorporación.
+## 11. Trazabilidad documental — 70 segundos
 
-Fuentes: docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/; https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/37
+El documento 08 explica el agente y el 17 remite al principal. Los requisitos
+incluyen las ocho historias solicitadas, con criterios Dado/Cuando/Entonces, y
+el inventario mantiene procedencia y hashes. README, decisiones y privacidad
+reflejan sesiones, almacenamiento temporal y confirmaciones. La ficha del docente
+revisaba 605d142 del día anterior; la tabla de cierre relaciona observaciones con
+commits y pruebas posteriores. Conservar históricos permite reconocer errores
+y cambios. El ZIP se genera desde una revisión Git exacta, con manifiesto,
+integridad y límite de veinte MB; generarlo no acredita envío al portal.
 
-## 9. Conocimiento curado y cobertura limitada
+Fuente: docs/37-cierre-verificado.md y scripts/empaquetar_entrega.py.
 
-Tiempo: 60 segundos.
+## 12. Conclusión — 50 segundos
 
-El inventario conserva ocho originales oficiales de MITRE y OWASP con URLs y hashes. El corpus ingerido comprende seis reglas curadas y no todas las páginas completas. La recuperación local del PR 37 recorrió veinte casos, de los cuales dieciocho tenían referencias esperadas. Para estos se obtuvo Recall@3 de 0,8056 y Precision@3 de 0,4630. Los dos casos fuera de cobertura no devolvieron fuentes. Estas métricas documentales usan un denominador distinto del recall de hallazgos. No se suman ni se intercambian. Su entorno es local, sin Gemini, y su latencia no representa Railway. Las condiciones no permiten atribuir una mejora causal frente a Semana 3.
+Demostramos un agente acotado con herramientas y decisiones trazables, pero esta
+corrida obtuvo menor F1 y mayor consumo que la ruta directa. Identificamos y
+corregimos una pérdida de cobertura sin alterar etiquetas ni borrar resultados.
+Corresponde validar el ajuste desplegado y describir sus límites. El ensayo oral,
+la instalación independiente y las aceptaciones son actividades humanas pendientes;
+no se sustituyen por documentos generados. Entregamos evidencia comprobable y
+no una promesa de que más herramientas siempre producen mejor precisión.
 
-Fuentes: docs/04-fuentes.md; docs/24-validacion-real-postmerge.md; docs/evidencias/semana-4/postmerge-caecd71-20261106/
-
-## 10. Revisión del frontend integrado
-
-Tiempo: 60 segundos.
-
-Sobre la base integrada 467d00e se amplió la prueba de navegador para verificar datos visibles del presupuesto, aprobación, rechazo y caducidad tanto en ZIP como en GitHub. Se comprobaron también consentimiento inicial, idempotencia, cambios de entrada, manifiesto alterado y bloqueo visual al vencer. Pasaron doce comprobaciones, además de 133 pruebas frontend. Las veinticuatro HTTP omitidas no se cuentan como aprobadas. Lint terminó correctamente. La configuración temporal del fixture no cambia flags del proyecto ni producción. El agente conserva sus evidencias históricas; esta corrida no vuelve a evaluar Gemini real.
-
-Fuentes: docs/evidencias/semana-4/cierre-agente-presupuesto-20261107/README.md
-
-## 11. Documentación que permite revisar el producto
-
-Tiempo: 70 segundos.
-
-Se consolidó el documento del agente para explicar propósito, herramientas v2, bucle, límites, evidencia, confirmaciones, evaluación y riesgos. El documento 17 remite al principal y su versión anterior queda archivada. Se conservaron las doce historias existentes, incluidas las ocho solicitadas, con Dado, Cuando y Entonces. El inventario concuerda con ocho copias oficiales y seis reglas curadas. No se alteró el corpus ni se presentan estos documentos como evidencia original de Semana 1.
-
-Fuentes: docs/08-agente.md; docs/02-requisitos.md; docs/04-fuentes.md; docs/evidencias/semana-4/cierre-agente-presupuesto-20261107/README.md
-
-## 12. Comparación final pendiente
-
-Tiempo: 50 segundos.
-
-La comparación final todavía debe incorporarse. La plantilla de resultados identifica commit, modelo, corpus y dataset congelado. Mantendrá los denominadores, errores y estados parciales, y separará métricas documentales de detección. Se informarán precisión, recall, F1, latencia e intentos por ruta cuando estén respaldados por la evidencia. No se llenan ausencias con cero ni se atribuye una mejora al agente antes de observarla. La política de prioridad ya está integrada; la activación del presupuesto y el despliegue siguen bajo coordinación. La exposición tiene doce minutos planificados, no un ensayo acreditado.
-
-Fuentes: docs/presentacion/comparacion-final-pendiente.md; eval/README.md
-
-Nota de integración posterior al PR #52: el guion refleja el nuevo límite; el PPTX/PDF entregado permanece como preparación y requiere regeneración coordinada al cerrar la comparación real. El candidato posterior del PR #54 incorpora severidad derivada y herencia verificable; mostrar el original del modelo y las reglas aplicadas, sin afirmar explotabilidad ni mejora de precisión.
+Fuente: docs/37-cierre-verificado.md y revisión asistida de citas.

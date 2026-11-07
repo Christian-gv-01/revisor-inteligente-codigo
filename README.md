@@ -1,243 +1,164 @@
-# CODEGUARD — Revisor Inteligente de Código Seguro
+# CODEGUARD · Revisor inteligente de código seguro
 
-> Actualización del 6 de noviembre: frontend y backend de confirmación integrados
-> mediante PR #36, commit `caecd71`, con CI en main y despliegue verificados.
-> La evaluación real y sus límites se registran en
-> [validación posterior a la integración](docs/24-validacion-real-postmerge.md).
-> La previsualización real sigue deshabilitada por defecto en el frontend público;
-> habilitarla requiere la decisión del equipo y un nuevo build.
+CODEGUARD revisa Python como texto, sin importarlo ni ejecutarlo. Integra React,
+FastAPI, Gemini, recuperación documental con ChromaDB y herramientas Ruff/Bandit.
+Entrega hallazgos con fuentes, ubicación y trazabilidad. Si falta respaldo,
+se abstiene; si solo se completa una parte, conserva lo útil y lo comunica.
 
-CODEGUARD analiza código Python como texto para identificar riesgos de seguridad sin ejecutarlo. Combina una API FastAPI, una interfaz React, Gemini y recuperación documental con ChromaDB. Los hallazgos deben incluir citas recuperadas; si no existe evidencia suficiente, el sistema se abstiene.
+## Versión y evidencias
 
-## Estado de la Entrega 4
+Base integrada: `8e66b2cc3f10b67589edd3714de17dcc8246d729` (PR #55), activa en
+Railway el 7 de noviembre de 2026. La ficha docente recibida revisaba `605d142`,
+del 6 de noviembre: sus observaciones deben contrastarse con cambios posteriores.
+El [cierre actual](docs/37-cierre-verificado.md) relaciona cada requisito y prueba.
+La evaluación generativa y sus límites están en la
+[comparación de rutas y semanas](docs/18-comparacion-semanas-3-4.md).
 
-Actualización del 5 de noviembre de 2026:
+URL pública: https://revisor-inteligente-codigo-production.up.railway.app
 
-La revisión documental actual toma como base `65675e2`, que integra el agente en
-React mediante PR #31. Su [validación local](docs/17-agente-integrado.md) registra
-250 pruebas backend/QA, 76 frontend y 17/17 HTTP con estático; la configuración
-alternativa registra 12/12 aplicables y cinco omisiones. Gemini y GitHub externo
-son simulados en esas pruebas. El agente ejecuta Ruff/Bandit en ambas configuraciones.
-La evidencia pública siguiente pertenece a corridas anteriores identificadas;
-no certifica automáticamente el despliegue de PR #31.
+Las pruebas de software con Gemini simulado no son medidas de precisión del
+proveedor. Los resultados históricos conservan su fecha y revisión en
+[docs/evidencias](docs/evidencias/semana-4/README.md).
 
-Documentación y responsabilidades: [índice](docs/README.md),
-[estado de cierre](docs/19-cierre-documental.md) y [aportes](docs/11-aportes-ia.md).
+## Funciones y límites
 
-Evidencia previa conservada:
-- Integración fusionada a `main` mediante [PR #25](https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/25), commit `d80e75c`; evidencias posteriores publicadas hasta `219069a`.
-- Backend, frontend e integración HTTP de la candidata aprobados en GitHub Actions. En Windows se registraron 223 pruebas backend y 71 frontend aprobadas, más 15/15 HTTP con Ruff/Bandit y 10/10 aplicables sin estático.
-- URL pública: https://revisor-inteligente-codigo-production.up.railway.app . Salud y OpenAPI responden; el endpoint estático ya figura en el esquema público.
-- [Matriz pública posterior a la fusión](docs/evidencias/semana-4/pruebas-publicas-post-merge-20261105.json): **26/26 aprobadas**, incluidos P05/P07 de sanitización 422.
-- Agente Gemini real: evidencia local de una ejecución completa y otra degradada por 503, con traza conservada. Son casos distintos y no demuestran disponibilidad general.
-- Dos análisis públicos conservaron un hallazgo y las mismas tres fuentes, con `continuidad_citas: true`. El equipo los presentó como antes/después de un reinicio, pero la imagen versionada muestra el comparador, no los logs de Railway. Falta el respaldo independiente del reinicio/volumen; la comparación HTTP no verifica por sí sola persistencia física.
-- Seguridad: QA-H03 incorpora captura acotada durante la lectura de stdout/stderr (ver [contrato estático](docs/10-analisis-estatico.md)); requiere validación de la revisión desplegada. El cierre documental de QA-H02 sigue pendiente. Persisten los 503 observados y la advertencia de tamaño del paquete frontend.
-- Estado, enlaces de CI, evidencias y límites en [Cierre técnico de QA](docs/12-cierre-qa-entrega4.md).
+- Código y `.py`: agente v2, estático y AST obligatorios; decisiones tipadas de
+  ampliar contexto ±6 líneas, buscar referencias por categoría y finalizar.
+  Máximo cuatro pasos; el revisor principal solicita tres y el evaluador cuatro.
+- ZIP/GitHub: hasta cinco Python y 12.000 caracteres combinados; ZIP hasta 5 MB.
+  Se analiza por archivo mediante la ruta directa. No atribuirle planificación
+  agéntica. El presupuesto requiere aprobación de una instantánea concreta.
+- Correcciones: comparar original y propuesta; aprobar solo descarga una copia.
+  Sesiones, hashes, caducidad, idempotencia y conflictos vinculan la decisión.
+- Severidad: política YAML, valor original conservado y herencia solo de reglas
+  citadas, no ambiguas y en la línea validada. No certifica explotabilidad.
+- Informe y JSON: fuentes, trazas, estado parcial y auditoría de severidad.
+- Demo: ejemplos locales ilustrativos. Agent Lab: `/agente/demo`.
 
-## Funcionalidades
+La explicación principal del agente es [docs/08-agente.md](docs/08-agente.md).
+La [arquitectura](docs/03-arquitectura.md), los [requisitos](docs/02-requisitos.md)
+y el [inventario de fuentes](docs/04-fuentes.md) describen el producto.
 
-- Análisis de código pegado y archivos `.py`.
-- Análisis de hasta cinco archivos Python dentro de un ZIP validado.
-- Descarga limitada de repositorios públicos de GitHub.
-- RAG con fuentes, citas y abstención verificable.
-- Agente integrado en la revisión principal de código pegado y archivos `.py`: evidencia Ruff/Bandit y AST para la síntesis RAG, pasos visibles y exportación de la traza. ZIP/GitHub conservan la revisión directa.
-- Agent Lab con herramientas AST de solo lectura para inspección técnica.
-- Interfaz React con hallazgos, trazabilidad documental y exportación.
+## Instalación local
 
-## Arquitectura
-
-Contrato, límites y pruebas de la integración: [Agente en la revisión principal](docs/17-agente-integrado.md).
-
-```text
-Navegador ──HTTPS──> FastAPI
-                      ├── React compilado (/)
-                      ├── API (/api/v1/*)
-                      ├── Agent Lab (/agente/demo)
-                      ├── Gemini
-                      └── ChromaDB (/data/chroma en producción)
-```
-
-El backend nunca importa ni ejecuta el código recibido. Las claves permanecen en el servidor y no deben utilizar variables `VITE_*`.
-
-## Requisitos
-
-- Python 3.13 para reproducir la imagen de producción.
-- Node.js 22 para compilar el frontend.
-- Docker Desktop para la ejecución integrada.
-- Una clave válida de Gemini solamente para análisis reales.
-
-## Configuración
-
-Copiar `.env.example` como `.env` y completar únicamente los valores locales. `.env` está ignorado por Git y por Docker.
-
-| Variable | Obligatoria | Uso |
-|---|---:|---|
-| `GEMINI_API_KEY` | Sí, para análisis real | Secreto del proveedor; nunca se publica. |
-| `GEMINI_MODEL` | Recomendada | Modelo disponible en la cuenta. |
-| `LLM_TIMEOUT_SECONDS` | No | Tiempo máximo de Gemini. |
-| `LLM_MAX_OUTPUT_TOKENS` | No | Límite de respuesta. |
-| `CHROMA_PATH` | Producción | Ruta del índice persistente; `/data/chroma` en Docker. |
-| `RAG_MAX_DISTANCE` | No | Umbral de recuperación documental. |
-| `PORT` | Plataforma | Puerto asignado al contenedor. |
-| `SERVE_FRONTEND` | Docker | Sirve `frontend/dist` desde FastAPI. |
-| `STATIC_ANALYSIS_ENABLED` | No | Activa Ruff/Bandit en rutas directas. El agente y endpoint estático los ejecutan independientemente de esta bandera. |
-| `RATE_LIMIT_ENABLED` | Producción | Presupuesto de peticiones por proceso. |
-| `CONCURRENCY_LIMIT_ENABLED` | Producción | Máximo de dos solicitudes costosas activas. |
-| `TRUST_RAILWAY_REAL_IP` | No | Activar solo con ingreso exclusivo por proxy confiable. |
-
-La síntesis lee `GEMINI_MODEL` (valor predeterminado en código:
-`gemini-3.5-flash-lite`), timeout 60 s y máximo de salida 2048 si no se configuran.
-El ejemplo `.env` propone timeout 20 s; los valores efectivos deben registrarse
-en cada evaluación. La temperatura de síntesis está fijada en código a 0,2 y la
-del planificador a 0. Las variables heredadas `LLM_PROVIDER`,
-`LLM_FALLBACK_PROVIDER`, `GROQ_MODEL`, `GROQ_API_KEY`, `LLM_TEMPERATURE` y
-`LLM_MAX_RETRIES` del ejemplo no seleccionan un proveedor alternativo ni cambian
-esos parámetros en la implementación actual. No existe fallback Groq funcional.
-
-`VITE_API_BASE_URL` se configura al compilar el frontend: vacío para el despliegue
-del mismo origen; en desarrollo, Vite redirige `/api` al backend local. Nunca
-guardar una clave de Gemini en una variable `VITE_*`.
-
-## Ejecución local sin Docker
+Requisitos: Python 3.13, Node.js 22 y npm. Una clave Gemini es necesaria únicamente
+para análisis generativo real. Nunca colocar claves en `VITE_*` ni en Git.
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r backend\requirements.txt
-cd frontend
-npm ci
-npm run build
-cd ..
+Copy-Item .env.example .env
+# Completar GEMINI_API_KEY solamente en .env para análisis real.
 python scripts\ingest.py
 cd backend
-python -m uvicorn app.main:app --reload
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-La API queda en `http://127.0.0.1:8000`; en desarrollo, el frontend también puede iniciarse con `npm run dev`.
-
-Para ese servidor de desarrollo, abrir otra terminal en `frontend/` y ejecutar
-`npm run dev`. Compilar React no activa automáticamente su servicio desde FastAPI;
-para servir el build sin Vite configurar `SERVE_FRONTEND=1` antes de iniciar el
-backend. Docker ya incluye esta configuración.
-
-## Ejecución integrada con Docker
+En otra terminal, desde la raíz:
 
 ```powershell
+cd frontend
+npm ci
+Copy-Item .env.example .env
+npm run dev -- --host 127.0.0.1
+```
+
+Vite redirige `/api` y `/agente` al backend local. En Linux/macOS usar
+`source .venv/bin/activate`, `cp` y separadores `/`. La primera ingesta descarga
+MiniLM ONNX si no está en caché. No se incluye una base privada en el repositorio.
+Consultar [la instalación comprobada](docs/30-instalacion-checkout-limpio.md):
+5 min 45 s con herramientas/cachés existentes, sin Gemini real. No acredita una
+instalación independiente por otro integrante.
+
+## Docker y Railway
+
+```sh
 docker compose config --quiet
 docker compose up --build -d
-docker compose ps
 docker compose logs --tail 80 codeguard
 ```
 
-Abrir `http://127.0.0.1:8080`. El volumen `codeguard-data` conserva ChromaDB. Para detener sin borrar datos: `docker compose down`. No utilizar `docker compose down -v` durante la prueba de persistencia.
+Abrir http://127.0.0.1:8080. `docker compose down` conserva el volumen;
+`down -v` lo elimina. El modelo ONNX entra durante el build. El arranque prepara
+el volumen y pasa a UID 10001 antes de ejecutar Python. `/health` usa `PORT` y no
+llama a Gemini. Guía completa: [docs/despliegue.md](docs/despliegue.md).
 
-La guía de hosting y volumen está en [docs/despliegue.md](docs/despliegue.md).
+Este candidato compila presupuesto y correcciones visibles por defecto en
+Docker. El presupuesto también se activa en el backend Docker: no es posible
+usar las rutas antiguas para saltarse la aprobación. Las banderas `VITE_*`
+son públicas y se fijan al construir la imagen, no al arrancarla. No acreditar
+activación en la URL pública hasta comprobar el nuevo despliegue.
 
-## Endpoints
+| Configuración | Propósito |
+|---|---|
+| `GEMINI_API_KEY` | Secreto solo en backend/plataforma |
+| `GEMINI_MODEL` | Modelo disponible en la cuenta |
+| `LLM_TIMEOUT_SECONDS`, `LLM_MAX_OUTPUT_TOKENS` | Timeout por llamada y máximo de salida |
+| `LLM_RETRY_ATTEMPTS` | Total de intentos por llamada lógica, entre 1 y 3 |
+| `ANALYSIS_TOTAL_SECONDS`, `AGENT_TOTAL_SECONDS`, `PROJECT_TOTAL_SECONDS` | Plazos compartidos acotados a 45/150/150 s |
+| `CHROMA_PATH` | Volumen persistente; `/data/chroma` en Docker |
+| `RAG_MAX_DISTANCE` | Distancia máxima; no es confianza |
+| `PROJECT_BUDGET_ENABLED` | Exigir aprobación de ZIP/GitHub en backend |
+| `VITE_PROJECT_BUDGET_ENABLED` | Build de interfaz del presupuesto; debe coincidir con backend |
+| `VITE_CORRECTIONS_API_ENABLED` | Build de previsualización y descarga aprobada |
+| `RATE_LIMIT_ENABLED`, `CONCURRENCY_LIMIT_ENABLED` | Protección por proceso; Docker las activa |
+| `STATIC_ANALYSIS_ENABLED` | Estático en rutas directas; agente lo ejecuta siempre |
+| `TRUST_RAILWAY_REAL_IP` | Solo con ingreso exclusivo por proxy confiable |
 
-| Método | Ruta | Propósito |
-|---|---|---|
-| `GET` | `/health` | Disponibilidad básica. |
-| `POST` | `/api/v1/analizar` | Código JSON. |
-| `POST` | `/api/v1/archivos` | Archivo `.py`. |
-| `POST` | `/api/v1/archivos/zip` | Proyecto ZIP. |
-| `POST` | `/api/v1/repositorios/github` | Repositorio público. |
-| `POST` | `/api/v1/agente/previsualizar` | Herramientas AST sin IA. |
-| `POST` | `/api/v1/agente/analizar` | Agente supervisado y análisis RAG. |
-| `POST` | `/api/v1/estatico/analizar` | Ruff/Bandit autónomos, sin Gemini; publicado en OpenAPI. |
+`backend/app/config/settings.py` concentra parámetros. Síntesis: temperatura
+0,2; planificador: 0. Los valores efectivos de Railway se registran por corrida.
+No existe fallback Groq funcional. Las variables heredadas `LLM_PROVIDER`,
+`LLM_FALLBACK_PROVIDER`, `LLM_TEMPERATURE` y `LLM_MAX_RETRIES` no cambian esa lógica.
+La [política de severidad](docs/35-severidad-derivada-herencia.md) distingue
+prioridad, confianza de Bandit y severidad resultante.
 
-## Pruebas
+## Verificación
 
-Backend, desde `backend/`:
-
-```powershell
-python -m pytest tests -q
-```
-
-Frontend:
-
-```powershell
-cd frontend
+```sh
+cd backend
+python -m pytest tests ../qa ../eval -q
+cd ../frontend
 npm test
 npm run lint
 npm run build
 ```
 
-Escenarios contra una instancia desplegada:
+La suite unitaria omite HTTP cuando no se configura servidor; omisión no es
+aprobación. Integración con proveedores simulados:
 
-```powershell
-python scripts\pruebas_produccion.py `
-  --base-url https://URL-PUBLICA `
-  --output docs\evidencias\semana-4\pruebas-publicas.json
+```sh
+python eval/run_integration.py --static-analysis --output tmp/http-estatico-nuevo
+python eval/run_integration.py --output tmp/http-sin-estatico-nuevo
+python qa/run_agent_v2_browser.py --output tmp/agente-browser-nuevo
+python qa/run_project_budget_browser.py --output tmp/presupuesto-browser-nuevo
 ```
 
-Persistencia de citas:
+Pruebas públicas sin llamadas generativas y comparación real separada:
 
-```powershell
-python scripts\verificar_persistencia_citas.py capturar --base-url https://URL-PUBLICA --baseline docs\evidencias\semana-4\persistencia-antes.json
-# Reiniciar o volver a desplegar conservando el volumen.
-python scripts\verificar_persistencia_citas.py verificar --base-url https://URL-PUBLICA --baseline docs\evidencias\semana-4\persistencia-antes.json --output docs\evidencias\semana-4\persistencia-despues.json
+```sh
+python scripts/pruebas_produccion.py --base-url https://URL --output tmp/publicas-nuevas.json
+python eval/comparar_rutas.py --validar
 ```
 
-Auditoría de secretos:
+El [protocolo](docs/27-protocolo-comparacion-rutas.md) explica cómo autorizar la
+corrida real de cuarenta solicitudes, conservar fallos y reportar consumo.
+No repetir para elegir solo resultados favorables.
 
-```powershell
-python scripts\auditar_secretos.py --output docs\evidencias\semana-4\auditoria-secretos.json
-```
+## Entrega y limitaciones
 
-La matriz completa está en [docs/08-pruebas.md](docs/08-pruebas.md).
+[Índice documental](docs/README.md), [presentación](docs/presentacion/README.md),
+[datos y privacidad](docs/tratamiento-datos.md), [decisiones](docs/09-decisiones.md),
+[aportes](docs/11-aportes-ia.md) y [cierre verificable](docs/37-cierre-verificado.md).
 
-Integración HTTP local, desde la raíz con dependencias e índice preparados:
+Puede haber falsos positivos/negativos. Citas resolubles no garantizan pertinencia
+semántica. El corpus curado es pequeño. El proveedor puede fallar o limitar cuota.
+Los plazos son cooperativos y dejar de esperar en el navegador no cancela una
+operación ya aprobada. No hay autenticación ni cuotas por persona; los límites
+por proceso requieren coordinación para varias réplicas. Revisar el resultado
+antes de cambiar software. El ensayo oral, las aceptaciones y los originales
+académicos faltantes deben aportarlos personas; no se fabrican como evidencia.
 
-```powershell
-python eval/run_integration.py --static-analysis --output tmp/http-estatico
-python eval/run_integration.py --output tmp/http-sin-estatico
-```
-
-El ejecutor utiliza servicios locales y proveedor simulado; no equivale a la
-evaluación de Gemini. Para comprobar también los ejecutores QA desde `backend/`:
-`python -m pytest tests ../qa -q`.
-
-La instalación en diez minutos es un criterio de la rúbrica aún pendiente de
-medición con un integrante nuevo. Registrar equipo, cachés y tiempo real; no
-inferirlo de que los comandos estén documentados.
-
-## Controles de seguridad
-
-- Límites de tamaño y cantidad para código, `.py`, ZIP y GitHub.
-- Rechazo de traversal, enlaces especiales, ZIP cifrados, bytes nulos y texto no UTF-8.
-- Dominio fijo `github.com` y llamadas solamente a `api.github.com`, sin redirecciones.
-- Separación explícita entre instrucciones confiables y código/documentos no confiables.
-- Citas RAG verificadas; referencias inventadas producen abstención.
-- Errores controlados para 429, 503, timeouts y respuestas inválidas.
-- Errores 422 sanitizados para no reflejar código o posibles secretos.
-
-## Limitaciones
-
-- No hay autenticación ni cuotas de tokens por usuario. Existen límites de peticiones y concurrencia por proceso; varias réplicas requieren coordinación compartida.
-- `/health` no demuestra por sí solo que Gemini y RAG funcionen.
-- Las herramientas AST son heurísticas y pueden producir falsos positivos o negativos.
-- Las pruebas con mocks validan contratos, no la calidad real de Gemini.
-- Las evidencias públicas y de comparación de citas están versionadas; falta el log independiente del reinicio. No certifican disponibilidad futura ni la integridad completa del volumen.
-
-## Documentación
-
-- [Índice y orden de lectura](docs/README.md)
-- [Matriz de cierre documental y pendientes](docs/19-cierre-documental.md)
-
-- [Propuesta](docs/01-propuesta.md)
-- [Requisitos y trazabilidad](docs/02-requisitos.md)
-- [Arquitectura](docs/03-arquitectura.md)
-- [Fuentes y materia prima](docs/04-fuentes.md)
-- [Levantamiento: instrumento y estado real](docs/levantamiento.md)
-- [RAG](docs/06-rag.md)
-- [Evaluación](docs/07-evaluacion.md)
-- [Comparación Semanas 3 y 4](docs/18-comparacion-semanas-3-4.md)
-- [Aviso de IA y tratamiento de datos](docs/tratamiento-datos.md)
-- [Pruebas de Entrega 4](docs/08-pruebas.md)
-- [Cierre QA e integración estática](docs/12-cierre-qa-entrega4.md)
-- [Decisiones](docs/09-decisiones.md)
-- [Aportes y uso de IA](docs/11-aportes-ia.md)
-- [Evidencias de semana 4](docs/evidencias/semana-4/README.md)
-
-
+El paquete se genera desde una revisión Git exacta con
+`scripts/empaquetar_entrega.py`, máximo 20 MB, sin `.env`, cachés ni dependencias.
+La generación del paquete no acredita envío al docente.

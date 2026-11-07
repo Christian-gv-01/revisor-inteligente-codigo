@@ -146,8 +146,8 @@ sin ejecutar ni importar el programa recibido.
 
 Un ID válido y una coincidencia literal no prueban pertinencia semántica ni
 explotabilidad. El agente descarta hallazgos inválidos individualmente y conserva
-los válidos con estado parcial; el flujo directo conserva su validación global
-de referencias.
+los válidos con estado parcial; la ruta directa también conserva hallazgos válidos individualmente y marca parcial
+cuando omite alguno.
 
 ## Datos y despliegue
 
@@ -162,15 +162,16 @@ de referencias.
 - API key solo en backend. No utilizar variables `VITE_*` para secretos.
 - Un proceso y una réplica para ChromaDB embebido y límites en memoria. No se
   afirma alta disponibilidad ni recuperación de backups probada.
-- No hay historial persistente de informes de usuarios. El código se procesa
-  en memoria/temporales y se envía al proveedor en modo API; esto no acredita
-  ausencia de retención por servicios externos.
+- No hay historial general de informes de usuarios. Las propuestas de corrección y
+  presupuestos sí guardan temporalmente contenido en SQLite, con caducidad y
+  limpieza. Consultar [tratamiento de datos](tratamiento-datos.md).
 
 ## Evidencia y alcance
 
 La validación local está en [17-agente-integrado.md](17-agente-integrado.md).
-La comparación de citas y la falta del log independiente se explican en
-[cierre QA](12-cierre-qa-entrega4.md). Una corrida pública previa no valida
+La comparación de citas histórica se explica en [cierre QA](12-cierre-qa-entrega4.md).
+La verificación actual del despliegue y recuperación del volumen se registra en
+[cierre verificado](37-cierre-verificado.md). Una corrida pública previa no valida
 automáticamente una versión posterior del agente.
 
 Contratos: [RAG](06-rag.md), [estático](10-analisis-estatico.md),

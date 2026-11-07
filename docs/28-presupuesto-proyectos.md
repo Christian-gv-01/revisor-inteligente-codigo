@@ -1,7 +1,9 @@
 # Presupuesto y aprobación de análisis ZIP/GitHub (candidato v1)
 
 Estado: integrado mediante PR #45 en `9c97ca1c8797bad5bdfdf227dba119b7839d32c7`,
-desactivado por defecto. No acredita activación pública ni cierre académico.
+desactivado por defecto en esa revisión. El candidato de cierre activa backend
+y frontend conjuntamente en Docker; no acreditar activación pública hasta
+comprobar el nuevo despliegue.
 Base inicial: `605d142ff8f643d755689e257c649e0a9e79a8ea`.
 Véase la [revisión frontend y trazabilidad](29-revision-frontend-agente-presupuesto.md).
 

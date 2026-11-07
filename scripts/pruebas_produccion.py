@@ -264,7 +264,7 @@ def casos(cliente: httpx.Client, seleccion: set[str] | None = None) -> list[Resu
     caso(
         "P25", "agente", "Cantidad excesiva de pasos",
         "HTTP 422",
-        lambda c: c.post("/api/v1/agente/previsualizar", json={"archivo": "x.py", "codigo": "print(1)", "max_pasos": 4}),
+        lambda c: c.post("/api/v1/agente/previsualizar", json={"archivo": "x.py", "codigo": "print(1)", "max_pasos": 5}),
         lambda r: r.status_code == 422,
     )
     inyeccion = (
