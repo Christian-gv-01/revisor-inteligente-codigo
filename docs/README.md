@@ -1,5 +1,8 @@
 # Documentación de CODEGUARD
 
+Sincronización con `384ffaf`: [instalación desde checkout limpio](30-instalacion-checkout-limpio.md)
+y [ensayo pendiente de indicaciones del ingeniero](presentacion/ensayo-cronometrado.md).
+
 Referencia integrada PR #45, `9c97ca1`: [revisión frontend y trazabilidad](29-revision-frontend-agente-presupuesto.md).
 Se conservan las [evidencias del candidato PR43/44](evidencias/semana-4/integracion-agente-presupuesto-20261106/README.md) con su commit original.
 

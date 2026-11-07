@@ -35,6 +35,9 @@ Gitleaks del repositorio constituye una verificación independiente.
 
 ## Instalación cronometrada: evidencia humana necesaria
 
+Preparación actual desde `384ffaf`: [checkout limpio, requisitos y medición](30-instalacion-checkout-limpio.md).
+Es una prueba automatizada en equipo existente, no el ensayo humano independiente.
+
 Debe probarla un integrante que no haya preparado ese entorno. Un directorio
 nuevo sobre una instalación existente no equivale necesariamente a un equipo
 limpio: registrar Git, Python, Node, cachés y dependencias ya presentes.

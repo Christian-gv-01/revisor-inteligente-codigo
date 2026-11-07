@@ -1,0 +1,30 @@
+{
+  "fecha_local": "2026-11-06",
+  "zona": "America/Bogota",
+  "operador": "Ejecución automatizada asistida para Ronald; no ensayo humano independiente",
+  "revision_instalada": "384ffafba3b10886751260c15a944e2b24f110ab",
+  "rama_sincronizada": "docs/frontend-agente-v2-presupuesto",
+  "merge_sincronizacion": "5b72b553da950697949356b6914b8c16056e8e70",
+  "inicio_local": "2026-11-06T19:02:20.562725-05:00",
+  "fin_local": "2026-11-06T19:08:05.778310-05:00",
+  "preparacion_segundos": 313.656,
+  "smoke_segundos": 11.624,
+  "total_pared_segundos": 345.216,
+  "nota_tiempos": "El total de pared incluye la pausa entre preparación y smoke. Los pasos individuales usan contador monotónico. No incluye descarga de Python/Node ni clonación desde Internet.",
+  "checkout_sin_cambios_versionados": true,
+  "flags_modificados": false,
+  "gemini_real": false,
+  "instalacion_humana_10_minutos": "pendiente, no acreditada por esta prueba",
+  "reparto_y_ensayo": "pendientes de indicaciones del ingeniero",
+  "sha256": {
+    "resultado.json": "e278e80ce2d9ba8e862cb657cabfe19de36d5c3b4a44a3f603351bbdab7ed4c7",
+    "smoke.json": "3f04024412106211123a330028d1ad3231cc6b1e163a4d8480d38a9be641a493",
+    "demo.json": "cc2b029b59dd4630bf653d315bb777a8456a5f724d3c618a4baaa0c9a70ed838",
+    "demo-checkout-limpio.png": "67ca97adfd3860c921062f845d4257a0ea91965b5e957d6afa3e15338f0c7658",
+    "07-pip-check.txt": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+    "05-build.txt": "60a4c3b050a275d80b893b0bdca45116462a5061b0a3e26ec5557262f1292498",
+    "06-ingesta.txt": "e1f231d3a45e56fea211016f017dacda9a8dabf26a40bb8ddfcc56307b8c521b",
+    "sincronizacion-evaluador-local.txt": "5825745105167138c1447f5d5aa9b7972506fc090eeb2a7a79e769e4208da761"
+  },
+  "nota_hashes": "SHA-256 de los blobs versionados en Git; obtener con git show. El checkout Windows puede convertir LF a CRLF."
+}

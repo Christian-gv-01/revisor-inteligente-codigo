@@ -1,0 +1,23 @@
+Fuente: knowledge\seguridad_python.md
+Base vectorial: C:\Users\alexm\Desktop\TITULACION\codeguard-instalacion-384ffaf\data\chroma
+Coleccion: seguridad_python
+Fragmentos procesados: 6
+Fragmentos obsoletos eliminados: 0
+Total de registros en la coleccion: 6
+
+Resultados de la consulta de prueba:
+1. Regla 1: Evitar eval con entradas no confiables
+   Fuente: MITRE CWE-94
+   URL: https://cwe.mitre.org/data/definitions/94.html
+   Fecha de vigencia: No indicada
+   Distancia: 0.4575
+2. Regla 4: Prevencion general de inyecciones
+   Fuente: OWASP Injection Prevention Cheat Sheet
+   URL: https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html
+   Fecha de vigencia: No indicada
+   Distancia: 0.5318
+3. Regla 5: Prevenir exposicion de credenciales y secretos
+   Fuente: MITRE CWE-798
+   URL: https://cwe.mitre.org/data/definitions/798.html
+   Fecha de vigencia: No indicada
+   Distancia: 0.5509

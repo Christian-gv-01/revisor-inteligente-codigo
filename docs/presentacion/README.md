@@ -25,8 +25,11 @@ veinte casos aún debe incorporarse con las evidencias de Christian.
 | 12 | Responsabilidades y evaluación final pendiente | 50 |
 | **Total** | | **720** |
 
-Doce minutos planificados, sin preguntas; no es un ensayo cronometrado. Acordar
-el reparto de voces. Las notas contienen fuentes y límites de cada afirmación.
+Doce minutos planificados, sin preguntas; no es un ensayo cronometrado. Ronald
+indicó que el reparto depende de las instrucciones del ingeniero para el 7 de
+noviembre. No se asignan expositores todavía. Se preparó una
+[hoja de coordinación y medición](ensayo-cronometrado.md), pendiente de completar
+con datos reales. Las notas contienen fuentes y límites de cada afirmación.
 
 ## Separación de resultados
 
