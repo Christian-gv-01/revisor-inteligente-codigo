@@ -1,17 +1,15 @@
 # 03. Arquitectura vigente de CODEGUARD
 
-> Extensión frontend local del 6 de noviembre: el análisis mantiene los flujos
-> descritos abajo. Se añade `CorrectionPreview`, con original/propuesta, casilla,
-> confirmación y cancelación. Un adaptador separado valida identidad, hashes y
-> contenido antes de generar una descarga nueva. La demo es local; el adaptador
-> real permanece desactivado hasta acordar el [contrato](20-contrato-confirmacion-humana.md).
-> No hay endpoints de aprobación implementados por esta rama ni cambios de hosting.
+Actualización del 7 de noviembre de 2026. Frontend y backend comparten los
+contratos de correcciones y presupuesto. Ambas interfaces públicas se comprobaron
+en c522c24; el contador de presupuestos anidados se corrigió y verificó en 0a6707b.
+La evidencia y los límites están en [el cierre vigente](37-cierre-verificado.md).
 
 ```mermaid
 sequenceDiagram
     actor U as Usuario
     participant F as Frontend
-    participant B as Backend de correcciones propuesto
+    participant B as Backend de correcciones
     U->>F: Solicitar previsualización
     F->>B: Original, hash y objetivo de corrección
     B-->>F: Propuesta, ID, hashes, nombre nuevo y caducidad
@@ -29,14 +27,13 @@ sequenceDiagram
     end
 ```
 
-Este diagrama es el contrato propuesto para integración; la validación actual
-utiliza un cliente simulado. El análisis y la generación de una propuesta no
-autorizan ejecutar el código.
+Este recorrido está implementado. Las pruebas de navegador con proveedor simulado
+se distinguen de las decisiones HTTP reales documentadas. Generar una propuesta
+no autoriza ejecutar el código.
 
-Revisión documental: 5 de noviembre de 2026. Base: `main`, `65675e2` (PR #31).
 La [arquitectura de revisión 2](historico/03-arquitectura-revision2.md) se conserva
-como registro histórico. La revisión Git no identifica por sí sola la versión
-que Railway tiene desplegada.
+como histórico. La revisión de Git no acredita por sí sola qué versión está activa:
+se contrasta el enlace SHA del despliegue Railway y el estado successful.
 
 ## Contexto — C4 nivel 1
 
@@ -96,32 +93,27 @@ para utilizar rutas relativas. Agent Lab está en `/agente/demo`.
 ```mermaid
 sequenceDiagram
     actor U as Usuario
-    participant UI as React
-    participant API as FastAPI
+    participant UI as React y FastAPI
     participant A as Agente
-    participant T as Ruff/Bandit y AST
-    participant R as ChromaDB
+    participant T as Herramientas y ChromaDB
     participant G as Gemini
     U->>UI: Código o .py, modo API
-    UI->>API: POST /api/v1/agente/analizar
-    API->>API: Validar entrada y aplicar controles
-    API->>A: Solicitud validada
-    A->>T: Estático una vez y AST inicial
-    T-->>A: Resultados y estados reales
-    loop Hasta dos inspecciones adicionales o finalizar antes
-        A->>G: Elegir herramienta permitida
-        G-->>A: Decisión estructurada
-        A->>T: Inspección si corresponde
-        T-->>A: Evidencia acotada
+    UI->>A: Entrada validada y presupuesto
+    A->>T: Ruff/Bandit y AST inicial
+    T-->>A: Evidencia y estados
+    loop Hasta el límite solicitado, máximo cuatro pasos
+        A->>G: Decidir con resultados anteriores
+        G-->>A: Herramienta tipada o finalizar
+        A->>T: Inspección o búsqueda permitida
+        T-->>A: Resultado acotado y trazable
     end
-    A->>R: Consultas por categorías
-    R-->>A: Hasta seis fuentes únicas
-    A->>G: Síntesis con código, evidencia y contexto
+    A->>T: Conservar fuentes base y añadir elegidas
+    T-->>A: Hasta seis fuentes únicas
+    A->>G: Síntesis con código y evidencia
     G-->>A: Informe estructurado
-    A->>A: Validar citas, fragmento y ubicación
-    A-->>API: Informe, estático y traza
-    API-->>UI: Respuesta tipada
-    UI-->>U: Paneles separados y exportación
+    A->>A: Validar citas, ubicaciones y herencia
+    A-->>UI: Informe, estático y traza
+    UI-->>U: Hallazgos, fuentes y exportación
 ```
 
 El diagrama describe el recorrido exitoso. Un fallo del proveedor puede conservar

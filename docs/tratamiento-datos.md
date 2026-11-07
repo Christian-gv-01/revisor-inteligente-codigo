@@ -1,6 +1,6 @@
 # Aviso de IA, tratamiento de datos y limitaciones
 
-Descripción técnica actualizada el 7 de noviembre de 2026, base `8e66b2c`.
+Descripción técnica actualizada el 7 de noviembre de 2026, flujos públicos verificados en `c522c24` y contador corregido en `0a6707b`.
 No constituye una certificación legal ni atribuye al proveedor condiciones de
 retención que el equipo no haya verificado.
 

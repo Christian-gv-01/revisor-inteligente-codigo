@@ -22,7 +22,7 @@ ZIP/GitHub mantienen revisión directa por archivo, con presupuesto previo cuand
 la función está habilitada. No tienen el bucle v2 de un único archivo. Demo de React
 usa ejemplos simulados. El laboratorio `/agente/demo` es una pantalla independiente
 con modos Gemini y AST local; no debe confundirse con Demo de React. Su acceso
-visible se incorpora a este candidato desde el [PR #50](https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/50).
+visible está integrado desde el [PR #50](https://github.com/Christian-gv-01/revisor-inteligente-codigo/pull/50).
 No hace falta incrustarlo para conectar el agente al análisis principal.
 
 ## Herramientas y controles obligatorios
@@ -110,7 +110,7 @@ de Bandit no se atribuye a Gemini ni representa una probabilidad calibrada.
 Véase la [política estática](10-analisis-estatico.md) y su
 [validación conjunta](31-validacion-conjunta-pr46-pr47.md).
 
-El candidato que incorpora el PR #54 añade la [política de severidad derivada](35-severidad-derivada-herencia.md):
+El PR #55 integró y verificó la [política de severidad derivada](35-severidad-derivada-herencia.md):
 Bandit alta × confianza alta deriva crítica conservando el original. El hallazgo
 contextual debe citar IDs estáticos ofrecidos y coincidir con su línea validada.
 Compartir ventana no autoriza herencia. Se conserva la severidad del modelo y
@@ -161,11 +161,13 @@ No se ejecuta código ni se sobrescriben originales. Caducidad, idempotencia y
 conflictos se detallan en [presupuesto](28-presupuesto-proyectos.md) y
 [confirmación de correcciones](23-integracion-confirmacion-qa.md).
 
-En la revisión 8e66b2c el presupuesto público seguía desactivado. El candidato
-de cierre lo activa conjuntamente en Docker y requiere verificar el despliegue.
-La prueba de interfaz usa el fixture local existente,
-con configuración temporal en el proceso de pruebas y proveedores simulados.
-No constituye activación del servicio publicado.
+En 8e66b2c el presupuesto público seguía desactivado. Desde c522c24 se
+comprobó activo: preparación, rechazo sin Gemini, aprobación y copia corregida
+con hashes e idempotencia. El PR #57 conserva además el consumo y los límites
+entre presupuestos anidados. Su aprobación pública registró dos intentos fallidos
+y estado parcial; repetirla consumió cero intentos nuevos. Ver
+[evidencia pública](evidencias/semana-4/postmerge-c522c24-20261107/README.md).
+Las pruebas de navegador simuladas y las reales se mantienen separadas.
 
 ## Evaluación y evidencia verificable
 
@@ -177,8 +179,11 @@ No constituye activación del servicio publicado.
 | [Evaluación histórica PR #37](24-validacion-real-postmerge.md) | Corrida real del flujo directo en `caecd71` | Ventaja del agente v2 respecto al flujo directo |
 | [Comparador de rutas](../eval/README.md) | Método sobre los mismos veinte casos, conservando errores/parciales | Resultados por la mera existencia del evaluador |
 
-Christian coordina la comparación final con Gemini real. Hasta revisar sus
-resultados no se afirma que el agente mejore precisión, recall o latencia.
+La comparación real está registrada en [docs/18](18-comparacion-semanas-3-4.md):
+c522c24 completó 17/20 informes directos y 14/20 del agente. Hubo 13 pares
+completos comunes, con F1 1,0 por ruta en ese subconjunto, conservando 3/6
+parciales. El A/B obtuvo dos cambios en cinco pares válidos y uno incompleto.
+El agente no demostró mayor precisión, y aumentó latencia e intentos.
 Identificar commit, dataset/hash, corpus, modelo, configuración, rutas, reintentos,
 errores y denominadores. Recuperación documental y detección son métricas
 diferentes. Las pruebas específicas están incluidas en los totales, no se suman nuevamente.
@@ -236,8 +241,10 @@ y commit sin trasladar conteos históricos a una ejecución nueva.
 
 La corrida real de 8e66b2c detectó que reutilizar exclusivamente las fuentes de
 `buscar_referencia` podía perder una referencia pertinente que sí recuperaba el
-flujo base del código. El candidato de cierre reserva las fuentes base y añade
+flujo base del código. El PR #56 reserva las fuentes base y añade
 las elegidas por el planificador, deduplicadas y con máximo seis. La herramienta
 sigue influyendo en la síntesis y conserva su traza. No se alteran el dataset ni
-las etiquetas. La corrida anterior se conserva; el ajuste requiere su propia
-evaluación sobre la revisión desplegada.
+las etiquetas. La corrida anterior se conserva y la posterior c522c24 tiene su
+propio JSON, parciales y denominadores. No se confunden sus subconjuntos completos
+ni se atribuye causalidad a la variación de F1. La huella del índice se verificó
+durante y después, manteniendo explícita la falta de observación inicial.
