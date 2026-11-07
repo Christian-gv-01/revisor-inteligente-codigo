@@ -1,0 +1,14 @@
+
+> frontend@0.0.0 test
+> vitest run --reporter=dot
+
+
+ RUN  v5.0.5 C:/Users/alexm/Desktop/TITULACION/codeguard-agente-v2-ronald/frontend
+
+-------····························································-----------------········································································
+
+ Test Files  10 passed | 2 skipped (12)
+      Tests  132 passed | 24 skipped (156)
+   Start at  18:29:32
+   Duration  1.85s (transform 66%, import 23%, tests 8%, worker 2%)
+

@@ -398,7 +398,7 @@ export function HomePage() {
                           servidor: "Error del servidor",
                           conexion: "Error de conexión",
                           contrato: "Respuesta no válida",
-                          pendiente: "Integración pendiente",
+                          pendiente: "Solicitud no completada",
                         }[error.kind]
                       }
                     </strong>

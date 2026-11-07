@@ -1,0 +1,32 @@
+{
+  "proveedor": "simulado",
+  "backend": "real",
+  "rag": "real",
+  "analisis_estatico": "real",
+  "casos": [
+    {
+      "caso": "Herramientas, argumentos, resultados y propagación real a decisión/síntesis",
+      "aprobado": true
+    },
+    {
+      "caso": "Traza legible sin desbordamiento móvil",
+      "aprobado": true
+    },
+    {
+      "caso": "Finalización anticipada: un paso, una decisión y una síntesis",
+      "aprobado": true
+    },
+    {
+      "caso": "Repetición exacta detiene inspecciones sin consumir otro paso",
+      "aprobado": true
+    },
+    {
+      "caso": "Error contextual conserva decisión y respaldo local, sin resultado inventado",
+      "aprobado": true
+    },
+    {
+      "caso": "Sin errores del navegador ni solicitudes externas",
+      "aprobado": true
+    }
+  ]
+}

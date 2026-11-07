@@ -1,0 +1,46 @@
+{
+  "fecha_local": "2026-11-06",
+  "zona": "America/Bogota",
+  "responsable": "Ronald Yépez",
+  "base_equipo": "9c97ca1c8797bad5bdfdf227dba119b7839d32c7",
+  "revision_codigo": "ecfa1a6219086132a60d3d6e5707c794e99521c6",
+  "procedencia": "Las pruebas se ejecutaron antes del commit con los mismos bytes de código y runners, contrastados después con Git normalizado LF. Los documentos se editaron posteriormente.",
+  "frontend": {
+    "aprobadas": 132,
+    "omitidas_http": 24,
+    "lint": "aprobado",
+    "build": "aprobado",
+    "advertencia": "bundle > 500 kB"
+  },
+  "navegador": {
+    "agente_v2": 6,
+    "presupuesto": 9,
+    "motor": "Edge headless",
+    "gemini": "simulado",
+    "github": "simulado",
+    "backend": "FastAPI real",
+    "sqlite": "real temporal",
+    "rag": "real local"
+  },
+  "codigo_sha256_lf": {
+    "frontend/src/pages/HomePage.tsx": "9f05e52c05e443c3d03bfb4872a00b873666b90ec65d8b49bfe3cba6b5993704",
+    "frontend/tests/project-budget-browser.mjs": "0a12276ef1789ae61f50c9b6e2b0a36c801162c22893cc049043c96e1bf82840",
+    "frontend/tests/agent-v2-browser.mjs": "fd98b7a58438849dcfd0b327b2660e30ce96d373cd0775c14107e0a5db73637d",
+    "qa/run_agent_v2_browser.py": "4ee293b0cef7c6744555c8cd54ef66030ba79111b5085a8ce7ccec54669c0d9d",
+    "qa/run_project_budget_browser.py": "c55428c603f080caed7d0d4c56927980bc9113b100d0eaec54750e0a9d7f20d8"
+  },
+  "archivos_sha256": {
+    "navegador-agente-v2.json": "9deb54f0fc4e3bb24657abb8c9e7fd1930e9e6d185f1102267b8feaa7d0344b8",
+    "agente-v2-escritorio.png": "75081533a2d53bfaba5b6e63a80c9e8bda3b7f88e67221705065a2fdbb5fc257",
+    "agente-v2-movil.png": "6cece8c8be3ce039052b13f1a6fb17fd89b1029fee09b6daf8e6fb6413c7de03",
+    "navegador-presupuesto.json": "dbf824eca83a2b83a220cd52d7ece8089884233f32632a4b6757a59266159855",
+    "presupuesto-escritorio.png": "f1c82158558cf1719e39359c49ab2f23cb2936b1aefc9fa345a2ffd305af2905",
+    "presupuesto-movil.png": "9952c0ce0f56522279ffa4eeecad1d42a64c555341788977b278cad3a963c2a9",
+    "frontend-tests.txt": "f564668af5f344670781b79e8cb7ce589ce6ca4802c7ab118ab97672895c8b67",
+    "frontend-build.txt": "62506573b111b3871b6d184461ca7a14f9949910ffd528b65d19ab144706f810"
+  },
+  "flags_persistentes_modificados": false,
+  "llamadas_gemini_reales": 0,
+  "produccion_verificada": false,
+  "limite": "No repite suite backend ni comparación real de veinte casos. El runner activa el presupuesto únicamente en procesos fixture aislados."
+}

@@ -1,0 +1,67 @@
+{
+  "base": "384ffafba3b10886751260c15a944e2b24f110ab",
+  "inicio_utc": "2026-11-07T00:02:20.562725+00:00",
+  "tipo": "checkout limpio en equipo existente; venv y node_modules nuevos",
+  "python": "3.12.14",
+  "node": "24.17.0",
+  "requisitos_readme": {
+    "python": "3.13",
+    "node": "22"
+  },
+  "caches": "pip/npm/modelo de embeddings preexistentes; no vaciadas",
+  "gemini_real": false,
+  "pasos": [
+    {
+      "paso": "01-checkout",
+      "comando": "git worktree add --detach C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf 384ffafba3b10886751260c15a944e2b24f110ab",
+      "directorio": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-agente-v2-ronald",
+      "segundos": 1.081,
+      "exit_code": 0
+    },
+    {
+      "paso": "02-venv",
+      "comando": "C:\\Users\\alexm\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe -m venv .venv",
+      "directorio": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf",
+      "segundos": 14.583,
+      "exit_code": 0
+    },
+    {
+      "paso": "03-backend",
+      "comando": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf\\.venv\\Scripts\\python.exe -m pip install -r backend/requirements.txt",
+      "directorio": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf",
+      "segundos": 257.225,
+      "exit_code": 0
+    },
+    {
+      "paso": "04-frontend",
+      "comando": "cmd.exe /d /c npm ci --no-audit --no-fund",
+      "directorio": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf\\frontend",
+      "segundos": 18.625,
+      "exit_code": 0
+    },
+    {
+      "paso": "05-build",
+      "comando": "cmd.exe /d /c npm run build",
+      "directorio": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf\\frontend",
+      "segundos": 7.764,
+      "exit_code": 0
+    },
+    {
+      "paso": "06-ingesta",
+      "comando": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf\\.venv\\Scripts\\python.exe scripts/ingest.py",
+      "directorio": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf",
+      "segundos": 9.36,
+      "exit_code": 0
+    },
+    {
+      "paso": "07-pip-check",
+      "comando": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf\\.venv\\Scripts\\python.exe -m pip check",
+      "directorio": "C:\\Users\\alexm\\Desktop\\TITULACION\\codeguard-instalacion-384ffaf",
+      "segundos": 4.724,
+      "exit_code": 0
+    }
+  ],
+  "duracion_segundos": 313.656,
+  "fin_preparacion_utc": "2026-11-07T00:07:34.218294+00:00",
+  "estado": "dependencias_build_indice_preparados; smoke pendiente"
+}

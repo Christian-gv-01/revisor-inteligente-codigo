@@ -1,6 +1,9 @@
 # Presupuesto y aprobación de análisis ZIP/GitHub (candidato v1)
 
-Estado: candidato de revisión, desactivado por defecto. No acredita activación pública ni cierre de evaluación académica. Base: `605d142ff8f643d755689e257c649e0a9e79a8ea`.
+Estado: integrado mediante PR #45 en `9c97ca1c8797bad5bdfdf227dba119b7839d32c7`,
+desactivado por defecto. No acredita activación pública ni cierre académico.
+Base inicial: `605d142ff8f643d755689e257c649e0a9e79a8ea`.
+Véase la [revisión frontend y trazabilidad](29-revision-frontend-agente-presupuesto.md).
 
 ## Finalidad
 
@@ -71,6 +74,11 @@ Backend activo: proyectos válidos enviados a rutas anteriores reciben 428 antes
 - Navegador: desde raíz con dependencias y corpus ingerido, `python qa/run_project_budget_browser.py --output tmp/http-presupuesto`. Requiere Playwright aislado y `PLAYWRIGHT_MODULE_PATH` a su `index.mjs`, más Chromium. Gemini y GitHub simulados; FastAPI, SQLite, RAG y Ruff/Bandit reales.
 - CI ejecuta el navegador y adjunta JSON, capturas y logs en el artefacto de integración. Comprobar resultados antes de declarar aprobada la integración visual. No se adjuntan bases SQLite ni ZIP temporales.
 
-Validación local inicial: 383 backend y 100 frontend aprobadas; 24 HTTP frontend omitidas sin servidor configurado. Otras 24 pruebas QA/evaluador aprobaron. Lint/build correctos, con advertencia previa de tamaño del bundle. Chromium local falló al descargar un archivo truncado; la validación interactiva está pendiente de CI. Ninguna prueba es evaluación de Gemini real.
+Registro histórico del candidato inicial: 383 backend y 100 frontend aprobadas;
+24 HTTP omitidas sin servidor. Otras 24 QA/evaluador aprobaron. Lint/build correctos.
+Chromium no estuvo disponible en aquella corrida. La posterior
+[evidencia integrada](evidencias/semana-4/integracion-agente-presupuesto-20261106/README.md)
+registra nueve escenarios de navegador del presupuesto aprobados. Ninguna de
+estas pruebas evalúa Gemini real. Persiste la advertencia de tamaño del bundle.
 
 Compatibilidad HTTP local adicional: 24/24 escenarios con análisis estático aprobados, RAG y Ruff/Bandit reales; proveedor Gemini y API GitHub simulados. Se conservan informes y logs en `tmp/http-presupuesto-compat-estatico-2/` (temporales locales, no producción).
