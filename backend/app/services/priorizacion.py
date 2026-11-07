@@ -5,14 +5,40 @@ import unicodedata
 from collections.abc import Sequence
 
 from app.models.analisis import Hallazgo
-from app.config.priorizacion import ORDEN_SEVERIDAD, ORDEN_CONFIANZA, CATEGORIAS_SEGURIDAD, CATEGORIAS_CALIDAD
+from app.config.priorizacion import (
+    FACTORES_CONFIANZA,
+    PESOS_SEVERIDAD,
+    ORDEN_SEVERIDAD,
+    CATEGORIAS_SEGURIDAD,
+    CATEGORIAS_CALIDAD,
+)
 
 
 # Criterio principal: severidad.
+# Criterio secundario: confianza conocida.
+# Criterio terciario: categoría normalizada.
+# Los empates restantes conservan el orden original.
 
+def calcular_puntuacion(
+    severidad: object,
+    confianza: object,
+) -> float | None:
+    """
+    Calcula peso de severidad por factor de confianza.
 
-# Criterio secundario: categorías relacionadas con seguridad.
+    Devuelve None si falta alguno de los valores o no está reconocido.
+    Los factores son ponderaciones operativas del proyecto, no probabilidades.
+    """
+    if not isinstance(severidad, str) or not isinstance(confianza, str):
+        return None
 
+    peso = PESOS_SEVERIDAD.get(severidad)
+    factor = FACTORES_CONFIANZA.get(confianza)
+
+    if peso is None or factor is None:
+        return None
+
+    return peso * factor
 
 
 def normalizar_categoria(categoria: object) -> str:
@@ -66,11 +92,13 @@ def priorizar_hallazgos(
     Ordena los hallazgos mediante criterios deterministas.
 
     1. Severidad: crítica, alta, media y baja.
-    2. Categoría: seguridad antes que calidad.
-    3. Conserva el orden original en los empates.
+    2. Confianza conocida: alta, media y baja; la ausente queda detrás.
+    3. Categoría: seguridad, desconocida y calidad.
+    4. Conserva el orden original en los empates restantes.
 
-    No modifica la lista original.
-    No reduce la severidad de ningún hallazgo.
+    La puntuación ponderada equivale al orden lexicográfico para las doce
+    combinaciones conocidas. Se conserva el orden lexicográfico actual.
+    No modifica la severidad original ni la lista recibida.
     """
 
     def clave(hallazgo: Hallazgo) -> tuple[int, int, int, int]:
@@ -84,16 +112,12 @@ def priorizar_hallazgos(
             ) from error
 
         confianza = getattr(hallazgo, "confianza", None)
-
-        try:
-            orden_confianza = ORDEN_CONFIANZA[confianza]
-        except (KeyError, TypeError):
-            orden_confianza = None
+        puntuacion = calcular_puntuacion(severidad, confianza)
 
         return (
             orden,
-            1 if orden_confianza is None else 0,
-            orden_confianza if orden_confianza is not None else 0,
+            1 if puntuacion is None else 0,
+            -(puntuacion if puntuacion is not None else 0.0),
             prioridad_categoria(hallazgo),
         )
 

@@ -116,3 +116,32 @@ las evidencias y el alcance constan en [el cierre QA](12-cierre-qa-entrega4.md).
   compartida.
 - Ejecutar tests unitarios, tests HTTP y pruebas smoke reales antes de fusionar
   esta implementación a la rama que despliega Railway.
+
+## Política de priorización: severidad × confianza
+
+Esta política reemplaza las descripciones anteriores que presentaban la
+categoría como segundo criterio.
+
+Los pesos y factores se centralizan en `app/config/priorizacion.py`:
+
+- Severidad: crítica 8, alta 4, media 2 y baja 1.
+- Confianza: alta 1.0, media 0.8 y baja 0.6.
+
+`calcular_puntuacion(severidad, confianza)` devuelve el producto de ambos
+valores cuando los dos están reconocidos. Si falta alguno o no está
+reconocido, devuelve `None`; nunca asigna cero a una confianza ausente.
+Son ponderaciones operativas del proyecto, no probabilidades calibradas.
+
+El orden de presentación conserva la regla lexicográfica existente:
+severidad dominante; confianza conocida (alta, media y baja), dejando la
+confianza ausente detrás dentro de la misma severidad; categoría como tercer
+criterio (seguridad, desconocida y calidad); y orden original estable para
+los empates restantes. La puntuación descendente y el orden lexicográfico
+son equivalentes para las doce combinaciones conocidas.
+
+Bandit aporta confianza exclusivamente mediante `issue_confidence`.
+Ruff y el informe de IA no proporcionan confianza en sus contratos actuales,
+por lo que permanecen sin puntuación cuando ese dato no existe. No se inventa
+ni se deduce confianza a partir de la severidad, no se añade un campo
+obligatorio al contrato de IA y no se modifica la severidad original.
+

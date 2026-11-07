@@ -55,6 +55,7 @@ def test_normaliza_hallazgos_separados(monkeypatch):
     assert resultado.hallazgos[0].severidad == "alta"
     assert resultado.hallazgos[0].confianza == "alta"
     assert resultado.hallazgos[1].tipo == "calidad"
+    assert resultado.hallazgos[1].confianza is None
     assert [x.hallazgos for x in resultado.herramientas] == [1, 1]
     assert len(llamadas) == 2
 

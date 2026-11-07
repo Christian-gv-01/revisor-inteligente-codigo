@@ -190,3 +190,78 @@ def test_desconocidos_conservan_categoria_y_orden_estable():
     assert [h.titulo for h in resultado] == [
         "SEGURIDAD", "CALIDAD 1", "CALIDAD 2"
     ]
+
+
+
+def test_puntuacion_y_equivalencia_lexicografica_doce_combinaciones():
+    import math
+
+    from app.config.priorizacion import (
+        FACTORES_CONFIANZA,
+        ORDEN_CONFIANZA,
+        ORDEN_SEVERIDAD,
+        PESOS_SEVERIDAD,
+    )
+    from app.services.priorizacion import calcular_puntuacion
+
+    esperadas = {
+        ("critica", "alta"): 8.0,
+        ("critica", "media"): 6.4,
+        ("critica", "baja"): 4.8,
+        ("alta", "alta"): 4.0,
+        ("alta", "media"): 3.2,
+        ("alta", "baja"): 2.4,
+        ("media", "alta"): 2.0,
+        ("media", "media"): 1.6,
+        ("media", "baja"): 1.2,
+        ("baja", "alta"): 1.0,
+        ("baja", "media"): 0.8,
+        ("baja", "baja"): 0.6,
+    }
+
+    combinaciones = [
+        (severidad, confianza)
+        for severidad in PESOS_SEVERIDAD
+        for confianza in FACTORES_CONFIANZA
+    ]
+
+    assert len(combinaciones) == 12
+    for combinacion in combinaciones:
+        puntuacion = calcular_puntuacion(*combinacion)
+        assert puntuacion is not None
+        assert math.isclose(puntuacion, esperadas[combinacion], rel_tol=1e-9)
+
+    por_puntuacion = sorted(
+        combinaciones,
+        key=lambda valores: calcular_puntuacion(*valores),
+        reverse=True,
+    )
+    por_orden_lexicografico = sorted(
+        combinaciones,
+        key=lambda valores: (
+            ORDEN_SEVERIDAD[valores[0]],
+            ORDEN_CONFIANZA[valores[1]],
+        ),
+    )
+    assert por_puntuacion == por_orden_lexicografico
+
+
+def test_puntuacion_devuelve_none_para_valores_ausentes_o_desconocidos():
+    from app.services.priorizacion import calcular_puntuacion
+
+    casos = [
+        ("alta", None),
+        ("alta", "desconocida"),
+        ("desconocida", "alta"),
+        (None, "alta"),
+    ]
+    for severidad, confianza in casos:
+        assert calcular_puntuacion(severidad, confianza) is None
+
+
+def test_informe_ia_sin_confianza_permanece_sin_puntuacion():
+    from app.services.priorizacion import calcular_puntuacion
+
+    # El contrato actual del informe de IA no aporta confianza.
+    assert calcular_puntuacion("alta", None) is None
+
