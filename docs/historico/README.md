@@ -1,15 +1,11 @@
-# Documentos históricos
+# Archivo histórico de CODEGUARD
 
-Copias preservadas durante la consolidación del 5 de noviembre de 2026, tomadas
-sin cambios del contenido de `main` en `65675e2`:
+Este directorio conserva versiones anteriores para **trazabilidad**, no para sustituir la documentación o el PDF vigentes.
 
 - [Arquitectura de revisión 2](03-arquitectura-revision2.md).
 - [Decisiones de revisión 2](09-decisiones-revision2.md).
+- [Presentaciones anteriores](presentacion/): cinco PDFs y cinco PowerPoint, archivados con el mismo contenido binario original. **Ninguno es el PDF oficial de entrega**.
 
-Sus fechas, estados propuestos y referencias a componentes pendientes describen
-esa revisión. No son la arquitectura actual ni actas de aprobación. Las rutas
-escritas como texto dentro de estos originales se interpretan desde la raíz del
-repositorio, como en su ubicación anterior.
+El material antiguo conserva sus fechas, denominadores, estados y límites de evidencia. No es una nueva ejecución de pruebas ni un acta de aprobación.
 
-Documentos vigentes: [arquitectura](../03-arquitectura.md) y
-[decisiones](../09-decisiones.md).
+Documentación vigente: [arquitectura](../03-arquitectura.md), [decisiones](../09-decisiones.md), [presentación oficial](../presentacion/README.md) y [cierre](../37-cierre-verificado.md).

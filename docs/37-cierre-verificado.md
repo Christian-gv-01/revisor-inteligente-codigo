@@ -85,13 +85,12 @@ La huella se observó durante y al final, no al inicio. No afirmar superioridad.
 
 1. Instalación por otro integrante: la automatizada de 5 min 45 s usó herramientas
    y cachés existentes. No certifica el objetivo humano de diez minutos.
-2. Ensayo oral y reparto: el equipo comunicó **10 minutos totales cronometrados** el 7 de noviembre, frente a los 12 previstos. No se dispone de tiempos individuales ni de observaciones docentes; el PDF de 12 diapositivas aportado para el cierre debe conciliarse con el PDF del repositorio. [Registro](evidencias/semana-4/registro-sustentacion-20261107.md).
+2. Sustentación: **10 minutos totales cronometrados**, frente a 12 previstos. El PDF final de 12 páginas ya está versionado como único vigente. La nota escrita del docente tiene siete observaciones con acciones y commits; no constan tiempos individuales ni comentarios orales adicionales del tribunal. [Registro](evidencias/semana-4/registro-sustentacion-20261107.md).
 3. **Semana 1:** se recuperaron [ADR y primer historial Git](evidencias/semana-1/README.md), y el 8 de noviembre se incorporaron cuatro capturas técnicas y [levantamiento complementario](levantamiento.md) de cinco cuestionarios (fechados 7 de noviembre, 90 respuestas, cuatro conclusiones). La primera propuesta localizada es del 4 de noviembre. No se acreditan capturas originales de PR/commits, ni levantamiento realizado en Semana 1, ni aprobación formal del ADR. Autorizaciones de datos y aceptación de riesgos requieren comprobación humana.
 4. La clasificación técnica del JWT histórico como fixture está en docs/18-ci-main-docker.
    No se probó como credencial ni se acredita revocación. Confirmación del titular,
    si la exige el docente, sigue siendo una declaración humana.
-5. La entrega del ZIP y el registro de correcciones en el portal requieren revisión
-   del paquete exacto y envío del responsable. Un ZIP generado no acredita envío.
+5. El workflow de `main` sobre `75644cf` pasó 8/8 verificaciones y generó un paquete candidato de 11.425.834 bytes (artefacto de GitHub Actions). La limpieza documental posterior necesita un **nuevo ZIP generado desde el SHA definitivo**. No consta aún el envío al portal ni su comprobante. Un ZIP generado no acredita envío.
 
 ## Criterio de entrega
 

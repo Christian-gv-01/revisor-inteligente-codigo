@@ -1,23 +1,14 @@
-# Presentación definitiva para entrega — CODEGUARD
+# Presentación oficial de CODEGUARD
 
-**Estado:** PDF final pendiente de incorporación por el equipo. Este directorio **no debe incluir PDF alternativos**.
+**Archivo vigente:** [CODEGUARD-SEMINARIO-12 diapos.pdf](CODEGUARD-SEMINARIO-12%20diapos.pdf)  
+**Diapositivas:** 12 · **Tamaño:** 476.707 bytes  
+**SHA-256:** `bb52e1a8f57f4b29a2aa0f66855a097d6a9f487a391fb45189bb202a737aa8a8`
 
-## Archivo exigido para habilitar el ZIP
+**Duración comunicada por el equipo:** 10 minutos cronometrados, frente a 12 minutos planificados. La medición total no permite atribuir duraciones individuales ni confirmar qué archivo se proyectó efectivamente.
 
-- Archivo: `docs/presentacion/CODEGUARD-SEMINARIO-12 diapos.pdf`.
-- Origen: PDF de 12 diapositivas aportado por Christian al cierre de la sustentación.
-- Tamaño comprobado: **476.707 bytes**.
-- SHA-256 esperado: `bb52e1a8f57f4b29a2aa0f66855a097d6a9f487a391fb45189bb202a737aa8a8`.
-- Cronometraje total comunicado: **10 minutos** (600 s); guion planificado: 12 minutos (720 s). No se conocen tiempos individuales.
+En esta carpeta se conserva **solo el PDF vigente**. Los cinco PDFs y cinco PowerPoint anteriores permanecen en [el archivo histórico del repositorio](../historico/presentacion/), sin considerarse versiones activas. El paquete de entrega debe generarse desde el SHA definitivo de Git.
 
-El script [`scripts/empaquetar_entrega.py`](../../scripts/empaquetar_entrega.py) bloqueará el empaquetado mientras no exista **exactamente ese PDF, con ese hash**, para evitar una entrega con diapositivas obsoletas o varias versiones vigentes.
+- [Cronometraje y retroalimentación docente](../evidencias/semana-4/registro-sustentacion-20261107.md).
+- [Guion histórico de 12 minutos](guion-12-minutos.md).
 
-Para incorporar el PDF, copiar el archivo a la ruta indicada en la rama de cierre, hacer commit y push, y verificar con `sha256sum` o `Get-FileHash -Algorithm SHA256` antes de generar el ZIP.
-
-## Versiones anteriores
-
-Los cinco PDFs previos se conservan exclusivamente en [histórico documental](../historico/presentacion/) con sus nombres originales. Los PPTX anteriores permanecen aquí como respaldo editable, pero **ningún PDF histórico se considera vigente**.
-
-[Registro de sustentación y observaciones](../evidencias/semana-4/registro-sustentacion-20261107.md) · [Guion previo](guion-12-minutos.md) · [Ensayo y cronometraje](ensayo-cronometrado.md).
-
-La aceptación del equipo, instalación humana independiente y la carga en el portal requieren evidencia específica. Una exportación o ZIP por sí solos no acreditan envío.
+**Importante:** que el PDF esté versionado y que GitHub Actions construya un ZIP no demuestra que se haya subido al portal académico.

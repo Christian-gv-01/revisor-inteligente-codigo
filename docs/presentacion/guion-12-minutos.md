@@ -1,7 +1,6 @@
-# Guion de doce minutos: cierre técnico y resultados reales
+# Guion planificado de doce minutos — conservar como referencia histórica
 
-Preparación del 7 de noviembre de 2026. Doce diapositivas, 720 segundos
-planificados, sin acreditar ensayo ni reparto. Las dos corridas reales usan `8e66b2c` y `c522c24`.
+Preparación del 7 de noviembre de 2026. Doce diapositivas y 720 segundos **planificados**; el equipo comunicó después **600 segundos cronometrados (10 minutos)**. El reparto por expositor no fue medido. El [PDF oficial](README.md) y las [observaciones escritas del docente](../evidencias/semana-4/registro-sustentacion-20261107.md) son las referencias vigentes. Las dos corridas reales usan `8e66b2c` y `c522c24`.
 El ajuste de consumo posterior está en PR #57 y no cambia los prompts del análisis.
 
 Integrantes confirmados: Ronald Yépez, Klever Andres Alban Cruz (Andy) y Christian

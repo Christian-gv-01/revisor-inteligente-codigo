@@ -122,18 +122,11 @@ El comparador exige el mismo objetivo y el conjunto completo de IDs. Solo inform
 
 La URL pública y una matriz 26/26 del **5 de noviembre** sí están evidenciadas. La continuidad operacional de las citas y la huella del índice se documentaron posteriormente con límites específicos: no equivalen a auditoría de integridad de todo el volumen ni a prueba de backup/restauración. La matriz completa de 26 casos **no consta repetida contra `3214960`**; no se debe atribuir a esa revisión hasta ejecutarla de nuevo.
 
-## Resultados automatizados actuales
+## Evidencia de suites automatizadas y alcance
 
-> Los resultados siguientes corresponden a la base previa a Ruff/Bandit. La actualización integrada, los hallazgos y bloqueos están en `docs/12-cierre-qa-entrega4.md`.
+Los totales antiguos de 115 pruebas backend, 58 frontend y 9 HTTP son de una etapa **previa** a Ruff/Bandit; se conservan en el historial y en el [cierre QA](12-cierre-qa-entrega4.md), pero **no representan la revisión actual**.
 
-- Backend: 115 pruebas aprobadas, 0 fallidas.
-- Frontend habitual: 58 aprobadas, 9 integraciones HTTP omitidas de forma intencional, 0 fallidas.
-- Integración HTTP separada: 9/9 aprobadas con FastAPI y ChromaDB reales y proveedor simulado.
-- ESLint: sin errores.
-- Build: correcto, con advertencia no bloqueante por tamaño del chunk principal.
-- Auditoría de secretos: aprobada, 0 patrones de secreto detectados.
-- Sintaxis de Compose: válida.
-- Contenedor y reinicio local: pendientes porque Docker Desktop Engine no estaba iniciado.
+En la revisión `75644cf` de 8 de noviembre, GitHub Actions aprobó **8/8 comprobaciones** (backend, frontend, integración, Gitleaks, imagen, captura de evidencias y empaquetado). No deben sumarse las suites ya incluidas ni interpretarse como precisión de Gemini real. [Cierre de pruebas y límites](37-cierre-verificado.md).
 
 ## Aclaración final de P25 (8 de noviembre de 2026)
 
