@@ -57,7 +57,7 @@ La justificación para conservar el agente como opción es educativa y de trazab
 
 ## Registro humano de sustentación y ensayo
 
-Se abrió [registro de sustentación del 7 de noviembre](evidencias/semana-4/registro-sustentacion-20261107.md) para consignar únicamente observaciones recibidas y tiempos **realmente medidos**. El plan de diez diapositivas/720 segundos del equipo no acredita ejecución oral ni coincide todavía con el PDF de doce diapositivas versionado. No se llenarán campos con datos supuestos.
+Se abrió [registro de sustentación del 7 de noviembre](evidencias/semana-4/registro-sustentacion-20261107.md) para consignar únicamente observaciones recibidas y tiempos **realmente medidos**. El equipo comunicó una **duración total cronometrada de 600 segundos (10 minutos)** frente a los 720 segundos planificados. El archivo final aportado para el cierre contiene **12 diapositivas**; la distribución anterior de 10 y los tiempos individuales siguen siendo planificación histórica, no una medida individual. Faltan observaciones académicas y confirmación de la versión efectivamente presentada.
 
 ## Pendientes de aceptación formal
 
