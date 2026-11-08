@@ -38,22 +38,24 @@ ofrecida, citada, no ambigua y en la línea validada. El backend reconstruye la
 auditoría; no acepta que el modelo la declare. Conserva la severidad original y
 nunca la reduce. ID y línea no demuestran por sí solos pertinencia semántica.
 
-## E4-13. Ruta de análisis predeterminada — decisión documental para el cierre
+## E4-13. Ruta predeterminada del agente — justificación revisada para cierre
 
-**Recomendación técnica (7 de noviembre de 2026):** ofrecer la **ruta directa como predeterminada** y conservar el **agente v2 como alternativa visible y seleccionable** para código pegado y archivos `.py`. Esta decisión se fundamenta en la evaluación pública posterior a `c522c24`, no en una preferencia estética:
+**Revisión documental del 8 de noviembre de 2026:** se opta **provisionalmente por mantener el agente v2 como ruta predeterminada implementada para texto Python y archivos `.py`** y la ruta directa como alternativa. Esto concilia el enrutamiento efectivo de la versión integrada con la decisión que documentó Ronald en `127522e`. La recomendación previa del 7 de noviembre de adoptar la ruta directa se conserva como alternativa razonable, **no como cambio de frontend que se hubiera desplegado**.
 
-| Indicador, veinte casos por ruta | Directa | Agente v2 |
+| Resultado real, 20 solicitudes por ruta | Ruta directa | Agente v2 |
 |---|---:|---:|
-| Informes completos | 17/20 | 14/20 |
+| Informes completos | **17/20 (85 %)** | **14/20 (70 %)** |
 | Informes parciales | 3/20 | 6/20 |
-| Latencia media global | 10,34 s | 22,62 s |
-| Intentos SDK reportados | 21 | 71 |
+| Latencia media | **10,34 s** | **22,62 s** |
+| Intentos SDK reportados | **21** | **71** |
 
-En los **13 pares que se completaron en ambas rutas**, F1 fue 1,00 para ambas. Este subconjunto no permite concluir igualdad general ni una mejora del agente. Los tokens globales permanecen desconocidos. Un A/B de la primera decisión tuvo dos cambios en cinco pares comparables, lo que demuestra influencia del contexto, **no** mejora de precisión. Consultar [evaluación final y límites](evidencias/semana-4/postmerge-c522c24-20261107/README.md) y [comparación](18-comparacion-semanas-3-4.md).
+En los **13 pares con informes completos en ambas rutas**, la F1 fue **1,00** en las dos; por ser un subconjunto seleccionado no demuestra equivalencia general. Los tokens totales son **desconocidos** por metadatos incompletos. La corrida histórica de `8e66b2c` sí encontró peor F1 del agente (0,762) frente a la ruta directa (0,957) en 20 pares completos, pero usó una versión y protocolo distintos.
 
-**Alcance de esta decisión:** el código documentado en E4-05 todavía describe el agente integrado para entradas de código y `.py`; **esta sección no demuestra que se haya cambiado el comportamiento predeterminado de la interfaz**. La adopción en frontend, su prueba de regresión y la aprobación final del equipo deben verificarse antes de afirmarlo en la sustentación o el portal. Mientras eso no ocurra, comunicarla como **decisión recomendada pendiente de implementación/aceptación**, no como función ya desplegada.
+**Motivo para conservar la ruta del agente:** el alcance académico de CODEGUARD comprende inspección inicial obligatoria, selección de herramientas permitidas, contexto, referencias y trazabilidad de cada decisión. Mantenerlo visible en el recorrido principal permite demostrar y evaluar esa orquestación supervisada con resultados y límites verificables. **No es una decisión sustentada en precisión superior, latencia inferior ni ahorro de consumo**: los datos observados favorecen a la ruta directa en completitud, tiempo e intentos.
 
-La justificación para conservar el agente como opción es educativa y de trazabilidad (herramientas y decisiones auditables), sin afirmar superioridad general en la evaluación disponible.
+**Riesgo aceptado provisionalmente:** mayor probabilidad de resultado parcial y espera. La alternativa directa debe permanecer accesible y claramente identificada. No se declara mejora hasta medirla en un conjunto nuevo con configuración congelada y revisión independiente de citas. Proponer en futuros trabajos un selector explícito de ruta y considerar la directa como predeterminada si el criterio principal pasa a ser completitud y rapidez.
+
+**Estado de aprobación:** justificación técnica escrita e integración documental; no sustituye el acuerdo expreso del equipo ni evidencia un cambio de comportamiento del frontend. [Resultados y limitaciones](evidencias/semana-4/postmerge-c522c24-20261107/README.md); [comparación histórica](18-comparacion-semanas-3-4.md).
 
 ## Registro humano de sustentación y ensayo
 
