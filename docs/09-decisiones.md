@@ -45,3 +45,53 @@ envío de código al proveedor.
 - Instalación en diez minutos y comparación generativa equivalente sin evidencia final.
 
 La aceptación final de riesgos y la autorización de entrega corresponden al equipo.
+
+## Justificación de la ruta predeterminada del agente
+
+### Decisión adoptada
+
+Se mantiene provisionalmente el agente supervisado como ruta predeterminada para código pegado y archivos `.py`. La ruta directa permanece disponible como alternativa.
+
+### Resultados de la evaluación comparativa
+
+La evaluación consideró 20 casos:
+
+| Indicador | Agente supervisado | Ruta directa |
+|---|---:|---:|
+| Informes completos | 14/20 (70 %) | 17/20 (85 %) |
+| Latencia | Aproximadamente 2 veces mayor | Referencia |
+| Intentos SDK | Aproximadamente 3,4 veces más | Referencia |
+
+La ruta directa obtuvo tres informes completos adicionales, equivalentes a una diferencia de 15 puntos porcentuales.
+
+### Justificación
+
+Se conserva provisionalmente el agente como ruta predeterminada por su función de inspección contextual supervisada, recuperación de información y análisis fundamentado en evidencias.
+
+Esta decisión responde al alcance funcional de CODEGUARD, no a una superioridad de rendimiento demostrada. Los resultados comparativos muestran que la ruta directa consiguió mayor completitud y menor latencia.
+
+Cuando se prioricen rapidez y completitud, la ruta directa constituye una alternativa válida.
+
+### Limitaciones
+
+La evaluación disponible no permite concluir cuál ruta tiene mayor precisión, menor tasa de falsos positivos, mejor cobertura de vulnerabilidades o mayor validez de referencias documentales.
+
+Tampoco se dispone del total de tokens consumidos ni de la huella del índice utilizada antes de la ejecución. Por tanto, no se afirma ahorro de tokens ni reproducibilidad completa.
+
+### Validación futura
+
+Se recomienda repetir los mismos 20 casos bajo condiciones equivalentes y registrar:
+
+- Huella del índice y configuración utilizada.
+- Informes completos.
+- Latencia.
+- Tokens consumidos.
+- Intentos SDK.
+- Precisión y falsos positivos.
+- Validez de las referencias y evidencias.
+
+La decisión deberá revisarse con esos resultados y con los criterios de aceptación del equipo.
+
+### Alcance de la actualización
+
+Esta justificación es documental. No modifica el enrutamiento, la configuración ni el código fuente del agente. La ruta predeterminada efectiva continúa siendo la implementada en la versión revisada.

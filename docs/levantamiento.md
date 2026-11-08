@@ -1,142 +1,117 @@
 # Levantamiento de requisitos y preguntas del caso
 
+**Proyecto:** CODEGUARD – Revisor Inteligente de Código Python
+**Responsable del instrumento:** Ronald Yépez
+**Fecha registrada en los cuestionarios:** 7 de noviembre de 2026
+**Fuente:** cuestionario respondido entregado por el equipo (`PROYECTO CODEGUARD_PREGUNTAS_RESPUESTAS.docx`).
 
-**Responsable del instrumento:** Ronald Yépez.
-**Fecha de elaboración documental:** 7 de noviembre de 2026.
-**Fecha de referencia del ejercicio simulado:** 17 de octubre de 2026.
-**Proyecto:** CODEGUARD – Revisor Inteligente de Código Python.
-**Participantes:** cinco perfiles ficticios identificados mediante códigos anónimos.
+## 1. Objetivo
 
-**Nota metodológica:** las respuestas que aparecen a continuación son simuladas. No se atribuyen a personas reales ni se presentan como entrevistas efectivamente realizadas.
+Identificar necesidades, dificultades y expectativas de personas con distintos perfiles de desarrollo y revisión de software respecto al análisis de seguridad de código Python. Las respuestas se utilizan para contrastar el alcance actual de CODEGUARD y orientar mejoras.
 
----
+## 2. Participantes registrados
 
-## 1. Objetivo del levantamiento
+| Código | Participante | Rol o profesión | Experiencia en Python | Fecha registrada |
+|---|---|---|---:|---|
+| P01 | Luis Lozada | Desarrollador Backend | 3 años | 07/11/2026 |
+| P02 | Juan Muñoz | Desarrollador de Software Freelance | 4 años | 07/11/2026 |
+| P03 | Ángel López | Administrador de Sistemas | 1 año y medio | 07/11/2026 |
+| P04 | Alex Martínez | Ingeniero de Software Fullstack | 2 años | 07/11/2026 |
+| P05 | Joel Sánchez | Estudiante de Ingeniería de Software | 1 año | 07/11/2026 |
 
-Identificar las necesidades, expectativas y dificultades que pueden experimentar los desarrolladores y revisores al analizar código Python, especialmente en la detección de vulnerabilidades, interpretación de resultados y trazabilidad de evidencias.
+## 3. Instrumento y respuestas registradas
 
-El levantamiento sirve como referencia para organizar los requisitos funcionales y no funcionales de CODEGUARD.
+Las siguientes respuestas se transcriben del documento entregado por el equipo. Se conserva el sentido de cada respuesta y se organizan por pregunta para facilitar su comparación.
 
-## 2. Perfiles considerados en la simulación
-
-| Código | Perfil | Experiencia considerada |
-|---|---|---|
-| P01 | Desarrollador Python | Desarrollo de aplicaciones Python |
-| P02 | Estudiante de Ingeniería de Software | Programación y proyectos académicos |
-| P03 | Analista de QA | Pruebas y validación de software |
-| P04 | Desarrollador Backend | APIs y servicios con Python |
-| P05 | Revisor de código y seguridad | Revisión de calidad y vulnerabilidades |
-
-## 3. Instrumento de 18 preguntas y respuestas simuladas
-
-| ID | Pregunta | P01 | P02 | P03 | P04 | P05 |
+| ID | Pregunta | P01 – Luis Lozada | P02 – Juan Muñoz | P03 – Ángel López | P04 – Alex Martínez | P05 – Joel Sánchez |
 |---|---|---|---|---|---|---|
-| L01 | ¿Qué dificultad encuentra al revisar seguridad de Python? | Detectar vulnerabilidades complejas. | Comprender errores de seguridad. | Revisiones manuales lentas. | Identificar problemas entre archivos. | Evitar falsos positivos. |
-| L02 | ¿Quién usaría la herramienta y con qué experiencia? | Desarrolladores. | Estudiantes. | Personal QA. | Desarrolladores backend. | Revisores de código. |
-| L03 | ¿Cómo realiza hoy la revisión y cuánto tarda? | Revisión manual y herramientas. | Lectura del código. | Pruebas automatizadas. | Ruff y Bandit. | Análisis estático y manual. |
-| L04 | ¿Prefiere pegar código, cargar `.py`, ZIP o GitHub? | Todas las opciones. | Pegar código y `.py`. | ZIP. | `.py` y GitHub. | Todas las opciones. |
-| L05 | ¿Qué tamaño y cantidad de archivos necesita revisar? | Proyectos medianos. | Archivos pequeños. | Proyectos completos. | Varios archivos. | Repositorios medianos y grandes. |
-| L06 | ¿Necesita repositorios privados o varios lenguajes? | Repositorios privados. | Principalmente Python. | Varios archivos Python. | Repositorios privados. | Más lenguajes en el futuro. |
-| L07 | ¿Qué información necesita para entender un hallazgo? | Línea y solución. | Explicación sencilla. | Severidad y evidencia. | Ubicación y recomendación. | Regla y justificación. |
-| L08 | ¿Cómo comprobaría que una referencia respalda el hallazgo? | Consultando la fuente. | Revisando el enlace. | Comprobando la referencia. | Verificando la regla. | Contrastando la evidencia. |
-| L09 | ¿Qué debe ocurrir cuando no hay evidencia suficiente? | Informar la falta de evidencia. | Explicar la incertidumbre. | Mostrar resultado parcial. | No inventar vulnerabilidades. | Abstenerse de clasificar. |
-| L10 | ¿Cómo desea distinguir una regla estática de una explicación de IA? | Paneles separados. | Etiquetas diferentes. | Identificar procedencia. | Diferenciar herramientas. | Mostrar reglas y fuentes. |
-| L11 | ¿Qué espera ver cuando Gemini falla? | Conservar resultados disponibles. | Explicar el error. | Mostrar análisis parcial. | Permitir reintento. | Informar el fallo. |
-| L12 | ¿Necesita exportar resultados y en qué formato? | JSON. | JSON. | JSON y PDF. | JSON. | JSON y reportes. |
-| L13 | ¿Qué información de su código no autoriza enviar a un proveedor? | Contraseñas y claves. | Código privado. | Datos confidenciales. | Variables de entorno. | Credenciales y secretos. |
-| L14 | ¿Desea inspección de solo lectura o cambios automáticos? | Solo lectura. | Solo lectura. | Solo lectura. | Solo lectura. | Solo lectura. |
-| L15 | ¿Qué tiempo de espera considera aceptable? | Menos de un minuto. | Respuesta rápida. | Depende del proyecto. | Tiempo controlado. | Mostrar progreso y espera. |
-| L16 | ¿Necesita que las fuentes sobrevivan a un reinicio? | Sí. | Sí. | Sí. | Sí. | Sí. |
-| L17 | ¿Desde qué dispositivo y navegador usará el producto? | Computadora y Chrome. | Computadora y navegador. | Computadora y Chrome. | Computadora. | Computadora y varios navegadores. |
-| L18 | ¿Con qué ejemplos decidiría que el producto le resulta útil? | Detectar errores reales. | Comprender vulnerabilidades. | Comparar resultados. | Revisar proyectos completos. | Obtener hallazgos verificables. |
+| L01 | ¿Qué dificultad encuentras al revisar la seguridad de código Python? | Manejo incorrecto de dependencias de terceros y vulnerabilidades en paquetes desactualizados. | Falta de tiempo para auditar proyectos grandes y complejos heredados. | No conocer a fondo todas las vulnerabilidades avanzadas en scripts de automatización. | Detectar malas configuraciones en frameworks web como Flask o FastAPI. | No saber identificar cuáles son los errores o vulnerabilidades comunes en seguridad. |
+| L02 | ¿Quién consideras que utilizaría una herramienta como CODEGUARD y con qué experiencia? | Desarrolladores junior y estudiantes de Ingeniería de Software. | Programadores backend con experiencia intermedia. | Personal de soporte y desarrolladores que escriben scripts rápidos. | Desarrolladores junior y mid-level. | Estudiantes y personas que están aprendiendo a programar. |
+| L03 | ¿Cómo realizas actualmente la revisión de seguridad del código y cuánto tiempo te toma? | Revisión manual y herramientas estáticas básicas; 20–30 minutos por archivo grande. | Linters automatizados en procesos locales; un par de minutos. | Revisión manual línea por línea; más de 30 minutos. | Extensiones del editor; un par de minutos. | No realiza revisiones formales de seguridad; solo prueba que el código funcione. |
+| L04 | ¿Qué método prefieres para revisar código: pegarlo directamente, cargar un archivo `.py`, subir un ZIP o conectar GitHub? | Cargar archivo `.py` y conectar directamente con GitHub. | Conectar directamente con repositorios de GitHub. | Pegar el código directamente o subir un archivo `.py`. | Cargar archivos `.py` o subir archivos ZIP. | Pegar el código directamente en la web o subir un archivo `.py`. |
+| L05 | ¿Qué tamaño y cantidad de archivos necesitas revisar normalmente? | Scripts de unas 300 líneas, con un promedio de 5 a 10 archivos por revisión. | Repositorios completos de proyectos web medianos. | Scripts cortos de automatización, de menos de 200 líneas. | Proyectos web medianos, de 10 a 15 archivos. | Archivos académicos o scripts pequeños, de menos de 100 líneas. |
+| L06 | ¿Necesitas revisar repositorios privados o trabajar con otros lenguajes además de Python? | Sí, repositorios privados y ocasionalmente JavaScript. | Sí, repositorios privados de manera indispensable. | No, principalmente scripts sueltos en Python. | A veces repositorios privados y código web híbrido. | No, solo proyectos académicos en Python. |
+| L07 | ¿Qué información necesitas para comprender correctamente un problema de seguridad detectado? | Línea exacta, tipo de vulnerabilidad y ejemplo de solución. | Nivel de severidad y ruta del archivo vulnerable. | Explicación sencilla y en lenguaje claro de qué está fallando. | Ejemplos prácticos de código seguro frente al código vulnerable. | Explicación detallada de por qué es un error, porque está aprendiendo. |
+| L08 | ¿Cómo comprobarías que una referencia o fuente respalda realmente un hallazgo? | Verificando que apunte a bases de datos oficiales como OWASP o CVE. | Mediante enlaces directos a estándares de seguridad reconocidos. | Que la explicación sea lógica y fácil de verificar. | Verificando que los enlaces de referencia funcionen correctamente. | Revisando que la documentación oficial respalde la explicación. |
+| L09 | ¿Qué debería hacer la herramienta cuando no encuentra evidencia suficiente para confirmar una vulnerabilidad? | Mostrar una advertencia en lugar de presentar un falso positivo como definitivo. | Marcarlo como una sugerencia de baja prioridad. | Omitir el aviso para no saturar. | Descartar el reporte para evitar falsas alarmas. | Avisar que no hay seguridad completa para no confundir al usuario. |
+| L10 | ¿Cómo te gustaría distinguir los resultados de herramientas estáticas de las explicaciones generadas por inteligencia artificial? | Con etiquetas visuales o colores diferentes en la interfaz. | Con paneles o pestañas independientes. | Con textos explicativos fáciles de leer. | Mediante iconos y un diseño visual distintivo. | Con un apartado de chat donde la IA explique el detalle. |
+| L11 | ¿Qué esperas que suceda si el servicio de inteligencia artificial Gemini presenta un error o deja de responder? | Que la aplicación muestre un aviso de reintento temporal. | Un aviso claro de caída temporal con opción de reintentar. | Un mensaje emergente sencillo en la pantalla. | Que mantenga accesibles los resultados del análisis estático. | Un aviso en pantalla para volver a intentar después. |
+| L12 | ¿Necesitas exportar los resultados? ¿Qué formato prefieres? | Sí, PDF o reporte Markdown. | Sí, JSON o PDF. | No es necesario; basta con verlos en pantalla. | Sí, PDF. | No es obligatorio; basta con verlos en la web. |
+| L13 | ¿Qué información de tu código consideras confidencial y no permitirías enviar a un proveedor externo? | Llaves de API y credenciales de bases de datos. | Tokens de autenticación y lógica de negocio privada. | Contraseñas y accesos a servidores internos. | Claves privadas y credenciales de acceso. | Ninguna en particular; son proyectos de práctica universitaria. |
+| L14 | ¿Prefieres que la herramienta solamente analice el código o que también realice correcciones automáticas? | Que sugiera la corrección y permita aplicarla opcionalmente. | Análisis detallado con sugerencias de código seguro. | Que proporcione el bloque de código corregido para copiar y pegar. | Correcciones sugeridas que se puedan aplicar con un clic. | Que enseñe cómo corregirlo con ejemplos claros. |
+| L15 | ¿Cuánto tiempo considerarías aceptable esperar para obtener un análisis? | Menos de 10 segundos. | Menos de 15 segundos. | Menos de 5 segundos. | Máximo 10 segundos. | Alrededor de 5 a 10 segundos. |
+| L16 | ¿Consideras importante que las fuentes y evidencias consultadas se conserven después de reiniciar el sistema? | Sí, para llevar un historial de auditoría. | Sí, para documentar las entregas. | No es prioritario. | Sí, para consultarlas más tarde. | Sería útil para repasar después. |
+| L17 | ¿Desde qué dispositivo y navegador utilizarías normalmente la herramienta? | Laptop con Windows y Google Chrome. | PC de escritorio y Google Chrome. | Laptop personal y Microsoft Edge. | Laptop personal y Google Chrome. | Laptop y Google Chrome. |
+| L18 | ¿Qué características tendría que cumplir CODEGUARD para que consideres útil y confiable su análisis? | Rapidez, precisión y explicaciones técnicas claras. | Confiabilidad en la detección de fallos críticos y seguridad de los datos. | Que sea sumamente fácil de usar y sin complicaciones. | Interfaz limpia y respuestas rápidas. | Que sea didáctico y fácil de entender para alguien que aprende. |
 
 ## 4. Análisis de las respuestas
 
-### 4.1 Facilidad de uso
+### 4.1 Formas de entrada y alcance de los proyectos
 
-Los perfiles simulados reflejan la importancia de disponer de una interfaz sencilla que permita introducir código directamente o cargar archivos y proyectos.
+Las preferencias varían según el perfil: se mencionan carga de archivos `.py`, pegado de código, archivos ZIP y conexión con GitHub. También aparecen necesidades de revisar varios archivos y repositorios medianos. Dos participantes señalan expresamente repositorios privados y otros mencionan ocasionalmente código JavaScript o web híbrido.
 
-CODEGUARD contempla diferentes mecanismos de entrada para facilitar el proceso de revisión.
+**Implicación para CODEGUARD:** mantener claras las entradas que el producto soporta actualmente y registrar repositorios privados y otros lenguajes como necesidades de evolución, no como capacidades ya disponibles si todavía no están implementadas.
 
-### 4.2 Información y trazabilidad
+### 4.2 Hallazgos comprensibles y verificables
 
-Se identifica como necesidad de diseño mostrar información suficiente para comprender cada hallazgo:
+Las respuestas solicitan ubicación exacta, tipo de vulnerabilidad, severidad, ruta del archivo, explicación sencilla o técnica y ejemplos de corrección. Para verificar las referencias, se mencionan fuentes oficiales como OWASP, CVE, estándares reconocidos y enlaces funcionales.
 
-- Ubicación exacta en el código.
-- Severidad asignada.
-- Descripción del problema.
-- Recomendación de corrección.
-- Regla estática o referencia documental relacionada.
+**Implicación para CODEGUARD:** cada hallazgo debe mostrar su ubicación y explicación, diferenciar la severidad y conservar la procedencia de las reglas o referencias. Las referencias deben poder comprobarse y no deben presentarse como respaldo si no son pertinentes.
 
-Esto coincide con el objetivo de proporcionar resultados comprensibles y verificables.
+### 4.3 Incertidumbre y disponibilidad de la IA
 
-### 4.3 Confianza en los resultados
+Los participantes prefieren advertencias, prioridad baja, omisión o descarte cuando no existe evidencia suficiente, para evitar falsas alarmas. Si Gemini falla, esperan un aviso y posibilidad de reintento; también se solicita conservar los resultados estáticos disponibles.
 
-Se considera importante diferenciar los resultados de Ruff y Bandit de las explicaciones generadas mediante Gemini y RAG.
+**Implicación para CODEGUARD:** informar la falta de evidencia, evitar afirmar que una vulnerabilidad está confirmada sin respaldo y conservar los resultados estáticos útiles cuando falle el servicio de IA.
 
-También se destaca que el sistema debe informar cuando no dispone de evidencia suficiente y evitar presentar una conclusión incierta como una vulnerabilidad confirmada.
+### 4.4 Privacidad, experiencia y rendimiento
 
-### 4.4 Seguridad y privacidad
+Se identifican como datos sensibles las llaves de API, credenciales, tokens, contraseñas, accesos internos y lógica de negocio privada. Los tiempos esperados indicados oscilan entre menos de 5 y menos de 15 segundos. Los perfiles también muestran necesidades distintas: desde explicaciones didácticas hasta reportes PDF, Markdown o JSON. Cuatro participantes expresan interés en sugerencias o aplicación de correcciones; uno prefiere únicamente aprender cómo corregir el problema.
 
-Los perfiles simulados priorizan proteger contraseñas, credenciales, variables de entorno y código confidencial.
+**Implicación para CODEGUARD:** informar claramente el tratamiento del código enviado a servicios externos, proteger secretos, no prometer tiempos que no hayan sido medidos y mantener las correcciones automáticas fuera del alcance actual de solo lectura hasta que exista un mecanismo explícito de revisión y autorización humana.
 
-El producto mantiene un enfoque de análisis de solo lectura, sin ejecutar el código recibido ni aplicar correcciones automáticamente.
+## 5. Conclusiones del levantamiento
 
-## 5. Conclusiones del ejercicio
+**Conclusión 1. Diversidad de entradas y proyectos.**\
+Las respuestas muestran preferencias por pegar código, cargar archivos `.py`, subir ZIP y conectar GitHub. También existe interés en repositorios privados y proyectos con varios archivos. Se confirma la importancia de documentar con precisión las entradas disponibles y considerar la ampliación de repositorios privados y lenguajes como trabajo futuro.
 
-**Conclusión 1. Interfaz y accesibilidad**
+**Conclusión 2. Explicaciones y referencias verificables.**\
+Los participantes necesitan que los hallazgos indiquen dónde está el problema, cuál es su severidad y cómo comprenderlo o corregirlo. También esperan referencias comprobables, preferentemente oficiales. CODEGUARD debe priorizar la trazabilidad y evitar referencias que no respalden el hallazgo.
 
-Una herramienta de revisión de código debe permitir diferentes formas de entrada y presentar los resultados de manera clara para desarrolladores con distintos niveles de experiencia.
+**Conclusión 3. Confianza, privacidad y manejo de fallos.**\
+Las respuestas destacan la protección de credenciales y código privado, la necesidad de advertir cuando no existe evidencia suficiente y la conservación de resultados estáticos si Gemini falla. Se debe mantener la separación entre resultados de herramientas estáticas y explicaciones de IA.
 
-**Conclusión 2. Evidencia verificable**
-
-La ubicación del hallazgo, su severidad y la procedencia de las reglas son elementos importantes para facilitar la revisión y reducir interpretaciones incorrectas.
-
-**Conclusión 3. Diferenciación de herramientas e inteligencia artificial**
-
-Es necesario separar las alertas deterministas de Ruff y Bandit de las explicaciones generadas por Gemini y RAG. La herramienta también debe gestionar los casos en los que el proveedor de IA no responde.
-
-**Conclusión 4. Mejoras futuras**
-
-Se identifican como posibles mejoras ampliar el soporte para repositorios privados, incorporar otros lenguajes, mejorar la experiencia de exportación y optimizar los tiempos de respuesta y el consumo de recursos.
+**Conclusión 4. Mejoras de experiencia y alcance controlado.**\
+Se identifican expectativas de rapidez, interfaz sencilla, explicaciones didácticas y exportación en distintos formatos. También se solicitan correcciones asistidas, pero el producto actual mantiene un enfoque de solo lectura. Estas solicitudes deben tratarse como oportunidades de evolución y no como funcionalidades ya entregadas.
 
 ## 6. Relación con los requisitos de CODEGUARD
 
-| Necesidad identificada | Requisito relacionado | Funcionalidad del producto |
+| Necesidad observada | Requisito o área relacionada | Aplicación en el producto |
 |---|---|---|
-| Diferentes entradas de código | HU-01 a HU-04 | Código, archivos, ZIP y GitHub |
-| Mostrar hallazgos comprensibles | RF-05 | Severidad, ubicación y descripción |
-| Consultar evidencias | HU-05 | Referencias y trazabilidad |
-| Gestionar ausencia de evidencia | HU-06 | Abstención del agente |
-| Diferenciar fuentes | HU-08 | Procedencia de resultados |
-| Gestionar fallos de Gemini | HU-09 | Resultados parciales |
-| Exportar resultados | HU-10 | Exportación JSON |
-| Proteger información | RS-01 y RS-07 | Análisis de solo lectura y protección de secretos |
-| Conservar información | HU-12 | Persistencia de fuentes |
+| Diferentes formas de introducir código | HU-01 a HU-04 | Entrada de código, archivos, ZIP y GitHub según el alcance implementado. |
+| Ubicación, severidad y explicación | RF-05 | Presentación estructurada de hallazgos. |
+| Referencias verificables | HU-05 | Consulta y trazabilidad de evidencias. |
+| Ausencia de evidencia suficiente | HU-06 | Abstención o advertencia sin afirmar una vulnerabilidad no confirmada. |
+| Diferenciar herramientas estáticas e IA | HU-08 | Separación de procedencia de resultados. |
+| Fallos de Gemini | HU-09 | Aviso de error y conservación de resultados estáticos útiles. |
+| Exportación | HU-10 | Exportación JSON disponible; PDF y Markdown quedan sujetos al alcance implementado. |
+| Protección de código y secretos | RS-01 y RS-07 | Análisis de solo lectura y medidas de protección de información. |
+| Persistencia de fuentes | HU-12 | Conservación de evidencias para consultas posteriores. |
 
-## 7. Limitaciones del levantamiento
+## 7. Alcance y consideraciones
 
-Este documento contiene un ejercicio de simulación y no resultados de entrevistas reales.
+- Este documento organiza las cinco respuestas contenidas en el archivo de cuestionarios entregado por el equipo.
+- La fecha consignada para cada respuesta es el 07/11/2026.
+- Los nombres, roles y experiencia se reproducen conforme al documento fuente.
+- Las preferencias expresadas no constituyen por sí solas una medición estadística ni una prueba de precisión técnica del producto.
+- Las respuestas sobre funciones deseadas no significan que esas funciones estén implementadas.
+- Las conclusiones se limitan a las respuestas registradas y se utilizan para orientar la revisión de requisitos.
 
-Los cinco perfiles no representan participantes identificados ni respuestas recogidas mediante una actividad de campo.
+## 8. Resultado
 
-Por tanto:
+Se documentan cinco participantes, 18 preguntas, 90 respuestas individuales, el análisis de necesidades, cuatro conclusiones y su relación con los requisitos de CODEGUARD.
 
-- No se puede afirmar que cinco usuarios hayan validado el producto.
-- Las preferencias indicadas no constituyen una muestra estadística.
-- Las conclusiones son hipótesis para orientar el desarrollo.
-- Se requiere aplicar el cuestionario a participantes reales para validar las necesidades identificadas.
+## Fuente documental de las respuestas
 
-## 8. Próximas actividades
-
-1. Aplicar el cuestionario a un mínimo de cinco personas que revisen código Python.
-2. Registrar la fecha real de aplicación y el rol de cada participante.
-3. Contrastar las respuestas reales con las hipótesis documentadas.
-4. Actualizar los requisitos según las necesidades confirmadas.
-5. Conservar las evidencias originales y sus referencias en el repositorio.
-
-**Resultado documental:** instrumento de 18 preguntas organizado, cinco perfiles simulados, matriz de respuestas, cuatro conclusiones y relación con los requisitos de CODEGUARD.
-
----
-
+Las respuestas individuales originales se conservan en el [cuestionario original de Word](evidencias/semana-1/encuestas/respuestas-cuestionario-semana-1-2026-11-07.docx).
 **Fin del documento.**

@@ -42,7 +42,7 @@ El ejecutor `scripts/pruebas_produccion.py` contiene 26 escenarios y genera JSON
 | P22 | GitHub | Ruta adicional | 400 |
 | P23 | GitHub | Loopback | 400 |
 | P24 | Agente | Nombre traversal | 422 |
-| P25 | Agente | Más de tres pasos | 422 |
+| P25 | Agente | Solicitud con max_pasos=4 (máximo permitido: 3 pasos) | 422 |
 | P26 | Prompt injection | Código malicioso en AST local | 200, solo lectura |
 
 ### Ejecución local
@@ -100,12 +100,14 @@ Las respuestas públicas no deben incluir excepciones, rutas internas, claves, c
 ## Persistencia de citas
 
 1. Ejecutar `verificar_persistencia_citas.py capturar` contra la URL pública.
-2. Guardar captura de la respuesta y del volumen montado en `/data`.
+2. Guardar la captura de la respuesta y la información del volumen montado.
 3. Reiniciar el servicio o realizar un redeploy conservando el volumen.
 4. Ejecutar la acción `verificar` con el mismo baseline.
-5. Conservar `persistencia-antes.json`, `persistencia-despues.json` y logs del reinicio.
+5. Conservar `persistencia-antes.json`, `persistencia-despues.json` y los logs del reinicio.
 
-El comparador exige el mismo objetivo y el conjunto completo de IDs. Solo informa continuidad de citas: no certifica persistencia del volumen ni que hubo un reinicio. El arranque puede reconstruir IDs iguales. Se necesitan además el evento de reinicio, el volumen y la recuperación sin reingesta. No se dispone de acceso para reiniciar Railway y el responsable no puede hacerlo durante esta revisión.
+La evidencia integrada del 5 de noviembre de 2026 está documentada en `docs/15-verificacion-publica-integrada.md` y `docs/12-cierre-qa-entrega4.md`. El equipo registró continuidad de las tres citas después del reinicio de Railway.
+
+La comparación informa `continuidad_citas: true`, pero mantiene `persistencia_volumen_verificada: false`. Por tanto, se acredita continuidad operacional de las citas, no una auditoría completa de integridad del volumen, backups o recuperación sin reingesta.
 
 ## Auditoría de secretos
 
@@ -118,9 +120,15 @@ El comparador exige el mismo objetivo y el conjunto completo de IDs. Solo inform
 - Auditoría de secretos sin hallazgos.
 - 26/26 escenarios locales aprobados.
 - 26/26 escenarios públicos aprobados.
-- Citas presentes antes y después del reinicio.
+- Continuidad de las citas documentada antes y después del reinicio.
 
-Los dos últimos puntos permanecen pendientes mientras no exista una URL pública accesible y un volumen remoto verificable.
+### Estado de las comprobaciones públicas
+
+La matriz pública posterior a la fusión del 5 de noviembre de 2026 obtuvo 26/26 escenarios aprobados y cero fallos. La evidencia está en [pruebas-publicas-post-merge-20261105.json](evidencias/semana-4/pruebas-publicas-post-merge-20261105.json).
+
+La continuidad de las tres citas después del reinicio de Railway está documentada en `docs/12-cierre-qa-entrega4.md` y `docs/15-verificacion-publica-integrada.md`.
+
+Permanece sin verificar la integridad completa del volumen remoto, dado que el comparador conserva `persistencia_volumen_verificada: false`. Esta limitación no debe confundirse con una matriz pública pendiente.
 
 ## Resultados automatizados actuales
 
@@ -134,3 +142,19 @@ Los dos últimos puntos permanecen pendientes mientras no exista una URL públic
 - Auditoría de secretos: aprobada, 0 patrones de secreto detectados.
 - Sintaxis de Compose: válida.
 - Contenedor y reinicio local: pendientes porque Docker Desktop Engine no estaba iniciado.
+
+### Trazabilidad de P25 y matriz pública vigente
+
+El escenario P25 de la matriz de producción envía `max_pasos=4` al endpoint `/api/v1/agente/previsualizar` y espera HTTP 422, porque el máximo permitido es de tres pasos.
+
+La prueba unitaria complementaria [test_agente_cuatro_pasos.py](../backend/tests/test_agente_cuatro_pasos.py) verifica que el valor predeterminado sea tres y que una solicitud con `max_pasos=5` sea rechazada. Esta comprobación unitaria es distinta del escenario P25 de la matriz.
+
+La matriz ejecutable de 26 escenarios está disponible en [scripts/pruebas_produccion.py](../scripts/pruebas_produccion.py).
+
+También puede consultarse la [matriz pública vigente de GitHub](https://github.com/Christian-gv-01/revisor-inteligente-codigo/blob/principal/scripts/pruebas_produccion.py).
+
+La ejecución pública posterior a la fusión obtuvo 26/26 aprobadas y cero fallos. Su JSON está disponible en [pruebas-publicas-post-merge-20261105.json](evidencias/semana-4/pruebas-publicas-post-merge-20261105.json).
+
+La evidencia de ejecución local del 4 de noviembre de 2026, con 26/26 escenarios aprobados, se conserva en [pruebas-locales.json](evidencias/semana-4/pruebas-locales.json).
+
+La ejecución local y la pública se identifican por separado; no deben confundirse sus resultados.

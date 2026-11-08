@@ -1,0 +1,172 @@
+﻿HISTORIAL GIT RECUPERADO
+Fecha de recuperación: 2026-11-08 00:36
+
+REMOTOS
+origin	https://github.com/Christian-gv-01/revisor-inteligente-codigo.git (fetch)
+origin	https://github.com/Christian-gv-01/revisor-inteligente-codigo.git (push)
+
+RAMAS
+  backup/backend-auditoria-pre-sync-20261106
+  backup/backend-pre-integracion-20261106
+* docs/correcciones-docente-entrega-final-20261108
+  docs/frontend-pendiente
+  feature/backend-agente-correcciones
++ feature/backend-auditoria-caecd71
+  feature/backend-ia
++ feature/backend-severidad-confianza-20261106-183226
+  feature/backend-severidad-derivada-20261107
++ feature/entrega4-backend-confirmacion
+  feature/frontend
+  feature/frontend-semana4
+  feature/qa-seguridad
+  feature/rag-chromadb
+  feature/rag-seguridad-ampliada
+  fix/rag-validacion
+  integration/backend-frontend
++ integration/entrega4-final-20261106-183020
+  integration/pr55-severidad-20261107
+  integration/revision-2
+  main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/build/entrega4-paquete-candidato
+  remotes/origin/ci/semana4-main-secretos-modelo
+  remotes/origin/codex/abstencion-hallazgos
+  remotes/origin/codex/agente-contexto-referencias
+  remotes/origin/codex/agente-limites-consumo
+  remotes/origin/codex/cierre-verificado-final
+  remotes/origin/codex/herencia-verificable-cierre
+  remotes/origin/codex/integracion-agente-presupuesto
+  remotes/origin/codex/reintentos-presupuesto
+  remotes/origin/docs/auditoria-entrega-integracion-20261105
+  remotes/origin/docs/cierre-agente-presupuesto-ronald
+  remotes/origin/docs/cierre-entrega-ronald-b6ce96c
+  remotes/origin/docs/cierre-semana4-decison-evidencias-20261107
+  remotes/origin/docs/correcciones-docente-entrega-final-20261108
+  remotes/origin/docs/entrega4-cierre-documental
+  remotes/origin/docs/entrega4-presentacion-resultados
+  remotes/origin/docs/frontend-agente-v2-presupuesto
+  remotes/origin/docs/frontend-pendiente
+  remotes/origin/docs/guias-vigentes-cierre
+  remotes/origin/docs/qa-postmerge-caecd71
+  remotes/origin/docs/qa-publica-post48-467d00
+  remotes/origin/docs/semana1-rescate-historico-20261107
+  remotes/origin/docs/semana4-cierre-validacion-20261105
+  remotes/origin/docs/validacion-publica-final-20261107
+  remotes/origin/eval/comparacion-directa-agente-20
+  remotes/origin/feat/semana4-agente-integrado
+  remotes/origin/feature/analisis-github
+  remotes/origin/feature/backend-auditoria-caecd71
+  remotes/origin/feature/backend-ia
+  remotes/origin/feature/backend-severidad-confianza-20261106-183226
+  remotes/origin/feature/backend-severidad-derivada-20261107
+  remotes/origin/feature/entrega-4-qa-seguridad-documentacion
+  remotes/origin/feature/entrega4-backend-confirmacion
+  remotes/origin/feature/entrega4-frontend-producto
+  remotes/origin/feature/entrega4-qa-pr19
+  remotes/origin/feature/entrega4-qa-produccion
+  remotes/origin/feature/frontend
+  remotes/origin/feature/frontend-acceso-agente
+  remotes/origin/feature/frontend-semana4
+  remotes/origin/feature/presupuesto-proyectos
+  remotes/origin/feature/qa-seguridad
+  remotes/origin/feature/rag-chromadb
+  remotes/origin/feature/rag-seguridad-ampliada
+  remotes/origin/feature/semana4-agente-contexto-estatico
+  remotes/origin/feature/semana4-analisis-resiliente
+  remotes/origin/feature/semana4-auditoria-agente
+  remotes/origin/feature/semana4-backend-despliegue
+  remotes/origin/feature/semana4-endurecimiento-http
+  remotes/origin/feature/semana4-evaluacion-planificador
+  remotes/origin/feature/semana4-frontend-contrato-estatico
+  remotes/origin/feature/semana4-rate-limit
+  remotes/origin/feature/semana4-ruff-bandit
+  remotes/origin/feature/semana4-trazabilidad-agente
+  remotes/origin/fix/cierre-revision7-ruta-directa
+  remotes/origin/fix/consumo-presupuesto-anidado
+  remotes/origin/fix/rag-validacion
+  remotes/origin/fix/semana4-captura-estatica-acotada
+  remotes/origin/fix/semana4-errores-503-422
+  remotes/origin/fix/semana4-gemini-reintentos
+  remotes/origin/integration/cierre-46-47-0863d49
+  remotes/origin/integration/cierre-50-51-post52
+  remotes/origin/integration/entrega4-confirmacion
+  remotes/origin/integration/entrega4-final-20261106-183020
+  remotes/origin/integration/revision-2
+  remotes/origin/integration/semana4-candidata
+  remotes/origin/integration/semana4-main-resuelto
+  remotes/origin/integration/semana4-qa26-actualizada
+  remotes/origin/main
+
+PRIMEROS 40 COMMITS
+2026-10-20T13:25:42-05:00 | 8e12619 | christian | chore: configurar gitignore y proteger credenciales
+2026-10-20T13:33:50-05:00 | 166eb5b | christian | chore: crear estructura inicial del proyecto
+2026-10-20T15:09:53-05:00 | e66e7b1 | christian | feat: inicializar API FastAPI con endpoint health
+2026-10-20T15:16:54-05:00 | a60459d | christian | chore: configurar dependencias de Gemini y variables de entorno
+2026-10-20T19:52:53-05:00 | 0832860 | Andyjr98 | qa: documentar seguridad y probar endpoint health
+2026-10-20T21:01:22-05:00 | 9e09729 | Andyjr98 | docs: agregar README inicial
+2026-10-20T21:09:55-05:00 | 04bab7c | Andyjr98 | docs: completar README inicial
+2026-10-20T21:17:43-05:00 | 2e9d8d7 | Andyjr98 | docs: actualizar bitacora de QA y seguridad
+2026-10-21T11:37:46-05:00 | 0584a3f | Andyjr98 | merge: integrar backend para pruebas de QA
+2026-10-21T17:36:02-05:00 | 5a34d44 | christian | feat: integrar Gemini con endpoint de analisis seguro
+2026-10-21T19:52:45-05:00 | e9bd57e | Andyjr98 | merge: integrar backend actualizado para pruebas de QA
+2026-10-21T22:09:33-05:00 | c786406 | Andyjr98 | test: agregar pruebas y evidencias de QA y seguridad
+2026-10-21T23:20:05-05:00 | 818b8e5 | Andyjr98 | test: ampliar pruebas de seguridad y actualizar evidencias
+2026-10-22T07:46:35-05:00 | 3a25ec7 | christian | fix: controlar timeout HTTPX del proveedor LLM
+2026-10-22T15:59:29-05:00 | f5f018f | christian | feat: implementar carga y validacion de archivos Python
+2026-10-22T16:20:18-05:00 | cf26cad | christian | feat: implementar analisis de proyectos ZIP con Gemini
+2026-10-22T18:41:19-05:00 | d7e5f69 | Andyjr98 | merge: integrar carga de archivos Python y ZIP del backend
+2026-10-22T18:51:38-05:00 | b602f23 | olmesaguilar | feat(frontend): crear revisor seguro con Monaco y carga de archivos
+2026-10-22T19:34:16-05:00 | 5daabe2 | Andyjr98 | test: completar pruebas de carga y actualizar evidencias de QA
+2026-10-22T21:00:13-05:00 | af284e5 | christian | merge: integrar frontend React para revision 2
+2026-10-22T21:01:05-05:00 | 06cb896 | christian | test: integrar pruebas y documentacion QA
+2026-10-22T21:02:52-05:00 | 46c0896 | Andyjr98 | test: ampliar validaciones ZIP y actualizar evidencias QA
+2026-10-22T21:41:11-05:00 | dcc6e98 | christian | docs: registrar evidencias de integracion React Gemini y pytest
+2026-10-23T10:45:56-05:00 | 1f1c6b0 | christian | fix: controlar errores zlib en archivos ZIP
+2026-10-23T11:23:42-05:00 | 49b69ba | christian | docs: comparar tres versiones de prompts con Gemini
+2026-10-23T11:28:58-05:00 | ed23721 | christian | docs: actualizar ADR y estado tecnico de revision 2
+2026-10-23T11:51:21-05:00 | f53036b | christian | test: documentar comparacion de prompts con diez casos
+2026-10-23T10:45:56-05:00 | 0348c0e | christian | fix: controlar errores zlib en archivos ZIP
+2026-10-23T16:12:47-05:00 | 5cf36e0 | Andyjr98 | test: registrar regresiones ZIP y evidencias de QA
+2026-10-23T19:15:31-05:00 | 5188ff0 | christian | test: integrar 44 pruebas finales de QA
+2026-10-29T03:07:29-05:00 | 8066bc7 | Andyjr98 | Implementa RAG con citas y abstencion
+2026-10-29T03:19:51-05:00 | 8a24891 | Andyjr98 | Refuerza seguridad del contexto RAG y pruebas
+2026-10-29T03:25:59-05:00 | aa4453f | Andyjr98 | A├▒ade pruebas de seguridad para contexto RAG
+2026-10-29T19:57:23-05:00 | 3653847 | Andyjr98 | feat: integrar mejoras RAG y seguridad ZIP
+2026-10-29T21:13:25-05:00 | 8f27ddc | Andyjr98 | Merge pull request #2 from Christian-gv-01/integration/revision-2
+2026-10-30T00:49:02-05:00 | 2ea3bfd | Andyjr98 | feat(rag): add security metadata filters and knowledge rules
+2026-10-30T15:47:17-05:00 | f1b4f5e | Andyjr98 | fix(rag): handle retrieval failures with HTTP 503
+2026-10-30T15:59:36-05:00 | 129d462 | Andyjr98 | Merge pull request #3 from Christian-gv-01/fix/rag-validacion
+2026-10-30T16:17:47-05:00 | c06402b | Andyjr98 | Merge pull request #4 from Christian-gv-01/feature/rag-seguridad-ampliada
+2026-10-30T16:42:25-05:00 | 8bc9a6f | olmesaguilar | feat(evaluacion): agregar referencias, 20 casos y evidencias de semana 3
+
+COMMITS DE INTEGRACION / MERGE
+2026-10-21T11:37:46-05:00 | 0584a3f | Andyjr98 | merge: integrar backend para pruebas de QA
+2026-10-21T19:52:45-05:00 | e9bd57e | Andyjr98 | merge: integrar backend actualizado para pruebas de QA
+2026-10-22T18:41:19-05:00 | d7e5f69 | Andyjr98 | merge: integrar carga de archivos Python y ZIP del backend
+2026-10-22T21:00:13-05:00 | af284e5 | christian | merge: integrar frontend React para revision 2
+2026-10-29T21:13:25-05:00 | 8f27ddc | Andyjr98 | Merge pull request #2 from Christian-gv-01/integration/revision-2
+2026-10-30T15:59:36-05:00 | 129d462 | Andyjr98 | Merge pull request #3 from Christian-gv-01/fix/rag-validacion
+2026-10-30T16:17:47-05:00 | c06402b | Andyjr98 | Merge pull request #4 from Christian-gv-01/feature/rag-seguridad-ampliada
+2026-10-30T17:22:39-05:00 | 6c2ab2f | christian | merge: integrar frontend y evaluacion semana 3 con RAG
+2026-10-31T12:49:21-05:00 | 563cc38 | Christian-gv-01 | merge: integrar CODEGUARD con RAG, frontend, GitHub y agente
+2026-11-04T18:58:29-05:00 | 30013f9 | Christian-gv-01 | merge: proteger endpoints Gemini con limites HTTP 429
+2026-11-04T20:15:36-05:00 | f969758 | Christian-gv-01 | Merge pull request #9 from Christian-gv-01/feature/semana4-endurecimiento-http
+2026-11-04T21:30:31-05:00 | 2121a87 | olmesaguilar | merge(qa): integrar base Ruff Bandit y protecciones HTTP
+2026-11-04T21:39:50-05:00 | f459ef9 | Christian-gv-01 | Merge pull request #11 from Christian-gv-01/feature/semana4-backend-despliegue
+2026-11-05T11:12:54-05:00 | c6cc0b1 | Christian-gv-01 | Merge pull request #13 from Christian-gv-01/fix/semana4-errores-503-422
+2026-11-05T11:37:33-05:00 | 8f4165f | Christian-gv-01 | Merge pull request #14 from Christian-gv-01/fix/semana4-gemini-reintentos
+2026-11-05T12:05:22-05:00 | 44ce3bc | Christian-gv-01 | Merge pull request #16 from Christian-gv-01/feature/semana4-analisis-resiliente
+2026-11-05T12:08:48-05:00 | af91089 | Christian-gv-01 | merge(integration): incorporar hotfix de main preservando QA y an├ílisis resiliente
+2026-11-05T12:12:37-05:00 | 7f0ac9c | Christian-gv-01 | Merge pull request #18 from Christian-gv-01/integration/semana4-main-resuelto
+2026-11-05T12:38:18-05:00 | 0355027 | Christian-gv-01 | Merge pull request #20 from Christian-gv-01/feature/semana4-auditoria-agente
+2026-11-05T13:35:24-05:00 | 462f8bb | Christian-gv-01 | merge(agent): conservar decisiones verificables y corregir Agent Lab
+2026-11-05T13:47:28-05:00 | 8fdde38 | Christian-gv-01 | merge(agent): integrar contexto Ruff Bandit y planificador supervisado
+2026-11-05T14:25:17-05:00 | 3925563 | Christian-gv-01 | merge(eval): documentar comparacion A/B real del planificador y evidencias
+2026-11-05T14:50:32-05:00 | b2bc6af | Christian-gv-01 | Merge pull request #23 from Christian-gv-01/feature/entrega4-qa-pr19
+2026-11-05T14:54:45-05:00 | e22d44a | Christian-gv-01 | Merge pull request #19 from Christian-gv-01/feature/semana4-frontend-contrato-estatico
+2026-11-05T15:48:58-05:00 | d80e75c | Christian-gv-01 | Merge pull request #25 from Christian-gv-01/integration/semana4-candidata
+2026-11-05T16:40:37-05:00 | 124ae94 | Christian-gv-01 | Merge pull request #27 from Christian-gv-01/docs/semana4-cierre-validacion-20261105
+2026-11-05T17:11:17-05:00 | 80bb242 | Christian-gv-01 | merge(qa): reconciliar PR #26 con main y documentar reinicio posterior
+2026-11-05T17:16:37-05:00 | 347a322 | Christian-gv-01 | Merge pull request #28 from Christian-gv-01/integration/semana4-qa26-actualizada
+2026-11-05T17:34:17-05:00 | c2b9b06 | Christian-gv-01 | Merge pull request #29 from Christian-gv-01/fix/semana4-captura-estatica-acotada
+2026-11-05T18:43:47-05:00 | ddf55ec | Christian-gv-01 | Merge pull request #30 from Christian-gv-01/docs/auditoria-entrega-integracion-20261105
