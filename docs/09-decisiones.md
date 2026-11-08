@@ -59,7 +59,7 @@ En los **13 pares con informes completos en ambas rutas**, la F1 fue **1,00** en
 
 ## Registro humano de sustentación y ensayo
 
-Se abrió [registro de sustentación del 7 de noviembre](evidencias/semana-4/registro-sustentacion-20261107.md) para consignar únicamente observaciones recibidas y tiempos **realmente medidos**. El equipo comunicó una **duración total cronometrada de 600 segundos (10 minutos)** frente a los 720 segundos planificados. El archivo final aportado para el cierre contiene **12 diapositivas**; la distribución anterior de 10 y los tiempos individuales siguen siendo planificación histórica, no una medida individual. Faltan observaciones académicas y confirmación de la versión efectivamente presentada.
+Se abrió [registro de sustentación del 7 de noviembre](evidencias/semana-4/registro-sustentacion-20261107.md) para consignar únicamente observaciones recibidas y tiempos **realmente medidos**. El equipo comunicó una **duración total cronometrada de 600 segundos (10 minutos)** frente a los 720 segundos planificados. El [PDF final ya versionado](presentacion/README.md) contiene **12 diapositivas**; la distribución anterior de 10 y los tiempos individuales siguen siendo planificación histórica. Se registró la **retroalimentación escrita** del docente del 8 de noviembre; faltan observaciones orales adicionales, si existieron, y confirmar el archivo proyectado durante la medición.
 
 ## Pendientes de aceptación formal
 
