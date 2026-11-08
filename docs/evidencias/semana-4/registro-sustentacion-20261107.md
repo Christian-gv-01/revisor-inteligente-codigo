@@ -13,9 +13,9 @@
 | Diferencia frente a lo previsto | 2 minutos menos (120 segundos) |
 | Procedencia del dato | Medición comunicada por Christian en el chat; no se adjuntó archivo de cronómetro |
 | Duración por participante | No informada; no se infiere desde el reparto planificado |
-| Observaciones o correcciones del ingeniero | No comunicadas en este registro; pendientes si existieron |
+| Observaciones o correcciones del ingeniero | Se recibió una nota escrita el 8 de noviembre; observaciones orales adicionales no documentadas |
 
-**Estatus de evidencia:** la duración total sí fue reportada como cronometrada. La distribución individual y las observaciones del docente **no** se han proporcionado; no se presentarán como hechos ni como ausencia confirmada de observaciones.
+**Estatus de evidencia:** la duración total fue reportada como cronometrada y existe una nota escrita del docente que se transcribe al final. La distribución individual y posibles observaciones del tribunal realizadas verbalmente siguen sin aportarse.
 
 ## Presentación aportada para el cierre
 
@@ -23,7 +23,7 @@ El equipo aportó el archivo `CODEGUARD-SEMINARIO-12 diapos.pdf`, comprobado con
 
 `bb52e1a8f57f4b29a2aa0f66855a097d6a9f487a391fb45189bb202a737aa8a8`
 
-**Nota de trazabilidad:** este archivo se recibió como adjunto de conversación. **No está automáticamente incorporado en GitHub**, ni se ha confirmado que sea exactamente el presentado durante la medición. Hasta sustituir/confirmar el PDF en `docs/presentacion/`, no atribuirle al repositorio el contenido del adjunto.
+**Actualización de repositorio (8 de noviembre):** este PDF ya figura como [único vigente](../../presentacion/README.md) en `docs/presentacion/` y su hash se valida al empaquetar. No se ha acreditado cuál archivo específico se proyectó durante el cronometraje de diez minutos.
 
 ## Plan previo de intervención, solo como referencia
 
@@ -41,11 +41,11 @@ Existió una planificación **de 10 diapositivas**, total 12 minutos: Christian 
 - [x] Registrar la **duración real total: 10 minutos**.
 - [x] Distinguir de la planificación histórica de 12 minutos.
 - [x] Identificar el archivo PDF de 12 diapositivas aportado para el cierre y verificar número de páginas y hash.
-- [ ] Incorporar a `docs/presentacion/` el PDF definitivo escogido y evitar que el ZIP incluya varios PDF etiquetados como vigentes.
+- [x] Incorporar el PDF definitivo a `docs/presentacion/` y dejar allí una única versión vigente. Las anteriores se preservan en `docs/historico/presentacion/`.
 - [ ] Completar observaciones docentes **solo si efectivamente hubo y se pueden describir**.
 - [ ] Confirmar si los 10 minutos corresponden al ensayo o a la sustentación realizada; el dato recibido dice 'tardamos 10 minutos cronometrados' y no distingue ambos eventos.
 - [ ] Revisar y aceptar la decisión E4-13 del agente (17/20 frente a 14/20).
-- [ ] Crear y verificar un nuevo ZIP desde el commit final, con manifiesto, límite de 20 MB y exclusión de secretos.
+- [x] Generar un ZIP candidato verificado en GitHub Actions para `75644cf` (workflow `42521350730`, 11.425.834 bytes de artefacto y estado aprobado). **Repetir para el SHA de `main` que resulte de cualquier limpieza posterior; no entregar el candidato antiguo como versión final**.
 - [ ] Subir el paquete y conservar comprobante del envío. El registro por sí solo no acredita ese envío.
 
 ## Fuentes técnicas
@@ -64,8 +64,8 @@ Existió una planificación **de 10 diapositivas**, total 12 minutos: Christian 
 | 2 | Incorporar evidencias auténticas de Semana 1 o declarar ausencias | [Inventario Semana 1](../semana-1/README.md), cuatro capturas y faltantes; commits `db10d7d6` y `5fce8ec2` | **Corregida documentalmente**, pendiente de aceptación docente |
 | 3 | Justificar el agente predeterminado con 14/20 vs 17/20, o cambiarlo | [Decisión E4-13](../../09-decisiones.md), justificación sin afirmar superioridad; commit `177a0ac8` | **Justificada**, aceptación del equipo pendiente |
 | 4 | Corregir P25 y enlazar matriz pública | [Pruebas](../../08-pruebas.md): cinco pasos inválidos y [matriz 26/26 del 5 nov](pruebas-publicas-post-merge-20261105.json); commit `1bf55b74` | **Corregida documentalmente** |
-| 5 | Regenerar ZIP del commit final y dejar solo un PDF vigente | Pendiente de consolidar PDF de 12 diapositivas aportado y archivar PDFs anteriores | **Pendiente** |
+| 5 | Regenerar ZIP del commit final y dejar solo un PDF vigente | PDF definitivo [versionado](../../presentacion/README.md), versiones anteriores archivadas; candidato CI generado sobre `75644cf` | **PDF corregido; regenerar ZIP tras última integración** |
 | 6 | Registrar observaciones del tribunal y respuesta por commit | Esta tabla registra la nota escrita; falta confirmar cuáles observaciones provinieron del tribunal oral, si fueron distintas | **En curso** |
-| 7 | Subir un ZIP único ≤20 MB sin secretos ni dependencias mediante el portal | Requiere paquete verificado, upload del responsable y comprobante | **Pendiente** |
+| 7 | Subir un ZIP único ≤20 MB sin secretos ni dependencias mediante el portal | CI en `75644cf`: paquete candidato 11.425.834 bytes; `gitleaks` aprobado. Hace falta el ZIP del **SHA final** y comprobante de carga en el portal | **Pendiente del envío** |
 
 **Control de cambios:** se indican los commits de preparación de cada corrección; al fusionar el PR, el commit de integración aporta la revisión de `main`. No afirmar enviado al portal hasta disponer del comprobante. Los diez minutos cronometrados ya están registrados arriba; no deben confundirse con el requisito independiente de instalación limpia.
