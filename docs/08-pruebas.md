@@ -1,6 +1,6 @@
 # 08. Plan y resultados de pruebas — Entrega 4
 
-> Resultado público posterior a la integración: **26/26 aprobadas** y análisis con tres fuentes. Ver [15-verificacion-publica-integrada.md](15-verificacion-publica-integrada.md). La continuidad de citas tras el reinicio posterior y el log de recuperación del índice se documentan en [el cierre consolidado](12-cierre-qa-entrega4.md); no constituyen una auditoría completa del volumen.
+> Matriz pública completa comprobada el **5 de noviembre de 2026: 26/26 aprobadas**, con evidencia en [pruebas-publicas-post-merge-20261105.json](evidencias/semana-4/pruebas-publicas-post-merge-20261105.json). La validación pública posterior del **7 de noviembre** sobre `c522c24` documentó **nueve controles HTTP**, no una nueva corrida completa de esta matriz. Ver [registro final](evidencias/semana-4/postmerge-c522c24-20261107/README.md) y [15-verificacion-publica-integrada.md](15-verificacion-publica-integrada.md). La continuidad de citas tras el reinicio posterior y el log de recuperación del índice se documentan en [el cierre consolidado](12-cierre-qa-entrega4.md); no constituyen una auditoría completa del volumen.
 
 ## Alcance
 
@@ -42,7 +42,7 @@ El ejecutor `scripts/pruebas_produccion.py` contiene 26 escenarios y genera JSON
 | P22 | GitHub | Ruta adicional | 400 |
 | P23 | GitHub | Loopback | 400 |
 | P24 | Agente | Nombre traversal | 422 |
-| P25 | Agente | Más de tres pasos | 422 |
+| P25 | Agente | Cinco pasos solicitados (el máximo permitido es cuatro) | 422 |
 | P26 | Prompt injection | Código malicioso en AST local | 200, solo lectura |
 
 ### Ejecución local
@@ -57,7 +57,7 @@ python scripts\pruebas_produccion.py --base-url http://127.0.0.1:8765 --output d
 python scripts\pruebas_produccion.py --base-url https://URL-PUBLICA --output docs\evidencias\semana-4\pruebas-publicas.json
 ```
 
-La evidencia pública debe contener 26/26 aprobados, el dominio HTTPS real y fecha UTC.
+La evidencia pública debe contener 26/26 aprobados, el dominio HTTPS real y fecha UTC. **No reutilizar** una ejecución del 5 de noviembre como si se hubiera corrido sobre el commit `3214960` o sobre el despliegue del 7 de noviembre. P25 usa actualmente `max_pasos=5`, conforme al script versionado.
 
 ### Resultado local ejecutado
 
@@ -120,7 +120,7 @@ El comparador exige el mismo objetivo y el conjunto completo de IDs. Solo inform
 - 26/26 escenarios públicos aprobados.
 - Citas presentes antes y después del reinicio.
 
-Los dos últimos puntos permanecen pendientes mientras no exista una URL pública accesible y un volumen remoto verificable.
+La URL pública y una matriz 26/26 del **5 de noviembre** sí están evidenciadas. La continuidad operacional de las citas y la huella del índice se documentaron posteriormente con límites específicos: no equivalen a auditoría de integridad de todo el volumen ni a prueba de backup/restauración. La matriz completa de 26 casos **no consta repetida contra `3214960`**; no se debe atribuir a esa revisión hasta ejecutarla de nuevo.
 
 ## Resultados automatizados actuales
 

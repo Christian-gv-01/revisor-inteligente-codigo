@@ -38,6 +38,27 @@ ofrecida, citada, no ambigua y en la línea validada. El backend reconstruye la
 auditoría; no acepta que el modelo la declare. Conserva la severidad original y
 nunca la reduce. ID y línea no demuestran por sí solos pertinencia semántica.
 
+## E4-13. Ruta de análisis predeterminada — decisión documental para el cierre
+
+**Recomendación técnica (7 de noviembre de 2026):** ofrecer la **ruta directa como predeterminada** y conservar el **agente v2 como alternativa visible y seleccionable** para código pegado y archivos `.py`. Esta decisión se fundamenta en la evaluación pública posterior a `c522c24`, no en una preferencia estética:
+
+| Indicador, veinte casos por ruta | Directa | Agente v2 |
+|---|---:|---:|
+| Informes completos | 17/20 | 14/20 |
+| Informes parciales | 3/20 | 6/20 |
+| Latencia media global | 10,34 s | 22,62 s |
+| Intentos SDK reportados | 21 | 71 |
+
+En los **13 pares que se completaron en ambas rutas**, F1 fue 1,00 para ambas. Este subconjunto no permite concluir igualdad general ni una mejora del agente. Los tokens globales permanecen desconocidos. Un A/B de la primera decisión tuvo dos cambios en cinco pares comparables, lo que demuestra influencia del contexto, **no** mejora de precisión. Consultar [evaluación final y límites](evidencias/semana-4/postmerge-c522c24-20261107/README.md) y [comparación](18-comparacion-semanas-3-4.md).
+
+**Alcance de esta decisión:** el código documentado en E4-05 todavía describe el agente integrado para entradas de código y `.py`; **esta sección no demuestra que se haya cambiado el comportamiento predeterminado de la interfaz**. La adopción en frontend, su prueba de regresión y la aprobación final del equipo deben verificarse antes de afirmarlo en la sustentación o el portal. Mientras eso no ocurra, comunicarla como **decisión recomendada pendiente de implementación/aceptación**, no como función ya desplegada.
+
+La justificación para conservar el agente como opción es educativa y de trazabilidad (herramientas y decisiones auditables), sin afirmar superioridad general en la evaluación disponible.
+
+## Registro humano de sustentación y ensayo
+
+Se abrió [registro de sustentación del 7 de noviembre](evidencias/semana-4/registro-sustentacion-20261107.md) para consignar únicamente observaciones recibidas y tiempos **realmente medidos**. El equipo comunicó una **duración total cronometrada de 600 segundos (10 minutos)** frente a los 720 segundos planificados. El archivo final aportado para el cierre contiene **12 diapositivas**; la distribución anterior de 10 y los tiempos individuales siguen siendo planificación histórica, no una medida individual. Faltan observaciones académicas y confirmación de la versión efectivamente presentada.
+
 ## Pendientes de aceptación formal
 
 - Disponibilidad variable y errores 503 observados del proveedor.

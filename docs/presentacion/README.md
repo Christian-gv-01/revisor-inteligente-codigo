@@ -1,19 +1,17 @@
-# Presentación vigente
+# Presentación: control de versión para la entrega
 
-Usar [CODEGUARD-validacion-final-equipo-20261107.pptx](CODEGUARD-validacion-final-equipo-20261107.pptx)
-y [su PDF](CODEGUARD-validacion-final-equipo-20261107.pdf): incorporan el nombre
-completo de Klever Andres Alban Cruz confirmado por Ronald. Las otras once
-diapositivas y los resultados conservan el contenido final entregado por Christian.
-Los originales **CODEGUARD-validacion-final-20261107.pptx/pdf** permanecen intactos
-y corresponden al ZIP técnico de `b6ce96c`.
-Doce diapositivas editables y guion de 720 segundos planificados. El ensayo real
-y el reparto aún requieren a los integrantes. Los archivos anteriores se conservan
-como histórico; el ZIP debe generarse desde el commit que incorpore esta versión.
+**Registro de duración real:** **10 minutos cronometrados (600 segundos)**, frente a los **12 minutos previstos (720 segundos)**; la diferencia es **2 minutos menos**. Medición comunicada por el equipo el 7 de noviembre de 2026. No se dispone de tiempos individuales.
 
-Incluye los cuarenta análisis c522c24, sus parciales, comparación histórica,
-A/B del planificador, verificación del índice y confirmaciones públicas.
-Las pruebas simuladas de software se distinguen de Gemini real. No afirma
-mejora de precisión ni tokens totales conocidos donde faltan metadatos.
+**Archivo de 12 diapositivas aportado al cierre:** `CODEGUARD-SEMINARIO-12 diapos.pdf` (adjunto de conversación, **no incorporado aún a GitHub**; SHA-256 `bb52e1a8f57f4b29a2aa0f66855a097d6a9f487a391fb45189bb202a737aa8a8`). Debe confirmarse o subirse al repositorio antes de generar el ZIP.
+
+El repositorio contiene también [`CODEGUARD-validacion-final-equipo-20261107.pdf`](CODEGUARD-validacion-final-equipo-20261107.pdf) y [su PPTX editable](CODEGUARD-validacion-final-equipo-20261107.pptx), de **12 diapositivas**, como versión anteriormente indicada vigente. **No se afirma que ese PDF de GitHub coincida byte por byte con el PDF adjunto reciente.** El plan conversado de 10 diapositivas y reparto 5+3+4 es una planificación histórica superada por el PDF de 12 páginas aportado después.
+
+**Regla de entrega:** seleccionar y verificar un solo PDF como **vigente** para la carga. Los PDFs anteriores pueden conservarse en `docs/presentacion/historico/` si el equipo decide archivarlos, pero no deben figurar como alternativas vigentes. Confirmar la versión real antes del ZIP.
+
+[Registro de tiempo y observaciones](../evidencias/semana-4/registro-sustentacion-20261107.md) · [Ensayo](ensayo-cronometrado.md).
+
+---
+## Material previo y trazabilidad
 
 ## Registro anterior
 
