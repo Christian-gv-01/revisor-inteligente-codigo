@@ -51,6 +51,23 @@ def empaquetar(repo: Path, salida: Path, ref: str = "HEAD", limite: int = 20_000
         archivos.append({"ruta": nombre, "bytes": len(datos), "git_blob": objeto,
                          "sha256": hashlib.sha256(datos).hexdigest(), "modo": modo})
     pdfs = [x["ruta"] for x in archivos if x["ruta"].startswith("docs/presentacion/") and x["ruta"].lower().endswith(".pdf")]
+    # La entrega académica exige un único PDF vigente, correspondiente al adjunto
+    # definitivo verificado por el equipo. No aceptar versiones anteriores o
+    # copias con el nombre correcto pero contenidos diferentes.
+    pdf_final = "docs/presentacion/CODEGUARD-SEMINARIO-12 diapos.pdf"
+    sha256_final = "bb52e1a8f57f4b29a2aa0f66855a097d6a9f487a391fb45189bb202a737aa8a8"
+    if pdfs != [pdf_final]:
+        raise ValueError(
+            "PDF de entrega incorrecto: se exige un único archivo vigente "
+            f"en {pdf_final}; encontrados: {pdfs}"
+        )
+    pdf_observado = next(item["sha256"] for item in archivos if item["ruta"] == pdf_final)
+    if pdf_observado != sha256_final:
+        raise ValueError(
+            "El PDF vigente no coincide con la versión de 12 páginas revisada "
+            "para la sustentación; comprobar el origen antes de empaquetar."
+        )
+
     manifiesto = {"revision": revision, "fecha_commit_utc": fecha.isoformat(), "estado": "candidato_pendiente_revision",
                   "pdf_presentacion": pdfs, "instalacion_limpia_cronometrada": "requiere evidencia humana independiente",
                   "archivos_git": archivos, "criterio": "bytes de objetos Git; no archivos modificados o no versionados del equipo"}
