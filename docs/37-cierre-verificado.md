@@ -86,7 +86,7 @@ La huella se observó durante y al final, no al inicio. No afirmar superioridad.
 1. Instalación por otro integrante: la automatizada de 5 min 45 s usó herramientas
    y cachés existentes. No certifica el objetivo humano de diez minutos.
 2. Ensayo oral y reparto: el equipo comunicó **10 minutos totales cronometrados** el 7 de noviembre, frente a los 12 previstos. No se dispone de tiempos individuales ni de observaciones docentes; el PDF de 12 diapositivas aportado para el cierre debe conciliarse con el PDF del repositorio. [Registro](evidencias/semana-4/registro-sustentacion-20261107.md).
-3. **Semana 1:** se recuperaron [ADR del 20 de octubre y primer historial Git](evidencias/semana-1/README.md); la primera propuesta localizada es del 4 de noviembre. Continúan **sin acreditarse** respuestas al levantamiento, capturas originales y propuesta de la primera semana. Nombres/cuentas/aportes y aceptación de riesgos requieren verificación humana; no inventar entrevistas ni firmas.
+3. **Semana 1:** se recuperaron [ADR y primer historial Git](evidencias/semana-1/README.md), y el 8 de noviembre se incorporaron cuatro capturas técnicas y [levantamiento complementario](levantamiento.md) de cinco cuestionarios (fechados 7 de noviembre, 90 respuestas, cuatro conclusiones). La primera propuesta localizada es del 4 de noviembre. No se acreditan capturas originales de PR/commits, ni levantamiento realizado en Semana 1, ni aprobación formal del ADR. Autorizaciones de datos y aceptación de riesgos requieren comprobación humana.
 4. La clasificación técnica del JWT histórico como fixture está en docs/18-ci-main-docker.
    No se probó como credencial ni se acredita revocación. Confirmación del titular,
    si la exige el docente, sigue siendo una declaración humana.
