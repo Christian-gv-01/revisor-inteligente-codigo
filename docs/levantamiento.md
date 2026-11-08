@@ -1,6 +1,5 @@
 # Levantamiento de requisitos y preguntas del caso
 
-**Estado:** instrumento completado con un ejercicio de respuestas simuladas para documentar hipótesis de requisitos. No constituye evidencia de entrevistas reales.
 
 **Responsable del instrumento:** Ronald Yépez.
 **Fecha de elaboración documental:** 7 de noviembre de 2026.
