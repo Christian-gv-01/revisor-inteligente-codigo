@@ -85,7 +85,7 @@ La huella se observó durante y al final, no al inicio. No afirmar superioridad.
 
 1. Instalación por otro integrante: la automatizada de 5 min 45 s usó herramientas
    y cachés existentes. No certifica el objetivo humano de diez minutos.
-2. Ensayo oral y reparto: los doce minutos son planificados, no cronometrados.
+2. Ensayo oral y reparto: el equipo comunicó **10 minutos totales cronometrados** el 7 de noviembre, frente a los 12 previstos. No se dispone de tiempos individuales ni de observaciones docentes; el PDF de 12 diapositivas aportado para el cierre debe conciliarse con el PDF del repositorio. [Registro](evidencias/semana-4/registro-sustentacion-20261107.md).
 3. Levantamiento y originales de Semana 1, nombres/cuentas/aportes y aceptación
    de riesgos: conservar faltantes reales; no inventar entrevistas ni firmas.
 4. La clasificación técnica del JWT histórico como fixture está en docs/18-ci-main-docker.
