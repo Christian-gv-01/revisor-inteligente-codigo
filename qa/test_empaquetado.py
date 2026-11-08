@@ -46,6 +46,17 @@ class Paquete(unittest.TestCase):
             self.assertEqual(manifest["pdf_presentacion"], [])
             self.assertIsNone(z.testzip())
 
+    def test_proyecto_sin_pdf_vigente_se_bloquea(self):
+        # El control específico de CODEGUARD no debe romper el uso genérico
+        # del empaquetador con repositorios mínimos ni permitir paquetes
+        # académicos sin su PDF de sustentación.
+        p = self.repo / "docs" / "presentacion"
+        p.mkdir(parents=True)
+        (p / "README.md").write_text("Control de presentación CODEGUARD\n")
+        self.commit()
+        with self.assertRaisesRegex(ValueError, "PDF de entrega incorrecto"):
+            MOD.empaquetar(self.repo, self.root / "sin_pdf.zip")
+
     def test_env_versionado_bloquea_entrega(self):
         (self.repo / ".env").write_text("MARCADOR_FICTICIO=ejemplo\n")
         self.commit()
