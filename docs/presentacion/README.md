@@ -1,5 +1,7 @@
 # Presentación vigente
 
+> **Control previo al portal (7 de noviembre):** el reparto conversado más recientemente prevé **10 diapositivas** y **12 minutos**: Christian 5 minutos, Ronald 3, Klever/Andy 4. Sin embargo, el PPTX/PDF actualmente señalado abajo contiene **12 diapositivas**. No declarar equivalentes ambas versiones. Verificar la exportación final y dejar un único PDF designado como vigente para el ZIP; conservar las versiones anteriores identificadas como históricas, sin ocultar su procedencia. El ensayo real no está documentado. [Registro pendiente](../evidencias/semana-4/registro-sustentacion-20261107.md).
+
 Usar [CODEGUARD-validacion-final-equipo-20261107.pptx](CODEGUARD-validacion-final-equipo-20261107.pptx)
 y [su PDF](CODEGUARD-validacion-final-equipo-20261107.pdf): incorporan el nombre
 completo de Klever Andres Alban Cruz confirmado por Ronald. Las otras once
