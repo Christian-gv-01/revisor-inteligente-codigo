@@ -1,20 +1,23 @@
-# Evidencias de Semana 1 — registro de faltantes
+﻿# Evidencias de Semana 1
 
-Creado el 5 de noviembre de 2026 por el rol de QA y documentación. Esta carpeta
-organiza la subsanación; **no contiene capturas o actas originales de Semana 1**.
-Su creación posterior no demuestra cumplimiento oportuno.
+Esta carpeta organiza los registros históricos recuperables del proyecto CODEGUARD.
 
-| Material solicitado | Situación comprobada en el repositorio | Acción para cerrar |
-|---|---|---|
-| Capturas de revisión 1 | No localizadas ni aportadas | Incorporar originales con fecha y autor; no recrearlas como históricas |
-| Notas y decisiones de esa semana | No aportadas | Recuperar notas reales o declarar la ausencia |
-| Respuestas del levantamiento | No aportadas | Vincular resultados reales al [instrumento](../../levantamiento.md) |
-| Propuesta, requisitos, arquitectura y fuentes | Consolidados ahora | Consultar [índice documental](../../README.md); indicar fecha real |
+## Evidencias incluidas
 
-Para cada evidencia recibida registrar: nombre, autor, fecha original, actividad,
-revisión Git si se conoce y ubicación. Omitir datos personales innecesarios y
-secretos. Si no se conoce un dato, indicar «no consta».
+1. historial-inicial-git.txt: primeros commits recuperados del historial Git.
+2. decisiones-iniciales.md: copia del documento de decisiones del commit 0832860.
+3. propuesta-version-inicial.md: estado comprobado de la propuesta y su historial.
+4. capturas/: imágenes originales disponibles.
 
-Los [documentos históricos conservados](../../historico/README.md) corresponden
-a revisión 2; no son prueba automática de revisión 1. Las pruebas de salud de
-semanas posteriores tampoco acreditan una ejecución en Semana 1.
+## Contexto histórico
+
+El 20 de octubre de 2026 se registraron actividades iniciales de configuración,
+desarrollo del backend y pruebas de QA.
+
+El commit 0832860 registra la documentación de seguridad y la prueba
+del endpoint de salud.
+
+## Limitaciones
+
+No se reconstruyen capturas inexistentes ni se atribuyen fechas no verificadas.
+Los documentos posteriores se identifican como tales.
