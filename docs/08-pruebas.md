@@ -134,3 +134,7 @@ La URL pública y una matriz 26/26 del **5 de noviembre** sí están evidenciada
 - Auditoría de secretos: aprobada, 0 patrones de secreto detectados.
 - Sintaxis de Compose: válida.
 - Contenedor y reinicio local: pendientes porque Docker Desktop Engine no estaba iniciado.
+
+## Aclaración final de P25 (8 de noviembre de 2026)
+
+El escenario vigente [P25 del ejecutor de producción](../scripts/pruebas_produccion.py) envía `max_pasos=5` y espera **HTTP 422**, porque el contrato del agente v2 admite **hasta cuatro pasos totales**; el revisor de la interfaz solicita tres por defecto. **Cuatro no constituye una entrada inválida en el contrato actual.** No integrar una tabla antigua que afirme `max_pasos=4 → 422` ni enlaces a la rama inexistente `principal`. La [matriz pública completa 26/26](evidencias/semana-4/pruebas-publicas-post-merge-20261105.json) corresponde al **5 de noviembre**, mientras que los nueve controles públicos posteriores a `c522c24` son otra evidencia de fecha y alcance distintos.
