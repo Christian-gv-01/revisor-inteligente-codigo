@@ -1,5 +1,8 @@
 # 19. Cierre documental — Entrega 4
 
+> **Actualización posterior del 7 de noviembre de 2026 (no modifica el diagnóstico histórico del 5):** se recuperaron del historial Git [ADR iniciales del 20 de octubre](evidencias/semana-1/decisiones-iniciales.md), [lista de los primeros commits](evidencias/semana-1/historial-inicial-git.txt) y [primera propuesta localizada del 4 de noviembre](evidencias/semana-1/propuesta-version-inicial.md). Estas evidencias cubren **parcialmente** el punto s1h y aclaran la procedencia de algunas decisiones, pero **siguen sin acreditarse** respuestas auténticas del levantamiento, captura PNG de revisión 1 y propuesta original de Semana 1. [Inventario actualizado](evidencias/semana-1/README.md). No se reasignan fechas ni se declara cumplimiento total.
+
+
 > Registro histórico del 5 de noviembre. Para el estado vigente del 7 de noviembre
 > consultar [37-cierre-verificado.md](37-cierre-verificado.md), con la comparación
 > real, herramientas v2, herencia, documentación y pendientes humanos. Las filas
