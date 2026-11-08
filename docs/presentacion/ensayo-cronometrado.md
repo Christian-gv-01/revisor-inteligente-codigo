@@ -1,4 +1,6 @@
-# Ensayo de sustentación: pendiente de indicaciones del ingeniero
+# Ensayo de sustentación: pendiente de medición real
+
+> Actualización de planificación del equipo (7 de noviembre): se propuso un reparto **de 10 diapositivas y 720 segundos** — Christian 5 minutos (1–4), Ronald 3 (5–6 y 9), Klever/Andy 4 (7–8 y 10). La hoja inferior conserva el **plan anterior de 12 diapositivas** para trazabilidad y no representa una medición real. Registrar el ensayo y cualquier observación docente en [la hoja de sustentación](../evidencias/semana-4/registro-sustentacion-20261107.md). El PDF de 12 diapositivas versionado requiere conciliación con ese plan antes de la entrega.
 
 Registro preparado el 6 de noviembre de 2026 para la exposición prevista por el
 equipo para el 7 de noviembre. Ronald indicó que primero deben consultar al
