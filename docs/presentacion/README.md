@@ -1,21 +1,17 @@
-# Presentación vigente
+# Presentación: control de versión para la entrega
 
-> **Control previo al portal (7 de noviembre):** el reparto conversado más recientemente prevé **10 diapositivas** y **12 minutos**: Christian 5 minutos, Ronald 3, Klever/Andy 4. Sin embargo, el PPTX/PDF actualmente señalado abajo contiene **12 diapositivas**. No declarar equivalentes ambas versiones. Verificar la exportación final y dejar un único PDF designado como vigente para el ZIP; conservar las versiones anteriores identificadas como históricas, sin ocultar su procedencia. El ensayo real no está documentado. [Registro pendiente](../evidencias/semana-4/registro-sustentacion-20261107.md).
+**Registro de duración real:** **10 minutos cronometrados (600 segundos)**, frente a los **12 minutos previstos (720 segundos)**; la diferencia es **2 minutos menos**. Medición comunicada por el equipo el 7 de noviembre de 2026. No se dispone de tiempos individuales.
 
-Usar [CODEGUARD-validacion-final-equipo-20261107.pptx](CODEGUARD-validacion-final-equipo-20261107.pptx)
-y [su PDF](CODEGUARD-validacion-final-equipo-20261107.pdf): incorporan el nombre
-completo de Klever Andres Alban Cruz confirmado por Ronald. Las otras once
-diapositivas y los resultados conservan el contenido final entregado por Christian.
-Los originales **CODEGUARD-validacion-final-20261107.pptx/pdf** permanecen intactos
-y corresponden al ZIP técnico de `b6ce96c`.
-Doce diapositivas editables y guion de 720 segundos planificados. El ensayo real
-y el reparto aún requieren a los integrantes. Los archivos anteriores se conservan
-como histórico; el ZIP debe generarse desde el commit que incorpore esta versión.
+**Archivo de 12 diapositivas aportado al cierre:** `CODEGUARD-SEMINARIO-12 diapos.pdf` (adjunto de conversación, **no incorporado aún a GitHub**; SHA-256 `bb52e1a8f57f4b29a2aa0f66855a097d6a9f487a391fb45189bb202a737aa8a8`). Debe confirmarse o subirse al repositorio antes de generar el ZIP.
 
-Incluye los cuarenta análisis c522c24, sus parciales, comparación histórica,
-A/B del planificador, verificación del índice y confirmaciones públicas.
-Las pruebas simuladas de software se distinguen de Gemini real. No afirma
-mejora de precisión ni tokens totales conocidos donde faltan metadatos.
+El repositorio contiene también [`CODEGUARD-validacion-final-equipo-20261107.pdf`](CODEGUARD-validacion-final-equipo-20261107.pdf) y [su PPTX editable](CODEGUARD-validacion-final-equipo-20261107.pptx), de **12 diapositivas**, como versión anteriormente indicada vigente. **No se afirma que ese PDF de GitHub coincida byte por byte con el PDF adjunto reciente.** El plan conversado de 10 diapositivas y reparto 5+3+4 es una planificación histórica superada por el PDF de 12 páginas aportado después.
+
+**Regla de entrega:** seleccionar y verificar un solo PDF como **vigente** para la carga. Los PDFs anteriores pueden conservarse en `docs/presentacion/historico/` si el equipo decide archivarlos, pero no deben figurar como alternativas vigentes. Confirmar la versión real antes del ZIP.
+
+[Registro de tiempo y observaciones](../evidencias/semana-4/registro-sustentacion-20261107.md) · [Ensayo](ensayo-cronometrado.md).
+
+---
+## Material previo y trazabilidad
 
 ## Registro anterior
 
