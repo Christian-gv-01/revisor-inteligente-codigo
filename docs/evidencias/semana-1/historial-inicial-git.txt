@@ -1,0 +1,28 @@
+﻿===== PRIMEROS COMMITS =====
+8e12619 | 2026-10-20 | christian | chore: configurar gitignore y proteger credenciales
+166eb5b | 2026-10-20 | christian | chore: crear estructura inicial del proyecto
+e66e7b1 | 2026-10-20 | christian | feat: inicializar API FastAPI con endpoint health
+a60459d | 2026-10-20 | christian | chore: configurar dependencias de Gemini y variables de entorno
+0832860 | 2026-10-20 | Andyjr98 | qa: documentar seguridad y probar endpoint health
+9e09729 | 2026-10-20 | Andyjr98 | docs: agregar README inicial
+04bab7c | 2026-10-20 | Andyjr98 | docs: completar README inicial
+2e9d8d7 | 2026-10-20 | Andyjr98 | docs: actualizar bitacora de QA y seguridad
+0584a3f | 2026-10-21 | Andyjr98 | merge: integrar backend para pruebas de QA
+5a34d44 | 2026-10-21 | christian | feat: integrar Gemini con endpoint de analisis seguro
+e9bd57e | 2026-10-21 | Andyjr98 | merge: integrar backend actualizado para pruebas de QA
+c786406 | 2026-10-21 | Andyjr98 | test: agregar pruebas y evidencias de QA y seguridad
+818b8e5 | 2026-10-21 | Andyjr98 | test: ampliar pruebas de seguridad y actualizar evidencias
+3a25ec7 | 2026-10-22 | christian | fix: controlar timeout HTTPX del proveedor LLM
+f5f018f | 2026-10-22 | christian | feat: implementar carga y validacion de archivos Python
+
+===== PRIMERAS INTEGRACIONES =====
+0584a3f | 2026-10-21 | merge: integrar backend para pruebas de QA
+e9bd57e | 2026-10-21 | merge: integrar backend actualizado para pruebas de QA
+d7e5f69 | 2026-10-22 | merge: integrar carga de archivos Python y ZIP del backend
+af284e5 | 2026-10-22 | merge: integrar frontend React para revision 2
+8f27ddc | 2026-10-29 | Merge pull request #2 from Christian-gv-01/integration/revision-2
+129d462 | 2026-10-30 | Merge pull request #3 from Christian-gv-01/fix/rag-validacion
+c06402b | 2026-10-30 | Merge pull request #4 from Christian-gv-01/feature/rag-seguridad-ampliada
+6c2ab2f | 2026-10-30 | merge: integrar frontend y evaluacion semana 3 con RAG
+563cc38 | 2026-10-31 | merge: integrar CODEGUARD con RAG, frontend, GitHub y agente
+30013f9 | 2026-11-04 | merge: proteger endpoints Gemini con limites HTTP 429
