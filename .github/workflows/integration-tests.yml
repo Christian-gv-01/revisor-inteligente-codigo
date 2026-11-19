@@ -19,7 +19,8 @@ jobs:
     env:
       ANONYMIZED_TELEMETRY: "False"
       OTEL_SDK_DISABLED: "true"
-    runs-on: ubuntu-latest
+    # Playwright 1.58 no instala Chromium en la nueva imagen ubuntu-26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
