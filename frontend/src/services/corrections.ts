@@ -1,10 +1,12 @@
-// Contrato propuesto v1. La API permanece deshabilitada hasta acordarlo con Backend.
-export interface CorrectionRequest {
+// Se conserva el objetivo individual v1 para integraciones existentes.
+export type CorrectionRequest = {
   archivo: string;
   codigo_original: string;
   sha256_original: string;
-  objetivo: { linea: number; descripcion: string };
-}
+} & (
+  { objetivo: { linea: number; descripcion: string }; objetivos?: never; lineas_excluidas?: number[] } |
+  { objetivo?: never; objetivos: { linea: number; descripcion: string }[]; lineas_excluidas?: number[] }
+);
 
 export interface CorrectionProposal {
   version: "1";
