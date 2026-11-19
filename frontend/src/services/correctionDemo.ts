@@ -13,6 +13,10 @@ export const demoCorrectionClient: CorrectionClient = {
   async preview(request: CorrectionRequest, signal: AbortSignal) {
     if (signal.aborted) throw new DOMException("Cancelado", "AbortError");
     if (!demoCorrectionAvailable(request.codigo_original)) throw new Error("Esta demostración solo incluye la corrección del ejemplo SQL inicial.");
+    const objetivos = "objetivos" in request && request.objetivos ? request.objetivos : [request.objetivo];
+    if (objetivos.length !== 1 || objetivos[0]?.linea !== 6) {
+      throw new Error("El modo demostración solo prepara la corrección de la consulta SQL de la línea 6.");
+    }
     const stem = request.archivo.replace(/\.py$/i, "").replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 70) || "ejemplo";
     return {
       version: "1", propuesta_id: `demo-${crypto.randomUUID()}`,
