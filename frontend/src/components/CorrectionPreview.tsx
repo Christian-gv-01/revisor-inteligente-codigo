@@ -101,6 +101,7 @@ export function CorrectionPreview({ archivo, codigo, finding, findings, demo, pa
       {disponibles.map(item => <label className="correction-target" key={item.id}>
         <input type="checkbox" aria-label={`Corregir ${item.titulo}, línea ${item.linea}`}
           checked={selectedIds.includes(item.id)}
+          disabled={!selectedIds.includes(item.id) && selectedIds.length >= 10}
           onChange={event => {
             const checked = event.target.checked;
             setSelectedIds(previous => checked
@@ -112,7 +113,7 @@ export function CorrectionPreview({ archivo, codigo, finding, findings, demo, pa
           }} />
         <span><strong>{item.titulo}</strong> · línea {item.linea} · {item.severidad}</span>
       </label>)}
-      <p className="correction-selection-count">{seleccionados.length} seleccionado(s) de {disponibles.length}. Si la IA intenta modificar otras zonas, la propuesta será rechazada.</p>
+      <p className="correction-selection-count">{seleccionados.length} seleccionado(s) de {disponibles.length}. Máximo 10 por solicitud. Si la IA intenta modificar otras zonas, la propuesta será rechazada.</p>
     </fieldset>
     {proposal && <p role="status">Selección bloqueada mientras revisas esta propuesta. Cancélala para cambiar hallazgos.</p>}
     {partial && <p className="correction-warning">El análisis es parcial. Aprobar una copia no completa la revisión ni garantiza seguridad.</p>}
