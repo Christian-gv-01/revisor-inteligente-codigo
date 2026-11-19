@@ -20,6 +20,11 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
   const visible = (result?.hallazgos.filter(finding => filter === "todas" || finding.severidad === filter) ?? [])
     .sort((a, b) => REVIEW_PRIORITY[a.severidad] - REVIEW_PRIORITY[b.severidad]);
   const highest = SEVERITIES.find(severity => result?.hallazgos.some(finding => finding.severidad === severity));
+  const observacionesEstaticas = result?.analisis_estatico?.flatMap(report =>
+    report.hallazgos.map(item => ({ ...item, archivo: report.archivo }))) ?? [];
+  const coincidenciasLinea = observacionesEstaticas.filter(item =>
+    result?.hallazgos.some(finding => finding.archivo === item.archivo && finding.linea === item.linea));
+  const soloEstaticas = observacionesEstaticas.length - coincidenciasLinea.length;
   const staticNeedsReview = result?.analisis_estatico?.some(
     report => report.hallazgos.length > 0 || report.estado !== "completo",
   );
@@ -29,7 +34,11 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
         <div><Icon name="file" size={23} /><h2 id="results-title">Informe de revisión</h2></div>
         {onExport ? <button className="text-button export-button" disabled={loading} onClick={onExport}><Icon name="download" size={18} />Exportar JSON</button> : <span className="count-badge">{result?.hallazgos.length ?? "—"}</span>}
       </div>
-      {!loading && result && <p className="analysis-origins">{result.hallazgos.length} hallazgos contextuales · {result.analisis_estatico?.reduce((n, r) => n + r.hallazgos.length, 0) ?? 0} observaciones de herramientas. Los conteos pueden referirse al mismo riesgo.</p>}
+      {!loading && result && <p className="analysis-origins">
+        {result.hallazgos.length} hallazgos contextuales (Gemini + RAG) · {observacionesEstaticas.length} observaciones independientes de Ruff/Bandit.
+        {" "}{coincidenciasLinea.length} observación(es) estática(s) en líneas también reportadas por Gemini;
+        {" "}{soloEstaticas} en otras líneas. Coincidir en una línea no implica que sea el mismo riesgo.
+      </p>
       {!loading && result?.estado === "parcial" && (
         <div className="analysis-notice" role="status">
           <strong>Análisis parcial: revisión incompleta</strong>
