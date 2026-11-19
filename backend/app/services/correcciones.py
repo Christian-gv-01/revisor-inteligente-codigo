@@ -394,8 +394,8 @@ def _validar_alcance_cambios(
         if tipo == "equal":
             continue
         if tipo == "insert":
-            # Se permiten inserciones pequeñas junto a una línea seleccionada;
-            # nunca reescrituras completas insertadas dentro del mismo punto.
+            # Una inserción extensa puede ocultar reescrituras enteras aunque
+            # esté anclada junto al objetivo. Rechazarla conservadoramente.
             if not (inicio in permitidas or inicio + 1 in permitidas):
                 raise CorreccionError(
                     "La propuesta modifica zonas no seleccionadas. No se generó ninguna copia.", 502
