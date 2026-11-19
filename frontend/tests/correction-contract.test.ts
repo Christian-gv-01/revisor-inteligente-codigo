@@ -91,6 +91,22 @@ it("diferencia un 422 por abstención del proveedor y un timeout", async () => {
     .mockResolvedValueOnce(new Response("{}", { status: 504 }));
   vi.stubGlobal("fetch", send);
   const client = configuredCorrectionClient()!;
-  await expect(client.preview(request, signal())).rejects.toThrow("Gemini no encontró una corrección válida");
+  await expect(client.preview(request, signal())).rejects.toThrow("No se obtuvo un parche local válido para 1 hallazgo(s)");
   await expect(client.preview(request, signal())).rejects.toThrow("no respondió dentro del plazo");
+});
+
+
+it("explica el rechazo de tres objetivos sin dar a entender que se corrigieron", async () => {
+  vi.stubEnv("VITE_CORRECTIONS_API_ENABLED", "1");
+  const code = "x = 1\ny = 2\nz = 3";
+  const request = {
+    archivo: "example.py", codigo_original: code, sha256_original: await sha256(code),
+    objetivos: [1, 2, 3].map(linea => ({ linea, descripcion: "Revisar" })),
+  };
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(
+    JSON.stringify({ detail: "No existe una corrección concreta y sustentable para este hallazgo." }),
+    { status: 422, headers: { "Content-Type": "application/json" } },
+  )));
+  await expect(configuredCorrectionClient()!.preview(request, signal()))
+    .rejects.toThrow("3 hallazgo(s) seleccionado(s)");
 });
