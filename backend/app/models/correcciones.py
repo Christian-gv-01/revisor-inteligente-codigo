@@ -34,7 +34,7 @@ class SolicitudPrevisualizacion(BaseModel):
     objetivo: ObjetivoCorreccion | None = None
     objetivos: list[ObjetivoCorreccion] | None = Field(default=None, min_length=1, max_length=10)
     # Solo para proteger hallazgos desmarcados en la interfaz.
-    lineas_excluidas: list[int] = Field(default_factory=list, max_length=100)
+    lineas_excluidas: list[int] = Field(default_factory=list, max_length=2000)
 
     @model_validator(mode="after")
     def validar_entrada(self) -> "SolicitudPrevisualizacion":
