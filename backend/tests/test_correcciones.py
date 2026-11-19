@@ -322,3 +322,85 @@ def test_entrada_seleccion_de_hallazgos_invalida(cliente, payload_changes):
     if payload_changes.get("objetivos") is not None:
         payload.pop("objetivo", None) if payload_changes.get("objetivo") is None else None
     assert cliente.post("/api/v1/correcciones/previsualizar", json=payload).status_code == 422
+
+
+# Regression: real model output is a compact patch, not a rewritten full file.
+def test_parche_local_eval_con_import_ast_y_original_intacto():
+    codigo = (
+        "import os\n"
+        "\n"
+        "def calcular(expresion):\n"
+        "    return eval(expresion)\n"
+        "\n"
+        "def otra_funcion():\n"
+        "    return 'NO CAMBIAR'\n"
+    )
+    parche = {
+        "cambios": [{"linea": 4, "antes": "    return eval(expresion)",
+                     "despues": "    return ast.literal_eval(expresion)"}],
+        "importaciones": ["ast"],
+    }
+    import json
+    correccion = correcciones._aplicar_parche_local(
+        codigo, json.dumps(parche), {"linea": 4, "descripcion": "Eliminar eval"},
+    )
+    assert "import ast\n" in correccion
+    assert "    return ast.literal_eval(expresion)\n" in correccion
+    assert "    return 'NO CAMBIAR'\n" in correccion
+    assert codigo.count("eval(expresion)") == 1
+    correcciones._validar_codigo_propuesto(codigo, correccion)
+    correcciones._validar_alcance_cambios(codigo, correccion, {4}, {7})
+
+
+@pytest.mark.parametrize("cambio", [
+    {"linea": 6, "antes": "    return 'NO CAMBIAR'", "despues": "    return 'CAMBIADO'"},
+    {"linea": 4, "antes": "    return eval(otro)", "despues": "    return 1"},
+    {"linea": 4, "antes": "    return eval(expresion)", "despues": "    return 1\n" * 5},
+])
+def test_parche_local_rechaza_ediciones_no_autorizadas(cambio):
+    import json
+    codigo = "import os\n\ndef calcular(expresion):\n    return eval(expresion)\n\ndef otra():\n    return 'NO CAMBIAR'\n"
+    with pytest.raises(correcciones.CorreccionError) as err:
+        correcciones._aplicar_parche_local(
+            codigo, json.dumps({"cambios": [cambio], "importaciones": []}),
+            {"linea": 4, "descripcion": "Eliminar eval"},
+        )
+    assert err.value.status_code == 502
+
+
+def test_parche_local_rechaza_imports_no_autorizados():
+    import json
+    codigo = "def ejecutar(x):\n    return eval(x)\n"
+    with pytest.raises(correcciones.CorreccionError):
+        correcciones._aplicar_parche_local(
+            codigo, json.dumps({"cambios": [
+                {"linea": 2, "antes": "    return eval(x)", "despues": "    return x"}
+            ], "importaciones": ["os"]}),
+            {"linea": 2, "descripcion": "Corregir"},
+        )
+
+
+def test_contexto_local_no_envia_el_archivo_entero():
+    codigo = "\n".join(["clave_privada = 'DATO NO NECESARIO'"] +
+                      [f"var_{i} = {i}" for i in range(1, 50)] +
+                      ["resultado = eval(entrada)"])
+    contexto = correcciones._contexto_local(
+        codigo, {"objetivos": [{"linea": 51, "descripcion": "Eval"}]},
+    )
+    assert len(contexto["lineas_editables"]) <= 2
+    assert len(contexto["contexto_no_editable"]) <= 7
+    assert "DATO NO NECESARIO" not in str(contexto)
+    assert contexto["objetivos"][0]["linea"] == 51
+
+
+def test_solicitud_v2_permite_mas_de_cien_lineas_excluidas(cliente, monkeypatch):
+    codigo = "".join(f"x_{i} = {i}\n" for i in range(1, 120))
+    monkeypatch.setattr(correcciones, "_generar_codigo_propuesto",
+                        lambda *_: codigo.replace("x_1 = 1", "x_1 = 10"))
+    respuesta = cliente.post("/api/v1/correcciones/previsualizar", json={
+        "archivo": "grande.py", "codigo_original": codigo,
+        "sha256_original": sha(codigo),
+        "objetivos": [{"linea": 1, "descripcion": "Modificar"}],
+        "lineas_excluidas": list(range(2, 120)),
+    })
+    assert respuesta.status_code == 200, respuesta.text

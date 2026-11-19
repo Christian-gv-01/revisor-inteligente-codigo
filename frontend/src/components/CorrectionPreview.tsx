@@ -23,25 +23,38 @@ export function CorrectionPreview({ archivo, codigo, finding, findings, demo, pa
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const pending = useRef<AbortController | null>(null);
+  const previewInFlight = useRef(false);
   const disponibles = (findings ?? [finding]).filter(item => item.archivo === archivo)
     .filter((item, index, list) => list.findIndex(other => other.id === item.id) === index);
   const seleccionados = disponibles.filter(item => selectedIds.includes(item.id));
   const lineasSeleccionadas = new Set(seleccionados.map(item => item.linea));
   const excluidas = [...new Set(disponibles.filter(item => !lineasSeleccionadas.has(item.linea))
     .map(item => item.linea))];
+  // El análisis puede contener sugerencias vacías o líneas no localizables:
+  // se usa la descripción visible como alternativa y se valida antes de llamar a la API.
+  const totalLineas = codigo.replace(/\r\n?/g, "\n").replace(/\n$/, "").split("\n").length;
+  const objetivosValidos = seleccionados.every(item => Number.isInteger(item.linea) &&
+    item.linea >= 1 && item.linea <= totalLineas);
 
   // El padre desmonta esta revisión al editar el código, cambiar archivo o hallazgo.
   useEffect(() => () => pending.current?.abort(), []);
 
   async function preview() {
-    if (!client || !seleccionados.length || phase === "previewing" || phase === "approving" || proposal) return;
+    if (!client || !seleccionados.length || !objetivosValidos ||
+        phase === "previewing" || phase === "approving" || proposal ||
+        previewInFlight.current) return;
+    previewInFlight.current = true;
     pending.current?.abort();
     const controller = new AbortController();
     pending.current = controller;
     setConsent(false); setProposal(null); setMessage(""); setError(""); setPhase("previewing");
     try {
       const request = { archivo, codigo_original: codigo, sha256_original: await sha256(codigo),
-        objetivos: seleccionados.map(item => ({ linea: item.linea, descripcion: item.correccion_sugerida })),
+        objetivos: seleccionados.map(item => ({
+          linea: item.linea,
+          descripcion: (item.correccion_sugerida?.trim() || item.explicacion?.trim() ||
+            item.titulo?.trim() || "Revisar el problema seleccionado").slice(0, 1000),
+        })),
         lineas_excluidas: excluidas };
       if (controller.signal.aborted) return;
       const candidate = await validateProposal(await client.preview(request, controller.signal), request);
@@ -51,6 +64,9 @@ export function CorrectionPreview({ archivo, codigo, finding, findings, demo, pa
       if (controller.signal.aborted) return;
       setError(cause instanceof Error ? cause.message : "No se pudo preparar la propuesta.");
       setPhase("idle");
+    } finally {
+      previewInFlight.current = false;
+      if (pending.current === controller) pending.current = null;
     }
   }
 
@@ -115,11 +131,12 @@ export function CorrectionPreview({ archivo, codigo, finding, findings, demo, pa
       </label>)}
       <p className="correction-selection-count">{seleccionados.length} seleccionado(s) de {disponibles.length}. Máximo 10 por solicitud. Si la IA intenta modificar otras zonas, la propuesta será rechazada.</p>
     </fieldset>
+    {!objetivosValidos && <p role="alert">Hay hallazgos cuya línea no existe en el archivo actual. Analiza nuevamente antes de corregir.</p>}
     {proposal && <p role="status">Selección bloqueada mientras revisas esta propuesta. Cancélala para cambiar hallazgos.</p>}
     {partial && <p className="correction-warning">El análisis es parcial. Aprobar una copia no completa la revisión ni garantiza seguridad.</p>}
     {!client && <p role="status">No hay una corrección descargable disponible para este resultado.</p>}
-    {(phase === "idle" || phase === "done") && <button className="primary-button" disabled={!client || seleccionados.length === 0} onClick={() => void preview()}>Previsualizar propuesta para {seleccionados.length} hallazgo(s)</button>}
-    {phase === "previewing" && <p role="status">Preparando la previsualización…</p>}
+    {(phase === "idle" || phase === "done") && <button className="primary-button" disabled={!client || seleccionados.length === 0 || !objetivosValidos} onClick={() => void preview()}>Previsualizar propuesta para {seleccionados.length} hallazgo(s)</button>}
+    {phase === "previewing" && <p role="status">Preparando una corrección localizada con Gemini. Puedes cancelar sin modificar el original.</p>}
     {proposal && <>
       <div className="correction-comparison">
         <div><h4>Original · {archivo}</h4><pre tabIndex={0} aria-label="Código original"><code>{codigo}</code></pre></div>

@@ -57,3 +57,40 @@ it("rechazar solo devuelve un estado y no un archivo", async () => {
   expect(() => validateRejection({ version: "1", propuesta_id: "otra-propuesta", estado: "rechazada" }, proposal)).toThrow();
   expect(() => validateRejection({ version: "1", propuesta_id: proposal.propuesta_id, estado: "aprobada" }, proposal)).toThrow();
 });
+
+
+it("explica el HTTP 422 sin revelar datos del código enviado", async () => {
+  vi.stubEnv("VITE_CORRECTIONS_API_ENABLED", "1");
+  const original = "token_interno = 'PRIVADO'";
+  const request = { archivo: "example.py", codigo_original: original,
+    sha256_original: await sha256(original),
+    objetivos: [{ linea: 1, descripcion: "Corregir" }] };
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(
+    new Response(JSON.stringify({ detail: [
+      { loc: ["body", "objetivos", 0, "descripcion"], input: original,
+        type: "string_too_short" },
+    ] }), { status: 422, headers: { "Content-Type": "application/json" } })
+  ));
+  const client = configuredCorrectionClient();
+  expect(client).toBeDefined();
+  await expect(client!.preview(request, signal())).rejects.toThrow("campo descripcion");
+  const err = await client!.preview(request, signal()).catch(e => String(e.message));
+  expect(err).not.toContain("PRIVADO");
+});
+
+it("diferencia un 422 por abstención del proveedor y un timeout", async () => {
+  vi.stubEnv("VITE_CORRECTIONS_API_ENABLED", "1");
+  const original = "return eval(x)";
+  const request = { archivo: "example.py", codigo_original: original,
+    sha256_original: await sha256(original),
+    objetivos: [{ linea: 1, descripcion: "Corregir" }] };
+  const send = vi.fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify({
+      detail: "No existe una corrección concreta y sustentable para este hallazgo.",
+    }), { status: 422, headers: { "Content-Type": "application/json" } }))
+    .mockResolvedValueOnce(new Response("{}", { status: 504 }));
+  vi.stubGlobal("fetch", send);
+  const client = configuredCorrectionClient()!;
+  await expect(client.preview(request, signal())).rejects.toThrow("Gemini no encontró una corrección válida");
+  await expect(client.preview(request, signal())).rejects.toThrow("no respondió dentro del plazo");
+});

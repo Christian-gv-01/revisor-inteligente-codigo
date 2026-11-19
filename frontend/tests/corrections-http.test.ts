@@ -78,7 +78,7 @@ suite("Correcciones: validadores frontend y backend reales, proveedor simulado",
   });
   it("timeout del generador conserva un error 504 sanitizado", async () => {
     const code = SQL_EXAMPLE_CODE + "\n# INTEGRACION_ERROR";
-    const r = await jar()(`${path}/previsualizar`, { archivo: "usuarios.py", codigo_original: code, sha256_original: await sha256(code), objetivo: { linea: 6, descripcion: "Revisar" } });
+    const r = await jar()(`${path}/previsualizar`, { archivo: "usuarios.py", codigo_original: code, sha256_original: await sha256(code), objetivo: { linea: 6, descripcion: "INTEGRACION_ERROR - Revisar" } });
     expect(r.status).toBe(504); expect(await r.text()).not.toContain("INTEGRACION_ERROR");
   });
 });
