@@ -28,3 +28,6 @@
 .correction-targets { min-width: 0; min-inline-size: 0; max-width: 100%; width: 100%; box-sizing: border-box; }
 .correction-target { min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
 .correction-target span { min-width: 0; overflow-wrap: anywhere; }
+
+/* Mantener scroll de código dentro de cada <pre>, nunca del documento. */
+.correction-preview { overflow-x: clip; }
