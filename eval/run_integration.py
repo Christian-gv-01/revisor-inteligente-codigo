@@ -46,6 +46,26 @@ class FixtureClient:
 
         if contents.startswith('{'):
             datos = json.loads(contents)
+            if 'lineas_editables' in datos:
+                if any('INTEGRACION_ERROR' in item.get('descripcion', '')
+                       for item in datos['objetivos']):
+                    raise TimeoutException('Timeout controlado de corrección')
+                cambios = []
+                for item in datos['lineas_editables']:
+                    original = item['texto']
+                    cambiado = original
+                    if 'consulta =' in original and 'SELECT' in original:
+                        cambiado = 'consulta = "SELECT * FROM usuarios WHERE nombre = ?"'
+                    elif 'cursor.execute(consulta)' in original:
+                        cambiado = 'cursor.execute(consulta, (nombre,))'
+                    elif 'cursor.execute(' in original and 'SELECT' in original:
+                        cambiado = 'cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre,))'
+                    if cambiado != original:
+                        cambios.append({'linea': item['linea'], 'antes': original, 'despues': cambiado})
+                return SimpleNamespace(
+                    text=json.dumps({'cambios': cambios, 'importaciones': []}),
+                    usage_metadata=None,
+                )
             if 'codigo_original_no_confiable' in datos:
                 codigo = datos['codigo_original_no_confiable']
                 if 'INTEGRACION_ERROR' in codigo:
