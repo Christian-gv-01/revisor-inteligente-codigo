@@ -412,7 +412,10 @@ def crear_previsualizacion(
 ) -> dict[str, Any]:
     """Crea y guarda una propuesta pendiente; no crea ningún archivo descargable."""
     hash_original_calculado = _sha256(solicitud.codigo_original)
-    if solicitud.objetivo.linea > len(solicitud.codigo_original.splitlines()):
+    if any(
+        objetivo.linea > len(solicitud.codigo_original.splitlines())
+        for objetivo in solicitud.objetivos_efectivos
+    ):
         raise CorreccionError("La línea objetivo no existe en el archivo.", 422)
     if not hmac.compare_digest(
         hash_original_calculado,
