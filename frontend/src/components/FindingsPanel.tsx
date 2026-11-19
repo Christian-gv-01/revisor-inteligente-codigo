@@ -38,7 +38,7 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
         {result.hallazgos.length} hallazgos contextuales (Gemini + RAG) · {observacionesEstaticas.length} observaciones independientes de Ruff/Bandit.
         {" "}{coincidenciasLinea.length} observación(es) estática(s) en líneas también reportadas por Gemini;
         {" "}{soloEstaticas} en otras líneas. Coincidir en una línea no implica que sea el mismo riesgo.
-      </p>
+      </p>}
       {!loading && result?.estado === "parcial" && (
         <div className="analysis-notice" role="status">
           <strong>Análisis parcial: revisión incompleta</strong>
