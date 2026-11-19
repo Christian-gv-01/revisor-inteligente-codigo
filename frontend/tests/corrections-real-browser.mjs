@@ -34,11 +34,11 @@ try {
     await page.goto(origin);
     await page.getByRole('button', { name: 'API real', exact: true }).click();
     await page.getByRole('button', { name: 'Analizar código', exact: true }).click();
-    await page.getByRole('button', { name: 'Previsualizar propuesta', exact: true }).waitFor();
+    await page.getByRole('button', { name: /Previsualizar propuesta para \d+ hallazgo/ }).waitFor();
   };
   const preview = async () => {
     const response = page.waitForResponse(r => r.url().endsWith('/correcciones/previsualizar') && r.request().method() === 'POST');
-    await page.getByRole('button', { name: 'Previsualizar propuesta', exact: true }).click();
+    await page.getByRole('button', { name: /Previsualizar propuesta para \d+ hallazgo/ }).click();
     const r = await response; assert.equal(r.status(), 200); const p = await r.json();
     await page.getByLabel('Código propuesto', { exact: true }).waitFor();
     return p;
@@ -49,7 +49,7 @@ try {
   await open(); const p = await preview();
   assert(await page.getByRole('button', { name: 'Confirmar y descargar copia', exact: true }).isDisabled());
   assert.equal(downloads.length, 0);
-  await page.getByRole('checkbox').check();
+  await page.getByRole('checkbox', { name: /He revisado la propuesta/ }).check();
   const downloadEvent = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Confirmar y descargar copia', exact: true }).click();
   const downloaded = await downloadEvent;
@@ -65,7 +65,7 @@ try {
 
   await open(); const expired = await preview();
   assert.equal((await fetch(`${api}/__integration__/correcciones/${expired.propuesta_id}/caducar`, { method: 'POST' })).status, 200);
-  await page.getByRole('checkbox').check();
+  await page.getByRole('checkbox', { name: /He revisado la propuesta/ }).check();
   const expiry = page.waitForResponse(r => r.url().includes(expired.propuesta_id));
   await page.getByRole('button', { name: 'Confirmar y descargar copia', exact: true }).click();
   assert.equal((await expiry).status(), 410);
@@ -74,7 +74,7 @@ try {
 
   await open(); const conflict = await preview();
   assert.equal((await decide(conflict, 'rechazar')).status(), 200);
-  await page.getByRole('checkbox').check();
+  await page.getByRole('checkbox', { name: /He revisado la propuesta/ }).check();
   const conflicting = page.waitForResponse(r => r.url().includes(conflict.propuesta_id));
   await page.getByRole('button', { name: 'Confirmar y descargar copia', exact: true }).click();
   assert.equal((await conflicting).status(), 409); assert.equal(downloads.length, 1);
@@ -92,7 +92,7 @@ try {
     } catch { /* cliente canceló */ }
   };
   await page.route('**/correcciones/*/decision', delayApproval);
-  await open(); await preview(); await page.getByRole('checkbox').check();
+  await open(); await preview(); await page.getByRole('checkbox', { name: /He revisado la propuesta/ }).check();
   const firstReached = reachedBackend();
   await page.getByRole('button', { name: 'Confirmar y descargar copia', exact: true }).click();
   await firstReached;
@@ -100,7 +100,7 @@ try {
   await page.waitForTimeout(1000); assert.equal(downloads.length, 1);
   cases.push({ caso: 'Cancelar ante una respuesta tardía del backend impide descargar', aprobado: true });
 
-  await open(); await preview(); await page.getByRole('checkbox').check();
+  await open(); await preview(); await page.getByRole('checkbox', { name: /He revisado la propuesta/ }).check();
   const secondReached = reachedBackend();
   await page.getByRole('button', { name: 'Confirmar y descargar copia', exact: true }).click();
   await secondReached;
@@ -110,7 +110,7 @@ try {
   await page.unroute('**/correcciones/*/decision', delayApproval);
 
   await open(); await preview();
-  assert(!(await page.getByRole('checkbox').isChecked()));
+  assert(!(await page.getByRole('checkbox', { name: /He revisado la propuesta/ }).isChecked()));
   await page.screenshot({ path: path.join(out, 'confirmacion-http-escritorio.png'), fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
