@@ -142,6 +142,8 @@ export function CorrectionPreview({ archivo, codigo, finding, findings, demo, pa
         <div><h4>Original · {archivo}</h4><pre tabIndex={0} aria-label="Código original"><code>{codigo}</code></pre></div>
         <div><h4>Propuesta · {proposal.archivo_salida}</h4><pre tabIndex={0} aria-label="Código propuesto"><code>{proposal.codigo_propuesto}</code></pre></div>
       </div>
+      {proposal.advertencias.some(warning => warning.startsWith("Corrección parcial:")) &&
+        <p role="alert" className="correction-warning">Esta propuesta solo modifica parte de los hallazgos seleccionados. Revisa cuáles quedaron pendientes antes de aprobar.</p>}
       {proposal.advertencias.length > 0 && <ul>{proposal.advertencias.map((warning, index) => <li key={index}>{warning}</li>)}</ul>}
       <label className="correction-consent"><input type="checkbox" checked={consent} disabled={phase === "approving"} onChange={event => setConsent(event.target.checked)} />He revisado la propuesta y autorizo generar y descargar únicamente esta copia corregida.</label>
       <button className="primary-button" disabled={!consent || phase !== "review"} onClick={() => void approve()}>{phase === "approving" ? "Confirmando…" : "Confirmar y descargar copia"}</button>
