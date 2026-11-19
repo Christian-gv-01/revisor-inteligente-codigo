@@ -268,3 +268,57 @@ def test_previsualizar_no_crea_archivo_python_en_servidor(cliente, tmp_path):
 
     assert list(tmp_path.glob("*.py")) == []
 
+
+
+def test_puede_seleccionar_varios_hallazgos(cliente, monkeypatch):
+    codigo = "a = 1\nb = 2\nc = 3\nd = 4\n"
+    propuesto = "a = 10\nb = 2\nc = 30\nd = 4\n"
+    monkeypatch.setattr(correcciones, "_generar_codigo_propuesto", lambda *_: propuesto)
+    respuesta = cliente.post("/api/v1/correcciones/previsualizar", json={
+        "archivo": "varios.py", "codigo_original": codigo, "sha256_original": sha(codigo),
+        "objetivos": [{"linea": 1, "descripcion": "Modificar a"},
+                       {"linea": 3, "descripcion": "Modificar c"}],
+        "lineas_excluidas": [2, 4],
+    })
+    assert respuesta.status_code == 200, respuesta.text
+    assert respuesta.json()["codigo_propuesto"] == propuesto
+
+
+def test_rechaza_modificaciones_de_un_hallazgo_no_seleccionado(cliente, monkeypatch):
+    codigo = "a = 1\nb = 2\nc = 3\nd = 4\n"
+    propuesto = "a = 10\nb = 20\nc = 30\nd = 40\n"
+    monkeypatch.setattr(correcciones, "_generar_codigo_propuesto", lambda *_: propuesto)
+    respuesta = cliente.post("/api/v1/correcciones/previsualizar", json={
+        "archivo": "varios.py", "codigo_original": codigo, "sha256_original": sha(codigo),
+        "objetivos": [{"linea": 1, "descripcion": "Modificar a"}],
+        "lineas_excluidas": [2, 3, 4],
+    })
+    assert respuesta.status_code == 502
+    assert "zonas no seleccionadas" in respuesta.text
+    with sqlite3.connect(correcciones.DB_PATH) as c:
+        assert c.execute("SELECT count(*) FROM propuestas_correccion").fetchone()[0] == 0
+
+
+def test_guardia_con_objetivo_unico_legacy_rechaza_cambios_ajenos(cliente, monkeypatch):
+    codigo = "a = 1\nb = 2\nc = 3\nd = 4\n"
+    monkeypatch.setattr(correcciones, "_generar_codigo_propuesto",
+                        lambda *_: "a = 10\nb = 2\nc = 3\nd = 40\n")
+    respuesta = cliente.post("/api/v1/correcciones/previsualizar", json={
+        "archivo": "ejemplo.py", "codigo_original": codigo, "sha256_original": sha(codigo),
+        "objetivo": {"linea": 1, "descripcion": "Modificar a"},
+    })
+    assert respuesta.status_code == 502
+
+
+@pytest.mark.parametrize("payload_changes", [
+    {"objetivo": {"linea": 3, "descripcion": "duplicado"}, "objetivos": [{"linea": 3, "descripcion": "Revisar"}]},
+    {"objetivo": None, "objetivos": []},
+    {"objetivo": None, "objetivos": [{"linea": 900, "descripcion": "No existe"}]},
+    {"objetivo": None, "objetivos": [{"linea": 3, "descripcion": "Revisar"}], "lineas_excluidas": [3]},
+])
+def test_entrada_seleccion_de_hallazgos_invalida(cliente, payload_changes):
+    payload = payload_previsualizar()
+    payload.update(payload_changes)
+    if payload_changes.get("objetivos") is not None:
+        payload.pop("objetivo", None) if payload_changes.get("objetivo") is None else None
+    assert cliente.post("/api/v1/correcciones/previsualizar", json=payload).status_code == 422
