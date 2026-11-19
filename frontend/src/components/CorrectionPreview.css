@@ -10,3 +10,24 @@
 .correction-warning { border-left: 4px solid #986400; padding-left: 12px; color: #714b00; }
 .finding-priority { margin: 0 0 10px; font-size: 12px; font-weight: 700; color: #375b7c; }
 @media (max-width: 800px) { .correction-comparison { grid-template-columns: 1fr; } .correction-preview { padding: 14px; } .correction-cancel { margin-left: 0; } .correction-preview button { max-width: 100%; white-space: normal; } }
+
+.correction-targets { margin: 16px 0; padding: 14px; border: 1px solid #abc4d8; border-radius: 8px; }
+.correction-targets legend { font-weight: 750; padding: 0 6px; }
+.correction-targets > p { margin: 5px 0 12px; }
+.correction-target { display: flex; align-items: flex-start; gap: 10px; padding: 10px 8px; border-radius: 6px; cursor: pointer; }
+.correction-target + .correction-target { border-top: 1px solid #d3e1eb; }
+.correction-target:hover { background: #e7f0f7; }
+.correction-target input { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 2px; }
+.correction-target span { min-width: 0; overflow-wrap: anywhere; }
+.correction-targets:disabled { opacity: 0.78; }
+.correction-selection-count { font-weight: 650; }
+
+/* Un fieldset tiene min-inline-size:min-content por defecto: en móviles
+   no debe ensanchar la página por los títulos o las casillas. */
+.correction-preview { min-width: 0; max-width: 100%; box-sizing: border-box; }
+.correction-targets { min-width: 0; min-inline-size: 0; max-width: 100%; width: 100%; box-sizing: border-box; }
+.correction-target { min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+.correction-target span { min-width: 0; overflow-wrap: anywhere; }
+
+/* Mantener scroll de código dentro de cada <pre>, nunca del documento. */
+.correction-preview { overflow-x: clip; }

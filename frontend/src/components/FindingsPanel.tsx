@@ -107,7 +107,7 @@ export function FindingsPanel({ result, loading, selectedId, onSelect, onExport 
       {!loading && result && (result.fuentes?.length ?? 0) > 0 && (
         <details className="sources-section"><summary><Icon name="book" size={17} /><span>{result.demo ? "Referencias de la demostración" : "Fuentes de conocimiento consultadas"}</span><span className="count-badge">{result.fuentes!.length}</span></summary><p>{result.demo ? "Documentos de ejemplo para recorrer la interfaz. No se realizó recuperación RAG." : "Documentos recuperados durante el análisis. Su recuperación no implica que respalden todos los hallazgos; revisa las citas indicadas en cada uno."}</p><SourceList sources={result.fuentes!} /></details>
       )}
-      <div className="panel-footnote"><Icon name="info" size={14} /><span>Selecciona un hallazgo para ubicarlo en el editor.</span></div>
+      <div className="panel-footnote"><Icon name="info" size={14} /><span>Abre un hallazgo para ubicarlo en el editor. En la previsualización podrás marcar uno o varios para corregir.</span></div>
     </section>
   );
 }

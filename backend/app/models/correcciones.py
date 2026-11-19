@@ -30,10 +30,28 @@ class SolicitudPrevisualizacion(BaseModel):
     archivo: str = Field(min_length=4, max_length=120)
     codigo_original: str = Field(min_length=1, max_length=12000)
     sha256_original: str = Field(pattern=_SHA256_RE.pattern)
-    objetivo: ObjetivoCorreccion
+    # Se conserva el objetivo único de v1 para clientes ya integrados.
+    objetivo: ObjetivoCorreccion | None = None
+    objetivos: list[ObjetivoCorreccion] | None = Field(default=None, min_length=1, max_length=10)
+    # Solo para proteger hallazgos desmarcados en la interfaz.
+    lineas_excluidas: list[int] = Field(default_factory=list, max_length=100)
 
     @model_validator(mode="after")
     def validar_entrada(self) -> "SolicitudPrevisualizacion":
+        if (self.objetivo is None) == (self.objetivos is None):
+            raise ValueError("Envía objetivo o objetivos, pero no ambos.")
+        elegidos = self.objetivos if self.objetivos is not None else [self.objetivo]
+        if len({(x.linea, x.descripcion) for x in elegidos}) != len(elegidos):
+            raise ValueError("No repitas el mismo hallazgo.")
+        total_lineas = len(self.codigo_original.splitlines())
+        if any(x.linea > total_lineas for x in elegidos):
+            raise ValueError("La línea de un objetivo debe existir en el archivo.")
+        if len(set(self.lineas_excluidas)) != len(self.lineas_excluidas):
+            raise ValueError("No repitas las líneas excluidas.")
+        if any(type(n) is not int or n < 1 or n > total_lineas for n in self.lineas_excluidas):
+            raise ValueError("Las líneas excluidas deben existir en el archivo.")
+        if any(x.linea in self.lineas_excluidas for x in elegidos):
+            raise ValueError("No se puede seleccionar y excluir la misma línea.")
         if not _ARCHIVO_RE.fullmatch(self.archivo) or ".." in self.archivo:
             raise ValueError("El archivo debe ser un nombre .py simple, sin rutas.")
         if "/" in self.archivo or "\\" in self.archivo or "\x00" in self.archivo:
@@ -47,6 +65,10 @@ class SolicitudPrevisualizacion(BaseModel):
         if longitud > 12000:
             raise ValueError("El código original supera 12000 unidades UTF-16.")
         return self
+
+    @property
+    def objetivos_efectivos(self) -> list[ObjetivoCorreccion]:
+        return self.objetivos if self.objetivos is not None else [self.objetivo]
 
 
 class SolicitudDecision(BaseModel):
