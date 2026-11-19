@@ -92,17 +92,37 @@ async function send(path: string, body: unknown, signal: AbortSignal): Promise<u
   const base = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
   const response = await fetch(`${base}${path}`, {
     method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body), signal: AbortSignal.any([signal, AbortSignal.timeout(60_000)]),
+    body: JSON.stringify(body), signal: AbortSignal.any([signal, AbortSignal.timeout(35_000)]),
   });
   if (!response.ok) {
-    if (response.status === 409 || response.status === 410) throw new Error("La propuesta cambió o caducó. Solicita otra previsualización.");
-    if (response.status === 502) {
-      // No reflejar respuestas crudas ni datos privados. Solo un rechazo controlado.
-      const body = await response.json().catch(() => null);
-      if (record(body) && typeof body.detail === "string" &&
-          body.detail.startsWith("La propuesta modifica zonas no seleccionadas.")) {
-        throw new Error("Gemini intentó modificar código que no seleccionaste. CODEGUARD bloqueó la propuesta; revisa tus hallazgos o corrige manualmente.");
+    // No mostrar el JSON de validación crudo: podría contener el código enviado.
+    const payload = [422, 502].includes(response.status)
+      ? await response.json().catch(() => null) : null;
+    const detail = record(payload) && typeof payload.detail === "string" ? payload.detail : "";
+    if (response.status === 422) {
+      if (detail.startsWith("No existe una corrección concreta") || detail.startsWith("La propuesta no introduce")) {
+        throw new Error("Gemini no encontró una corrección válida para el hallazgo marcado. No se cambió el archivo; prueba otro hallazgo o revísalo manualmente.");
       }
+      if (record(payload) && Array.isArray(payload.detail)) {
+        const fields = payload.detail.map(item =>
+          record(item) && Array.isArray(item.loc) ? String(item.loc[item.loc.length - 1]) : "")
+          .filter(value => ["archivo", "codigo_original", "sha256_original", "objetivos", "objetivo",
+            "linea", "descripcion", "lineas_excluidas"].includes(value));
+        const field = fields[0];
+        throw new Error(field
+          ? `La solicitud no cumple la validación del servidor (campo ${field}). Comprueba archivo y hallazgos antes de reintentar.`
+          : "La solicitud no cumple el contrato de correcciones. Vuelve a analizar el archivo antes de reintentar.");
+      }
+      throw new Error("No se pudo generar una corrección válida (422). No se modificó el archivo original.");
+    }
+    if (response.status === 409 || response.status === 410) throw new Error("La propuesta cambió o caducó. Solicita otra previsualización.");
+    if (response.status === 413) throw new Error("El archivo excede el límite de la corrección selectiva. Selecciona uno más pequeño.");
+    if (response.status === 429) throw new Error("Se alcanzó el límite temporal de propuestas. Reintenta más tarde.");
+    if (response.status === 502 && detail.startsWith("La propuesta modifica zonas no seleccionadas.")) {
+      throw new Error("Gemini intentó modificar código no seleccionado. La propuesta se bloqueó para proteger tu archivo.");
+    }
+    if (response.status === 503 || response.status === 504) {
+      throw new Error("Gemini no respondió dentro del plazo o no está disponible. No se generó ningún archivo.");
     }
     throw new Error("No se pudo completar la operación. No se descargó ningún archivo.");
   }
