@@ -21,3 +21,10 @@
 .correction-target span { min-width: 0; overflow-wrap: anywhere; }
 .correction-targets:disabled { opacity: 0.78; }
 .correction-selection-count { font-weight: 650; }
+
+/* Un fieldset tiene min-inline-size:min-content por defecto: en móviles
+   no debe ensanchar la página por los títulos o las casillas. */
+.correction-preview { min-width: 0; max-width: 100%; box-sizing: border-box; }
+.correction-targets { min-width: 0; min-inline-size: 0; max-width: 100%; width: 100%; box-sizing: border-box; }
+.correction-target { min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+.correction-target span { min-width: 0; overflow-wrap: anywhere; }
