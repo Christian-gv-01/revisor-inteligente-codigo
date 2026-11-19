@@ -2,16 +2,20 @@ import { useState } from "react";
 import { createRoot } from "react-dom/client";
 import { CorrectionPreview } from "../src/components/CorrectionPreview";
 import { demoCorrectionClient } from "../src/services/correctionDemo";
-import type { CorrectionClient } from "../src/services/corrections";
+import type { CorrectionClient, CorrectionRequest } from "../src/services/corrections";
 import { SQL_EXAMPLE_CODE } from "../src/services/demo";
 import "../src/styles/global.css";
 
 export function Fixture() {
   const [revision, setRevision] = useState(0);
   const [actions, setActions] = useState<string[]>([]);
+  const [lastRequest, setLastRequest] = useState<CorrectionRequest | null>(null);
   const scenario = new URLSearchParams(location.search).get("scenario");
   const client: CorrectionClient = {
-    preview: demoCorrectionClient.preview,
+    async preview(request, signal) {
+      setLastRequest(request);
+      return demoCorrectionClient.preview(request, signal);
+    },
     async decide(proposal, decision, signal) {
       setActions(previous => [...previous, decision]);
       if (scenario === "slow" && decision === "aprobar") await new Promise(resolve => setTimeout(resolve, 700));
@@ -31,6 +35,7 @@ export function Fixture() {
       demo partial client={client} />
     <button onClick={() => setRevision(previous => previous + 1)}>Cambiar entrada de prueba</button>
     <pre id="actions">{JSON.stringify(actions)}</pre>
+    <pre id="last-request">{JSON.stringify(lastRequest)}</pre>
   </main>;
 }
 createRoot(document.getElementById("root")!).render(<Fixture />);
