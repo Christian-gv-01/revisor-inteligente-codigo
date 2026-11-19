@@ -8,30 +8,41 @@ interface Props {
   archivo: string;
   codigo: string;
   finding: Finding;
+  findings?: Finding[];
   demo: boolean;
   partial?: boolean;
   client?: CorrectionClient;
 }
 
-export function CorrectionPreview({ archivo, codigo, finding, demo, partial, client }: Props) {
+export function CorrectionPreview({ archivo, codigo, finding, findings, demo, partial, client }: Props) {
   const [proposal, setProposal] = useState<CorrectionProposal | null>(null);
+  // Solo el hallazgo abierto queda marcado inicialmente.
+  const [selectedIds, setSelectedIds] = useState<string[]>([finding.id]);
   const [consent, setConsent] = useState(false);
   const [phase, setPhase] = useState<"idle" | "previewing" | "review" | "approving" | "done">("idle");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const pending = useRef<AbortController | null>(null);
+  const disponibles = (findings ?? [finding]).filter(item => item.archivo === archivo)
+    .filter((item, index, list) => list.findIndex(other => other.id === item.id) === index);
+  const seleccionados = disponibles.filter(item => selectedIds.includes(item.id));
+  const lineasSeleccionadas = new Set(seleccionados.map(item => item.linea));
+  const excluidas = [...new Set(disponibles.filter(item => !lineasSeleccionadas.has(item.linea))
+    .map(item => item.linea))];
+
   // El padre desmonta esta revisión al editar el código, cambiar archivo o hallazgo.
   useEffect(() => () => pending.current?.abort(), []);
 
   async function preview() {
-    if (!client || phase === "previewing" || phase === "approving") return;
+    if (!client || !seleccionados.length || phase === "previewing" || phase === "approving" || proposal) return;
     pending.current?.abort();
     const controller = new AbortController();
     pending.current = controller;
     setConsent(false); setProposal(null); setMessage(""); setError(""); setPhase("previewing");
     try {
       const request = { archivo, codigo_original: codigo, sha256_original: await sha256(codigo),
-        objetivo: { linea: finding.linea, descripcion: finding.correccion_sugerida } };
+        objetivos: seleccionados.map(item => ({ linea: item.linea, descripcion: item.correccion_sugerida })),
+        lineas_excluidas: excluidas };
       if (controller.signal.aborted) return;
       const candidate = await validateProposal(await client.preview(request, controller.signal), request);
       if (controller.signal.aborted) return;
@@ -84,10 +95,29 @@ export function CorrectionPreview({ archivo, codigo, finding, demo, partial, cli
     <h3 id="correction-preview-title">Previsualizar una corrección</h3>
     <p>{demo ? "Demostración local del flujo de aprobación." : "Revisa una propuesta antes de autorizar la descarga."} Se genera una copia con otro nombre; no se ejecuta código ni se modifica el archivo original.</p>
     {!demo && <p>La propuesta se conserva temporalmente mientras decides y caduca a los cinco minutos. La revisión humana sigue siendo necesaria antes de usar la copia.</p>}
-    <p><strong>Hallazgo seleccionado:</strong> {finding.titulo} · {archivo}:{finding.linea}</p>
+    <fieldset className="correction-targets" disabled={phase === "previewing" || phase === "approving" || !!proposal}>
+      <legend>Selecciona qué hallazgos quieres corregir</legend>
+      <p>Solo se solicitará una corrección para los hallazgos marcados. Los demás deben mantenerse sin cambios.</p>
+      {disponibles.map(item => <label className="correction-target" key={item.id}>
+        <input type="checkbox" aria-label={`Corregir ${item.titulo}, línea ${item.linea}`}
+          checked={selectedIds.includes(item.id)}
+          onChange={event => {
+            const checked = event.target.checked;
+            setSelectedIds(previous => checked
+              ? [...previous, item.id]
+              : previous.filter(id => id !== item.id));
+            setConsent(false);
+            setMessage("");
+            setError("");
+          }} />
+        <span><strong>{item.titulo}</strong> · línea {item.linea} · {item.severidad}</span>
+      </label>)}
+      <p className="correction-selection-count">{seleccionados.length} seleccionado(s) de {disponibles.length}. Si la IA intenta modificar otras zonas, la propuesta será rechazada.</p>
+    </fieldset>
+    {proposal && <p role="status">Selección bloqueada mientras revisas esta propuesta. Cancélala para cambiar hallazgos.</p>}
     {partial && <p className="correction-warning">El análisis es parcial. Aprobar una copia no completa la revisión ni garantiza seguridad.</p>}
     {!client && <p role="status">No hay una corrección descargable disponible para este resultado.</p>}
-    {(phase === "idle" || phase === "done") && <button className="primary-button" disabled={!client} onClick={() => void preview()}>Previsualizar propuesta</button>}
+    {(phase === "idle" || phase === "done") && <button className="primary-button" disabled={!client || seleccionados.length === 0} onClick={() => void preview()}>Previsualizar propuesta para {seleccionados.length} hallazgo(s)</button>}
     {phase === "previewing" && <p role="status">Preparando la previsualización…</p>}
     {proposal && <>
       <div className="correction-comparison">
