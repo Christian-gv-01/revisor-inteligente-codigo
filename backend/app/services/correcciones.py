@@ -394,9 +394,9 @@ def _validar_alcance_cambios(
         if tipo == "equal":
             continue
         if tipo == "insert":
-            # Un punto de inserción n se encuentra después de la línea n.
-            # Nunca permitir añadir un bloque independiente lejano al objetivo.
-            if not any(n in permitidas or n + 1 in permitidas for n in (inicio,)):
+            # Se permiten inserciones pequeñas junto a una línea seleccionada;
+            # nunca reescrituras completas insertadas dentro del mismo punto.
+            if not (inicio in permitidas or inicio + 1 in permitidas):
                 raise CorreccionError(
                     "La propuesta modifica zonas no seleccionadas. No se generó ninguna copia.", 502
                 )
