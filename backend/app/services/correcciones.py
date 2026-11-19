@@ -370,7 +370,12 @@ def _generar_codigo_propuesto(codigo_original: str, objetivo: dict[str, Any]) ->
                 config=types.GenerateContentConfig(
                     system_instruction=instrucciones,
                     temperature=0,
-                    max_output_tokens=min(obtener_max_tokens_llm(), 768),
+                    # 1 hallazgo: salida breve; varios: margen proporcional, sin
+                # sobrepasar la política global de tokens del servidor.
+                max_output_tokens=min(
+                    obtener_max_tokens_llm(),
+                    640 + 180 * len(objetivo.get("objetivos") or [objetivo]),
+                ),
                 ),
             )
         for candidato in getattr(respuesta, "candidates", None) or ():
