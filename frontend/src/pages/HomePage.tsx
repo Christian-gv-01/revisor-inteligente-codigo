@@ -39,6 +39,7 @@ const agentLabUrl = `${(import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, 
 export function HomePage() {
   const [input, setInput] = useState<AnalysisInput>(initial);
   const [mode, setMode] = useState<Mode>("demo");
+  const [analysisRoute, setAnalysisRoute] = useState<"agente" | "directa">("agente");
   const [scenario, setScenario] = useState<Scenario>("hallazgos");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [selected, setSelected] = useState<Finding | null>(null);
@@ -164,7 +165,9 @@ export function HomePage() {
           ? await analyzeDemo(input, scenario, controller.signal)
           : project
              ? await analyzeCode(input, controller.signal)
-             : await analyzeWithAgent(input, controller.signal);
+             : analysisRoute === "directa"
+               ? await analyzeCode(input, controller.signal)
+               : await analyzeWithAgent(input, controller.signal);
       if (controller.signal.aborted) return;
       setResult(response);
       setSelected(response.hallazgos[0] ?? null);
@@ -264,12 +267,27 @@ export function HomePage() {
       <main id="workspace">
         <section className={`mode-banner ${mode}`} aria-label="Configuración de análisis">
           <Icon name="info" size={17} />
-          <p>{mode === "demo" ? "Datos de ejemplo · Simulación local sin IA. Las referencias son ilustrativas." : project ? "Revisión de proyecto: análisis por archivo con fuentes y herramientas estáticas." : "Revisión con agente: inspecciones, herramientas y fuentes en un mismo informe. El código se analiza sin ejecutarlo."}</p>
+          <p>{mode === "demo" ? "Datos de ejemplo · Simulación local sin IA. Las referencias son ilustrativas." : project ? "Revisión de proyecto: análisis por archivo con fuentes y herramientas estáticas." : analysisRoute === "directa" ? "Ruta directa: Gemini, RAG y análisis estático sin planificación adicional." : "Revisión con agente: inspecciones, herramientas y fuentes en un mismo informe. El código se analiza sin ejecutarlo."}</p>
           <div className="mode-switch" role="group" aria-label="Modo de análisis">
             <button disabled={busy} aria-pressed={mode === "demo"} onClick={() => { clearResult(); setMode("demo"); }}>Demo</button>
             <button disabled={busy} aria-pressed={mode === "api"} onClick={() => { clearResult(); setMode("api"); }}>API real</button>
           </div>
         </section>
+        {mode === "api" && !project && <section className="analysis-route-choice" aria-label="Elegir profundidad y velocidad del análisis">
+          <div className="analysis-route-buttons" role="group" aria-label="Ruta de análisis de Python">
+            <button type="button" disabled={busy} aria-pressed={analysisRoute === "agente"}
+              onClick={() => { clearResult(); setAnalysisRoute("agente"); }}>
+              Agente supervisado
+            </button>
+            <button type="button" disabled={busy} aria-pressed={analysisRoute === "directa"}
+              onClick={() => { clearResult(); setAnalysisRoute("directa"); }}>
+              Rápida (directa)
+            </button>
+          </div>
+          <p>{analysisRoute === "agente"
+            ? "Analiza con planificación y trazabilidad de herramientas; puede tardar más."
+            : "Analiza con Gemini y fuentes RAG sin el bucle del agente. Puede completar más rápido; el tiempo depende del proveedor."}</p>
+        </section>}
         <section className="agent-access" aria-labelledby="agent-access-title">
           <div>
             <h2 id="agent-access-title">Agente de revisión</h2>
