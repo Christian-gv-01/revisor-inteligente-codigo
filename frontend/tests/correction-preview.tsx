@@ -35,7 +35,11 @@ export function Fixture() {
       demo partial client={client} />
     <button onClick={() => setRevision(previous => previous + 1)}>Cambiar entrada de prueba</button>
     <pre id="actions">{JSON.stringify(actions)}</pre>
-    <pre id="last-request">{JSON.stringify(lastRequest)}</pre>
+    {/* Este registro pertenece al fixture, no a CODEGUARD. Su JSON
+        no debe crear un scroll horizontal falso en las pruebas móviles. */}
+    <pre id="last-request" style={{ maxWidth: "100%", whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>
+      {JSON.stringify(lastRequest)}
+    </pre>
   </main>;
 }
 createRoot(document.getElementById("root")!).render(<Fixture />);
