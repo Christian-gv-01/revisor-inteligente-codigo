@@ -101,7 +101,7 @@ async function send(path: string, body: unknown, signal: AbortSignal): Promise<u
     const detail = record(payload) && typeof payload.detail === "string" ? payload.detail : "";
     if (response.status === 422) {
       if (detail.startsWith("No existe una corrección concreta") || detail.startsWith("La propuesta no introduce")) {
-        const cantidad = "objetivos" in body && Array.isArray(body.objetivos) ? body.objetivos.length : 1;
+        const cantidad = record(body) && Array.isArray(body.objetivos) ? body.objetivos.length : 1;
         throw new Error(`No se obtuvo un parche local válido para ${cantidad} hallazgo(s) seleccionado(s). Algunas correcciones necesitan cambiar más líneas de las autorizadas. Prueba seleccionarlos de uno en uno o revísalos manualmente; el original permanece intacto.`);
       }
       if (record(payload) && Array.isArray(payload.detail)) {
