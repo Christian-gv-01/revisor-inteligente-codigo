@@ -24,6 +24,10 @@ export function Fixture() {
     <h1>Confirmación humana · QA local</h1><p>Datos simulados. Sin llamadas a Backend, Gemini o Railway.</p>
     <CorrectionPreview key={revision} archivo="usuarios.py" codigo={SQL_EXAMPLE_CODE}
       finding={{ id: "sql", archivo: "usuarios.py", linea: 6, severidad: "alta", categoria: "SQL", titulo: "Consulta construida con entrada externa", explicacion: "Ejemplo", correccion_sugerida: "Parametrizar la consulta" }}
+      findings={[
+        { id: "sql", archivo: "usuarios.py", linea: 6, severidad: "alta", categoria: "SQL", titulo: "Consulta construida con entrada externa", explicacion: "Ejemplo", correccion_sugerida: "Parametrizar la consulta" },
+        { id: "extra", archivo: "usuarios.py", linea: 9, severidad: "media", categoria: "Código", titulo: "Problema no seleccionado", explicacion: "Ejemplo", correccion_sugerida: "Revisar" },
+      ]}
       demo partial client={client} />
     <button onClick={() => setRevision(previous => previous + 1)}>Cambiar entrada de prueba</button>
     <pre id="actions">{JSON.stringify(actions)}</pre>
