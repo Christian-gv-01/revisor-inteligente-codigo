@@ -35,7 +35,7 @@ from app.models.correcciones import (
     unidades_utf16,
 )
 from app.config import settings
-from app.services.presupuesto import generar_con_presupuesto, ConsumoAgotado, comprobar_plazo, PlazoAgotado
+from app.services.presupuesto import generar_con_presupuesto, ConsumoAgotado, comprobar_plazo, PlazoAgotado, presupuesto_solicitud
 
 
 logger = logging.getLogger(__name__)
@@ -360,16 +360,19 @@ def _generar_codigo_propuesto(codigo_original: str, objetivo: dict[str, Any]) ->
                 retry_options=types.HttpRetryOptions(attempts=1),
             ),
         )
-        respuesta = generar_con_presupuesto(
-            cliente, timeout_ms=plazo * 1000,
-            model=obtener_modelo_gemini(),
-            contents=contenido,
-            config=types.GenerateContentConfig(
-                system_instruction=instrucciones,
-                temperature=0,
-                max_output_tokens=min(obtener_max_tokens_llm(), 768),
-            ),
-        )
+        # Una propuesta = un único intento a Gemini y un único plazo total.
+        # Evita seguir reintentando tras la cancelación o caducidad del navegador.
+        with presupuesto_solicitud(segundos=plazo, llamadas=1):
+            respuesta = generar_con_presupuesto(
+                cliente, timeout_ms=plazo * 1000,
+                model=obtener_modelo_gemini(),
+                contents=contenido,
+                config=types.GenerateContentConfig(
+                    system_instruction=instrucciones,
+                    temperature=0,
+                    max_output_tokens=min(obtener_max_tokens_llm(), 768),
+                ),
+            )
         for candidato in getattr(respuesta, "candidates", None) or ():
             motivo = getattr(candidato, "finish_reason", None)
             if getattr(motivo, "value", motivo) == "MAX_TOKENS":
