@@ -385,18 +385,21 @@ def _validar_alcance_cambios(
     """
     originales = codigo_original.splitlines(keepends=True)
     propuestos = codigo_propuesto.splitlines(keepends=True)
+    # Evita un cálculo de diff excesivo con miles de líneas repetidas.
+    if max(len(originales), len(propuestos)) > 2000:
+        raise CorreccionError("Archivo demasiado extenso para una corrección selectiva.", 413)
     permitidas = set(lineas_seleccionadas)
     permitidas.update(n + 1 for n in lineas_seleccionadas if n < len(originales))
     permitidas -= lineas_excluidas
-    for tipo, inicio, fin, _, _ in SequenceMatcher(
-        None, originales, propuestos, autojunk=False
+    for tipo, inicio, fin, nuevo_inicio, nuevo_fin in SequenceMatcher(
+        None, originales, propuestos, autojunk=True
     ).get_opcodes():
         if tipo == "equal":
             continue
         if tipo == "insert":
             # Una inserción extensa puede ocultar reescrituras enteras aunque
             # esté anclada junto al objetivo. Rechazarla conservadoramente.
-            if not (inicio in permitidas or inicio + 1 in permitidas):
+            if nuevo_fin - nuevo_inicio > 12 or not (inicio in permitidas or inicio + 1 in permitidas):
                 raise CorreccionError(
                     "La propuesta modifica zonas no seleccionadas. No se generó ninguna copia.", 502
                 )
