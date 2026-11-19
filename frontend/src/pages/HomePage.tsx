@@ -370,7 +370,8 @@ export function HomePage() {
               </div>
               {result && selected && code !== null && selected.archivo === filename && !busy && (
                 <CorrectionPreview key={`${filename}:${selected.id}`} archivo={filename} codigo={code}
-                  finding={selected} demo={result.demo} partial={result.estado === "parcial"}
+                  finding={selected} findings={result.hallazgos.filter(item => item.archivo === filename)}
+                   demo={result.demo} partial={result.estado === "parcial"}
                   client={result.demo ? (demoCorrectionAvailable(code) ? demoCorrectionClient : undefined) : configuredCorrectionClient()} />
               )}
               {mode === "demo" && (
