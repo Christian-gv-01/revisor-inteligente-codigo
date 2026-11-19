@@ -23,6 +23,7 @@ export function CorrectionPreview({ archivo, codigo, finding, findings, demo, pa
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const pending = useRef<AbortController | null>(null);
+  const previewInFlight = useRef(false);
   const disponibles = (findings ?? [finding]).filter(item => item.archivo === archivo)
     .filter((item, index, list) => list.findIndex(other => other.id === item.id) === index);
   const seleccionados = disponibles.filter(item => selectedIds.includes(item.id));
@@ -41,7 +42,9 @@ export function CorrectionPreview({ archivo, codigo, finding, findings, demo, pa
   async function preview() {
     if (!client || !seleccionados.length || !objetivosValidos ||
         phase === "previewing" || phase === "approving" || proposal ||
-        (pending.current && !pending.current.signal.aborted)) return;
+        previewInFlight.current) return;
+    previewInFlight.current = true;
+    pending.current?.abort();
     const controller = new AbortController();
     pending.current = controller;
     setConsent(false); setProposal(null); setMessage(""); setError(""); setPhase("previewing");
@@ -62,6 +65,7 @@ export function CorrectionPreview({ archivo, codigo, finding, findings, demo, pa
       setError(cause instanceof Error ? cause.message : "No se pudo preparar la propuesta.");
       setPhase("idle");
     } finally {
+      previewInFlight.current = false;
       if (pending.current === controller) pending.current = null;
     }
   }
