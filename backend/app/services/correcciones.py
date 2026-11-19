@@ -252,8 +252,9 @@ def _contexto_local(codigo: str, objetivo: dict[str, Any]) -> dict[str, Any]:
     """Limita el texto enviado a Gemini a los hallazgos seleccionados."""
     lineas = codigo.splitlines()
     elegidos = objetivo.get("objetivos") or [objetivo]
+    excluidas = set(objetivo.get("lineas_excluidas") or [])
     editables = {n for item in elegidos for n in (item["linea"], item["linea"] + 1)
-                 if n <= len(lineas)}
+                 if n <= len(lineas) and n not in excluidas}
     vecinas = {n for item in elegidos
                for n in range(max(1, item["linea"] - 3),
                               min(len(lineas), item["linea"] + 3) + 1)}
@@ -284,7 +285,8 @@ def _aplicar_parche_local(codigo: str, texto: str, objetivo: dict[str, Any]) -> 
         raise CorreccionError("No existe una corrección concreta y sustentable para este hallazgo.", 422)
     originales = codigo.splitlines(keepends=True)
     elegidos = objetivo.get("objetivos") or [objetivo]
-    permitidas = {n for item in elegidos for n in (item["linea"], item["linea"] + 1)}
+    permitidas = ({n for item in elegidos for n in (item["linea"], item["linea"] + 1)}
+                 - set(objetivo.get("lineas_excluidas") or []))
     nuevas = {}
     for cambio in cambios:
         if not isinstance(cambio, dict):
@@ -511,6 +513,7 @@ def crear_previsualizacion(
             solicitud.objetivo.model_dump() if solicitud.objetivo is not None
             else {"objetivos": [objetivo.model_dump() for objetivo in objetivos]}
         )
+        descripcion["lineas_excluidas"] = solicitud.lineas_excluidas
         codigo_propuesto = _generar_codigo_propuesto(
             solicitud.codigo_original, descripcion,
         )
