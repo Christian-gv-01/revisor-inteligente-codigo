@@ -404,3 +404,41 @@ def test_solicitud_v2_permite_mas_de_cien_lineas_excluidas(cliente, monkeypatch)
         "lineas_excluidas": list(range(2, 120)),
     })
     assert respuesta.status_code == 200, respuesta.text
+
+
+def test_previsualizacion_multiseleccion_informa_hallazgos_no_modificados(cliente):
+    solicitud = {
+        "archivo": "usuarios.py",
+        "codigo_original": CODIGO_ORIGINAL,
+        "sha256_original": sha(CODIGO_ORIGINAL),
+        "objetivos": [
+            {"linea": 1, "descripcion": "Revisar importación"},
+            {"linea": 3, "descripcion": "Parametrizar consulta"},
+        ],
+    }
+    respuesta = cliente.post("/api/v1/correcciones/previsualizar", json=solicitud)
+    assert respuesta.status_code == 200, respuesta.text
+    propuesta = respuesta.json()
+    assert propuesta["codigo_propuesto"] == CODIGO_PROPUESTO
+    parcial = [v for v in propuesta["advertencias"] if v.startswith("Corrección parcial:")]
+    assert len(parcial) == 1
+    assert "1 de 2" in parcial[0]
+    assert "líneas 1" in parcial[0]
+
+
+def test_previsualizacion_multiseleccion_completa_no_alega_parcial(cliente):
+    solicitud = {
+        "archivo": "usuarios.py",
+        "codigo_original": CODIGO_ORIGINAL,
+        "sha256_original": sha(CODIGO_ORIGINAL),
+        "objetivos": [
+            {"linea": 3, "descripcion": "Parametrizar consulta"},
+            {"linea": 4, "descripcion": "Revisar llamada"},
+        ],
+    }
+    respuesta = cliente.post("/api/v1/correcciones/previsualizar", json=solicitud)
+    assert respuesta.status_code == 200, respuesta.text
+    assert not any(
+        v.startswith("Corrección parcial:")
+        for v in respuesta.json()["advertencias"]
+    )
