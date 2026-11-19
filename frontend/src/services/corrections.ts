@@ -96,6 +96,14 @@ async function send(path: string, body: unknown, signal: AbortSignal): Promise<u
   });
   if (!response.ok) {
     if (response.status === 409 || response.status === 410) throw new Error("La propuesta cambió o caducó. Solicita otra previsualización.");
+    if (response.status === 502) {
+      // No reflejar respuestas crudas ni datos privados. Solo un rechazo controlado.
+      const body = await response.json().catch(() => null);
+      if (record(body) && typeof body.detail === "string" &&
+          body.detail.startsWith("La propuesta modifica zonas no seleccionadas.")) {
+        throw new Error("Gemini intentó modificar código que no seleccionaste. CODEGUARD bloqueó la propuesta; revisa tus hallazgos o corrige manualmente.");
+      }
+    }
     throw new Error("No se pudo completar la operación. No se descargó ningún archivo.");
   }
   return response.json();
