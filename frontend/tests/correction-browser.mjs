@@ -93,6 +93,17 @@ try {
   results.push({ caso: 'Previsualización móvil 390 px sin desbordamiento horizontal', aprobado: true });
   await page.setViewportSize({ width: 1440, height: 1080 });
   await page.goto('http://127.0.0.1:5178/');
+  await page.getByRole('button', { name: 'API real', exact: true }).click();
+  const agente = page.getByRole('button', { name: 'Agente supervisado', exact: true });
+  const directa = page.getByRole('button', { name: 'Rápida (directa)', exact: true });
+  assert.equal(await agente.getAttribute('aria-pressed'), 'true');
+  await directa.click();
+  assert.equal(await directa.getAttribute('aria-pressed'), 'true');
+  assert.equal(await agente.getAttribute('aria-pressed'), 'false');
+  await agente.click();
+  assert.equal(await agente.getAttribute('aria-pressed'), 'true');
+  results.push({ caso: 'La ruta rápida es seleccionable y el agente es el modo inicial', aprobado: true });
+  await page.getByRole('button', { name: 'Demo', exact: true }).click();
   await page.getByRole('button', { name: 'Probar análisis', exact: true }).click();
   await preview();
   assert(!(await page.getByRole('checkbox', { name: /He revisado la propuesta/ }).isChecked()));
