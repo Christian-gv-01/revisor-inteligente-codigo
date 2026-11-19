@@ -85,7 +85,11 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: `${output}/previsualizacion-movil.png`, fullPage: true });
   const width = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, viewport: innerWidth }));
-  assert(width.scroll <= width.viewport);
+  assert(width.scroll <= width.viewport,
+    `Desbordamiento móvil: ${JSON.stringify(await page.evaluate(() =>
+      [...document.querySelectorAll('body *')].filter(el => el.getBoundingClientRect().right > innerWidth + 1)
+        .slice(0, 12).map(el => ({ tag: el.tagName, className: typeof el.className === 'string' ? el.className : '', right: Math.round(el.getBoundingClientRect().right) }))
+    ))}`);
   results.push({ caso: 'Previsualización móvil 390 px sin desbordamiento horizontal', aprobado: true });
   await page.setViewportSize({ width: 1440, height: 1080 });
   await page.goto('http://127.0.0.1:5178/');
